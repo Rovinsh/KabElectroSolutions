@@ -1,0 +1,5 @@
+@if (!isLoginPage) {<app-header></app-header>}
+<div style="display: flex;">
+  @if (!isLoginPage) {<app-sidebar></app-sidebar>}
+  <router-outlet></router-outlet>
+</div>

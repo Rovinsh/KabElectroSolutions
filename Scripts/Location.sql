@@ -1,0 +1,4 @@
+CREATE TABLE Location (
+    LocationID INT IDENTITY(1,1) PRIMARY KEY,
+    LocationName VARCHAR(200) NOT NULL
+);

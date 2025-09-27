@@ -1,0 +1,102 @@
+<!-- <mat-dialog-content> -->
+@if (isLoading) {
+  <div class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+}
+ 
+@if (!isLoading) {
+  
+<div>
+<div class="container">
+  <h2 class="claim-code">Claim Code : <strong>{{ claimId }}</strong></h2>
+
+  <div class="tabs">
+    <button class="active">Claim details</button>
+    <button>Claim Logs</button>
+    <button>Claim History</button>
+    <button>Claim Estimation</button>
+  </div>
+
+ <div class="step-progress">
+  @for (step of steps; let i = $index; track step) {
+    <div class="step">
+      <div class="step-label" [class.completed]="i <= currentStep">{{ step }}</div>
+      <div class="step-circle" [class.completed]="i <= currentStep"></div>
+      @if (i < steps.length - 1) {
+        <div class="step-line" [class.completed]="i < currentStep"></div>
+      }
+    </div>
+  }
+</div>
+
+  <div class="actions">
+    <button class="reject">Reject Call</button>
+    <button class="accept">Accept Call</button>
+    <button mat-icon-button color="Red" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="four-column-row">
+    <!-- Claim Details -->
+    <div class="card">
+      <h3>Claim details</h3>
+      <p><strong>Call Status:</strong> {{claim?.statusName}}</p>      
+      <p><strong>Call Date:</strong> {{claim?.createdDate | date:'MMM d, y'}} at {{claim?.createdTime}}</p>
+      <p><strong>Redeem Status:</strong> {{claim?.claimRedeemStatus}}</p>
+      <p><strong>Concern:</strong> {{claim?.concern}}</p>
+      <p><strong>Remarks:</strong> {{claim?.remarks}}</p>
+      <p><strong>Service Center:</strong> {{claim?.servicePartnerName}}</p>
+      <p><strong>Service Center City:</strong> {{claim?.servicePartnerCity}}</p>
+      <p><strong>Service Center Address:</strong> {{claim?.servicePartnerAddress}}</p>
+      <p><strong>Reasons:</strong>{{claim?.reasons}}</p>
+      <p><strong>Claim Initiated Date:</strong>{{claim?.startDate | date:'MMM d, y'}}</p>
+    </div>
+
+    <!-- Customer Details -->
+    <div class="card">
+      <h3>Customer details</h3>
+      <p><strong>Name:</strong> {{claim?.customerName}}</p>
+      <p><strong>Contact:</strong> {{claim?.customerPhone}}</p>
+      <p><strong>Email:</strong> {{claim?.customerEmail}}</p>
+      <p><strong>City:</strong> {{claim?.customerCity}}</p>
+      <p><strong>State:</strong> {{claim?.customerState}}</p>
+      <p><strong>Pincode:</strong> {{claim?.pincode}}</p>
+      <p><strong>Address:</strong> {{claim?.customerAddress}}</p>
+      <p><strong>Alternate Contact No.:</strong> {{claim?.customerPhone}}</p>
+    </div>
+
+    <!-- Product Details -->
+    <div class="card">
+      <h3>Product Details</h3>
+      <p><strong>Product Serial Number : </strong> {{claim?.itemSerialNumber}}</p>
+      <p><strong>Product Name:</strong>  {{claim?.itemName}}</p>
+      <p><strong>Category:</strong> {{claim?.itemCategory}}</p>
+      <p><strong>Brand:</strong> {{claim?.itemBrand}}</p>
+      <p><strong>Product Price:</strong> ₹{{claim?.itemPrice}}</p>
+      <p><strong>Purchase Date:</strong> {{claim?.planSoldDate | date:'MMM d, y'}}</p>      
+      <p><strong>SLA No:</strong> SLA361360405375/304069</p>
+      <p><strong>Invoice Image:</strong> </p>
+    </div>
+
+    <!-- Warranty Details -->
+    <div class="card">
+      <h3>Warranty Details</h3>
+      <p><strong>Warranty Serial No:</strong> {{claim?.warranty}}</p>
+      <p><strong>Warranty Code:</strong> {{claim?.warrantyActivationCode}}</p>
+      <p><strong>Warranty Type:</strong> {{claim?.warrantyType}}</p>
+      <p><strong>Warranty Status:</strong> Active</p>
+      <p><strong>Warranty Start Date:</strong> {{claim?.warrantyStartDate | date:'MMM d, y'}}</p>
+      <p><strong>Warranty End Date:</strong> {{claim?.endDate | date:'MMM d, y'}}</p>
+      <p><strong>Warranty  Source:</strong> {{claim?.channelName}}</p>
+      <p><strong>Warranty Duration:</strong> {{claim?.warrantyDuration}}</p>
+      <p><strong>Gas Charging consumed:</strong> 0</p>
+      <p><strong>Repair consumed:</strong> 0</p>
+      <p><strong>AC Service consumed:</strong> 0</p>
+    </div>
+  </div>
+</div>
+</div>
+}
+<!-- </mat-dialog-content> -->
