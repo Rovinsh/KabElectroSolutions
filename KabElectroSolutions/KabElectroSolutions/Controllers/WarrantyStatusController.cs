@@ -1,4 +1,5 @@
 ﻿using KabElectroSolutions.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,7 @@ namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WarrantyStatusController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;

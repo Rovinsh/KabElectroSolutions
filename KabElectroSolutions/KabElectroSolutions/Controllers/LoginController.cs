@@ -4,6 +4,10 @@ using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace KabElectroSolutions.Controllers
 {
@@ -13,11 +17,13 @@ namespace KabElectroSolutions.Controllers
     {
         private readonly KabElectroSolutionsDbContext _context;
         private readonly ILogger<LoginController> _logger;
+        private readonly IConfiguration _config;
 
-        public LoginController(ILogger<LoginController> logger, KabElectroSolutionsDbContext context)
+        public LoginController(ILogger<LoginController> logger, KabElectroSolutionsDbContext context, IConfiguration config)
         {
             _logger = logger;
             _context = context;
+            _config = config;
         }
 
         [HttpPost("login")]
@@ -58,11 +64,25 @@ namespace KabElectroSolutions.Controllers
                 .Select(p => (int?)p.PrivilegeId)
                 .ToListAsync();
 
+            var claims = new List<System.Security.Claims.Claim> { new System.Security.Claims.Claim(ClaimTypes.Name, request.Username) };
+            claims.AddRange(roleNameMap.Select(role => new System.Security.Claims.Claim(ClaimTypes.Role, role.Value)));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(2),
+                signingCredentials: creds);
+
             // Response formatting
             var response = new
             {
                 status = 200,
                 message = "user details",
+                token = new JwtSecurityTokenHandler().WriteToken(token),
                 data = new
                 {
                     id = user.Id,

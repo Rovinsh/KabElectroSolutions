@@ -1,13 +1,15 @@
 ﻿using KabElectroSolutions.Data;
-using Microsoft.AspNetCore.Mvc;
 using KabElectroSolutions.DTOs;
-using Microsoft.EntityFrameworkCore;
 using KabElectroSolutions.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ClaimsController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;

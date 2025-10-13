@@ -1,6 +1,7 @@
 ﻿using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WarrantyTypesController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;

@@ -3,10 +3,11 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ClaimDetailsComponent } from './claim-details/claim-details';
 import { ClaimFormComponent } from './claim-form/claim-form';
+import { RoleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', component: DashboardComponent,  canActivate: [RoleGuard], data: { roles: ['List_all_kits'] }},
   { path: 'login', component: LoginComponent },
   { path: 'claim-details/:claimId', component: ClaimDetailsComponent },
   { path: 'claim-form', component: ClaimFormComponent },

@@ -1,5 +1,6 @@
 ﻿using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LocationsController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;

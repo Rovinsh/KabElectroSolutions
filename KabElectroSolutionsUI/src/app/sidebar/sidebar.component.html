@@ -1,9 +1,11 @@
 <div class="sidebar">
-    <div class="sidebar-icon" title="Home" (click)="goToClaims()">🏠</div>
-    <div class="sidebar-icon" title="Claims" (click)="goToClaims()">📋</div>
-    <div class="sidebar-icon" title="Create New Claim" (click)="goToCreateClaim()">➕</div>
-    <div class="sidebar-icon" title="Support">📞</div>
-    <div class="sidebar-icon" title="Help">❓</div>
-    <div class="sidebar-icon" title="Settings">⚙️</div>    
-  </div>
-  
+  <ng-container *ngFor="let item of menu">
+    <div
+      class="sidebar-icon"
+      *ngIf="hasAccess(item)"
+      [title]="item.title"
+      (click)="item.action ? item.action() : null">
+      {{ item.icon }}
+    </div>
+  </ng-container>
+</div>

@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder,private http: HttpClient,private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private auth: AuthService) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -33,17 +34,30 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value;
 
-      this.http.post('https://localhost:7181/api/Login/login', loginData)
+      this.auth.login(loginData)
         .subscribe({
-          next: (response:any) => {
-            console.log('Login successful:', response);
-            // Login success → redirect to dashboard
-          this.router.navigate(['/dashboard']);
+          next: (res: any) => {
+            this.auth.saveToken(res.token);
+            this.router.navigate(['/dashboard']);
           },
           error: (error:any) => {
             console.error('Login failed:', error);
           }
+          //error: () => alert('Invalid credentials'),
         });
+
+
+      // this.http.post('https://localhost:7181/api/Login/login', loginData)
+      //   .subscribe({
+      //     next: (response:any) => {
+      //       console.log('Login successful:', response);
+      //       // Login success → redirect to dashboard
+      //     this.router.navigate(['/dashboard']);
+      //     },
+      //     error: (error:any) => {
+      //       console.error('Login failed:', error);
+      //     }
+      //   });
     }
   }
-    }
+}
