@@ -22,7 +22,10 @@ namespace KabElectroSolutions.Data
         public DbSet<WarrantyStatus> WarrantyStatuses { get; set; }
         public DbSet<WarrantyType> WarrantyTypes { get; set; }
         public DbSet<Claim> Claims { get; set; }
-
+        public DbSet<Brands> Brands { get; set; }
+        public DbSet<Categories> Categories { get; set; }
+        public DbSet<Plans> Plans { get; set; }
+        public DbSet<Warranties> Warranties { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here

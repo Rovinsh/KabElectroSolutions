@@ -18,6 +18,9 @@ export class HeaderComponent {
   logout() {
     localStorage.clear();
     sessionStorage.clear();
-    window.location.href = '/login';
+    if (window.location.pathname.includes('/crm')) {
+    window.location.href = 'crm/login';
+    }else
+     window.location.href = 'login';
   }
 }

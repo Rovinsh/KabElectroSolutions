@@ -1,34 +1,65 @@
-<div class="login-container">
-    <h2>Login</h2>
-    <p>Hello! Log in with your email.</p>
-  
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <input
-          type="email"
-          formControlName="username"
-          placeholder="Email address"
-          [class.error]="email.invalid && email.touched"
+<div class="container-fluid vh-100">
+  <div class="row h-100 logoverflow">
+    <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center bg-light-subtle">
+      <img
+        src="assets/loginimage.png"
+        alt="AC and Washing Machine Service"
+        class="img-fluid w-75 loginimagehgt"
+      />
+    </div>
+
+    <div class="col-md-6 d-flex align-items-center justify-content-center bg-white">
+      <div class="login-box text-center p-4 p-md-5" style="max-width: 400px; width: 100%;">
+        <img
+          src="assets/logo.png"
+          alt="KAB Electro Solutions Logo"
+          class="mb-4"
+          style="width: 140px;"
         />
-        <div *ngIf="email.invalid && email.touched" class="error-text">
-          Email is required!
-        </div>
+
+        <h4 class="fw-bold mb-2">Sign In</h4>
+        <p class="text-muted mb-4">Please enter your details to sign in</p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3 text-start">
+            <label class="form-label fw-semibold">Email Address</label>
+            <input
+              type="email"
+              formControlName="username"
+              class="form-control form-control-lg"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div class="mb-3 text-start">
+            <label class="form-label fw-semibold">Password</label>
+            <input
+              type="password"
+              formControlName="password"
+              class="form-control form-control-lg"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe" />
+              <label for="rememberMe" class="form-check-label">Remember Me</label>
+            </div>
+            <a href="#" class="text-danger text-decoration-none fw-semibold">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-login w-100 btn-lg mb-3">
+            Sign In
+          </button>
+        </form>
+
+        <footer class="mt-4">
+          <p class="text-secondary small mb-0">
+            Copyright © 2025 - KAB Electro Solutions
+          </p>
+        </footer>
       </div>
-  
-      <div class="form-group">
-        <input
-          type="password"
-          formControlName="password"
-          placeholder="Password"
-          [class.error]="password.invalid && password.touched"
-        />
-        <div *ngIf="password.invalid && password.touched" class="error-text">
-          Password is required!
-        </div>
-      </div>
-  
-      <button type="submit" [disabled]="loginForm.invalid">LOG IN</button>
-  
-      <a class="forgot-link" href="#">Forgot password?</a>
-    </form>
-  </div> 
+    </div>
+  </div>
+</div>

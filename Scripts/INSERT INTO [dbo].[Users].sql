@@ -44,5 +44,5 @@ INSERT INTO [dbo].[Users]
            ,1
            ,'8433112032')
 GO
-
+update users set PasswordHash='$2a$11$gXYhUkelbL6EsIVNNDjlKOG9n41NtO6ckYMR5W6.b7YTzkRDZlz9q' where id=1
 

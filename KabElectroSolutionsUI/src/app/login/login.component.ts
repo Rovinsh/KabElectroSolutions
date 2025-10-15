@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
+import { ToastService } from '../services/toastService.service';
 
 @Component({
   selector: 'app-login',
@@ -38,10 +39,11 @@ export class LoginComponent {
         .subscribe({
           next: (res: any) => {
             this.auth.saveToken(res.token);
+            //this.toast.success('Loged in Successfully!');
             this.router.navigate(['/dashboard']);
           },
           error: (error:any) => {
-            console.error('Login failed:', error);
+            //this.toast.error(error.error?.message || 'Something went wrong!');
           }
           //error: () => alert('Invalid credentials'),
         });

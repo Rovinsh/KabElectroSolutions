@@ -1,0 +1,47 @@
+<div class="flex justify-center items-start p-6 bg-gray-100 min-h-screen">
+  <mat-card class="w-full max-w-2xl shadow-xl rounded-2xl px-8 py-6">
+    <form [formGroup]="brandForm" (ngSubmit)="onSubmit()">
+
+      <mat-card-header class="bg-blue-600 text-white p-4 rounded-t-2xl mb-6">
+        <mat-card-title class="text-xl font-semibold">Create New Brand</mat-card-title>
+      </mat-card-header>
+
+        <mat-form-field appearance="outline" class="col-span-full">
+          <mat-label>Category</mat-label>
+          <input type="text" matInput formControlName="CategoryId" (focus)="showAllCategoriesTypes()" [matAutocomplete]="categoryAuto">
+          <mat-autocomplete #categoryAuto="matAutocomplete" autoActiveFirstOption>
+            <mat-option *ngFor="let category of filteredcategories$ | async" [value]="category.id">
+              {{ category.catName }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="brandForm.get('CategoryId')?.hasError('required')">
+          Category is required
+        </mat-error>
+        </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full mb-4">
+        <mat-label>Brand Name</mat-label>
+        <input matInput formControlName="BrandName" required />
+        <mat-error *ngIf="brandForm.get('BrandName')?.hasError('required')">
+          Brand Name is required
+        </mat-error>
+      </mat-form-field>
+
+       <mat-form-field appearance="outline" class="w-full md:col-span-2">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
+
+      <mat-checkbox formControlName="IsDisable" class="mt-4">
+        Disable Brand
+      </mat-checkbox>
+
+      <div class="flex justify-end mt-8">
+        <button mat-raised-button color="primary" type="submit" [disabled]="brandForm.invalid">
+          Submit Brand
+        </button>
+      </div>
+
+    </form>
+  </mat-card>
+</div>

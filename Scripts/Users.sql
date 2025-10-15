@@ -21,3 +21,8 @@ CREATE TABLE Users (
     IsActiveBusiness BIT,
 	PasswordHash NVARCHAR(256)
 );
+
+ALTER TABLE users
+ADD BusinessAddressId INT NULL;
+ALTER TABLE users
+ADD AddressId INT NULL;

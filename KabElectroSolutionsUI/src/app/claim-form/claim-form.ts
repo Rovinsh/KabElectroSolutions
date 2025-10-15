@@ -13,7 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Observable, startWith, map, of } from 'rxjs';
-import { ApiService, CitiesDto, LocationResponseDto, PincodeDto, StateDto,CategoryDto, BrandDto, WarrantyTypeDto } from '../services/api.service';
+import { ApiService, CitiesDto, LocationResponseDto, PincodeDto, StateDto,CategoryDto, BrandDto, WarrantyTypeDto, PlanDto } from '../services/api.service';
 
 @Component({
   selector: 'app-claim-form',
@@ -53,14 +53,15 @@ export class ClaimFormComponent implements OnInit {
   products: string[]=[];
   categories: CategoryDto[]=[];
   brands: BrandDto[]=[];
+  plans: PlanDto[]=[];
   warrantyTypes:WarrantyTypeDto[]=[];
 
   constructor(private fb: FormBuilder, private http: HttpClient, private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.products= ["DEVICE SECURE - GOLD","DEVICE SECURE - GOLD 1", "DEVICE SECURE - GOLD 2"];
-    this.categories= [{id:1, name:"Air Conditioner"},{id:2, name:"Washing Machine"},{id:3, name:"Refrigerator"}]
-    this.brands= [{id:1, name:"LG",categoryId:1},{id:2, name:"Samsung",categoryId:1},{id:3, name:"Whirlpool",categoryId:1},{id:4, name:"Samsung",categoryId:2},{id:5, name:"LG",categoryId:2},{id:6, name:"LG",categoryId:3}];
+    // this.products= ["DEVICE SECURE - GOLD","DEVICE SECURE - GOLD 1", "DEVICE SECURE - GOLD 2"];
+    // this.categories= [{id:1, name:"Air Conditioner"},{id:2, name:"Washing Machine"},{id:3, name:"Refrigerator"}]
+    // this.brands= [{id:1, name:"LG",categoryId:1},{id:2, name:"Samsung",categoryId:1},{id:3, name:"Whirlpool",categoryId:1},{id:4, name:"Samsung",categoryId:2},{id:5, name:"LG",categoryId:2},{id:6, name:"LG",categoryId:3}];
 
     this.apiService.getLocations().subscribe(res => {
       this.locations = res.data;
@@ -83,6 +84,17 @@ export class ClaimFormComponent implements OnInit {
       this.warrantyTypes = res.data;
     });
 
+    this.apiService.getCategories().subscribe(res => {
+      this.categories = res.data;
+    });
+
+    this.apiService.getBrands().subscribe(res => {
+      this.brands = res.data;
+    });
+
+     this.apiService.getPlans().subscribe(res => {
+      this.plans = res.data;
+    });
 
     this.claimForm = this.fb.group({
       technicianName: [''],

@@ -1,52 +1,65 @@
-.login-container {
-    max-width: 400px;
-    margin: 5rem auto;
-    padding: 2rem;
-    text-align: center;
-    font-family: Arial, sans-serif;
+/* Overall font and spacing */
+body {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Login button (orange color like SmartHR) */
+.btn-login {
+  background-color: #f26b3a;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.w-75{
+    width: 100% !important;
+}
+.loginimagehgt{    height: 690px !important;}
+.btn-login:hover {
+  background-color: #e55b26;
+}
+.logoverflow{overflow-y: hidden !important;}
+
+/* Social Buttons */
+.btn-social {
+  width: 55px;
+  height: 45px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.btn-social:hover {
+  background-color: #f7f7f7;
+}
+
+.btn-facebook i {
+  color: #1877f2;
+  font-size: 18px;
+}
+
+.btn-google i {
+  color: #ea4335;
+  font-size: 18px;
+}
+
+.btn-apple i {
+  color: #000;
+  font-size: 18px;
+}
+
+/* Divider lines */
+hr {
+  border-color: #ddd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .login-box {
+    padding: 2rem !important;
   }
-  
-  input {
-    width: 100%;
-    padding: 0.75rem;
-    margin-top: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  
-  input.error {
-    border-color: red;
-  }
-  
-  .error-text {
-    color: red;
-    font-size: 0.875rem;
-    text-align: left;
-  }
-  
-  button {
-    margin-top: 2rem;
-    width: 100%;
-    padding: 1rem;
-    background-color: #b5f1f5;
-    border: 2px solid #a0e2c8;
-    color: #fff;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  .forgot-link {
-    display: block;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #999;
-  }
-  
+}

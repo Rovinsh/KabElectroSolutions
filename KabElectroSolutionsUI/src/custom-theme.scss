@@ -1,35 +1,51 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
-@use '@angular/material' as mat;
-
-html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+/* 1️⃣ Global font and body setup */
+body {
+  font-family: 'Roboto, Arial, sans-serif';
+  color-scheme: light;
+  background-color: var(--mdc-theme-surface);
+  color: var(--mdc-theme-on-surface);
+  margin: 0;
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
+/* 2️⃣ Angular Material 3 theme colors using CSS variables */
+:root {
+  /* Primary / Azure */
+  --mdc-theme-primary: #007fff;
+  --mdc-theme-on-primary: #ffffff;
+  /* Secondary / Blue */
+  --mdc-theme-secondary: #2196f3;
+  --mdc-theme-on-secondary: #ffffff;
+  /* Error */
+  --mdc-theme-error: #f44336;
+  --mdc-theme-on-error: #ffffff;
+  /* Surface / Background */
+  --mdc-theme-surface: #ffffff;
+  --mdc-theme-on-surface: #000000;
+  /* Optional tertiary color (used by some components) */
+  --mdc-theme-tertiary: #2196f3;
+}
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+/* 3️⃣ SnackBar custom styles */
+.toast-success {
+  background-color: var(--mdc-theme-primary); /* Azure */
+  color: var(--mdc-theme-on-primary);
+  font-weight: 500;
+}
 
-  // Reset the user agent margin.
-  margin: 0;
+.toast-error {
+  background-color: var(--mdc-theme-error);
+  color: var(--mdc-theme-on-error);
+  font-weight: 500;
+}
+
+.toast-info {
+  background-color: var(--mdc-theme-secondary); /* Blue */
+  color: var(--mdc-theme-on-secondary);
+  font-weight: 500;
+}
+
+.toast-warning {
+  background-color: #ff9800; /* Orange for warning */
+  color: #ffffff;
+  font-weight: 500;
 }
