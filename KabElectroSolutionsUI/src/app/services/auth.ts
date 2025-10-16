@@ -7,6 +7,8 @@ import {jwtDecode} from 'jwt-decode';
 })
 export class AuthService {
   private apiUrl = 'https://localhost:7181/api';
+  username:string="";
+  password:string="";
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +19,7 @@ export class AuthService {
 
   saveToken(token: string) {
     localStorage.setItem('token', token);
+
   }
 
   getToken() {
@@ -34,6 +37,9 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
+    this.username="";
+    this.password="";
+    //localStorage.removeItem('redirectUrl');
   }
 
   isLoggedIn(): boolean {
