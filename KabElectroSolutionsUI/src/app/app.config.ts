@@ -1,8 +1,9 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, importProvidersFrom  } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient,withInterceptors  } from '@angular/common/http';
 import {authInterceptor} from './interceptors/auth-interceptor'
 import { routes } from './app.routes';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 export const appConfig: ApplicationConfig = {
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes),
+    importProvidersFrom(MatSnackBarModule)
   ]
 };
