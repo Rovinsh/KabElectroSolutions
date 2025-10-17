@@ -6,7 +6,11 @@ import {jwtDecode} from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7181/api';
+   //For local
+   private apiUrl = 'https://localhost:7181/api';
+  //for serve 
+  //private apiUrl = 'https://kabelectro.in/API/api';
+
   username:string="";
   password:string="";
 

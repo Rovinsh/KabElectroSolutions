@@ -34,7 +34,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("http://localhost:4200") // Your Angular app's URL
+
+        policy.WithOrigins("http://localhost:4200", "https://kabelectro.in/crm", "https://kabelectro.in/API") // Your Angular app's URL
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
