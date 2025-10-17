@@ -41,7 +41,6 @@ export class LoginComponent {
             this.auth.saveToken(res.token);
             this.auth.username = loginData.username;
             this.auth.password = loginData.password;
-            //this.toast.success('Loged in Successfully!');
             const redirectUrl = localStorage.getItem('redirectUrl');
         if (redirectUrl) {
           localStorage.removeItem('redirectUrl');
