@@ -13,6 +13,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ApiService, CategoryDto } from '../services/api.service';
+import {  ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { ToastService } from '../services/toastService.service';
+import { MatDialogRef } from '@angular/material/dialog';
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-brand-form',
@@ -36,7 +40,8 @@ export class BrandFormComponent {
 brandForm!: FormGroup;
 categories:CategoryDto[]=[];
 filteredcategories$!: Observable<CategoryDto[]>;
-constructor(private fb: FormBuilder, private http: HttpClient,private apiService: ApiService) { }
+
+constructor(private fb: FormBuilder, private http: HttpClient,private apiService: ApiService, private toast:ToastService, private dialogRef: MatDialogRef<BrandFormComponent>) { }
 
 ngOnInit(): void {
 
@@ -45,10 +50,10 @@ ngOnInit(): void {
     });
 
   this.brandForm = this.fb.group({
-  CategoryId: [null, Validators.required],    
-  BrandName: ['', Validators.required],       
+  categoryId: [null, Validators.required],    
+  brandName: ['', Validators.required],       
   description: [null],                    
-  IsDisable: [true]   
+  isDisable: [true]   
     });
   }
 
@@ -56,19 +61,22 @@ ngOnInit(): void {
   this.filteredcategories$ = of(this.categories );
   }
 
-  // private _filterCategories(value: string): CategoryDto[] {
-  //   const filterValue = value.toLowerCase();
-  //   return this.categories.filter(category =>
-  //     category.CatName.toLowerCase().includes(filterValue)
-  //   );
-  // }
-
-onSubmit(): void {
+ onSubmit(): void {
   if (this.brandForm.valid) {
     this.apiService.postBarands(this.brandForm.value).subscribe({
-      next: (res) => console.log('brand created:', res),
-      error: (err) => console.error('Error creating brand:', err)
+      next: (res) => {
+        console.log('Brand created:', res);
+        this.toast.success('Brand Created Successfully!');
+         this.dialogRef.close('success');
+      },
+      error: (err) => {
+        console.error('Error creating Brand:', err);
+        this.toast.error(err?.message || 'Error creating Brand!');
+      }
     });
   }
 }
+onClose() {
+    this.dialogRef.close(); 
+  }
 }

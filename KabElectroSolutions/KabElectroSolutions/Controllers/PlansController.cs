@@ -31,6 +31,7 @@ namespace KabElectroSolutions.Controllers
          {
              Id = p.Id,
              CatId = p.CatId,
+             CategoryName = _context.Categories.Where(c => c.Id == p.CatId).Select(c => c.CatName).FirstOrDefault(),
              PlanName = p.PlanName,
              Description= p.Description,
              Remark = p.Remark,

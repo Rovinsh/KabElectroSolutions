@@ -1,12 +1,26 @@
-<div class="flex justify-center items-start p-6 bg-gray-100 min-h-screen">
-  <mat-card class="w-full max-w-2xl shadow-xl rounded-2xl px-8 py-6">
-    <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
 
-      <mat-card-header class="bg-blue-600 text-white p-4 rounded-t-2xl mb-6">
-        <mat-card-title class="text-xl font-semibold">Create New Plan</mat-card-title>
-      </mat-card-header>
+<!-- Full width gray background with padding -->
+<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
+  <!-- Card container -->
+  <mat-card class="w-full max-w-5xl shadow-xl rounded-2xl">
+    <!-- Divider -->
+    <hr class="my-0" />
 
-        <mat-form-field appearance="outline" class="col-span-full">
+    <!-- Form Section -->
+    <mat-card-header class="bg-blue-50 text-blue-800 p-3">
+      <mat-card-title class="text-lg font-semibold">Create / Edit Plan</mat-card-title>
+        <button mat-icon-button (click)="onClose()" class="close-btn">
+      X
+    </button>
+    </mat-card-header>
+ <mat-card-content class="p-6">
+      <form
+        [formGroup]="planForm"
+        (ngSubmit)="onSubmit()"
+        class="row g-4">
+
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="col-span-full">
           <mat-label>Category</mat-label>
           <input type="text" matInput formControlName="catId" (focus)="showAllCategoriesTypes()" [matAutocomplete]="categoryAuto">
           <mat-autocomplete #categoryAuto="matAutocomplete" autoActiveFirstOption>
@@ -14,39 +28,51 @@
               {{ category.catName }}
             </mat-option>
           </mat-autocomplete>
-          <mat-error *ngIf="planForm.get('CategoryId')?.hasError('required')">
+          <mat-error *ngIf="planForm.get('catId')?.hasError('required')">
           Category is required
         </mat-error>
         </mat-form-field>
-
+        </div>
+      <div class="col-6">
       <mat-form-field appearance="outline" class="w-full mb-4">
         <mat-label>Plan Name</mat-label>
         <input matInput formControlName="planName" required />
-        <mat-error *ngIf="planForm.get('PlanName')?.hasError('required')">
+        <mat-error *ngIf="planForm.get('planName')?.hasError('required')">
           Plan Name is required
         </mat-error>
       </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline" class="w-full md:col-span-2">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3"></textarea>
-        </mat-form-field>
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+          </mat-form-field>
+        </div>
 
-         <mat-form-field appearance="outline" class="w-full md:col-span-2">
-          <mat-label>Remark</mat-label>
-          <textarea matInput formControlName="remark" rows="3"></textarea>
-        </mat-form-field>
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Remark</mat-label>
+            <textarea matInput formControlName="remark" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-12 d-flex align-items-center">
+          <mat-checkbox formControlName="isDisable">Disable Plan</mat-checkbox>
+        </div>
 
-      <mat-checkbox formControlName="isDisable" class="mt-4">
-        Disable Plan
-      </mat-checkbox>
+        <div class="col-12 text-end">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="px-5 py-2 text-lg"
+            [disabled]="planForm.invalid">
+            Submit Plan
+          </button>
+        </div>
 
-      <div class="flex justify-end mt-8">
-        <button mat-raised-button color="primary" type="submit" [disabled]="planForm.invalid">
-          Submit Plan
-        </button>
-      </div>
+      </form>
+    </mat-card-content>
 
-    </form>
   </mat-card>
 </div>

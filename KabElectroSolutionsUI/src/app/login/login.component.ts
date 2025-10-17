@@ -16,7 +16,7 @@ import { ToastService } from '../services/toastService.service';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private auth: AuthService) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private auth: AuthService, private toast :ToastService) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -39,11 +39,11 @@ export class LoginComponent {
         .subscribe({
           next: (res: any) => {
             this.auth.saveToken(res.token);
-            //this.toast.success('Loged in Successfully!');
+            this.toast.success('Loged in Successfully!');
             this.router.navigate(['/dashboard']);
           },
           error: (error:any) => {
-            //this.toast.error(error.error?.message || 'Something went wrong!');
+            this.toast.error(error.error?.message || 'Something went wrong!');
           }
           //error: () => alert('Invalid credentials'),
         });

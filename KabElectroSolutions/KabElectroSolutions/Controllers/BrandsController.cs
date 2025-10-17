@@ -31,6 +31,7 @@ namespace KabElectroSolutions.Controllers
          {
              Id = b.Id,
              CategoryId = b.CategoryId,
+             CategoryName = _context.Categories.Where(c => c.Id == b.CategoryId).Select(c => c.CatName).FirstOrDefault(),
              BrandName = b.BrandName,
              Description = b.Description,
              IsDisable = b.IsDisable,

@@ -131,7 +131,8 @@ export interface CategoryDto {
 }
 
 export interface BrandDto {
-  name: string;
+  brandName: string;
+  categoryName: string;
   id: number;
   categoryId:number;
 }
@@ -152,9 +153,9 @@ export interface CategoryResponseDto {
 
 export interface PlanDto {
   planName: string;
+  categoryName:string,
   id: number;
   catId: number;
-  categoryId: number;
   description: string;
   remark: string;
   isDisable: boolean;

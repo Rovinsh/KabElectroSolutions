@@ -13,6 +13,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ApiService, CategoryDto } from '../services/api.service';
+import {  ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { ToastService } from '../services/toastService.service';
+import { MatDialogRef } from '@angular/material/dialog';
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
  selector: 'app-plan-form',
@@ -36,7 +40,7 @@ export class PlanFormComponent {
 planForm!: FormGroup;
 categories:CategoryDto[]=[];
 filteredcategories$!: Observable<CategoryDto[]>;
-constructor(private fb: FormBuilder, private http: HttpClient,private apiService: ApiService) { }
+constructor(private fb: FormBuilder, private http: HttpClient,private apiService: ApiService, private toast:ToastService, private dialogRef: MatDialogRef<PlanFormComponent>) { }
 
 ngOnInit(): void {
 
@@ -57,18 +61,22 @@ ngOnInit(): void {
   this.filteredcategories$ = of(this.categories );
   }
 
-  // private _filterCategories(value: string): CategoryDto[] {
-  //   const filterValue = value.toLowerCase();
-  //   return this.categories.filter(category =>
-  //     category.CatName.toLowerCase().includes(filterValue)
-  //   );
-  // }
 onSubmit(): void {
   if (this.planForm.valid) {
     this.apiService.postPlans(this.planForm.value).subscribe({
-      next: (res) => console.log('plan created:', res),
-      error: (err) => console.error('Error creating plan:', err)
+      next: (res) => {
+        console.log('plan created:', res);
+        this.toast.success('plan Created Successfully!');
+         this.dialogRef.close('success');
+      },
+      error: (err) => {
+        console.error('Error creating plan:', err);
+        this.toast.error(err?.message || 'Error creating plan!');
+      }
     });
   }
 }
+onClose() {
+    this.dialogRef.close(); 
+  }
 }

@@ -169,8 +169,8 @@
           <mat-label>Brand</mat-label>
           <mat-select formControlName="itemBrand">
             @for (brand of brands; track brand) {
-            <mat-option [value]="brand.name">
-              {{ brand.name }}
+            <mat-option [value]="brand.brandName">
+              {{ brand.brandName }}
             </mat-option> }
           </mat-select>
         </mat-form-field>

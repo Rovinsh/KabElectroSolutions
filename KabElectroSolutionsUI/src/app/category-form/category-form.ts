@@ -12,8 +12,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ApiService } from '../services/api.service';
-import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import {  ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { ToastService } from '../services/toastService.service';
+import { MatDialogRef } from '@angular/material/dialog';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
@@ -29,15 +30,14 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     CommonModule,
     MatNativeDateModule,
     MatSelectModule,
-    MatAutocompleteModule,
-    AgGridAngular
+    MatAutocompleteModule
   ],
   templateUrl: './category-form.html',
   styleUrl: './category-form.css'
 })
 export class CategoryFormComponent {
 categoryForm!: FormGroup;
-constructor(private fb: FormBuilder, private http: HttpClient,private apiService: ApiService) { }
+constructor(private fb: FormBuilder, private http: HttpClient,private apiService: ApiService, private toast:ToastService, private dialogRef: MatDialogRef<CategoryFormComponent>) { }
 
 ngOnInit(): void {
   this.categoryForm = this.fb.group({
@@ -50,20 +50,19 @@ ngOnInit(): void {
  onSubmit(): void {
   if (this.categoryForm.valid) {
     this.apiService.postCategory(this.categoryForm.value).subscribe({
-      next: (res) => console.log('category created:', res),
-      error: (err) => console.error('Error creating category:', err)
+      next: (res) => {
+        console.log('Category created:', res);
+        this.toast.success('Category Created Successfully!');
+         this.dialogRef.close('success');
+      },
+      error: (err) => {
+        console.error('Error creating category:', err);
+        this.toast.error(err?.message || 'Error creating category!');
+      }
     });
   }
 }
-  public columnDefs: ColDef[] = [
-    { field: 'catName', headerName: 'Name' },
-    { field: 'description', headerName: 'Description' },
-    { field: 'isDisable', headerName: 'Active' }
-  ];
-
-public rowData = [
-    { catName: 'Toyota', description: 'Celica', isDisable: 'yes' },
-    { catName: 'Ford', description: 'Mondeo', isDisable: 'no' },
-    { catName: 'Porsche', description: 'Boxster', isDisable: 'yes' }
-  ];
+onClose() {
+    this.dialogRef.close(); 
+  }
 }
