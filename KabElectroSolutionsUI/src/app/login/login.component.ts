@@ -39,8 +39,16 @@ export class LoginComponent {
         .subscribe({
           next: (res: any) => {
             this.auth.saveToken(res.token);
-            this.toast.success('Loged in Successfully!');
-            this.router.navigate(['/dashboard']);
+            this.auth.username = loginData.username;
+            this.auth.password = loginData.password;
+            //this.toast.success('Loged in Successfully!');
+            const redirectUrl = localStorage.getItem('redirectUrl');
+        if (redirectUrl) {
+          localStorage.removeItem('redirectUrl');
+          this.router.navigateByUrl(redirectUrl);
+        } else {
+          this.router.navigate(['/dashboard']); // fallback route
+        }
           },
           error: (error:any) => {
             this.toast.error(error.error?.message || 'Something went wrong!');
