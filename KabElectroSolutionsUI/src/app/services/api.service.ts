@@ -68,15 +68,15 @@ export class ApiService {
   }
 
  updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
-  return this.http.put(`${this.baseUrl}Categories/${id}`, categoryData);
+  return this.http.post(`${this.baseUrl}Categories/${id}`, categoryData);
   }
 
  updateBrand(id: number, brandData: BrandDto): Observable<any> {
-  return this.http.put(`${this.baseUrl}Brands/${id}`, brandData);
+  return this.http.post(`${this.baseUrl}Brands/${id}`, brandData);
   }
 
   updatePlan(id: number, planData: PlanDto): Observable<any> {
-    return this.http.put(`${this.baseUrl}Plans/${id}`, planData);
+    return this.http.post(`${this.baseUrl}Plans/${id}`, planData);
   }
 }
 
@@ -197,42 +197,34 @@ export interface BrandResponseDto {
 }
 
 export interface WarrantyDto {
-  isZappEnable: boolean;
-  status: number;
-  serialNumber: number;
-  regionId: number;
-  displayName?: string;
-  policyId: number;
-  rmId: number;
-  activationCode?: string;
-  price: number;
-  extraInfo?: string;
-  duration: number;
-  productExtraImage?: string;
-  discrepancyReason?: string;
-  storeAssignedAt?: string;
-  active: boolean;
-  verified: boolean;
-  distributorAssignedAt?: string;
-  warrantyInvoiceNo?: string;
-  startDate?: string;
-  endDate?: string;
+  serialnumber: number;
+  warrantyType: string;
+  warrantyDisplayName: string;
+  warrantyCode: string;
+  warrantyPrice: number;
+  warrantyDuration: number;
+  warrantyStartDate: string;
+  warrantyEndDate: string;
+  warrantyInvoiceNo: string;
+  warrantyPurchaseDate: string;
+  warrantySeller?: string;
+  warrantyCouponCode?: string;
+  warrantyScratchCode?: string;
+  warrantyExtraInfo?: string;
+  warrantyDescription?: string;
+  warrantyCreatedBy?: string;
   productId: number;
-  discrepants?: string;
-  purchaseDate?: string;
-  endorsementNo?: string;
-  seller?: string;
-  couponCode?: string;
-  cancellationAt?: string;
-  cancellationDoneBy?: string;
-  scratchCode?: string;
-  kitCoverage?: string;
-  oemId: number;
-  brandWarrantyDuration: number;
-  cancellationReason?: string;
-  type: number;
-  insured?: string;
-  cancellationRole?: string;
+  productName: string;
+  customerName: string;
+  customerMobileNo: string;
+  customerEmail: string;
+  customerAddress: string;
+  customerCityId: number;
+  customerCityName: string;
+  customerStateId: number;
+  customerStateName: string;
+  customerPinCode: number;
+  isDisable:boolean;
 }
 
 export interface WarrantyResponseDto {

@@ -1,116 +1,132 @@
 CREATE TABLE Warranties (
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    IsZappEnable BIT DEFAULT 0,
-    Status INT,
-    SerialNumber BIGINT,
-    RegionId INT,
-    DisplayName NVARCHAR(255),
-    PolicyId INT,
-    RmId INT,
-    ActivationCode NVARCHAR(50),
-    Price DECIMAL(10, 2),
-    ExtraInfo NVARCHAR(MAX),
-    Duration INT,
-    ProductExtraImage NVARCHAR(MAX),
-    DiscrepancyReason NVARCHAR(MAX),
-    StoreAssignedAt DATETIME,
-    Active BIT DEFAULT 1,
-    Verified BIT DEFAULT 1,
-    DistributorAssignedAt DATETIME,
+    SerialNumber BIGINT NOT NULL,
+    WarrantyType NVARCHAR(255),
+    WarrantyTypeId INT,
+    WarrantyDisplayName NVARCHAR(255),
+    WarrantyCode NVARCHAR(100),
+    WarrantyPrice DECIMAL(10, 2) NOT NULL,
+    WarrantyDuration INT NOT NULL,
+    WarrantyStartDate DATE,
+    WarrantyEndDate DATE,
     WarrantyInvoiceNo NVARCHAR(100),
-    StartDate DATE,
-    EndDate DATE,
+    WarrantyPurchaseDate DATE,
+    WarrantySeller NVARCHAR(255),
+    WarrantyCouponCode NVARCHAR(100),
+    WarrantyScratchCode NVARCHAR(100),
+    WarrantyExtraInfo NVARCHAR(MAX),
+    WarrantyDescription NVARCHAR(MAX),
+    WarrantyCreatedBy NVARCHAR(255),
     ProductId INT,
-    Discrepants NVARCHAR(MAX), 
-    PurchaseDate DATE,
-    EndorsementNo NVARCHAR(100),
-    Seller NVARCHAR(255),
-    CouponCode NVARCHAR(100),
-    CancellationAt DATETIME,
-    CancellationDoneBy NVARCHAR(255),
-    ScratchCode NVARCHAR(100),
-    KitCoverage NVARCHAR(255),
-    OemId INT,
-    BrandWarrantyDuration INT,
-    CancellationReason NVARCHAR(MAX),
-    Type INT NOT NULL,
-    Insured NVARCHAR(MAX), 
-    CancellationRole NVARCHAR(100),
-    CONSTRAINT FK_Warranties_WarrantyTypes FOREIGN KEY (Type) REFERENCES WarrantyTypes(Id)
+    ProductName NVARCHAR(255),
+    CustomerName NVARCHAR(255),
+    CustomerMobileNo NVARCHAR(20),
+    CustomerEmail NVARCHAR(100),
+    CustomerAddress NVARCHAR(MAX),
+    CustomerCityId INT,
+    CustomerCityName NVARCHAR(100),
+    CustomerStateId INT,
+    CustomerStateName NVARCHAR(100),
+    CustomerPinCode NVARCHAR(10),
+    IsDisable BIT DEFAULT 1,
+
+    -- Foreign Key Constraints
+    CONSTRAINT FK_Warranties_WarrantyTypes FOREIGN KEY (WarrantyTypeId) REFERENCES WarrantyTypes(Id),
+    CONSTRAINT FK_Warranties_Products FOREIGN KEY (ProductId) REFERENCES Plans(Id),
+    CONSTRAINT FK_Warranties_Cities FOREIGN KEY (CustomerCityId) REFERENCES Cities(Id)
 );
+
  INSERT INTO Warranties (
-    IsZappEnable,
-    Status,
     SerialNumber,
-    RegionId,
-    DisplayName,
-    PolicyId,
-    RmId,
-    ActivationCode,
-    Price,
-    ExtraInfo,
-    Duration,
-    ProductExtraImage,
-    DiscrepancyReason,
-    StoreAssignedAt,
-    Active,
-    Verified,
-    DistributorAssignedAt,
+    WarrantyType,
+    WarrantyTypeId,
+    WarrantyDisplayName,
+    WarrantyCode,
+    WarrantyPrice,
+    WarrantyDuration,
+    WarrantyStartDate,
+    WarrantyEndDate,
     WarrantyInvoiceNo,
-    StartDate,
-    EndDate,
+    WarrantyPurchaseDate,
+    WarrantySeller,
+    WarrantyCouponCode,
+    WarrantyScratchCode,
+    WarrantyExtraInfo,
+    WarrantyDescription,
+    WarrantyCreatedBy,
     ProductId,
-    Discrepants,
-    PurchaseDate,
-    EndorsementNo,
-    Seller,
-    CouponCode,
-    CancellationAt,
-    CancellationDoneBy,
-    ScratchCode,
-    KitCoverage,
-    OemId,
-    BrandWarrantyDuration,
-    CancellationReason,
-    Type,
-    Insured,
-    CancellationRole
+    ProductName,
+    CustomerName,
+    CustomerMobileNo,
+    CustomerEmail,
+    CustomerAddress,
+    CustomerCityId,
+    CustomerCityName,
+    CustomerStateId,
+    CustomerStateName,
+    CustomerPinCode,
+    IsDisable
 )
-VALUES (
-    0, -- IsZappEnable
-    1, -- Status
-    14614511, -- SerialNumber
-    NULL, -- RegionId
-    N'DEVICE SECURE GOLD', -- DisplayName
-    NULL, -- PolicyId
-    NULL, -- RmId
-    N'CHS2187026', -- ActivationCode
-    2499.00, -- Price
-    NULL, -- ExtraInfo
-    12, -- Duration
-    N'{}', -- ProductExtraImage as JSON string
-    NULL, -- DiscrepancyReason
-    NULL, -- StoreAssignedAt
-    1, -- Active
-    1, -- Verified
-    NULL, -- DistributorAssignedAt
-    N'SLA219369900871/222864', -- WarrantyInvoiceNo
-    '2025-04-18', -- StartDate
-    '2026-04-17', -- EndDate
-    NULL, -- ProductId
-    N'[]', -- Discrepants as JSON array string
-    '2025-04-18', -- PurchaseDate
-    NULL, -- EndorsementNo
-    NULL, -- Seller
-    NULL, -- CouponCode
-    NULL, -- CancellationAt
-    NULL, -- CancellationDoneBy
-    NULL, -- ScratchCode
-    NULL, -- KitCoverage
-    NULL, -- OemId
-    NULL, -- BrandWarrantyDuration
-    NULL, -- CancellationReason
-    21, -- Type (foreign key from WarrantyTypes)
-    N'{}', -- Insured as JSON string
-    NULL  -- CancellationRole
+VALUES 
+(
+    1234567890,                     -- SerialNumber
+    N'Extended Warranty',           -- WarrantyType
+    1,                              -- WarrantyTypeId (FK)
+    N'Device Secure Gold',          -- WarrantyDisplayName
+    N'WRTY10001',                   -- WarrantyCode
+    1999.99,                        -- WarrantyPrice
+    12,                             -- WarrantyDuration (months)
+    '2025-01-01',                   -- WarrantyStartDate
+    '2026-01-01',                   -- WarrantyEndDate
+    N'INV10001',                    -- WarrantyInvoiceNo
+    '2024-12-15',                   -- WarrantyPurchaseDate
+    N'ABC Electronics',             -- WarrantySeller
+    N'DIWALI100',                   -- WarrantyCouponCode
+    N'SC10001',                     -- WarrantyScratchCode
+    N'{}',                          -- WarrantyExtraInfo (JSON)
+    N'1 year coverage against damage', -- WarrantyDescription
+    N'AdminUser',                   -- WarrantyCreatedBy
+   1,                            -- ProductId (FK)
+    N'Samsung Galaxy S21',         -- ProductName
+    N'John Doe',                    -- CustomerName
+    N'9123456789',                  -- CustomerMobileNo
+    N'john.doe@example.com',        -- CustomerEmail
+    N'123 Tech Street, Block A',    -- CustomerAddress
+    201,                            -- CustomerCityId (FK)
+    N'Tech City',                   -- CustomerCityName
+    301,                            -- CustomerStateId (FK)
+    N'Tech State',                  -- CustomerStateName
+    N'560001',                      -- CustomerPinCode
+    1                               -- IsDisable
+),
+(
+    9876543210,
+    N'Standard Warranty',
+    2,
+    N'Device Secure Silver',
+    N'WRTY10002',
+    999.50,
+    6,
+    '2025-05-01',
+    '2025-11-01',
+    N'INV10002',
+    '2025-04-20',
+    N'Mobile World',
+    NULL,
+    NULL,
+    N'{ "notes": "Includes screen damage" }',
+    N'6 months basic coverage',
+    N'SupportUser',
+    2,
+    N'Xiaomi Redmi Note 12',
+    N'Jane Smith',
+    N'9123456789',
+    N'john.doe@example.com',
+    N'456 Main Road, Apt 5B',
+    202,
+    N'Mobile City',
+    302,
+    N'Mobile State',
+    N'600002',
+    1
 );

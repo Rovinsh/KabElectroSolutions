@@ -1,150 +1,232 @@
-<div class="flex justify-center items-start p-6 bg-gray-100 min-h-screen">
-  <mat-card class="w-full max-w-6xl shadow-xl rounded-2xl px-8" style="padding:20px 20px 20px 20px">
-    <form [formGroup]="warrantyForm" (ngSubmit)="onSubmit()" class="p-6">
-      <!-- Header -->
-      <mat-card-header class="bg-blue-600 text-white p-4 rounded-t-2xl mb-6">
-        <mat-card-title class="text-xl font-semibold">Create New Warranty</mat-card-title>
-      </mat-card-header>
+<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
+  <mat-card class="w-full max-w-6xl shadow-xl rounded-2xl">
+    
+    <!-- Header -->
+    <mat-card-header class="bg-blue-600 text-white p-4 flex justify-between items-center rounded-t-2xl">
+      <mat-card-title class="text-lg font-semibold">Create New Warranty</mat-card-title>
+      <button mat-icon-button (click)="onClose()" class="text-white hover:text-red-300">✕</button>
+    </mat-card-header>
 
-      <!-- Warranty Type -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-        <mat-form-field appearance="outline" class="col-span-full">
-          <mat-label>Warranty Type</mat-label>
-          <input type="text" matInput formControlName="type" (focus)="showAllWarrantyTypes()" [matAutocomplete]="warrantyTypeAuto">
-          <mat-autocomplete #warrantyTypeAuto="matAutocomplete" autoActiveFirstOption>
-            <mat-option *ngFor="let warrantyType of filteredWarrantyTypes$ | async" [value]="warrantyType.id">
-              {{ warrantyType.name }}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
+    <hr class="my-0" />
 
-        <!-- Column 1 -->
-        <mat-form-field appearance="outline">
-          <mat-label>Display Name</mat-label>
-          <input matInput formControlName="display_name" />
-        </mat-form-field>
+    <mat-card-content class="p-6">
+      <form [formGroup]="warrantyForm" (ngSubmit)="onSubmit()" class="row gy-3">
+        
+        <!-- Warranty Serial No -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Warranty Serial No</mat-label>
+            <input matInput formControlName="warrantySerialNumber" />
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Activation Code</mat-label>
-          <input matInput formControlName="activationcode" />
-        </mat-form-field>
+        <!-- Warranty Type -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Warranty Type</mat-label>
+            <input type="text" matInput formControlName="warrantyTypeId" (focus)="showAllWarrantyTypes()" [matAutocomplete]="warrantyTypeAuto" />
+            <mat-autocomplete #warrantyTypeAuto="matAutocomplete" autoActiveFirstOption>
+              <mat-option *ngFor="let warrantyType of filteredWarrantyTypes$ | async" [value]="warrantyType.id">
+                {{ warrantyType.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Serial Number</mat-label>
-          <input matInput type="number" formControlName="serialnumber" />
-        </mat-form-field>
+        <!-- Warranty Code -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Warranty Code</mat-label>
+            <input matInput formControlName="warrantyCode" />
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Price</mat-label>
-          <input matInput type="number" formControlName="price" />
-        </mat-form-field>
+        <!-- Display Name -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Display Name</mat-label>
+            <input matInput formControlName="warrantyDisplayName" />
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Duration (months)</mat-label>
-          <input matInput type="number" formControlName="duration" />
-        </mat-form-field>
+        <!-- Price -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Price</mat-label>
+            <input matInput formControlName="warrantyPrice" />
+            <mat-error *ngIf="warrantyForm.get('warrantyPrice')?.hasError('pattern')">
+              Please enter a valid price (numbers and decimals only)
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Start Date</mat-label>
-          <input matInput [matDatepicker]="startPicker" formControlName="startdate">
-          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-          <mat-datepicker #startPicker></mat-datepicker>
-        </mat-form-field>
+        <!-- Duration -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Duration (months)</mat-label>
+            <input matInput type="number" formControlName="warrantyDuration" />
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>End Date</mat-label>
-          <input matInput [matDatepicker]="endPicker" formControlName="enddate">
-          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-          <mat-datepicker #endPicker></mat-datepicker>
-        </mat-form-field>
+        <!-- Start & End Date -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="warrantyStartDate" />
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="warrantyEndDate" />
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Warranty Invoice No</mat-label>
-          <input matInput formControlName="warranty_invoice_no" />
-        </mat-form-field>
+        <!-- Invoice & Purchase Date -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Warranty Invoice No</mat-label>
+            <input matInput formControlName="warrantyInvoiceNo" />
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Purchase Date</mat-label>
+            <input matInput [matDatepicker]="purchasePicker" formControlName="warrantyPurchaseDate" />
+            <mat-datepicker-toggle matSuffix [for]="purchasePicker"></mat-datepicker-toggle>
+            <mat-datepicker #purchasePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Purchase Date</mat-label>
-          <input matInput [matDatepicker]="purchasePicker" formControlName="purchasedate">
-          <mat-datepicker-toggle matSuffix [for]="purchasePicker"></mat-datepicker-toggle>
-          <mat-datepicker #purchasePicker></mat-datepicker>
-        </mat-form-field>
+        <!-- Seller & Coupon -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Seller</mat-label>
+            <input matInput formControlName="warrantySeller" />
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Coupon Code</mat-label>
+            <input matInput formControlName="warrantyCouponCode" />
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Seller</mat-label>
-          <input matInput formControlName="seller" />
-        </mat-form-field>
+        <!-- Scratch Code & Plan Sold Date -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Scratch Code</mat-label>
+            <input matInput formControlName="warrantyScratchCode" />
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Plan Sold Date</mat-label>
+            <input matInput [matDatepicker]="soldPicker" formControlName="planSoldDate" />
+            <mat-datepicker-toggle matSuffix [for]="soldPicker"></mat-datepicker-toggle>
+            <mat-datepicker #soldPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Coupon Code</mat-label>
-          <input matInput formControlName="coupon_code" />
-        </mat-form-field>
+        <!-- Customer Details -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer Name</mat-label>
+            <input matInput formControlName="customerName" />
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer Mobile No</mat-label>
+            <input matInput formControlName="customerMobileNo" />
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer Email</mat-label>
+            <input matInput formControlName="customerEmail" />
+          </mat-form-field>
+        </div>
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer Address</mat-label>
+            <textarea matInput formControlName="customerAddress" rows="2"></textarea>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Brand Warranty Duration</mat-label>
-          <input matInput type="number" formControlName="brandwarrantyduration" />
-        </mat-form-field>
+        <!-- State, City, Pincode -->
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer State</mat-label>
+            <input matInput formControlName="customerStateId" [matAutocomplete]="stateAuto" />
+            <mat-autocomplete #stateAuto="matAutocomplete" autoActiveFirstOption>
+              <mat-option *ngFor="let state of filteredStates$ | async" [value]="state.name" (onSelectionChange)="onStateSelected(state.id)">
+                {{ state.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer City</mat-label>
+            <input matInput formControlName="customerCityId" [matAutocomplete]="cityAuto" />
+            <mat-autocomplete #cityAuto="matAutocomplete" autoActiveFirstOption>
+              <mat-option *ngFor="let city of filteredCities$ | async" [value]="city.name" (onSelectionChange)="onCitySelected(city.id)">
+                {{ city.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer Pincode</mat-label>
+            <input matInput formControlName="customerPinCode" [matAutocomplete]="pincodeAuto" />
+            <mat-autocomplete #pincodeAuto="matAutocomplete">
+              <mat-option *ngFor="let pincode of filteredPincodes$ | async" [value]="pincode.pincode">
+                {{ pincode.pincode }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Scratch Code</mat-label>
-          <input matInput formControlName="scratch_code" />
-        </mat-form-field>
+        <!-- Extra Info, Description -->
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Extra Info</mat-label>
+            <textarea matInput formControlName="warrantyExtraInfo" rows="2"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="warrantyDescription" rows="2"></textarea>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Kit Coverage</mat-label>
-          <input matInput formControlName="kit_coverage" />
-        </mat-form-field>
+        <!-- Created By -->
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Created By</mat-label>
+            <input matInput formControlName="warrantyCreatedBy" />
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Cancellation Done By</mat-label>
-          <input matInput formControlName="cancellation_done_by" />
-        </mat-form-field>
+        <!-- Checkbox -->
+        <div class="col-6 d-flex align-items-center">
+          <mat-checkbox formControlName="isDisable">Active Warranty</mat-checkbox>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Cancellation Role</mat-label>
-          <input matInput formControlName="cancellation_role" />
-        </mat-form-field>
-
-        <!-- Textareas -->
-        <mat-form-field appearance="outline" class="col-span-full">
-          <mat-label>Cancellation Reason</mat-label>
-          <textarea matInput formControlName="cancellation_reason" rows="2"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="col-span-full">
-          <mat-label>Extra Info</mat-label>
-          <textarea matInput formControlName="extrainfo" rows="2"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="col-span-full">
-          <mat-label>Product Extra Image (JSON)</mat-label>
-          <textarea matInput formControlName="product_extra_image" rows="2"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="col-span-full">
-          <mat-label>Discrepants (JSON)</mat-label>
-          <textarea matInput formControlName="discrepants" rows="2"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="col-span-full">
-          <mat-label>Insured (JSON)</mat-label>
-          <textarea matInput formControlName="insured" rows="2"></textarea>
-        </mat-form-field>
-      </div>
-
-      <!-- Checkboxes -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 px-1">
-        <mat-checkbox formControlName="is_zapp_enable">Zapp Enabled</mat-checkbox>
-        <mat-checkbox formControlName="active">Active</mat-checkbox>
-        <mat-checkbox formControlName="verified">Verified</mat-checkbox>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="flex justify-end mt-8">
-        <button mat-raised-button color="primary" type="submit" class="px-8 py-2 text-lg">
-          Submit Warranty
-        </button>
-      </div>
-    </form>
+        <!-- Submit Button -->
+        <div class="col-12 text-end mt-4">
+          <button mat-raised-button color="primary" type="submit" class="px-6 py-2 text-lg" [disabled]="warrantyForm.invalid">
+            Submit Warranty
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
   </mat-card>
 </div>

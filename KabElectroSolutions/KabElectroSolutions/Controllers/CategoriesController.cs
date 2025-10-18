@@ -58,7 +58,7 @@ namespace KabElectroSolutions.Controllers
             return CreatedAtAction(nameof(GetCategories), new { id = categories.Id }, categories);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] Categories updatedCategory)
         {
             if (updatedCategory == null)

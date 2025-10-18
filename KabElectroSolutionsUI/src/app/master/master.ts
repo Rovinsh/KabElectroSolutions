@@ -114,12 +114,12 @@ export class MasterComponent implements OnInit {
 
   categoryCols: ColDef[] = [
     { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
-    { headerName: 'Name', field: 'catName', filter: true, width: 350 },
+    { headerName: 'Name', field: 'catName', filter: true, width: 250 },
     {
       headerName: 'Description',
       field: 'description',
       filter: false,
-      width: 430,
+      width:300,
       cellRenderer: (params: any) => {
         const words = params.value ? params.value.split(' ') : [];
         if (words.length > 150) return words.slice(0, 150).join(' ') + '...';

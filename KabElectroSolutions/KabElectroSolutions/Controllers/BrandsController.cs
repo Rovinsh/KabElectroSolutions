@@ -60,7 +60,7 @@ namespace KabElectroSolutions.Controllers
             return CreatedAtAction(nameof(GetBrands), new { id = brands.Id }, brands);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> UpdateBrand(int id, [FromBody] Brands updatedBrand)
         {
             if (updatedBrand == null)

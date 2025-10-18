@@ -3,69 +3,45 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../services/auth';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';  // <-- Needed for routerLink
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule], // <-- Include RouterModule
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
-isLoginPage = false;
+  isLoginPage = false;
 
-  constructor(private router: Router,private auth: AuthService) {
+  constructor(private router: Router, private auth: AuthService) {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        // Hide sidebar ONLY on login route
         this.isLoginPage = event.urlAfterRedirects === '/login';
       });
   }
 
-menu: SidebarItem[] = [
-    { title: 'Home', icon: '🏠', roles: ['List_all_kits', 'Create Business'], action: () => this.goToClaims() },
-    { title: 'Claims', icon: '📋', roles: ['List_all_kits'], action: () => this.goToClaims() },
-    { title: 'Create New Claim', icon: '➕', roles: ['Create Business'], action: () => this.goToCreateClaim() },
-    { title: 'Master', icon: '📂', roles: ['Create Business'], action: () => this.goToMaster() },
-    { title: 'Create New Warranty', icon: '🛡️', roles: ['Create Business'], action: () => this.goToCreateWarranty() },
-    { title: 'Support', icon: '📞', roles: ['Service Centre'] },
-    { title: 'Help', icon: '❓', roles: [] },       // visible to everyone
-    { title: 'Settings', icon: '⚙️', roles: ['List_all_kits'] }
+  menu: SidebarItem[] = [
+    { title: 'Home', icon: '🏠', roles: ['List_all_kits', 'Create Business'], route: '/dashboard' },
+    { title: 'Claims', icon: '📋', roles: ['List_all_kits'], route: '/dashboard' },
+    { title: 'Create New Claim', icon: '➕', roles: ['Create Business'], route: '/claim-form' },
+    { title: 'Master', icon: '📂', roles: ['Create Business'], route: '/master' },
+    { title: 'Warranties', icon: '🛡️', roles: ['Create Business'], route: '/warranties' },
+    { title: 'Support', icon: '📞', roles: ['Service Centre'], route: '/support' },
+    { title: 'Help', icon: '❓', roles: [], route: '/help' },
+    { title: 'Settings', icon: '⚙️', roles: ['List_all_kits'], route: '/settings' }
   ];
 
-  goToCreateClaim() {
-    this.router.navigate(['/claim-form']);
-  }
-  goToClaims() {
-    this.router.navigate(['/dashboard']);
-  }
-  goToCategories() {
-    this.router.navigate(['/category-form']);
-  }
-
-  goToBrands() {
-    this.router.navigate(['/brand-form']);
-  }
-
-  goToPlan() {
-    this.router.navigate(['/plan-form']);
-  }
-
-  goToCreateWarranty() {
-    this.router.navigate(['/warranty-form']);
-  }
-
-  goToMaster(){
-    this.router.navigate(['/master']);
-  }
-  
   hasAccess(item: SidebarItem): boolean {
     return item.roles.length === 0 || item.roles.some(r => this.auth.getRoles().includes(r));
   }
 }
+
 interface SidebarItem {
   title: string;
   icon: string;
-  roles: string[];        // Allowed roles
-  action?: () => void;    // Optional click handler
+  roles: string[];
+  route: string;
 }

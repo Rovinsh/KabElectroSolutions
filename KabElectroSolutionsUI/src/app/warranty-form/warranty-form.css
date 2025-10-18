@@ -1,0 +1,10 @@
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  font-weight: bold;
+  font-size: 18px;
+}

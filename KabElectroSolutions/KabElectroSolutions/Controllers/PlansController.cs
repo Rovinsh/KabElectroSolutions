@@ -61,7 +61,7 @@ namespace KabElectroSolutions.Controllers
             return CreatedAtAction(nameof(GetPlans), new { id = plans.Id }, plans);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> UpdatePlan(int id, [FromBody] Plans updatedPlan)
         {
             if (updatedPlan == null)

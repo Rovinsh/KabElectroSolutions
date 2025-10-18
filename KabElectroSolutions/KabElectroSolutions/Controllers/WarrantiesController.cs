@@ -23,52 +23,46 @@ namespace KabElectroSolutions.Controllers
         [HttpGet("warranties")]
         public async Task<IActionResult> GetWarranties()
         {
-            var warranty = await _context.Warranties.Select(w => new Warranties
-            {
-                Id = w.Id,
-                IsZappEnable = w.IsZappEnable,
-                Status = w.Status,
-                SerialNumber = w.SerialNumber,
-                RegionId = w.RegionId,
-                DisplayName = w.DisplayName,
-                PolicyId = w.PolicyId,
-                RmId = w.RmId,
-                ActivationCode = w.ActivationCode,
-                Price = w.Price,
-                ExtraInfo = w.ExtraInfo,
-                Duration = w.Duration,
-                ProductExtraImage = w.ProductExtraImage,
-                DiscrepancyReason = w.DiscrepancyReason,
-                StoreAssignedAt = w.StoreAssignedAt,
-                Active = w.Active,
-                Verified = w.Verified,
-                DistributorAssignedAt = w.DistributorAssignedAt,
-                WarrantyInvoiceNo = w.WarrantyInvoiceNo,
-                StartDate = w.StartDate,
-                EndDate = w.EndDate,
-                ProductId = w.ProductId,
-                Discrepants = w.Discrepants,
-                PurchaseDate = w.PurchaseDate,
-                EndorsementNo = w.EndorsementNo,
-                Seller = w.Seller,
-                CouponCode = w.CouponCode,
-                CancellationAt = w.CancellationAt,
-                CancellationDoneBy = w.CancellationDoneBy,
-                ScratchCode = w.ScratchCode,
-                KitCoverage = w.KitCoverage,
-                OemId = w.OemId,
-                BrandWarrantyDuration = w.BrandWarrantyDuration,
-                CancellationReason = w.CancellationReason,
-                Type = w.Type,
-                Insured = w.Insured,
-                CancellationRole = w.CancellationRole
-            }).ToListAsync();
-
+            var warranties = await _context.Warranties
+                .Select(w => new WarrantiesDTO
+                {
+                    Id = w.Id,
+                    SerialNumber = w.SerialNumber,
+                    WarrantyType = w.WarrantyType,
+                    WarrantyTypeId = w.WarrantyTypeId,
+                    WarrantyDisplayName = w.WarrantyDisplayName,      
+                    WarrantyCode = w.WarrantyCode,         
+                    WarrantyPrice = w.WarrantyPrice,                
+                    WarrantyDuration = w.WarrantyDuration,           
+                    WarrantyStartDate = w.WarrantyStartDate,        
+                    WarrantyEndDate = w.WarrantyEndDate,             
+                    WarrantyInvoiceNo = w.WarrantyInvoiceNo, 
+                    WarrantyPurchaseDate = w.WarrantyPurchaseDate,   
+                    WarrantySeller = w.WarrantySeller,               
+                    WarrantyCouponCode = w.WarrantyCouponCode,       
+                    WarrantyScratchCode = w.WarrantyScratchCode,     
+                    WarrantyExtraInfo = w.WarrantyExtraInfo,         
+                    WarrantyDescription = w.WarrantyDescription, 
+                    WarrantyCreatedBy = w.WarrantyCreatedBy,
+                    ProductName = w.ProductName,
+                    ProductId = w.ProductId,
+                    CustomerName = w.CustomerName,
+                    CustomerMobileNo = w.CustomerMobileNo,
+                    CustomerEmail = w.CustomerEmail,
+                    CustomerAddress = w.CustomerAddress,
+                    CustomerCityId = w.CustomerCityId,
+                    CustomerCityName = w.CustomerCityName,
+                    CustomerStateId = w.CustomerStateId,
+                    CustomerStateName = w.CustomerStateName,
+                    CustomerPinCode = w.CustomerPinCode,
+                    IsDisable = w.IsDisable
+                })
+                .ToListAsync();
             return Ok(new
             {
                 status = 200,
                 message = "Warranty Statuses",
-                data = warranty
+                data = warranties
             });
         }
         
