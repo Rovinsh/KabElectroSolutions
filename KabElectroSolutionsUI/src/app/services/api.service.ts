@@ -66,6 +66,18 @@ export class ApiService {
   postWarranties(warrantyData: WarrantyDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Warranties`, warrantyData);
   }
+
+ updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
+  return this.http.put(`${this.baseUrl}Categories/${id}`, categoryData);
+  }
+
+ updateBrand(id: number, brandData: BrandDto): Observable<any> {
+  return this.http.put(`${this.baseUrl}Brands/${id}`, brandData);
+  }
+
+  updatePlan(id: number, planData: PlanDto): Observable<any> {
+    return this.http.put(`${this.baseUrl}Plans/${id}`, planData);
+  }
 }
 
 export interface LocationResponseDto {

@@ -58,5 +58,25 @@ namespace KabElectroSolutions.Controllers
             return CreatedAtAction(nameof(GetCategories), new { id = categories.Id }, categories);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] Categories updatedCategory)
+        {
+            if (updatedCategory == null)
+                return BadRequest("Invalid category data");
+
+            var existingCategory = await _context.Categories.FindAsync(id);
+            if (existingCategory == null)
+                return NotFound("Category not found");
+
+            existingCategory.CatName = updatedCategory.CatName;
+            existingCategory.Description = updatedCategory.Description;
+            existingCategory.IsDisable = updatedCategory.IsDisable;
+
+            _context.Categories.Update(existingCategory);
+            await _context.SaveChangesAsync();
+
+            return Ok(existingCategory);
+        }
+
     }
 }

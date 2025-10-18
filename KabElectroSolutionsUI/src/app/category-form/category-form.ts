@@ -1,68 +1,89 @@
-import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { CommonModule } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ApiService } from '../services/api.service';
-import {  ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ApiService, CategoryDto } from '../services/api.service';
 import { ToastService } from '../services/toastService.service';
-import { MatDialogRef } from '@angular/material/dialog';
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-category-form-component',
+  standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatDatepickerModule,
-    MatCheckboxModule,
     MatCardModule,
-    CommonModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    MatAutocompleteModule
+    MatCheckboxModule
   ],
   templateUrl: './category-form.html',
-  styleUrl: './category-form.css'
+  styleUrls: ['./category-form.css']
 })
-export class CategoryFormComponent {
-categoryForm!: FormGroup;
-constructor(private fb: FormBuilder, private http: HttpClient,private apiService: ApiService, private toast:ToastService, private dialogRef: MatDialogRef<CategoryFormComponent>) { }
+export class CategoryFormComponent implements OnInit {
+  categoryForm!: FormGroup;
+  title: string = 'Create Category';
+  submitBtnLabel: string = 'Submit Category';
+  mode: 'add' | 'edit' = 'add';
 
-ngOnInit(): void {
-  this.categoryForm = this.fb.group({
-  catName:['', Validators.required],
-  description:[null],
-  isDisable: [true] 
+  private fb = inject(FormBuilder);
+  private apiService = inject(ApiService);
+  private toast = inject(ToastService);
+  private dialogRef = inject(MatDialogRef<CategoryFormComponent>);
+  private data = inject(MAT_DIALOG_DATA) as { mode: 'add' | 'edit'; record?: CategoryDto };
+
+  ngOnInit(): void {
+    this.categoryForm = this.fb.group({
+      catName: ['', Validators.required],
+      description: [null],
+      isDisable: [true]
     });
-  }
 
- onSubmit(): void {
-  if (this.categoryForm.valid) {
-    this.apiService.postCategory(this.categoryForm.value).subscribe({
-      next: (res) => {
-        console.log('Category created:', res);
-        this.toast.success('Category Created Successfully!');
-         this.dialogRef.close('success');
-      },
-      error: (err) => {
-        console.error('Error creating category:', err);
-        this.toast.error(err?.message || 'Error creating category!');
+    if (this.data) {
+      this.mode = this.data.mode;
+      this.title = this.mode === 'edit' ? 'Edit Category' : 'Create Category';
+      this.submitBtnLabel = this.mode === 'edit' ? 'Update Category' : 'Submit Category';
+
+      if (this.mode === 'edit' && this.data.record) {
+        this.categoryForm.patchValue({
+          catName: this.data.record.catName,
+          description: this.data.record.description,
+          isDisable: !!this.data.record.isDisable
+        });
       }
-    });
+    }
   }
-}
-onClose() {
-    this.dialogRef.close(); 
+
+  onSubmit(): void {
+    if (this.categoryForm.invalid) return;
+
+    const formData = { ...this.categoryForm.value, isDisable: this.categoryForm.value.isDisable ? true : false };
+
+    if (this.mode === 'edit' && this.data.record) {
+      this.apiService.updateCategory(this.data.record.id, formData).subscribe({
+        next: () => {
+          this.toast.success('Category Updated Successfully!');
+          this.dialogRef.close('success');
+        },
+        error: (err) => this.toast.error(err?.error || 'Error updating category!')
+      });
+    } else {
+      this.apiService.postCategory(formData).subscribe({
+        next: () => {
+          this.toast.success('Category Created Successfully!');
+          this.dialogRef.close('success');
+        },
+        error: (err) => this.toast.error(err?.error || 'Error creating category!')
+      });
+    }
+  }
+
+  onClose() {
+    this.dialogRef.close();
   }
 }

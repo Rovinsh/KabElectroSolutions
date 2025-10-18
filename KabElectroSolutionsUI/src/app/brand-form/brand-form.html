@@ -1,45 +1,58 @@
-<!-- Full width gray background with padding -->
 <div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
-  <!-- Card container -->
   <mat-card class="w-full max-w-5xl shadow-xl rounded-2xl">
-    <!-- Divider -->
+
+    <mat-card-header class="bg-blue-50 text-blue-800 p-3 flex justify-between items-center rounded-t-2xl">
+      <mat-card-title class="text-lg font-semibold">{{ title }}</mat-card-title>
+      <button mat-icon-button (click)="onClose()" class="text-gray-600 hover:text-red-600">
+        ✕
+      </button>
+    </mat-card-header>
+
     <hr class="my-0" />
 
-    <!-- Form Section -->
-    <mat-card-header class="bg-blue-50 text-blue-800 p-3">
-      <mat-card-title class="text-lg font-semibold">Create / Edit Brand</mat-card-title>
-        <button mat-icon-button (click)="onClose()" class="close-btn">
-      X
-    </button>
-    </mat-card-header>
- <mat-card-content class="p-6">
+    <mat-card-content class="p-6">
       <form
         [formGroup]="brandForm"
         (ngSubmit)="onSubmit()"
-        class="row g-4">
+        class="row gy-2"
+        style="row-gap: 8px; margin-top: 14px;"
+      >
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Category</mat-label>
+            <input
+              type="text"
+              matInput
+              [matAutocomplete]="categoryAuto"
+              formControlName="categoryId"
+              (focus)="showAllCategoriesTypes()"
+            />
+            <mat-autocomplete
+              #categoryAuto="matAutocomplete"
+              [displayWith]="displayCategoryName"
+              autoActiveFirstOption
+            >
+              <mat-option
+                *ngFor="let category of filteredcategories$ | async"
+                [value]="category"
+              >
+                {{ category.catName }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="brandForm.get('categoryId')?.hasError('required')">
+              Category is required
+            </mat-error>
+          </mat-form-field>
+        </div>
 
         <div class="col-6">
-          <mat-form-field appearance="outline" class="col-span-full">
-          <mat-label>Category</mat-label>
-          <input type="text" matInput formControlName="categoryId" (focus)="showAllCategoriesTypes()" [matAutocomplete]="categoryAuto">
-          <mat-autocomplete #categoryAuto="matAutocomplete" autoActiveFirstOption>
-            <mat-option *ngFor="let category of filteredcategories$ | async" [value]="category.id">
-              {{ category.catName }}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="brandForm.get('CategoryId')?.hasError('required')">
-          Category is required
-        </mat-error>
-        </mat-form-field>
-        </div>
-      <div class="col-6">
-      <mat-form-field appearance="outline" class="w-full mb-4">
-        <mat-label>Brand Name</mat-label>
-        <input matInput formControlName="brandName" required />
-        <mat-error *ngIf="brandForm.get('BrandName')?.hasError('required')">
-          Brand Name is required
-        </mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Brand Name</mat-label>
+            <input matInput formControlName="brandName" required />
+            <mat-error *ngIf="brandForm.get('brandName')?.hasError('required')">
+              Brand Name is required
+            </mat-error>
+          </mat-form-field>
         </div>
 
         <div class="col-12">
@@ -58,14 +71,13 @@
             mat-raised-button
             color="primary"
             type="submit"
-            class="px-5 py-2 text-lg"
-            [disabled]="brandForm.invalid">
-            Submit Brand
+            class="px-6 py-2 text-lg"
+            [disabled]="brandForm.invalid"
+          >
+            {{ submitBtnLabel }}
           </button>
         </div>
-
       </form>
     </mat-card-content>
-
   </mat-card>
 </div>

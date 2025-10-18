@@ -33,7 +33,7 @@ namespace KabElectroSolutions.Controllers
              CatId = p.CatId,
              CategoryName = _context.Categories.Where(c => c.Id == p.CatId).Select(c => c.CatName).FirstOrDefault(),
              PlanName = p.PlanName,
-             Description= p.Description,
+             Description = p.Description,
              Remark = p.Remark,
              IsDisable = p.IsDisable,
          })
@@ -48,7 +48,7 @@ namespace KabElectroSolutions.Controllers
 
             return Ok(result);
         }
-       
+
         [HttpPost]
         public async Task<IActionResult> CreatePlans([FromBody] Plans plans)
         {
@@ -59,6 +59,28 @@ namespace KabElectroSolutions.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetPlans), new { id = plans.Id }, plans);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePlan(int id, [FromBody] Plans updatedPlan)
+        {
+            if (updatedPlan == null)
+                return BadRequest("Invalid plan data");
+
+            var existingPlan = await _context.Plans.FindAsync(id);
+            if (existingPlan == null)
+                return NotFound("Plan not found");
+
+            existingPlan.CatId = updatedPlan.CatId;
+            existingPlan.PlanName = updatedPlan.PlanName;
+            existingPlan.Description = updatedPlan.Description;
+            existingPlan.Remark = updatedPlan.Remark;
+            existingPlan.IsDisable = updatedPlan.IsDisable;
+
+            _context.Plans.Update(existingPlan);
+            await _context.SaveChangesAsync();
+
+            return Ok(existingPlan);
         }
     }
 }

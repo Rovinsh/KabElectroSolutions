@@ -1,23 +1,14 @@
-<!-- Full width gray background with padding -->
 <div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
-  <!-- Card container -->
   <mat-card class="w-full max-w-5xl shadow-xl rounded-2xl">
-    <!-- Divider -->
     <hr class="my-0" />
 
-    <!-- Form Section -->
-    <mat-card-header class="bg-blue-50 text-blue-800 p-3">
-      <mat-card-title class="text-lg font-semibold">Create / Edit Category</mat-card-title>
-        <button mat-icon-button (click)="onClose()" class="close-btn">
-      X
-    </button>
+    <mat-card-header class="bg-blue-50 text-blue-800 p-3 flex justify-between items-center">
+      <mat-card-title class="text-lg font-semibold">{{ title }}</mat-card-title>
+      <button mat-icon-button (click)="onClose()" class="close-btn">X</button>
     </mat-card-header>
 
     <mat-card-content class="p-6">
-      <form
-        [formGroup]="categoryForm"
-        (ngSubmit)="onSubmit()"
-        class="row g-4">
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="row g-4">
 
         <div class="col-12">
           <mat-form-field appearance="outline" class="w-100">
@@ -41,18 +32,13 @@
         </div>
 
         <div class="col-12 text-end">
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            class="px-5 py-2 text-lg"
+          <button mat-raised-button color="primary" type="submit" class="px-5 py-2 text-lg"
             [disabled]="categoryForm.invalid">
-            Submit Category
+            {{ submitBtnLabel }}
           </button>
         </div>
 
       </form>
     </mat-card-content>
-
   </mat-card>
 </div>

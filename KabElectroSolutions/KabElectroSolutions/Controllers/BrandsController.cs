@@ -59,5 +59,26 @@ namespace KabElectroSolutions.Controllers
 
             return CreatedAtAction(nameof(GetBrands), new { id = brands.Id }, brands);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBrand(int id, [FromBody] Brands updatedBrand)
+        {
+            if (updatedBrand == null)
+                return BadRequest("Invalid brand data");
+
+            var existingBrand = await _context.Brands.FindAsync(id);
+            if (existingBrand == null)
+                return NotFound("Brand not found");
+
+            existingBrand.CategoryId = updatedBrand.CategoryId;
+            existingBrand.BrandName = updatedBrand.BrandName;
+            existingBrand.Description = updatedBrand.Description;
+            existingBrand.IsDisable = updatedBrand.IsDisable;
+
+            _context.Brands.Update(existingBrand);
+            await _context.SaveChangesAsync();
+
+            return Ok(existingBrand);
+        }
     }
 }

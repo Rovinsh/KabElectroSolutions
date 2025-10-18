@@ -1,82 +1,116 @@
-import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Observable, startWith, map, of } from 'rxjs';
+import { Component, OnInit, inject } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { CommonModule } from '@angular/common';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ApiService, CategoryDto } from '../services/api.service';
-import {  ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { Observable, of } from 'rxjs';
+import { ApiService, CategoryDto, BrandDto } from '../services/api.service';
 import { ToastService } from '../services/toastService.service';
-import { MatDialogRef } from '@angular/material/dialog';
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-brand-form',
+  standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatDatepickerModule,
-    MatCheckboxModule,
     MatCardModule,
-    CommonModule,
-    MatNativeDateModule,
+    MatCheckboxModule,
     MatSelectModule,
     MatAutocompleteModule
   ],
   templateUrl: './brand-form.html',
-  styleUrl: './brand-form.css'
+  styleUrls: ['./brand-form.css']
 })
-export class BrandFormComponent {
-brandForm!: FormGroup;
-categories:CategoryDto[]=[];
-filteredcategories$!: Observable<CategoryDto[]>;
+export class BrandFormComponent implements OnInit {
+  brandForm!: FormGroup;
+  categories: CategoryDto[] = [];
+  filteredcategories$!: Observable<CategoryDto[]>;
+  title: string = 'Create Brand';
+  submitBtnLabel: string = 'Submit Brand';
+  mode: 'add' | 'edit' = 'add';
 
-constructor(private fb: FormBuilder, private http: HttpClient,private apiService: ApiService, private toast:ToastService, private dialogRef: MatDialogRef<BrandFormComponent>) { }
+  private fb = inject(FormBuilder);
+  private apiService = inject(ApiService);
+  private toast = inject(ToastService);
+  private dialogRef = inject(MatDialogRef<BrandFormComponent>);
+  private data = inject(MAT_DIALOG_DATA) as { mode: 'add' | 'edit'; record?: BrandDto };
 
-ngOnInit(): void {
+  ngOnInit(): void {
+    this.brandForm = this.fb.group({
+      categoryId: [null, Validators.required],
+      brandName: ['', Validators.required],
+      description: [''],
+      isDisable: [true]
+    });
 
     this.apiService.getCategories().subscribe(res => {
       this.categories = res.data;
-    });
 
-  this.brandForm = this.fb.group({
-  categoryId: [null, Validators.required],    
-  brandName: ['', Validators.required],       
-  description: [null],                    
-  isDisable: [true]   
-    });
-  }
+      if (this.data) {
+        this.mode = this.data.mode;
+        this.title = this.mode === 'edit' ? 'Edit Brand' : 'Create Brand';
+        this.submitBtnLabel = this.mode === 'edit' ? 'Update Brand' : 'Submit Brand';
 
- showAllCategoriesTypes() {
-  this.filteredcategories$ = of(this.categories );
-  }
+       if (this.mode === 'edit' && this.data?.record) {
+        const selectedCategory = this.categories.find(c => c.id === this.data.record?.categoryId) ?? null;
 
- onSubmit(): void {
-  if (this.brandForm.valid) {
-    this.apiService.postBarands(this.brandForm.value).subscribe({
-      next: (res) => {
-        console.log('Brand created:', res);
-        this.toast.success('Brand Created Successfully!');
-         this.dialogRef.close('success');
-      },
-      error: (err) => {
-        console.error('Error creating Brand:', err);
-        this.toast.error(err?.message || 'Error creating Brand!');
+        this.brandForm.patchValue({
+          categoryId: selectedCategory,
+          brandName: this.data.record.brandName,
+          description: this.data.record.description,
+          isDisable: !!this.data.record.isDisable
+        });
+      }
       }
     });
   }
-}
-onClose() {
-    this.dialogRef.close(); 
+
+  showAllCategoriesTypes() {
+    this.filteredcategories$ = of(this.categories);
+  }
+
+  displayCategoryName(category: CategoryDto | null): string {
+    return category ? category.catName : '';
+  }
+
+  onSubmit(): void {
+    if (this.brandForm.invalid) return;
+
+    const formData = {
+      ...this.brandForm.value,
+      isDisable: this.brandForm.value.isDisable ? true : false,
+      categoryId: this.brandForm.value.categoryId?.id ?? this.brandForm.value.categoryId
+    };
+
+    if (this.mode === 'edit' && this.data.record) {
+      this.apiService.updateBrand(this.data.record.id, formData).subscribe({
+        next: () => {
+          this.toast.success('Brand Updated Successfully!');
+          this.dialogRef.close('success');
+        },
+        error: (err) => this.toast.error(err?.error || 'Error updating brand!')
+      });
+    } else {
+      this.apiService.postBarands(formData).subscribe({
+        next: () => {
+          this.toast.success('Brand Created Successfully!');
+          this.dialogRef.close('success');
+        },
+        error: (err) => this.toast.error(err?.error || 'Error creating Brand!')
+      });
+    }
+  }
+
+  onClose() {
+    this.dialogRef.close();
   }
 }

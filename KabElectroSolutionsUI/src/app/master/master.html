@@ -1,27 +1,28 @@
 <div class="d-flex flex-column flex-md-row min-vh-100">
   <main class="flex-fill p-3">
     <div class="container-fluid dashboard-container">
-    <ul class="nav nav-tabs justify-content-start tabs flex-wrap">
-   <li class="nav-item" (click)="setActiveTab('category')">
-    <a class="nav-link" [class.active]="activeTab === 'category'" href="javascript:void(0)">
-        <i class="bi bi-tags"></i> Category
-      </a>
-    </li>
-    <li class="nav-item" (click)="setActiveTab('brand')">
-      <a class="nav-link" [class.active]="activeTab === 'brand'" href="javascript:void(0)">
-        <i class="bi bi-building"></i> Brand
-      </a>
-    </li>
-    <li class="nav-item" (click)="setActiveTab('plan')">
-      <a class="nav-link" [class.active]="activeTab === 'plan'" href="javascript:void(0)">
-        <i class="bi bi-credit-card"></i> Plan
-      </a>
-    </li>
-</ul>
+
+      <ul class="nav nav-tabs justify-content-start tabs flex-wrap">
+        <li class="nav-item" (click)="setActiveTab('category')">
+          <a class="nav-link" [class.active]="activeTab === 'category'" href="javascript:void(0)">
+            <i class="bi bi-tags"></i> Category
+          </a>
+        </li>
+        <li class="nav-item" (click)="setActiveTab('brand')">
+          <a class="nav-link" [class.active]="activeTab === 'brand'" href="javascript:void(0)">
+            <i class="bi bi-building"></i> Brand
+          </a>
+        </li>
+        <li class="nav-item" (click)="setActiveTab('plan')">
+          <a class="nav-link" [class.active]="activeTab === 'plan'" href="javascript:void(0)">
+            <i class="bi bi-credit-card"></i> Plan
+          </a>
+        </li>
+      </ul>
 
       <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap">
         <h5 class="mb-2 text-capitalize">{{ activeTab }} list</h5>
-        <button class="btn btn-primary mb-2 btncolor" (click)="openAddPopup()">
+        <button class="btn btn-primary mb-2 btncolor" (click)="openPopup()">
           <i class="bi bi-plus-lg"></i> Add {{ activeTab | titlecase }}
         </button>
       </div>
@@ -30,24 +31,14 @@
         <ag-grid-angular
           style="width: 100%; height: 450px;"
           class="ag-theme-alpine"
-          [rowData]="
-            activeTab === 'category'
-              ? categories
-              : activeTab === 'brand'
-              ? brands
-              : plans
-          "
-          [columnDefs]="
-            activeTab === 'category'
-              ? categoryCols
-              : activeTab === 'brand'
-              ? brandCols
-              : planCols
-          "
+          [rowData]="activeTab === 'category' ? categories : activeTab === 'brand' ? brands : plans"
+          [columnDefs]="activeTab === 'category' ? categoryCols : activeTab === 'brand' ? brandCols : planCols"
           [animateRows]="true"
+          (cellClicked)="onCellClicked($event)"
         >
         </ag-grid-angular>
       </div>
+
     </div>
   </main>
 </div>

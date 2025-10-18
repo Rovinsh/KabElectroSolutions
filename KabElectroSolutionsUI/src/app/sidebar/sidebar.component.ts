@@ -26,7 +26,7 @@ menu: SidebarItem[] = [
     { title: 'Home', icon: '🏠', roles: ['List_all_kits', 'Create Business'], action: () => this.goToClaims() },
     { title: 'Claims', icon: '📋', roles: ['List_all_kits'], action: () => this.goToClaims() },
     { title: 'Create New Claim', icon: '➕', roles: ['Create Business'], action: () => this.goToCreateClaim() },
-    { title: 'Master', icon: '🛡️', roles: ['Create Business'], action: () => this.goToMaster() },
+    { title: 'Master', icon: '📂', roles: ['Create Business'], action: () => this.goToMaster() },
     { title: 'Create New Warranty', icon: '🛡️', roles: ['Create Business'], action: () => this.goToCreateWarranty() },
     { title: 'Support', icon: '📞', roles: ['Service Centre'] },
     { title: 'Help', icon: '❓', roles: [] },       // visible to everyone
