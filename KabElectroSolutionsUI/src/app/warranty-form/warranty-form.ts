@@ -14,6 +14,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ApiService, CitiesDto, LocationResponseDto, PincodeDto, StateDto, WarrantyTypeDto, PlanDto } from '../services/api.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-warranty-form',
@@ -28,7 +29,8 @@ import { MatDialogRef } from '@angular/material/dialog';
     CommonModule,
     MatNativeDateModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatIconModule
   ],
   templateUrl: './warranty-form.html',
   styleUrl: './warranty-form.css'

@@ -72,6 +72,10 @@ export class MasterComponent implements OnInit {
     case 'category':
       dialogRef = this.dialog.open(CategoryFormComponent, {
         width: '800px',
+        maxWidth: '95vw',   // ✅ Mobile-friendly width
+        maxHeight: '90vh',  // ✅ Forces scrolling if too tall
+        height: 'auto',
+        disableClose: true,
         data: {
           mode: isEdit ? 'edit' : 'add',
           record: data || null
@@ -81,6 +85,10 @@ export class MasterComponent implements OnInit {
     case 'brand':
       dialogRef = this.dialog.open(BrandFormComponent, {
         width: '800px',
+        maxWidth: '95vw',   // ✅ Mobile-friendly width
+      maxHeight: '90vh',  // ✅ Forces scrolling if too tall
+      height: 'auto',
+        disableClose: true,
         data: {
           mode: isEdit ? 'edit' : 'add',
           record: data || null
@@ -90,6 +98,10 @@ export class MasterComponent implements OnInit {
     case 'plan':
       dialogRef = this.dialog.open(PlanFormComponent, {
         width: '800px',
+        maxWidth: '95vw',   // ✅ Mobile-friendly width
+        maxHeight: '90vh',  // ✅ Forces scrolling if too tall
+        height: 'auto',
+        disableClose: true,
         data: {
           mode: isEdit ? 'edit' : 'add',
           record: data || null

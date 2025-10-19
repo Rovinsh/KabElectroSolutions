@@ -5,16 +5,18 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { ToastService } from '../services/toastService.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,MatProgressSpinnerModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  isLoading = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private auth: AuthService, private toast :ToastService) {
     this.loginForm = this.fb.group({
@@ -34,6 +36,7 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value;
+      this.isLoading = true;
 
       this.auth.login(loginData)
         .subscribe({
@@ -41,7 +44,10 @@ export class LoginComponent {
             this.auth.saveToken(res.token);
             this.auth.username = loginData.username;
             this.auth.password = loginData.password;
+            this.auth.firstName = res.data.firstname;
+            this.auth.lastName = res.data.lastname??"";
             const redirectUrl = localStorage.getItem('redirectUrl');
+             this.isLoading = false;
         if (redirectUrl) {
           localStorage.removeItem('redirectUrl');
           this.router.navigateByUrl(redirectUrl);
@@ -50,23 +56,11 @@ export class LoginComponent {
         }
           },
           error: (error:any) => {
+             this.isLoading = false;
             this.toast.error(error.error?.message || 'Something went wrong!');
           }
           //error: () => alert('Invalid credentials'),
         });
-
-
-      // this.http.post('https://localhost:7181/api/Login/login', loginData)
-      //   .subscribe({
-      //     next: (response:any) => {
-      //       console.log('Login successful:', response);
-      //       // Login success → redirect to dashboard
-      //     this.router.navigate(['/dashboard']);
-      //     },
-      //     error: (error:any) => {
-      //       console.error('Login failed:', error);
-      //     }
-      //   });
     }
   }
 }

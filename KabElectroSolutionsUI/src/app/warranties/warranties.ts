@@ -5,11 +5,12 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
 import { ApiService, WarrantyDto } from '../services/api.service';
 import { WarrantyFormComponent } from '../warranty-form/warranty-form';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-warranties',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, AgGridModule],
+  imports: [CommonModule, MatDialogModule, AgGridModule,MatIconModule],
  templateUrl: './warranties.html',
   styleUrl: './warranties.css'
 })
@@ -27,21 +28,27 @@ export class Warranties implements OnInit {
   }
 
   openPopup(data?: any) {
-  const isEdit = !!data; 
-  let dialogRef = this.dialog.open(WarrantyFormComponent, {
-        width: '1500px',
-        data: {
-          mode: isEdit ? 'edit' : 'add',
-          record: data || null
-        }
-      });
-  
-  dialogRef?.afterClosed().subscribe(result => {
-    if (result === 'success') {
-      this.loadWarranties();
-    }
-  });
-}
+    const isEdit = !!data;
+
+    const dialogRef = this.dialog.open(WarrantyFormComponent, {
+      width: '900px',
+      maxWidth: '95vw',   // ✅ Mobile-friendly width
+      maxHeight: '90vh',  // ✅ Forces scrolling if too tall
+      height: 'auto',
+      panelClass: 'custom-dialog-container',
+      disableClose: true,
+      data: {
+        mode: isEdit ? 'edit' : 'add',
+        record: data || null
+      }
+    });
+
+    dialogRef?.afterClosed().subscribe(result => {
+      if (result === 'success') {
+        this.loadWarranties();
+      }
+    });
+  }
 
 
   onCellClicked(event: any) {

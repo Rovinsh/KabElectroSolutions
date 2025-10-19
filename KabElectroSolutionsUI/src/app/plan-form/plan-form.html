@@ -7,10 +7,10 @@
     <hr class="my-0" />
 
     <mat-card-content class="p-4">
-      <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="row g-3">
+      <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="row gy-2" style="row-gap: 8px; margin-top: 14px;">
 
         <div class="col-6">
-          <mat-form-field appearance="outline" class="w-full mb-2">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Category</mat-label>
             <input
               type="text"
@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-6">
-          <mat-form-field appearance="outline" class="w-full mb-2">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Plan Name</mat-label>
             <input matInput formControlName="planName" required />
             <mat-error *ngIf="planForm.get('planName')?.hasError('required')">
@@ -45,14 +45,14 @@
         </div>
 
         <div class="col-6">
-          <mat-form-field appearance="outline" class="w-full mb-1">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Description</mat-label>
             <textarea matInput formControlName="description" rows="3"></textarea>
           </mat-form-field>
         </div>
 
         <div class="col-6">
-          <mat-form-field appearance="outline" class="w-full mb-1">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Remark</mat-label>
             <textarea matInput formControlName="remark" rows="3"></textarea>
           </mat-form-field>

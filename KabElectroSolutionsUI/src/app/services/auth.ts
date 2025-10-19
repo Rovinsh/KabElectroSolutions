@@ -13,7 +13,8 @@ export class AuthService {
 
   username:string="";
   password:string="";
-
+  firstName:string="";
+  lastName:string="";
   constructor(private http: HttpClient) { }
 
   login(loginData: any) {
@@ -43,6 +44,8 @@ export class AuthService {
     localStorage.removeItem('token');
     this.username="";
     this.password="";
+    this.firstName="";
+    this.lastName="";
     //localStorage.removeItem('redirectUrl');
   }
 
