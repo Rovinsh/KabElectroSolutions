@@ -33,13 +33,38 @@ steps: string[] = [
 ];
 
 currentStep: number = 1; // index of the current completed step (0-based)
-
+currentStepIndex = 0;
+status : any[]= [];
 
 
   constructor(private route: ActivatedRoute,private apiService: ApiService,private router: Router) {}
 
   ngOnInit(): void {
+
+    const statusToStepMap: Record<string, number> = {
+    'Claim Registered': 0,
+    'Claim Allocated': 1,
+    'Customer Appointment': 2,
+    'Customer Visit': 3,
+    'Cost Estimation': 4,
+    'Repair': 5,
+    'Invoice': 6,
+    'Payment': 7,
+    'Call Closed': 8,
+    'Call Aborted': 9
+  };
+  
     this.claimId = this.route.snapshot.paramMap.get('claimId');
+ this.apiService.getStatus('Status/status').subscribe({
+      next: (status) => {
+        this.status = status.data;
+        const currentStatus = this.status[this.claim!.status].name || 'Claim Registered';
+  this.currentStepIndex = statusToStepMap[currentStatus] ?? 0;
+  },
+      error: (err) => {
+        console.error('API error:', err);
+      }
+  });
     //this.claimId = this.data.claimId;    
 
     console.log('Claim ID:', this.claimId);

@@ -7,9 +7,14 @@
  
 @if (!isLoading) {
   
-<div>
+<div> <div class="actions">
+    <h2 class="claim-code">Claim Code : <strong>{{ claimId }}</strong></h2>
+    <button class="reject">Reject Call</button>
+    <button class="accept">Accept Call</button>
+      <button mat-icon-button (click)="close()" class="close-btn" style="background-color: black;">X</button>
+  </div>
 <div class="container">
-  <h2 class="claim-code">Claim Code : <strong>{{ claimId }}</strong></h2>
+
 
   <div class="tabs">
     <button class="active">Claim details</button>
@@ -18,30 +23,23 @@
     <button>Claim Estimation</button>
   </div>
 
- <div class="step-progress">
+<div class="status-bar">
   @for (step of steps; let i = $index; track step) {
-    <div class="step">
-      <div class="step-label" [class.completed]="i <= currentStep">{{ step }}</div>
-      <div class="step-circle" [class.completed]="i <= currentStep"></div>
+    <div class="status-step">
+      <div class="status-label" [class.completed]="i <= currentStepIndex">{{ step }}</div>
+      <div class="status-circle" [class.completed]="i <= currentStepIndex"></div>
       @if (i < steps.length - 1) {
-        <div class="step-line" [class.completed]="i < currentStep"></div>
+        <div class="status-line" [class.completed]="i < currentStepIndex"></div>
       }
     </div>
   }
 </div>
-
-  <div class="actions">
-    <button class="reject">Reject Call</button>
-    <button class="accept">Accept Call</button>
-    <button mat-icon-button color="Red" (click)="close()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
+ 
 
   <div class="four-column-row">
     <!-- Claim Details -->
     <div class="card">
-      <h3>Claim details</h3>
+      <h5>Claim details</h5>
       <p><strong>Call Status:</strong> {{claim?.statusName}}</p>      
       <p><strong>Call Date:</strong> {{claim?.createdDate | date:'MMM d, y'}} at {{claim?.createdTime}}</p>
       <p><strong>Redeem Status:</strong> {{claim?.claimRedeemStatus}}</p>
@@ -56,7 +54,7 @@
 
     <!-- Customer Details -->
     <div class="card">
-      <h3>Customer details</h3>
+      <h5>Customer details</h5>
       <p><strong>Name:</strong> {{claim?.customerName}}</p>
       <p><strong>Contact:</strong> {{claim?.customerPhone}}</p>
       <p><strong>Email:</strong> {{claim?.customerEmail}}</p>
@@ -69,7 +67,7 @@
 
     <!-- Product Details -->
     <div class="card">
-      <h3>Product Details</h3>
+      <h5>Product Details</h5>
       <p><strong>Product Serial Number : </strong> {{claim?.itemSerialNumber}}</p>
       <p><strong>Product Name:</strong>  {{claim?.itemName}}</p>
       <p><strong>Category:</strong> {{claim?.itemCategory}}</p>
@@ -82,7 +80,7 @@
 
     <!-- Warranty Details -->
     <div class="card">
-      <h3>Warranty Details</h3>
+      <h5>Warranty Details</h5>
       <p><strong>Warranty Serial No:</strong> {{claim?.warranty}}</p>
       <p><strong>Warranty Code:</strong> {{claim?.warrantyActivationCode}}</p>
       <p><strong>Warranty Type:</strong> {{claim?.warrantyType}}</p>
