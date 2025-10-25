@@ -46,6 +46,8 @@ export class AuthService {
     this.password="";
     this.firstName="";
     this.lastName="";
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
     //localStorage.removeItem('redirectUrl');
   }
 

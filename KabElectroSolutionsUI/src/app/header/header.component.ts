@@ -17,8 +17,8 @@ constructor(private auth: AuthService)
 }
 
   showDropdown = false;
-  firstName:string="";
-  lastName:string="";
+  firstName:string = "";
+  lastName: string | null = null;
   avatar: string="";
 
   toggleDropdown() {
@@ -31,11 +31,11 @@ constructor(private auth: AuthService)
     // if (window.location.pathname.includes('/crm')) {
     // window.location.href = 'crm/login';
     // }else
-     window.location.href = 'login';
+     window.location.href = '#/login';
   }
   ngOnInit(): void {
-  this.firstName = this.auth.firstName;
-  this.lastName = this.auth.lastName;
-  this.avatar= this.firstName.charAt(0)+this.lastName.charAt(0);
+  this.firstName = localStorage.getItem("firstName")!;
+  this.lastName = localStorage.getItem("lastName");
+  this.avatar= this.firstName.charAt(0)+this.lastName?.charAt(0);
   }
 }

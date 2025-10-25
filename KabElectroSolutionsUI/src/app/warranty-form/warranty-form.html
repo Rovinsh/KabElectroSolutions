@@ -1,57 +1,71 @@
-<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
+<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start overflow-y-auto divheight">
   <mat-card class="w-full max-w-6xl shadow-xl rounded-2xl">
-    
-    <!-- Header -->  
 
-    <mat-card-header class="bg-blue-50 text-blue-800 p-3 flex justify-between items-center">
-      <mat-card-title class="text-lg font-semibold">Create New Warranty</mat-card-title>
-      <button mat-icon-button (click)="onClose()" class="close-btn">X</button>
+    <!-- Header -->
+    <mat-card-header class="bg-blue-600 text-white p-4 flex justify-between items-center rounded-t-2xl">
+      <mat-card-title class="text-lg font-semibold text-black">{{ title }}</mat-card-title>
+      <button mat-icon-button (click)="onClose()" class="text-white hover:text-red-300 text-xl font-bold">✕</button>
     </mat-card-header>
 
-    <hr class="my-0" />
+    <hr class="my-0 marginbottom border-gray-300" />
 
     <mat-card-content class="p-6">
       <form [formGroup]="warrantyForm" (ngSubmit)="onSubmit()" class="row gy-3">
-        
-        <!-- Warranty Serial No -->
-        <div class="col-6">
+
+        <!-- Warranty Serial Number -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Warranty Serial No</mat-label>
-            <input matInput formControlName="warrantySerialNumber" />
+            <input matInput formControlName="serialNumber" [readonly]="mode === 'edit'" />
+            <mat-error *ngIf="warrantyForm.get('serialNumber')?.hasError('pattern')">
+               Please enter a valid Serial No (numbers only)
+            </mat-error>
           </mat-form-field>
         </div>
 
         <!-- Warranty Type -->
-        <div class="col-6">
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Warranty Type</mat-label>
-            <input type="text" matInput formControlName="warrantyTypeId" (focus)="showAllWarrantyTypes()" [matAutocomplete]="warrantyTypeAuto" />
-            <mat-autocomplete #warrantyTypeAuto="matAutocomplete" autoActiveFirstOption>
-              <mat-option *ngFor="let warrantyType of filteredWarrantyTypes$ | async" [value]="warrantyType.id">
-                {{ warrantyType.name }}
-              </mat-option>
+            <input matInput formControlName="warrantyTypeId"
+                   [matAutocomplete]="warrantyTypeAuto"
+                   (focus)="showAllWarrantyTypes()"
+                   (input)="showAllWarrantyTypes()" />
+            <mat-autocomplete #warrantyTypeAuto="matAutocomplete"
+                              [displayWith]="displayWarrantyType"
+                              (optionSelected)="onWarrantyTypeSelected($event.option.value)">
+              <mat-option *ngFor="let wt of filteredWarrantyTypes$ | async" [value]="wt">{{ wt.name }}</mat-option>
             </mat-autocomplete>
+            <mat-error *ngIf="warrantyForm.get('warrantyTypeId')?.hasError('required')">
+              Warranty Type is required
+            </mat-error>
           </mat-form-field>
         </div>
 
         <!-- Warranty Code -->
-        <div class="col-6">
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Warranty Code</mat-label>
             <input matInput formControlName="warrantyCode" />
+            <mat-error *ngIf="warrantyForm.get('warrantyCode')?.hasError('required')">
+              Warranty Code is required
+            </mat-error>
           </mat-form-field>
         </div>
 
         <!-- Display Name -->
-        <div class="col-6">
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Display Name</mat-label>
             <input matInput formControlName="warrantyDisplayName" />
+            <mat-error *ngIf="warrantyForm.get('warrantyDisplayName')?.hasError('required')">
+              Warranty Display Name is required
+            </mat-error>
           </mat-form-field>
         </div>
 
         <!-- Price -->
-        <div class="col-6">
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Price</mat-label>
             <input matInput formControlName="warrantyPrice" />
@@ -62,171 +76,221 @@
         </div>
 
         <!-- Duration -->
-        <div class="col-6">
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Duration (months)</mat-label>
             <input matInput type="number" formControlName="warrantyDuration" />
+            <mat-error *ngIf="warrantyForm.get('warrantyDuration')?.hasError('pattern')">
+             Please enter a valid duration (numbers only)
+            </mat-error>
           </mat-form-field>
         </div>
 
-        <!-- Start & End Date -->
-        <div class="col-6">
+        <!-- Start Date -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Start Date</mat-label>
             <input matInput [matDatepicker]="startPicker" formControlName="warrantyStartDate" />
             <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
             <mat-datepicker #startPicker></mat-datepicker>
+            <mat-error *ngIf="warrantyForm.get('warrantyStartDate')?.hasError('required')">
+              Warranty Start Date is required
+            </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-6">
+
+        <!-- End Date -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>End Date</mat-label>
             <input matInput [matDatepicker]="endPicker" formControlName="warrantyEndDate" />
             <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
             <mat-datepicker #endPicker></mat-datepicker>
+            <mat-error *ngIf="warrantyForm.get('warrantyEndDate')?.hasError('required')">
+              Warranty End Date is required
+            </mat-error>
           </mat-form-field>
         </div>
 
-        <!-- Invoice & Purchase Date -->
-        <div class="col-6">
+        <!-- Invoice No -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Warranty Invoice No</mat-label>
             <input matInput formControlName="warrantyInvoiceNo" />
+            <mat-error *ngIf="warrantyForm.get('warrantyInvoiceNo')?.hasError('required')">
+              Warranty Invoice No is required
+            </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-6">
+
+        <!-- Purchase Date -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Purchase Date</mat-label>
             <input matInput [matDatepicker]="purchasePicker" formControlName="warrantyPurchaseDate" />
             <mat-datepicker-toggle matSuffix [for]="purchasePicker"></mat-datepicker-toggle>
             <mat-datepicker #purchasePicker></mat-datepicker>
+            <mat-error *ngIf="warrantyForm.get('warrantyPurchaseDate')?.hasError('required')">
+              Purchase Date is required
+            </mat-error>
           </mat-form-field>
         </div>
 
-        <!-- Seller & Coupon -->
-        <div class="col-6">
+        <!-- Seller -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Seller</mat-label>
             <input matInput formControlName="warrantySeller" />
           </mat-form-field>
         </div>
-        <div class="col-6">
+
+        <!-- Coupon Code -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Coupon Code</mat-label>
             <input matInput formControlName="warrantyCouponCode" />
           </mat-form-field>
         </div>
 
-        <!-- Scratch Code & Plan Sold Date -->
-        <div class="col-6">
+        <!-- Scratch Code -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Scratch Code</mat-label>
             <input matInput formControlName="warrantyScratchCode" />
           </mat-form-field>
         </div>
-        <div class="col-6">
+
+        <!-- Product -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Plan Sold Date</mat-label>
-            <input matInput [matDatepicker]="soldPicker" formControlName="planSoldDate" />
-            <mat-datepicker-toggle matSuffix [for]="soldPicker"></mat-datepicker-toggle>
-            <mat-datepicker #soldPicker></mat-datepicker>
+            <mat-label>Product</mat-label>
+            <input matInput type="text"
+                   formControlName="productId"
+                   [matAutocomplete]="productAuto"
+                   (focus)="showAllProduct()"
+                   (input)="showAllProduct()" />
+            <mat-autocomplete #productAuto="matAutocomplete" [displayWith]="displayProduct" autoActiveFirstOption>
+              <mat-option *ngFor="let pro of filteredProduct$ | async" [value]="pro">{{ pro.planName }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="warrantyForm.get('productId')?.hasError('required')">Product is required</mat-error>
           </mat-form-field>
         </div>
 
-        <!-- Customer Details -->
-        <div class="col-6">
+        <!-- Customer Name -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Customer Name</mat-label>
             <input matInput formControlName="customerName" />
+            <mat-error *ngIf="warrantyForm.get('customerName')?.hasError('required')">Customer Name is required</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-6">
+
+        <!-- Customer Mobile No -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Customer Mobile No</mat-label>
             <input matInput formControlName="customerMobileNo" />
+            <mat-error *ngIf="warrantyForm.get('customerMobileNo')?.hasError('required')">Customer Mobile No is required</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-6">
+
+        <!-- Customer Email -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Customer Email</mat-label>
             <input matInput formControlName="customerEmail" />
+            <mat-error *ngIf="warrantyForm.get('customerEmail')?.hasError('required')">Customer Email is required</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-12">
+
+        <!-- Customer State -->
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer State</mat-label>
+            <input matInput formControlName="stateId"
+                   [matAutocomplete]="stateAuto"
+                   (focus)="showState()"
+                   (input)="showState()" />
+            <mat-autocomplete #stateAuto="matAutocomplete" [displayWith]="displayState" autoActiveFirstOption (optionSelected)="onStateSelected($event.option.value)">
+              <mat-option *ngFor="let state of filteredStates$ | async" [value]="state">{{ state.name }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="warrantyForm.get('stateId')?.hasError('required')">Customer State is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Customer City -->
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer City</mat-label>
+            <input matInput formControlName="cityId"
+                   [matAutocomplete]="cityAuto"
+                   (focus)="showCities()"
+                   (input)="showCities()" />
+            <mat-autocomplete #cityAuto="matAutocomplete" [displayWith]="displayCities" autoActiveFirstOption (optionSelected)="onCitySelected($event.option.value)">
+              <mat-option *ngFor="let city of filteredCities$ | async" [value]="city">{{ city.name }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="warrantyForm.get('cityId')?.hasError('required')">Customer City is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Customer Address -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Customer Address</mat-label>
             <textarea matInput formControlName="customerAddress" rows="2"></textarea>
+            <mat-error *ngIf="warrantyForm.get('customerAddress')?.hasError('required')">Customer Address is required</mat-error>
           </mat-form-field>
         </div>
 
-        <!-- State, City, Pincode -->
-        <div class="col-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Customer State</mat-label>
-            <input matInput formControlName="customerStateId" [matAutocomplete]="stateAuto" />
-            <mat-autocomplete #stateAuto="matAutocomplete" autoActiveFirstOption>
-              <mat-option *ngFor="let state of filteredStates$ | async" [value]="state.name" (onSelectionChange)="onStateSelected(state.id)">
-                {{ state.name }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-        <div class="col-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Customer City</mat-label>
-            <input matInput formControlName="customerCityId" [matAutocomplete]="cityAuto" />
-            <mat-autocomplete #cityAuto="matAutocomplete" autoActiveFirstOption>
-              <mat-option *ngFor="let city of filteredCities$ | async" [value]="city.name" (onSelectionChange)="onCitySelected(city.id)">
-                {{ city.name }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-        <div class="col-4">
+        <!-- Customer Pincode -->
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Customer Pincode</mat-label>
-            <input matInput formControlName="customerPinCode" [matAutocomplete]="pincodeAuto" />
-            <mat-autocomplete #pincodeAuto="matAutocomplete">
-              <mat-option *ngFor="let pincode of filteredPincodes$ | async" [value]="pincode.pincode">
-                {{ pincode.pincode }}
-              </mat-option>
+            <input matInput formControlName="pinCodeId"
+                   [matAutocomplete]="pincodeAuto"
+                   (focus)="showPincode()"
+                   (input)="showPincode()" />
+            <mat-autocomplete #pincodeAuto="matAutocomplete" [displayWith]="displayPincodes">
+              <mat-option *ngFor="let pin of filteredPincodes$ | async" [value]="pin">{{ pin.pincode }}</mat-option>
             </mat-autocomplete>
-          </mat-form-field>
-        </div>
-
-        <!-- Extra Info, Description -->
-        <div class="col-12">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Extra Info</mat-label>
-            <textarea matInput formControlName="warrantyExtraInfo" rows="2"></textarea>
-          </mat-form-field>
-        </div>
-        <div class="col-12">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Description</mat-label>
-            <textarea matInput formControlName="warrantyDescription" rows="2"></textarea>
+            <mat-error *ngIf="warrantyForm.get('pinCodeId')?.hasError('required')">Customer Pincode is required</mat-error>
           </mat-form-field>
         </div>
 
         <!-- Created By -->
-        <div class="col-6">
+        <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Created By</mat-label>
             <input matInput formControlName="warrantyCreatedBy" />
           </mat-form-field>
         </div>
 
-        <!-- Checkbox -->
-        <div class="col-6 d-flex align-items-center">
-          <mat-checkbox formControlName="isDisable">Active Warranty</mat-checkbox>
+        <!-- Extra Info -->
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Extra Info</mat-label>
+            <textarea matInput formControlName="warrantyExtraInfo" rows="2"></textarea>
+          </mat-form-field>
+        </div>
+
+        <!-- Description -->
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="warrantyDescription" rows="2"></textarea>
+          </mat-form-field>
+        </div>
+
+        <!-- Active/Disable Warranty -->
+        <div class="col-3 flex items-center">
+          <mat-checkbox formControlName="isDisable">Disable Warranty</mat-checkbox>
         </div>
 
         <!-- Submit Button -->
         <div class="col-12 text-end mt-4">
-          <button mat-raised-button color="primary" type="submit" class="px-6 py-2 text-lg" [disabled]="warrantyForm.invalid">
-            Submit Warranty
-          </button>
+          <button mat-raised-button color="primary" type="submit">{{ submitBtnLabel }}</button>
         </div>
+
       </form>
     </mat-card-content>
   </mat-card>

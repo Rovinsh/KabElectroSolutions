@@ -78,6 +78,11 @@ export class ApiService {
   updatePlan(id: number, planData: PlanDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Plans/${id}`, planData);
   }
+  
+  updateWarranties(id: number, warranties: WarrantyDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Warranties/${id}`, warranties);
+  }
+  
 }
 
 export interface LocationResponseDto {
@@ -197,8 +202,10 @@ export interface BrandResponseDto {
 }
 
 export interface WarrantyDto {
-  serialnumber: number;
+  id: number;
+  serialNumber: number;
   warrantyType: string;
+  warrantyTypeId: number;
   warrantyDisplayName: string;
   warrantyCode: string;
   warrantyPrice: number;
@@ -219,10 +226,11 @@ export interface WarrantyDto {
   customerMobileNo: string;
   customerEmail: string;
   customerAddress: string;
-  customerCityId: number;
+  cityId: number;
   customerCityName: string;
-  customerStateId: number;
+  stateId: number;
   customerStateName: string;
+  pinCodeId: number;
   customerPinCode: number;
   isDisable:boolean;
 }

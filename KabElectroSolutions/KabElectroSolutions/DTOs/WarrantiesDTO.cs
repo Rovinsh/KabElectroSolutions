@@ -28,11 +28,12 @@ namespace KabElectroSolutions.DTOs
         public string? CustomerMobileNo { get; set; }
         public string? CustomerEmail { get; set; }
         public string? CustomerAddress { get; set; }
-        public int? CustomerCityId { get; set; }
+        public int? CityId { get; set; }
         public string? CustomerCityName { get; set; }
-        public int? CustomerStateId { get; set; }
+        public int? StateId { get; set; }
         public string? CustomerStateName { get; set; }
-        public string? CustomerPinCode { get; set; }
+        public int? PinCodeId { get; set; }
+        public int? CustomerPinCode { get; set; }
         public bool IsDisable { get; set; }
 
     }

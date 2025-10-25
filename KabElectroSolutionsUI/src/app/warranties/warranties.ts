@@ -5,12 +5,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
 import { ApiService, WarrantyDto } from '../services/api.service';
 import { WarrantyFormComponent } from '../warranty-form/warranty-form';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-warranties',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, AgGridModule,MatIconModule],
+  imports: [CommonModule, MatDialogModule, AgGridModule],
  templateUrl: './warranties.html',
   styleUrl: './warranties.css'
 })
@@ -28,12 +27,11 @@ export class Warranties implements OnInit {
   }
 
   openPopup(data?: any) {
-    const isEdit = !!data;
-
-    const dialogRef = this.dialog.open(WarrantyFormComponent, {
+  const isEdit = !!data; 
+   const dialogRef = this.dialog.open(WarrantyFormComponent, {
       width: '900px',
-      maxWidth: '95vw',   // ✅ Mobile-friendly width
-      maxHeight: '90vh',  // ✅ Forces scrolling if too tall
+      maxWidth: '95vw',   
+      maxHeight: '90vh', 
       height: 'auto',
       panelClass: 'custom-dialog-container',
       disableClose: true,
@@ -42,13 +40,13 @@ export class Warranties implements OnInit {
         record: data || null
       }
     });
-
-    dialogRef?.afterClosed().subscribe(result => {
-      if (result === 'success') {
-        this.loadWarranties();
-      }
-    });
-  }
+  
+  dialogRef?.afterClosed().subscribe(result => {
+    if (result === 'success') {
+      this.loadWarranties();
+    }
+  });
+}
 
 
   onCellClicked(event: any) {
@@ -60,7 +58,7 @@ export class Warranties implements OnInit {
   warrantyCols: ColDef[] = [
     { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
     { headerName: 'Warranty', field: 'warrantyDisplayName', filter: true, width: 100 },
-    { headerName: 'Serial NO', field: 'warrantySerialNumber', filter: true, width: 100 },
+    { headerName: 'Serial NO', field: 'serialNumber', filter: true, width: 100 },
     { headerName: 'Type', field: 'warrantyType', filter: true, width: 100 },
     { headerName: 'Code', field: 'warrantyCode', filter: true, width: 100 },
     { headerName: 'Price', field: 'warrantyPrice', filter: true, width: 100 },
@@ -75,10 +73,10 @@ export class Warranties implements OnInit {
     { headerName: 'Customer Name', field: 'customerName', filter: true, width: 100 },
     { headerName: 'Customer Mobile No', field: 'customerMobileNo', filter: true, width: 100 },
     { headerName: 'Customer Email', field: 'customerEmail', filter: true, width: 100 },
-    { headerName: 'Customer Address', field: 'customerAddress', filter: true, width: 100 },
-    { headerName: 'Customer City', field: 'customerCityName', filter: true, width: 100 },
-    { headerName: 'Customer State', field: 'customerStateName', filter: true, width: 100 },
-    { headerName: 'Customer Pincode', field: 'customerPinCode', filter: true, width: 100 },
+    { headerName: 'Address', field: 'customerAddress', filter: true, width: 100 },
+    { headerName: 'City', field: 'customerCityName', filter: true, width: 100 },
+    { headerName: 'State', field: 'customerStateName', filter: true, width: 100 },
+    { headerName: 'Pincode', field: 'customerPinCode', filter: true, width: 100 },
     { headerName: 'Scratch Code', field: 'warrantyScratchCode', filter: true, width: 100 },
     { headerName: 'Extra Info', field: 'warrantyExtraInfo', filter: true, width: 100 },
     {

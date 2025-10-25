@@ -8,3 +8,11 @@ mat-card-header {
   font-weight: bold;
   font-size: 18px;
 }
+mat-card-title {
+  color: black !important;
+}
+.divheight{height:600px;}
+mat-card {
+  overflow-x: auto;
+}
+.marginbottom{margin-bottom:20px !important}

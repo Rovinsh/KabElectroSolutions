@@ -7,7 +7,6 @@ namespace KabElectroSolutions.Models
     {
         public int Id { get; set; }
         public long SerialNumber { get; set; }
-        public string? WarrantyType { get; set; }
         public int? WarrantyTypeId { get; set; } 
         public string? WarrantyDisplayName { get; set; }
         public string? WarrantyCode { get; set; }
@@ -24,16 +23,13 @@ namespace KabElectroSolutions.Models
         public string? WarrantyDescription { get; set; }
         public string? WarrantyCreatedBy { get; set; }
         public int? ProductId { get; set; }
-        public string? ProductName { get; set; }
         public string? CustomerName { get; set; }
         public string? CustomerMobileNo { get; set; }
         public string? CustomerEmail { get; set; }
         public string? CustomerAddress { get; set; }
-        public int? CustomerCityId { get; set; }
-        public string? CustomerCityName { get; set; }
-        public int? CustomerStateId { get; set; }
-        public string? CustomerStateName { get; set; }
-        public string? CustomerPinCode { get; set; }
+        public int? CityId { get; set; }
+        public int? StateId { get; set; }
+        public int? PinCodeId { get; set; }
         public bool IsDisable { get; set; } 
     }
 

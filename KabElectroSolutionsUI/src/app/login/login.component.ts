@@ -46,6 +46,8 @@ export class LoginComponent {
             this.auth.password = loginData.password;
             this.auth.firstName = res.data.firstname;
             this.auth.lastName = res.data.lastname??"";
+            localStorage.setItem('firstName', this.auth.firstName);
+            localStorage.setItem('lastName', this.auth.lastName??"");
             const redirectUrl = localStorage.getItem('redirectUrl');
              this.isLoading = false;
         if (redirectUrl) {

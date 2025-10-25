@@ -10,13 +10,14 @@ html, body {
 /* Fullscreen Background */
 .login-page {
   position: relative;
-  height: 100vh;
-  width: 100vw;
+  height: 95vh;
+  width: 95vw;
   background: url('./../../assets/loginimage.png') center/cover no-repeat fixed;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 /* White translucent overlay for faded effect */
@@ -215,4 +216,3 @@ html, body {
 body.loading {
   overflow: hidden;
 }
-
