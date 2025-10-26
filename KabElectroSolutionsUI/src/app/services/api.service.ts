@@ -33,9 +33,11 @@ export class ApiService {
   getPincodes(): Observable<PincodeResponseDto> {
     return this.http.get<PincodeResponseDto>(`${this.baseUrl+"Locations/pincodes"}`);
   }
-    getWarrantyTypes(): Observable<WarrantyTypeResponseDto> {
+
+  getWarrantyTypes(): Observable<WarrantyTypeResponseDto> {
     return this.http.get<WarrantyTypeResponseDto>(`${this.baseUrl+"WarrantyTypes/warrantyTypes"}`);
   }
+
   getCategories(): Observable<CategoryResponseDto> {
     return this.http.get<CategoryResponseDto>(`${this.baseUrl + "Categories/categories"}`);
   }
@@ -49,6 +51,14 @@ export class ApiService {
   }
   getWarranty(): Observable<WarrantyResponseDto> {
     return this.http.get<WarrantyResponseDto>(`${this.baseUrl + "Warranties/warranties"}`);
+  }
+
+  getWarranties(phone?: string, email?: string): Observable<WarrantyDto[]> {
+    const params: any = {};
+    if (phone) params.phone = phone;
+    if (email) params.email = email;
+
+    return this.http.get<WarrantyDto[]>(`${this.baseUrl}Warranties/byparameter`, { params });
   }
 
   postCategory(categoryData: CategoryDto): Observable<any> {
@@ -81,6 +91,10 @@ export class ApiService {
   
   updateWarranties(id: number, warranties: WarrantyDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Warranties/${id}`, warranties);
+  }
+  
+  postClaim(claimData: ClaimDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims`, claimData);
   }
   
 }
@@ -205,6 +219,7 @@ export interface WarrantyDto {
   id: number;
   serialNumber: number;
   warrantyType: string;
+  catgoryName: string;
   warrantyTypeId: number;
   warrantyDisplayName: string;
   warrantyCode: string;
@@ -239,4 +254,143 @@ export interface WarrantyResponseDto {
   status: number;
   message: string;
   data: WarrantyDto[];
+}
+
+export interface ClaimDto {
+  id?: number;
+  technicianName?: string;
+  lmStatus?: string;
+  itemName?: string;
+  rating?: number | null;
+  l3ApprovalDate?: string | null;
+  servicePartner?: number;
+  otpRequired?: boolean;
+  displayName?: string;
+  reasons?: string;
+  callCloseRemarks?: string;
+  concern?: string;
+  claimRegisteredPhoneNumber?: string;
+  reasonOfLoss?: string;
+  estimationFirst?: number | null;
+  solvyPan?: string;
+  l2ServiceRejectionRemarks?: string;
+  servicePartnerName?: string;
+  voiceUrl?: string;
+  estimationParts?: string;
+  customerAddress?: string;
+  brandComplaintNumber?: string;
+  address?: number;
+  otpVerificationTimestamp?: string | null;
+  warrantyStartDate?: string | null;
+  channelId?: number;
+  phone?: string;
+  itemPrice?: number;
+  warrantyDuration?: number;
+  invoiceDate?: string | null;
+  assignedExecutiveName?: string;
+  alternateContact?: string;
+  planSoldDate?: string;
+  raiseAdditional?: boolean;
+  warrantyTypeId?: number;
+  customerState?: string;
+  itemSerialNumber?: string;
+  solvyAddress?: string;
+  endDate?: string | null;
+  itemBrand?: string;
+  l2ServiceApprovalDate?: string | null;
+  claimVerificationDocumentUploadTimestamp?: string | null;
+  customerEmail?: string;
+  channelName?: string;
+  claimRedeemStatus?: string;
+  createdTime?: string; 
+  endStatus?: string;
+  l2InsuranceRejectionRemarks?: string;
+  callAbortDateTime?: string | null;
+  servicePartnerCity?: string;
+  estimationDateTime?: string | null;
+  estimationActionDate?: string | null;
+  repairCompletionDate?: string | null;
+  warrantyActivationCode?: string;
+  invoiceActionDate?: string | null;
+  status?: number;
+  itemImei?: string;
+  hsnRequired?: boolean;
+  pincode?: number;
+  estimationLast?: number | null;
+  servicePartnerPhone?: string;
+  itemCategory?: string;
+  technician?: string;
+  startDate?: string | null;
+  customerAlternateEmail?: string;
+  servicePartnerState?: string;
+  claimRedeemedDate?: string | null;
+  l2InsuranceApprovalDate?: string | null;
+  utrNumber?: string;
+  extraInfo?: string;
+  appointmentConfirmationTime?: string | null;
+  created?: string;
+  claimRedeemed?: boolean;
+  previousVisitProductSerialNumber?: string;
+  servicePartnerGST?: string;
+  callAbortReason?: string;
+  insuredCompany?: string;
+  solvyGST?: string;
+  paymentDone?: string;
+  servicePartnerPincode?: number;
+  claimApproved?: number;
+  appointmentPendingReason?: string;
+  insured?: string;
+  statusName?: string;
+  selfInvoice?: string;
+  servicePartnerPAN?: string;
+  servicePartnerAddress?: string;
+  storeName?: string;
+  l1ApprovalDate?: string | null;
+  previousStatus?: number;
+  firstVisitTAT?: number | null;
+  paymentStatus?: string;
+  estimationPaymentAmount?: number | null;
+  customerPhone?: string;
+  warranty?: number;
+  claimPaymentStatus?: string;
+  registeredBy?: number;
+  l1RejectionRemarks?: string;
+  dropDate?: string | null;
+  cta?: string;
+  customerCity?: string;
+  item?: number;
+  isAddressEditable?: boolean;
+  registeredByName?: string;
+  l3RejectionRemarks?: string;
+  createdDate?: string;
+  claimType?: number;
+  repairDoneTAT?: number | null;
+  warrantyType?: string;
+  pickupDate?: string | null;
+  itemCategoryId?: number;
+  paymentId?: string;
+  remarks?: string;
+  type?: string;
+  claimAmount?: number | null;
+  appointment?: number;
+  solvyStateCode?: string;
+  paymentTxnId?: string;
+  paymentAmount?: number | null;
+  amount?: number | null;
+  invoiceNumber?: string;
+  customerName?: string;
+  sgst?: string;
+  cgst?: string;
+  igst?: string;
+  sgsTList?: string[];
+  cgsTList?: string[];
+  igsTList?: string[];
+}
+
+
+
+export interface ClaimResponseDto {
+  status: number;
+  message: string;
+  data: ClaimDto[];
 }

@@ -20,6 +20,7 @@ namespace KabElectroSolutions.Controllers
             _logger = logger;
             _context = context;
         }
+      
         [HttpGet("warranties")]
         public async Task<IActionResult> GetWarranties()
         {
@@ -66,7 +67,69 @@ namespace KabElectroSolutions.Controllers
                 data = warranties
             });
         }
-        
+
+        [HttpGet("byParameter")]
+        public async Task<IActionResult> GetWarrantiesByParameter([FromQuery] string? phone, [FromQuery] string? email)
+        {
+            if (string.IsNullOrWhiteSpace(phone) && string.IsNullOrWhiteSpace(email))
+                return BadRequest("At least one of phone or email must be provided.");
+
+            var warranties = await (
+             from w in _context.Warranties
+             join p in _context.Plans on w.ProductId equals p.Id
+             join c in _context.Categories on p.CatId equals c.Id into categoryGroup
+             from cat in categoryGroup.DefaultIfEmpty() // LEFT JOIN to handle missing categories
+             where
+                 (!string.IsNullOrEmpty(phone) && w.CustomerMobileNo == phone) ||
+                 (!string.IsNullOrEmpty(email) && w.CustomerEmail == email)
+             select new WarrantiesDTO
+             {
+                 Id = w.Id,
+                 SerialNumber = w.SerialNumber,
+                 ProductId = w.ProductId,
+                 ProductName = p.PlanName,
+                 CatgoryName = cat.CatName, 
+                 WarrantyTypeId = w.WarrantyTypeId,
+                 WarrantyType = _context.WarrantyTypes.Where(wt => wt.Id == w.WarrantyTypeId).Select(c => c.Name).FirstOrDefault(),
+                 WarrantyDisplayName = w.WarrantyDisplayName,
+                 WarrantyCode = w.WarrantyCode,
+                 WarrantyPrice = w.WarrantyPrice,
+                 WarrantyDuration = w.WarrantyDuration,
+                 WarrantyStartDate = w.WarrantyStartDate,
+                 WarrantyEndDate = w.WarrantyEndDate,
+                 WarrantyInvoiceNo = w.WarrantyInvoiceNo,
+                 WarrantyPurchaseDate = w.WarrantyPurchaseDate,
+                 WarrantySeller = w.WarrantySeller,
+                 WarrantyCouponCode = w.WarrantyCouponCode,
+                 WarrantyScratchCode = w.WarrantyScratchCode,
+                 WarrantyExtraInfo = w.WarrantyExtraInfo,
+                 WarrantyDescription = w.WarrantyDescription,
+                 WarrantyCreatedBy = w.WarrantyCreatedBy,
+                 CustomerName = w.CustomerName,
+                 CustomerMobileNo = w.CustomerMobileNo,
+                 CustomerEmail = w.CustomerEmail,
+                 CustomerAddress = w.CustomerAddress,
+                 CityId = w.CityId,
+                 CustomerCityName = _context.Cities.Where(c => c.Id == w.CityId).Select(ct => ct.Name).FirstOrDefault(),
+                 StateId = w.StateId,
+                 CustomerStateName = _context.Locations.Where(s => s.Id == w.StateId).Select(c => c.Name).FirstOrDefault(),
+                 PinCodeId = w.PinCodeId,
+                 CustomerPinCode = _context.Pincodes.Where(pin => pin.Id == w.PinCodeId).Select(pn => pn.PincodeValue).FirstOrDefault(),
+                 IsDisable = w.IsDisable
+             })
+             .ToListAsync();
+
+                    if (!warranties.Any())
+                        return NotFound("No warranty found for the provided criteria.");
+
+                    return Ok(new
+                    {
+                        status = 200,
+                        message = "Warranty details fetched successfully.",
+                        data = warranties
+                    });
+       }
+
         [HttpPost]
         public async Task<IActionResult> CreateWarranty([FromBody] Warranties warranties)
         {

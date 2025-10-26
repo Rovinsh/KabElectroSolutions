@@ -23,6 +23,7 @@ namespace KabElectroSolutions.DTOs
         public string? WarrantyDescription { get; set; }
         public string? WarrantyCreatedBy { get; set; }
         public int? ProductId { get; set; }
+        public string? CatgoryName { get; set; }
         public string? ProductName { get; set; }
         public string? CustomerName { get; set; }
         public string? CustomerMobileNo { get; set; }

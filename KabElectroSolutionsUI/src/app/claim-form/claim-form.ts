@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 // Angular Material
@@ -12,9 +12,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable, startWith, map, of } from 'rxjs';
-import { ApiService, CitiesDto, LocationResponseDto, PincodeDto, StateDto,CategoryDto, BrandDto, WarrantyTypeDto, PlanDto } from '../services/api.service';
-
+import { Observable, startWith, map, of, debounceTime, distinctUntilChanged, switchMap, combineLatest } from 'rxjs';
+import { ApiService,WarrantyDto } from '../services/api.service';
+import { MatDialog } from '@angular/material/dialog';
+import { WarrantyPopupComponent } from '../warranty-popup/warranty-popup';
+import { ToastService } from '../services/toastService.service';
 @Component({
   selector: 'app-claim-form',
   templateUrl: './claim-form.html',
@@ -35,79 +37,21 @@ import { ApiService, CitiesDto, LocationResponseDto, PincodeDto, StateDto,Catego
 })
 export class ClaimFormComponent implements OnInit {
   claimForm!: FormGroup;
-  selectedStateId: number | null = null;
-  selectedCityId: number | null = null;
-
-  // filtered observables
-  filteredStates$!: Observable<StateDto[]>;
-  filteredCities$!: Observable<CitiesDto[]>;
-  filteredPincodes$!: Observable<PincodeDto[]>;
-  filteredWarrantyTypes$!: Observable<WarrantyTypeDto[]>;
-  customerState = new FormControl('');
-  locations: LocationResponseDto['data'] = {};
-  stateIds: string[] = [];
-  cityIds: string[] = [];
-  pincodes: PincodeDto[] = [];
-  states: StateDto[] = [];
-  cities: CitiesDto[] = [];
-  products: string[]=[];
-  categories: CategoryDto[]=[];
-  brands: BrandDto[]=[];
-  plans: PlanDto[]=[];
-  warrantyTypes:WarrantyTypeDto[]=[];
-
-  constructor(private fb: FormBuilder, private http: HttpClient, private apiService: ApiService) { }
-
+  constructor(private fb: FormBuilder, private http: HttpClient, private apiService: ApiService, private dialog: MatDialog) { }
+ private toast = inject(ToastService);
   ngOnInit(): void {
-    // this.products= ["DEVICE SECURE - GOLD","DEVICE SECURE - GOLD 1", "DEVICE SECURE - GOLD 2"];
-    // this.categories= [{id:1, name:"Air Conditioner"},{id:2, name:"Washing Machine"},{id:3, name:"Refrigerator"}]
-    // this.brands= [{id:1, name:"LG",categoryId:1},{id:2, name:"Samsung",categoryId:1},{id:3, name:"Whirlpool",categoryId:1},{id:4, name:"Samsung",categoryId:2},{id:5, name:"LG",categoryId:2},{id:6, name:"LG",categoryId:3}];
-
-    this.apiService.getLocations().subscribe(res => {
-      this.locations = res.data;
-      this.stateIds = Object.keys(this.locations);
-    });
-
-    this.apiService.getStates().subscribe(res => {
-      this.states = res.data;
-    });
-
-    this.apiService.getCities().subscribe(res => {
-      this.cities = res.data;
-    });
-
-    this.apiService.getPincodes().subscribe(res => {
-      this.pincodes = res.data;
-    });
-
-    this.apiService.getWarrantyTypes().subscribe(res => {
-      this.warrantyTypes = res.data;
-    });
-
-    this.apiService.getCategories().subscribe(res => {
-      this.categories = res.data;
-    });
-
-    this.apiService.getBrands().subscribe(res => {
-      this.brands = res.data;
-    });
-
-     this.apiService.getPlans().subscribe(res => {
-      this.plans = res.data;
-    });
-
     this.claimForm = this.fb.group({
       technicianName: [''],
       lmStatus: [''],
-      itemName: [''],
+      itemName: ['',Validators.required],
       rating: [null],
       l3ApprovalDate: [null],
       servicePartner: [null],
       otpRequired: [false],
       displayName: [''],
-      reasons: [''],
+      reasons: ['',Validators.required],
       callCloseRemarks: [''],
-      concern: [''],
+      concern: ['',Validators.required],
       claimRegisteredPhoneNumber: [''],
       reasonOfLoss: [''],
       estimationFirst: [null],
@@ -116,29 +60,28 @@ export class ClaimFormComponent implements OnInit {
       servicePartnerName: [''],
       voiceUrl: [''],
       estimationParts: [''],
-      customerAddress: [''],
+      customerAddress: ['',Validators.required],
       brandComplaintNumber: [''],
       address: [null],
       otpVerificationTimestamp: [null],
       warrantyStartDate: [null],
       channelId: [null],
       phone: [''],
-      itemPrice: [null],
+      itemPrice: [null,Validators.required],
       warrantyDuration: [null],
       invoiceDate: [null],
       assignedExecutiveName: [''],
       alternateContact: [''],
-      planSoldDate: [null],
+      planSoldDate: [null,Validators.required],
       raiseAdditional: [false],
       warrantyTypeId: [null],
-      customerState: [''],
-      itemSerialNumber: [''],
+      itemSerialNumber: ['',Validators.required],
       solvyAddress: [''],
       endDate: [null],
       itemBrand: [''],
       l2ServiceApprovalDate: [null],
       claimVerificationDocumentUploadTimestamp: [null],
-      customerEmail: [''],
+      customerEmail: ['',Validators.required],
       customerAlternativeEmail: [''],
       channelName: [''],
       claimRedeemStatus: [''],
@@ -150,12 +93,12 @@ export class ClaimFormComponent implements OnInit {
       estimationDateTime: [null],
       estimationActionDate: [null],
       repairCompletionDate: [null],
-      warrantyActivationCode: [''],
+      warrantyActivationCode: ['',Validators.required],
       invoiceActionDate: [null],
       status: [null],
       itemImei: [''],
       hsnRequired: [false],
-      customerPincode: [''],
+      customerPincode: ['',Validators.required],
       estimationLast: [null],
       servicePartnerPhone: [''],
       itemCategory: [''],
@@ -190,7 +133,7 @@ export class ClaimFormComponent implements OnInit {
       firstVisitTAT: [null],
       paymentStatus: [''],
       estimationPaymentAmount: [null],
-      customerPhone: [''],
+      customerPhone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       customerAlternativePhone: [''],
       warranty: [null],
       claimPaymentStatus: [''],
@@ -198,7 +141,7 @@ export class ClaimFormComponent implements OnInit {
       l1RejectionRemarks: [''],
       dropDate: [null],
       cta: [''],
-      customerCity: [''],
+      customerCity: ['',Validators.required],
       item: [null],
       isAddressEditable: [false],
       registeredByName: [''],
@@ -206,11 +149,11 @@ export class ClaimFormComponent implements OnInit {
       createdDate: [null],
       claimType: [null],
       repairDoneTAT: [null],
-      warrantyType: [''],
+      warrantyType: ['',Validators.required],
       pickupDate: [null],
       itemCategoryId: [null],
       paymentId: [''],
-      remarks: [''],
+      remarks: ['',Validators.required],
       type: [''],
       claimAmount: [null],
       appointment: [null],
@@ -219,122 +162,100 @@ export class ClaimFormComponent implements OnInit {
       paymentAmount: [null],
       amount: [null],
       invoiceNumber: [''],
-      customerName: [''],
+      customerName: ['',Validators.required],
+      categoryName: ['',Validators.required],
+      customerState: ['',Validators.required],
       sgst: [''],
       cgst: [''],
       igst: [''],
       SLANo: ['']
     });
+    
+combineLatest([
+  this.claimForm.get('customerPhone')!.valueChanges.pipe(
+    startWith(this.claimForm.get('customerPhone')!.value || ''),
+    debounceTime(500),
+    distinctUntilChanged()
+  ),
+  this.claimForm.get('customerEmail')!.valueChanges.pipe(
+    startWith(this.claimForm.get('customerEmail')!.value || ''),
+    debounceTime(500),
+    distinctUntilChanged()
+  )
+])
+.pipe(
+  switchMap(([phone, email]) => {
+    const phoneValid = phone && phone.length === 10 && /^[0-9]+$/.test(phone);
+    const emailValid = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    // this.claimForm.get('customerState')!.valueChanges.subscribe(stateId => {
-    //   this.cityIds = stateId && this.locations[this.selectedStateId!]
-    //     ? Object.keys(this.locations[stateId].cities)
-    //     : [];
-    //   this.claimForm.patchValue({ customerCity: '', customerPincode: '' });
-    // });
+    if (phoneValid || emailValid) {
+      return this.getWarrantyByParameter(phone || '', email || '');
+    }
 
-    this.claimForm.get('customerCity')!.valueChanges.subscribe(cityId => {
-      const stateId = this.selectedStateId;
-      // this.pincodes = (stateId && cityId)
-      //   ? this.locations[stateId].cities[cityId].pincodes
-      //   : [];
-      // this.claimForm.patchValue({ customerPincode: '' });
-    });
-
-    this.filteredWarrantyTypes$ = this.claimForm.get('warrantyType')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterWarrantyTypes(value || ''))
-    );
-
-
-    this.filteredStates$ = this.claimForm.get('customerState')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterStates(value || ''))
-    );
-
-    this.filteredCities$ = this.claimForm.get('customerCity')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterCities(value || '', this.cities))
-    );
-
-    this.filteredPincodes$ = this.claimForm.get('customerPincode')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterPincodes(value || '', this.pincodes))
-    );
+    return of(null);
+  })
+)
+.subscribe((response) => {
+  if (response) {
+    this.openPopup(response);
+  }
+});
   }
 
-  showAllStates(): void {
-    this.claimForm.get('customerState')!.setValue('');
-  }
-
-  private _filterStates(value: string): StateDto[] {
-    const filterValue = value.toLowerCase();
-    return this.states.filter(state =>
-      state.name.toLowerCase().includes(filterValue)
-    );
-  }
-
-  showAllWarrantyTypes() {
-  // Trigger valueChanges with an empty string so all warranty types are returned
-  this.filteredWarrantyTypes$ = of(this.warrantyTypes);
+getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto> {
+  return this.apiService.getWarranties(phone, email).pipe(
+    map((res: any) => res || null)
+  );
 }
 
-   private _filterWarrantyTypes(value: string): WarrantyTypeDto[] {
-    const filterValue = value.toLowerCase();
-    return this.warrantyTypes.filter(warrantyType =>
-      warrantyType.name.toLowerCase().includes(filterValue)
-    );
-  }
+  openPopup(data: WarrantyDto | WarrantyDto[]) {
+    const dialogRef = this.dialog.open(WarrantyPopupComponent, {
+      width: '1100px',
+    maxWidth: '110vw',
+    maxHeight: '90vh',
+    height: 'auto',
+    panelClass: 'custom-dialog-container',
+    disableClose: true,
+    data: { record: Array.isArray(data) ? data : [data] }
+    });
 
-  // private _filter(value: string): string[] {
-  //   const filterValue = value.toLowerCase();
-  //   return this.states.filter(state =>
-  //     state.toLowerCase().includes(filterValue)
-  //   );
-  // }
-
-  private _filterCities(value: string, sourceCities: CitiesDto[]): CitiesDto[] {
-    if (!this.selectedStateId) return [];
-    const filterValue = value.toLowerCase();
-    return sourceCities.filter(city =>
-      city.name.toLowerCase().includes(filterValue)
-    );
-  }
-
-  private _filterPincodes(value: string | number, cityPincodes: PincodeDto[]): PincodeDto[] {
-    if (!this.selectedCityId) return [];
-    const filterValue = value.toString();
-    return cityPincodes.filter(p => p.pincode.toString().includes(filterValue));
-  }
+    dialogRef.afterClosed().subscribe(selectedRow => {
+      if (selectedRow) {
+      this.claimForm.patchValue({
+        //  customerPhone:selectedRow.customerMobileNo,
+        //  customerEmail:selectedRow.customerEmail,
+        customerName:selectedRow.customerName,
+        customerState:selectedRow.customerStateName,
+         customerCity:selectedRow.customerCityName,
+        customerAddress:selectedRow.customerAddress,
+        customerPincode:selectedRow.customerPinCode,
+        itemSerialNumber:selectedRow.serialNumber,
+        itemName:selectedRow.productName,
+        categoryName:selectedRow.catgoryName,
+        itemPrice:selectedRow.warrantyPrice,
+        planSoldDate:selectedRow.warrantyPurchaseDate,
+        warranty:selectedRow.serialNumber ,
+        warrantyActivationCode:selectedRow.warrantyCode,
+        warrantyType:selectedRow.warrantyType,
+        displayName:selectedRow.displayName,
+    });
+    };
+  });}
 
   onSubmit(): void {
     if (this.claimForm.valid) {
-      this.http.post('/api/Claims', this.claimForm.value).subscribe({
-        next: (res) => console.log('Claim created:', res),
-        error: (err) => console.error('Error creating claim:', err)
+ const formData = {
+      ...this.claimForm.value,
+      // isDisable: this.claimForm.value.isDisable ? true : false,
+      claimRegisteredPhoneNumber: this.claimForm.value.customerMobileNo,
+    };
+this.apiService.postClaim(formData).subscribe({
+        next: () => {
+          this.toast.success('Brand Created Successfully!');
+        },
+        error: (err) => this.toast.error(err?.error || 'Error creating Brand!')
       });
     }
   }
 
-  // Event handlers for selection
-  onStateSelected(stateId: number) {
-    this.selectedStateId = stateId;
-    const stateCities = this.cities.filter(c => c.stateId === stateId);
-    this.filteredCities$ = this.claimForm.get('customerCity')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterCities(value || '', stateCities))
-    );  
-    this.claimForm.patchValue({ customerCity: null });
-  }
-
-  onCitySelected(cityId: number) {
-    this.selectedCityId = cityId;
-    const cityPincodes = this.pincodes.filter(c => c.cityId === cityId);    
-
-    this.filteredPincodes$ = this.claimForm.get('customerPincode')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterPincodes(value || '',cityPincodes))
-    );
-    this.claimForm.patchValue({ customerPincode: '' });
-  }
 }
