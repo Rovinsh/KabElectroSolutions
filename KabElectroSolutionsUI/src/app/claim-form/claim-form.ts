@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-// Angular Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -17,6 +16,8 @@ import { ApiService,WarrantyDto } from '../services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { WarrantyPopupComponent } from '../warranty-popup/warranty-popup';
 import { ToastService } from '../services/toastService.service';
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-claim-form',
   templateUrl: './claim-form.html',
@@ -32,7 +33,8 @@ import { ToastService } from '../services/toastService.service';
     MatCardModule,
     MatSelectModule,
     CommonModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatIconModule
   ]
 })
 export class ClaimFormComponent implements OnInit {
@@ -44,6 +46,7 @@ export class ClaimFormComponent implements OnInit {
       technicianName: [''],
       lmStatus: [''],
       itemName: ['',Validators.required],
+      serchcustomerPhone: [null],
       rating: [null],
       l3ApprovalDate: [null],
       servicePartner: [null],
@@ -164,6 +167,7 @@ export class ClaimFormComponent implements OnInit {
       invoiceNumber: [''],
       customerName: ['',Validators.required],
       categoryName: ['',Validators.required],
+      brandName: ['',Validators.required],
       customerState: ['',Validators.required],
       sgst: [''],
       cgst: [''],
@@ -171,43 +175,58 @@ export class ClaimFormComponent implements OnInit {
       SLANo: ['']
     });
     
-combineLatest([
-  this.claimForm.get('customerPhone')!.valueChanges.pipe(
-    startWith(this.claimForm.get('customerPhone')!.value || ''),
-    debounceTime(500),
-    distinctUntilChanged()
-  ),
-  this.claimForm.get('customerEmail')!.valueChanges.pipe(
-    startWith(this.claimForm.get('customerEmail')!.value || ''),
-    debounceTime(500),
-    distinctUntilChanged()
-  )
-])
-.pipe(
-  switchMap(([phone, email]) => {
-    const phoneValid = phone && phone.length === 10 && /^[0-9]+$/.test(phone);
-    const emailValid = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+ this.claimForm.get('serchcustomerPhone')!.valueChanges
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    )
+    .subscribe((value: string) => {
+      if (value && value.trim().length > 2) {
+        this.performSearch(value.trim());
+      }
+    });
 
-    if (phoneValid || emailValid) {
-      return this.getWarrantyByParameter(phone || '', email || '');
+  }
+
+onSearch(): void {
+  const value = this.claimForm.get('serchcustomerPhone')!.value?.trim();
+  if (!value) {
+    this.toast.error('Please enter phone number or email');
+    return;
+  }
+  this.performSearch(value);
+}
+performSearch(value: string): void {
+  const isEmail = value.includes('@');
+  const phone = isEmail ? '' : value;
+  const email = isEmail ? value : '';
+
+  const phoneValid = phone ? /^[0-9]{10}$/.test(phone) : false;
+  const emailValid = email ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) : false;
+
+  if (!phoneValid && !emailValid) {
+    return;
+  }
+
+  this.getWarrantyByParameter(phone, email).subscribe({
+    next: (res: any) => {
+      if (res && res.length > 0) {
+        this.openPopup(res);
+      } else {
+        this.toast.error('No record found for the given input.');
+      }
+    },
+    error: () => {
+      this.toast.error('Error fetching warranty details');
     }
-
-    return of(null);
-  })
-)
-.subscribe((response) => {
-  if (response) {
-    this.openPopup(response);
-  }
-});
-  }
-
-getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto> {
-  return this.apiService.getWarranties(phone, email).pipe(
-    map((res: any) => res || null)
-  );
+  });
 }
 
+getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto[]> {
+  return this.apiService.getWarranties(phone, email).pipe(
+    map((res: any) => res?.data || res || [])
+  );
+}
   openPopup(data: WarrantyDto | WarrantyDto[]) {
     const dialogRef = this.dialog.open(WarrantyPopupComponent, {
       width: '1100px',
@@ -222,8 +241,8 @@ getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto> {
     dialogRef.afterClosed().subscribe(selectedRow => {
       if (selectedRow) {
       this.claimForm.patchValue({
-        //  customerPhone:selectedRow.customerMobileNo,
-        //  customerEmail:selectedRow.customerEmail,
+          customerPhone:selectedRow.customerMobileNo,
+          customerEmail:selectedRow.customerEmail,
         customerName:selectedRow.customerName,
         customerState:selectedRow.customerStateName,
          customerCity:selectedRow.customerCityName,
@@ -233,6 +252,7 @@ getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto> {
         itemSerialNumber:"dddd",
         itemName:selectedRow.productName,
         categoryName:selectedRow.catgoryName,
+        brandName:selectedRow.brandName,
         itemPrice:selectedRow.warrantyPrice,
         planSoldDate:"2025-07-18",
         warranty:selectedRow.serialNumber ,
@@ -243,7 +263,7 @@ getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto> {
         servicePartnerName:"KAB ELECTRO SOLUTIONS",
         servicePartner:"537416",
         solvyPan:"AAPCS1780F",
-        itemBrand:"Daikin",
+        itemBrand:selectedRow.brandName,
         claimApproved:"0",
         channelId:"0",
         channelName:"Croma",
@@ -286,14 +306,13 @@ getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto> {
     if (this.claimForm.valid) {
  const formData = {
       ...this.claimForm.value,
-      // isDisable: this.claimForm.value.isDisable ? true : false,
       claimRegisteredPhoneNumber: this.claimForm.value.customerMobileNo,
     };
 this.apiService.postClaim(formData).subscribe({
         next: () => {
-          this.toast.success('Brand Created Successfully!');
+          this.toast.success('Warranty Created Successfully!');
         },
-        error: (err) => this.toast.error(err?.error || 'Error creating Brand!')
+        error: (err) => this.toast.error(err?.error || 'Error creating Warranty!')
       });
     }
   }

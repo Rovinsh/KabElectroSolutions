@@ -52,6 +52,11 @@
       <td mat-cell *matCellDef="let row">{{ row.catgoryName }}</td>
     </ng-container>
 
+    <ng-container matColumnDef="brandName">
+      <th mat-header-cell *matHeaderCellDef>Brand Name</th>
+      <td mat-cell *matCellDef="let row">{{ row.brandName }}</td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"
         [class.selected]="selectedId === row.id">

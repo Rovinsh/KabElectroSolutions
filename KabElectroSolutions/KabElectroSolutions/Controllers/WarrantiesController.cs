@@ -75,21 +75,24 @@ namespace KabElectroSolutions.Controllers
                 return BadRequest("At least one of phone or email must be provided.");
 
             var warranties = await (
-             from w in _context.Warranties
-             join p in _context.Plans on w.ProductId equals p.Id
-             join c in _context.Categories on p.CatId equals c.Id into categoryGroup
-             from cat in categoryGroup.DefaultIfEmpty() // LEFT JOIN to handle missing categories
-             where
-                 (!string.IsNullOrEmpty(phone) && w.CustomerMobileNo == phone) ||
-                 (!string.IsNullOrEmpty(email) && w.CustomerEmail == email)
-             select new WarrantiesDTO
-             {
-                 Id = w.Id,
-                 SerialNumber = w.SerialNumber,
-                 ProductId = w.ProductId,
-                 ProductName = p.PlanName,
-                 CatgoryName = cat.CatName, 
-                 WarrantyTypeId = w.WarrantyTypeId,
+              from w in _context.Warranties
+              join p in _context.Plans on w.ProductId equals p.Id
+              join c in _context.Categories on p.CatId equals c.Id into categoryGroup
+              from cat in categoryGroup.DefaultIfEmpty()
+              join b in _context.Brands on cat.Id equals b.CategoryId into brandGroup
+              from brand in brandGroup.DefaultIfEmpty() // LEFT JOIN Brands
+              where
+                  (!string.IsNullOrEmpty(phone) && w.CustomerMobileNo == phone) ||
+                  (!string.IsNullOrEmpty(email) && w.CustomerEmail == email)
+              select new WarrantiesDTO
+              {
+                  Id = w.Id,
+                  SerialNumber = w.SerialNumber,
+                  ProductId = w.ProductId,
+                  ProductName = p.PlanName,
+                  CatgoryName = cat.CatName,
+                  BrandName = brand.BrandName,
+                  WarrantyTypeId = w.WarrantyTypeId,
                  WarrantyType = _context.WarrantyTypes.Where(wt => wt.Id == w.WarrantyTypeId).Select(c => c.Name).FirstOrDefault(),
                  WarrantyDisplayName = w.WarrantyDisplayName,
                  WarrantyCode = w.WarrantyCode,

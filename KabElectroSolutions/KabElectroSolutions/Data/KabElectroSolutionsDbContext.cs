@@ -23,6 +23,7 @@ namespace KabElectroSolutions.Data
         public DbSet<WarrantyType> WarrantyTypes { get; set; }
         public DbSet<Claim> Claims { get; set; }
         public DbSet<Brands> Brands { get; set; }
+        public DbSet<ServicePartners> ServicePartner { get; set; }       
         public DbSet<Categories> Categories { get; set; }
         public DbSet<Plans> Plans { get; set; }
         public DbSet<Warranties> Warranties { get; set; }

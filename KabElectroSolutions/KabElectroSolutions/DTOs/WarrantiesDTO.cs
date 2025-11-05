@@ -24,6 +24,7 @@ namespace KabElectroSolutions.DTOs
         public string? WarrantyCreatedBy { get; set; }
         public int? ProductId { get; set; }
         public string? CatgoryName { get; set; }
+        public string? BrandName { get; set; }
         public string? ProductName { get; set; }
         public string? CustomerName { get; set; }
         public string? CustomerMobileNo { get; set; }

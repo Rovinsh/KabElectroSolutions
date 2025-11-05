@@ -6,7 +6,8 @@ import { AgGridModule } from 'ag-grid-angular';
 import { CategoryFormComponent } from '../../app/category-form/category-form';
 import { BrandFormComponent } from '../../app/brand-form/brand-form';
 import { PlanFormComponent } from '../../app/plan-form/plan-form';
-import { ApiService, CategoryDto, PlanDto, BrandDto } from '../services/api.service';
+import { ServicePartnerFormComponent } from '../../app/service-partner-form/service-partner-form';
+import { ApiService, CategoryDto, PlanDto, BrandDto, ServicePartnerDto } from '../services/api.service';
 
 @Component({
   selector: 'app-master',
@@ -20,6 +21,7 @@ export class MasterComponent implements OnInit {
   categories: CategoryDto[] = [];
   brands: BrandDto[] = [];
   plans: PlanDto[] = [];
+  servicePartner: ServicePartnerDto[] = [];
 
   constructor(private dialog: MatDialog, private apiService: ApiService) {}
 
@@ -43,6 +45,9 @@ export class MasterComponent implements OnInit {
       case 'plan':
         this.loadPlans();
         break;
+      case 'servicePartner':
+        this.loadServicePartners();
+        break;
     }
   }
 
@@ -60,7 +65,13 @@ export class MasterComponent implements OnInit {
 
   loadPlans() {
     this.apiService.getPlans().subscribe(res => {
-      this.plans = res.data.sort((a: any, b: any) => a.planName.localeCompare(b.planName));
+    this.plans = res.data.sort((a: any, b: any) => a.planName.localeCompare(b.planName));
+    });
+  }
+
+  loadServicePartners() {
+    this.apiService.getServicePartners().subscribe(res => {
+    this.servicePartner = res.data.sort((a: any, b: any) => a.servicePartner.localeCompare(b.servicePartner));
     });
   }
 
@@ -72,8 +83,8 @@ export class MasterComponent implements OnInit {
     case 'category':
       dialogRef = this.dialog.open(CategoryFormComponent, {
         width: '800px',
-        maxWidth: '95vw',   // ✅ Mobile-friendly width
-        maxHeight: '90vh',  // ✅ Forces scrolling if too tall
+        maxWidth: '95vw',  
+        maxHeight: '90vh',  
         height: 'auto',
         disableClose: true,
         data: {
@@ -85,8 +96,8 @@ export class MasterComponent implements OnInit {
     case 'brand':
       dialogRef = this.dialog.open(BrandFormComponent, {
         width: '800px',
-        maxWidth: '95vw',   // ✅ Mobile-friendly width
-      maxHeight: '90vh',  // ✅ Forces scrolling if too tall
+        maxWidth: '95vw',  
+      maxHeight: '90vh', 
       height: 'auto',
         disableClose: true,
         data: {
@@ -98,8 +109,21 @@ export class MasterComponent implements OnInit {
     case 'plan':
       dialogRef = this.dialog.open(PlanFormComponent, {
         width: '800px',
-        maxWidth: '95vw',   // ✅ Mobile-friendly width
-        maxHeight: '90vh',  // ✅ Forces scrolling if too tall
+        maxWidth: '95vw',   
+        maxHeight: '90vh',  
+        height: 'auto',
+        disableClose: true,
+        data: {
+          mode: isEdit ? 'edit' : 'add',
+          record: data || null
+        }
+      });
+      break;
+      case 'servicePartner':
+      dialogRef = this.dialog.open(ServicePartnerFormComponent, {
+        width: '800px',
+        maxWidth: '95vw',   
+        maxHeight: '90vh',  
         height: 'auto',
         disableClose: true,
         data: {
@@ -233,4 +257,42 @@ export class MasterComponent implements OnInit {
       }
     }
   ];
+
+  servicePartnerCols: ColDef[] = [
+  { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
+  { headerName: 'Service Partner', field: 'servicePartner', filter: true, width: 180 },
+  { headerName: 'Phone', field: 'phone', filter: true, width: 130 },
+  { headerName: 'Email', field: 'email', filter: true, width: 130 },
+  { headerName: 'PAN', field: 'pan', filter: true, width: 130 },
+  { headerName: 'GST', field: 'gst', filter: true, width: 150 },
+  { headerName: 'City', field: 'cityName', filter: true, width: 150 },
+  { headerName: 'State', field: 'stateName', filter: true, width: 150 },
+  { headerName: 'Pincode', field: 'pinCode', filter: true, width: 100 },
+  { headerName: 'Address', field: 'address', filter: false, width: 250,
+    cellRenderer: (params: any) => {
+      const words = params.value ? params.value.split(' ') : [];
+      if (words.length > 150) return words.slice(0, 150).join(' ') + '...';
+      return params.value;
+    }
+  },
+ 
+  {
+    headerName: 'Active',
+    field: 'isDisable',
+    filter: true,
+    width: 100,
+    cellRenderer: (params: any) =>
+      params.value == 1
+        ? '<span class="badge bg-success">Active</span>'
+        : '<span class="badge bg-danger">Inactive</span>'
+  },
+  {
+    headerName: 'Action',
+    width: 100,
+    cellRenderer: (params: any) => {
+      return `<a href="javascript:void(0)" class="edit-link" data-id="${params.data.id}">✏️</a>`;
+    }
+  }
+];
+
 }
