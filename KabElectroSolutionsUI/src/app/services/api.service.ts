@@ -16,6 +16,11 @@ export class ApiService {
   getClaims(controllerName:string): Observable<any> {
     return this.http.get(`${this.baseUrl+controllerName}`);
   }
+
+  getAuditLogs(controllerName:string): Observable<any> {
+    return this.http.get(`${this.baseUrl+controllerName}`);
+  }
+
    getStatus(controllerName:string): Observable<any> {
     return this.http.get(`${this.baseUrl+controllerName}`);
   }

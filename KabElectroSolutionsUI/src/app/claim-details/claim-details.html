@@ -17,13 +17,33 @@
 
 
   <div class="tabs">
-    <button class="active">Claim details</button>
-    <button>Claim Logs</button>
-    <button>Claim History</button>
-    <button>Claim Estimation</button>
-  </div>
+  <button 
+    [class.active]="selectedTab === 'details'" 
+    (click)="tabClicked('details')">Claim details</button>
 
-<div class="status-bar">
+  <button 
+    [class.active]="selectedTab === 'logs'" 
+    (click)="tabClicked('logs')">Claim Logs</button>
+
+  <button 
+    [class.active]="selectedTab === 'history'" 
+    (click)="tabClicked('history')">Claim History</button>
+
+  <button 
+    [class.active]="selectedTab === 'estimation'" 
+    (click)="tabClicked('estimation')">Claim Estimation</button>
+    
+</div>
+<div *ngIf="selectedTab === 'logs'">
+  <app-audit-log [auditLogs]="auditData"></app-audit-log>
+</div>
+<div *ngIf="selectedTab === 'details'">
+  <!-- Existing claim details UI here -->
+</div>
+<div *ngIf="selectedTab === 'history'">History Content...</div>
+<div *ngIf="selectedTab === 'estimation'">Estimation Content...</div>
+
+<div class="status-bar" *ngIf="selectedTab === 'details'">
   @for (step of steps; let i = $index; track step) {
     <div class="status-step">
       <div class="status-label" [class.completed]="i <= currentStepIndex">{{ step }}</div>
@@ -36,7 +56,7 @@
 </div>
  
 
-  <div class="four-column-row">
+  <div class="four-column-row" *ngIf="selectedTab === 'details'">
     <!-- Claim Details -->
     <div class="card">
       <h5>Claim details</h5>

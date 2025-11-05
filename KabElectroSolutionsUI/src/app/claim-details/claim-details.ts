@@ -7,18 +7,38 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { AuditLogComponent } from '../audit-log/audit-log';
 
 @Component({
   selector: 'app-claim-details',
   templateUrl: './claim-details.html',
   styleUrls: ['./claim-details.css'],
-  imports: [CommonModule, MatDialogModule, MatButtonModule,MatIconModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule,MatIconModule,AuditLogComponent],
   providers: [DatePipe]
 })
 export class ClaimDetailsComponent implements OnInit {
 claimId: string | null = null;
 claim: Claim | null = null;
 isLoading: boolean = false;
+selectedTab: string = 'details';
+auditData = [];
+// auditData = [
+//   {
+//     status: 'Call Registered',
+//     performerName: 'Croma claim',
+//     designation: 'Call Center Executive',
+//     timestamp: '2025-11-01 18:09:53',
+//     remarks: 'service request'
+//   },
+//   {
+//     status: 'AssignServicePartner',
+//     performerName: 'Partha Ghosh Chowdhury',
+//     designation: 'Service Executive',
+//     timestamp: '2025-11-01 18:54:17',
+//     remarks: '-'
+//   }
+// ];
+
 steps: string[] = [
   'Claim Registered',
   'Claim Allocated',
@@ -53,18 +73,18 @@ status : any[]= [];
     'Call Closed': 8,
     'Call Aborted': 9
   };
-  
+
     this.claimId = this.route.snapshot.paramMap.get('claimId');
- this.apiService.getStatus('Status/status').subscribe({
+    this.apiService.getStatus('Status/status').subscribe({
       next: (status) => {
         this.status = status.data;
         const currentStatus = this.status[this.claim!.status].name || 'Claim Registered';
-  this.currentStepIndex = statusToStepMap[currentStatus] ?? 0;
-  },
+        this.currentStepIndex = statusToStepMap[currentStatus] ?? 0;
+      },
       error: (err) => {
         console.error('API error:', err);
       }
-  });
+    });
     //this.claimId = this.data.claimId;    
 
     console.log('Claim ID:', this.claimId);
@@ -85,5 +105,21 @@ status : any[]= [];
       close(): void {
     this.router.navigate(['/dashboard']); // 👈 back to list page
   }
-      
+
+  tabClicked(tab: string) {
+    this.selectedTab = tab;
+    if(tab === 'logs')
+    {
+      this.apiService.getAuditLogs('AuditLogs/claim').subscribe({
+          next: (res) => {
+            this.auditData = res;
+            console.log('API response:', res);            
+          },
+          error: (err) => {
+            console.error('API error:', err);
+             // hide spinner even on error
+          }
+        });
+    }
+  }      
 }
