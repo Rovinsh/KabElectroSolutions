@@ -49,8 +49,13 @@ export class ApiService {
   getBrands(): Observable<BrandResponseDto> {
     return this.http.get<BrandResponseDto>(`${this.baseUrl + "Brands/brands"}`);
   }
+
   getWarranty(): Observable<WarrantyResponseDto> {
     return this.http.get<WarrantyResponseDto>(`${this.baseUrl + "Warranties/warranties"}`);
+  }
+
+  getServicePartners(): Observable<ServicePartnerResponseDto> {
+    return this.http.get<ServicePartnerResponseDto>(`${this.baseUrl + "ServicePartners/servicePartners"}`);
   }
 
   getWarranties(phone?: string, email?: string): Observable<WarrantyDto[]> {
@@ -77,6 +82,10 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Warranties`, warrantyData);
   }
 
+  postServicePartners(servicePartnerData: ServicePartnerDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}ServicePartners`, servicePartnerData);
+  }
+
  updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Categories/${id}`, categoryData);
   }
@@ -91,6 +100,10 @@ export class ApiService {
   
   updateWarranties(id: number, warranties: WarrantyDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Warranties/${id}`, warranties);
+  }
+  
+  updateServicePartners(id: number, servicePartnerData: ServicePartnerDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}ServicePartners/${id}`, servicePartnerData);
   }
   
   postClaim(claimData: ClaimDto): Observable<any> {
@@ -215,11 +228,36 @@ export interface BrandResponseDto {
   data: BrandDto[];
 }
 
+export interface ServicePartnerDto {
+  servicePartner: string;
+  id: number;
+  cityId: number;
+  cityName: string;
+  stateId: number;
+  pinCodeId: number;
+  pinCode: string;
+  stateName: string;
+  address: string;
+  phone: string;
+  email:string;
+  pan: string;
+  gst: string;
+  extraInfo:string;
+  isDisable: boolean;
+}
+
+export interface ServicePartnerResponseDto {
+  status: number;
+  message: string;
+  data: ServicePartnerDto[];
+}
+
 export interface WarrantyDto {
   id: number;
   serialNumber: number;
   warrantyType: string;
   catgoryName: string;
+  brandName: string;
   warrantyTypeId: number;
   warrantyDisplayName: string;
   warrantyCode: string;

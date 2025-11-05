@@ -31,20 +31,28 @@ export class WarrantyPopupComponent implements OnInit {
     'productName',
     'warrantyPurchaseDate',
     'warrantyStartDate',
-    'catgoryName'
+    'catgoryName',
+    'brandName'
   ];
 
   private dialogRef = inject(MatDialogRef<WarrantyPopupComponent>);
   private dialogData = inject(MAT_DIALOG_DATA) as {
-    record?: { data: WarrantyDto[]; message?: string }[]
-  };
+  record?: WarrantyDto[];
+};
+
 
   selectedId: number | null = null;
 
-  ngOnInit(): void {
-    const response = this.dialogData?.record || [];
-    this.dataSource = response.flatMap(r => r.data || []);
-  }
+ngOnInit(): void {
+  this.dataSource = this.dialogData?.record || [];
+  this.dataSource = this.dataSource.map((r: any) => ({
+    ...r,
+    warrantyPurchaseDate: r.warrantyPurchaseDate ? new Date(r.warrantyPurchaseDate) : null,
+    warrantyStartDate: r.warrantyStartDate ? new Date(r.warrantyStartDate) : null
+  }));
+
+  console.log('Popup Data Source:', this.dataSource);
+}
 
   onSelect(row: WarrantyDto) {
     this.selectedId = row.id;
