@@ -17,12 +17,12 @@ namespace KabElectroSolutions.Controllers
             _context = context;
         }
 
-        [HttpGet("{entityName}")]
+        [HttpGet("{entityName}/{entityRecordId}")]
         public async Task<IActionResult> GetAuditLogs(
             string entityName, int entityRecordId)
         {
             var logs = await _context.AuditLogs
-                .Where(x => x.EntityName == entityName)
+                .Where(x => x.EntityName == entityName && x.EntityRecordId == entityRecordId)
                 .OrderBy(x => x.Timestamp)
                 .ToListAsync();
 

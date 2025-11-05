@@ -110,7 +110,7 @@ status : any[]= [];
     this.selectedTab = tab;
     if(tab === 'logs')
     {
-      this.apiService.getAuditLogs('AuditLogs/claim').subscribe({
+      this.apiService.getAuditLogs('AuditLogs/Claim/'+this.claimId).subscribe({
           next: (res) => {
             this.auditData = res;
             console.log('API response:', res);            

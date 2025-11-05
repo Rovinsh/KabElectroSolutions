@@ -19,6 +19,7 @@ constructor(private auth: AuthService)
   showDropdown = false;
   firstName:string = "";
   lastName: string | null = null;
+  userRole: string = "";
   avatar: string="";
 
   toggleDropdown() {
@@ -36,6 +37,7 @@ constructor(private auth: AuthService)
   ngOnInit(): void {
   this.firstName = localStorage.getItem("firstName")!;
   this.lastName = localStorage.getItem("lastName");
+  this.userRole = localStorage.getItem("userRole")!;
   this.avatar= this.firstName.charAt(0)+this.lastName?.charAt(0);
   }
 }

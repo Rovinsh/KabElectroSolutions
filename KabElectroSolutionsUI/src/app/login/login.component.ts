@@ -45,9 +45,11 @@ export class LoginComponent {
             this.auth.username = loginData.username;
             this.auth.password = loginData.password;
             this.auth.firstName = res.data.firstname;
-            this.auth.lastName = res.data.lastname??"";
+            this.auth.lastName = res.data.lastname??"";            
+             this.auth.userRole = res.data.businessrole_name;
             localStorage.setItem('firstName', this.auth.firstName);
             localStorage.setItem('lastName', this.auth.lastName??"");
+            localStorage.setItem('userRole', this.auth.userRole??"");
             const redirectUrl = localStorage.getItem('redirectUrl');
              this.isLoading = false;
         if (redirectUrl) {

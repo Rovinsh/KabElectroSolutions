@@ -89,7 +89,30 @@ namespace KabElectroSolutions.Controllers
             _context.Claims.Add(claim);
             await _context.SaveChangesAsync();
 
+            await AddAuditLog("Claim", claim.Id, "Call Registered", claim.Concern);
+
             return CreatedAtAction(nameof(GetClaim), new { id = claim.Id }, claim);
+        }
+
+        private async Task AddAuditLog(string entity, int recordId, string status, string? remarks = "-")
+        {
+            var performerEmail = User?.Identity?.Name ?? "System";
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+
+            var log = new AuditLog
+            {
+                EntityName = entity,
+                EntityRecordId = recordId,
+                Status = status,
+                PerformerName = user?.Firstname +" " + user?.Lastname,
+                Designation = user?.BusinessroleName!,
+                Timestamp = DateTime.UtcNow,
+                Remarks = remarks
+            };
+
+            _context.AuditLogs.Add(log);
+            await _context.SaveChangesAsync();
         }
     }
 }
