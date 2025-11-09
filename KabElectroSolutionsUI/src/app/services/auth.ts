@@ -15,6 +15,7 @@ export class AuthService {
   password:string="";
   firstName:string="";
   lastName:string="";
+  userRole: string="";
   constructor(private http: HttpClient) { }
 
   login(loginData: any) {
@@ -48,6 +49,7 @@ export class AuthService {
     this.lastName="";
     localStorage.removeItem('firstName');
     localStorage.removeItem('lastName');
+    localStorage.removeItem('userRole');
     //localStorage.removeItem('redirectUrl');
   }
 

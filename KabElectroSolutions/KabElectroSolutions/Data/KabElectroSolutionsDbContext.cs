@@ -27,6 +27,7 @@ namespace KabElectroSolutions.Data
         public DbSet<Categories> Categories { get; set; }
         public DbSet<Plans> Plans { get; set; }
         public DbSet<Warranties> Warranties { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here
