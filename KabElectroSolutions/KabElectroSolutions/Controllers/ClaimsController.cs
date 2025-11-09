@@ -9,7 +9,7 @@ namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   
     public class ClaimsController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;
@@ -114,5 +114,24 @@ namespace KabElectroSolutions.Controllers
             _context.AuditLogs.Add(log);
             await _context.SaveChangesAsync();
         }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateClaimStatus(int id, [FromBody] Claim claim)
+        {
+            if (claim == null)
+                return BadRequest("Invalid claim data");
+
+            var existingClaim = await _context.Claims.FindAsync(id);
+            if (existingClaim == null)
+                return NotFound("Claim not found");
+
+            existingClaim.Status = claim.Status;
+
+            _context.Entry(existingClaim).Property(x => x.Status).IsModified = true;
+            await _context.SaveChangesAsync();
+
+            return Ok(existingClaim);
+        }
+
     }
 }
