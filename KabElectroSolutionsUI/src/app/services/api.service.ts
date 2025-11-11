@@ -70,6 +70,15 @@ export class ApiService {
 
     return this.http.get<WarrantyDto[]>(`${this.baseUrl}Warranties/byparameter`, { params });
   }
+  
+  getReports(filters: { reportType: string; startDate: Date | null; endDate: Date | null }): Observable<ReportsResponseDto[]> {
+  const params = {
+    reportType: filters.reportType,
+    startDate: filters.startDate ? filters.startDate.toISOString() : '',
+    endDate: filters.endDate ? filters.endDate.toISOString() : ''
+  };
+  return this.http.get<ReportsResponseDto[]>(`${this.baseUrl}Reports/reports`, { params });
+  }
 
   postCategory(categoryData: CategoryDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Categories`, categoryData);
@@ -113,6 +122,10 @@ export class ApiService {
   
   postClaim(claimData: ClaimDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Claims`, claimData);
+  }
+
+  updateClaimStatus(id: number, claimData: ClaimDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims/UpdateClaimStatus/${id}`, claimData);
   }
   
 }
@@ -257,6 +270,20 @@ export interface ServicePartnerResponseDto {
   data: ServicePartnerDto[];
 }
 
+export interface ReportsDto {
+  fileName: string;
+  id: number;
+  dateRange: string;
+  link: string;
+  timeStamp: string;
+  status: string;
+}
+
+export interface ReportsResponseDto {
+  status: number;
+  message: string;
+  data: ReportsDto[];
+}
 export interface WarrantyDto {
   id: number;
   serialNumber: number;

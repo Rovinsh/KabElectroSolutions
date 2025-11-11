@@ -9,7 +9,7 @@ namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+    [Authorize]
     public class ClaimsController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;

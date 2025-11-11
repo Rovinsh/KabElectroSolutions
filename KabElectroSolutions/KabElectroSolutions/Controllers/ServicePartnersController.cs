@@ -12,6 +12,7 @@ namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ServicePartnersController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;
