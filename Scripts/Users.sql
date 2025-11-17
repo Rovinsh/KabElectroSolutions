@@ -26,3 +26,8 @@ ALTER TABLE users
 ADD BusinessAddressId INT NULL;
 ALTER TABLE users
 ADD AddressId INT NULL;
+
+ALTER TABLE users
+ADD IsPartner BIT DEFAULT 0;
+ALTER TABLE users
+ADD PartnerId INT NULL;

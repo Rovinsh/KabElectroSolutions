@@ -41,6 +41,8 @@ namespace KabElectroSolutions.Models
         public bool IsActiveBusiness { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
         public ICollection<UserRole> UserRoles { get; set; }
+        public int? PartnerId { get; set; }
+        public bool IsPartner { get; set; }
     }
 
     public class ApiResponse
