@@ -17,6 +17,12 @@ CREATE TABLE ServicePartner (
     CONSTRAINT FK_ServicePartners_Pincodes FOREIGN KEY (PinCodeId) REFERENCES Pincodes(Id)
 );
 
+ALTER TABLE ServicePartner
+ADD Firstname NVARCHAR(100);
+ALTER TABLE ServicePartner
+ADD Lastname NVARCHAR(100) NULL;
+
+
 
 INSERT INTO ServicePartner
 (
@@ -40,9 +46,9 @@ VALUES
     '9876543210',
     'contact@abcelectricals.com',
     '123, Industrial Area, Delhi',
-    1,   -- CityId (Delhi)
-    1,   -- StateId (Delhi)
-    1,   -- PinCodeId (110001)
+    920,   -- CityId (Delhi)
+    7,   -- StateId (Delhi)
+    5171,   -- PinCodeId (110001)
     'Authorized service partner for north region.',
    1    -- ✅ Active (not disabled)
 ),
@@ -53,9 +59,9 @@ VALUES
     '9123456780',
     'support@shreepower.com',
     'Flat 205, Andheri West, Mumbai',
-    2,   -- CityId (Mumbai)
-    2,   -- StateId (Maharashtra)
-    2,   -- PinCodeId (400058)
+    551,   -- CityId (Mumbai)
+    5,   -- StateId (Maharashtra)
+   2864,   -- PinCodeId (400058)
     'Specializes in inverter and battery servicing.',
     1    -- ✅ Active (not disabled)
 );

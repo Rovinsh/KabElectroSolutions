@@ -25,7 +25,7 @@ export class SidebarComponent {
 
   menu: SidebarItem[] = [
     { title: 'Home', icon: '🏠', roles: ['List_all_kits', 'Create Business'], route: '/dashboard' },
-    { title: 'Claims', icon: '📋', roles: ['List_all_kits'], route: '/dashboard' },
+    { title: 'Claims', icon: '📋', roles: ['List_all_kits','Create Business'], route: '/dashboard' },
     { title: 'Create New Claim', icon: '➕', roles: ['Create Business'], route: '/claim-form' },
     { title: 'Master', icon: '📂', roles: ['Create Business'], route: '/master' },
     { title: 'Report', icon: '📄', roles: ['Create Business'], route: '/report' },

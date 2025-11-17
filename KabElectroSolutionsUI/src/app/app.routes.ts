@@ -10,7 +10,7 @@ import { Warranties } from './warranties/warranties';
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'crm/login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent,  canActivate: [RoleGuard], data: { roles: ['List_all_kits'] }},
+  { path: 'dashboard', component: DashboardComponent,  canActivate: [RoleGuard], data: { roles: ['List_all_kits','Create Business'] }},
   { path: 'login', component: LoginComponent },
   { path: 'claim-details/:claimId', component: ClaimDetailsComponent },
   { path: 'claim-form', component: ClaimFormComponent },

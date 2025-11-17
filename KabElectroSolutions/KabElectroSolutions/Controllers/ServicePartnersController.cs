@@ -113,6 +113,12 @@ namespace KabElectroSolutions.Controllers
             _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
 
+            var userRole = new UserRole
+            {
+                UserId = user.Id,
+                RoleId = _context.Roles.Where(role => role.RoleName == "Service Centre").First().RoleId
+            };
+
 
             return CreatedAtAction(nameof(GetServicePartners), new { id = servicePartners.Id }, servicePartners);
         }
