@@ -16,5 +16,7 @@
         public string? Gst { get; set; }
         public string? ExtraInfo { get; set; }
         public bool IsDisable { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
     }
 }

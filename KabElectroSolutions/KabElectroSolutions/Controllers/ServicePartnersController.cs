@@ -1,5 +1,7 @@
-﻿using KabElectroSolutions.Data;
+﻿using Azure.Core;
+using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
+using KabElectroSolutions.Helper;
 using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -73,6 +75,44 @@ namespace KabElectroSolutions.Controllers
 
             _context.ServicePartner.Add(servicePartners);
             await _context.SaveChangesAsync();
+
+            var user = new User
+            {
+                Firstname = servicePartners.Firstname,
+                Lastname = servicePartners.Lastname,
+                Phone = servicePartners.Phone,
+                Email = servicePartners.Email,
+                Business = 1,
+                BusinessPhone = servicePartners.Phone,
+                BusinessEmail = servicePartners.Email,
+                Businessname = servicePartners.ServicePartner,
+                Businessrole = 1,
+                BusinessGst = servicePartners.Gst!,
+                BusinessPan = servicePartners.Pan!,
+                BusinessroleName = "Service Center Head",
+                IsActiveBusiness = true,
+                PasswordHash = PasswordHelper.HashPassword(servicePartners.Phone),
+                IsPartner = true,
+                PartnerId = servicePartners.Id
+            };            
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            var address = new Address
+            {
+                UserId = user.Id,
+                IsBusinessAddress = true,
+                AddressLine = servicePartners.Address!,
+                Location = servicePartners.StateId,
+                Pincode = _context.Pincodes.Where(pincode => pincode.Id == servicePartners.PinCodeId).First().PincodeValue,
+                City = _context.Cities.Where(city => city.Id == servicePartners.CityId).First().Name,
+                State= _context.Locations.Where(location => location.Id == servicePartners.StateId).First().Name
+            };
+
+            _context.Addresses.Add(address);
+            await _context.SaveChangesAsync();
+
 
             return CreatedAtAction(nameof(GetServicePartners), new { id = servicePartners.Id }, servicePartners);
         }
