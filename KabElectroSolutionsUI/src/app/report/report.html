@@ -1,4 +1,4 @@
-<div class="d-flex flex-column flex-md-row min-vh-100">
+<!-- <div class="d-flex flex-column flex-md-row min-vh-100">
   <main class="flex-fill p-3">
     <div class="container-fluid dashboard-container">
       <div class="card shadow-sm border-0">
@@ -9,9 +9,9 @@
         </div>
 
         <div class="card-body">
-          <!-- Filters -->
+          
           <div class="row g-3 align-items-center">
-            <!-- Report Type -->
+         
             <div class="col-md-2">
               <label class="form-label fw-semibold mb-1">Report Type</label>
               <select
@@ -26,7 +26,7 @@
               </select>
             </div>
 
-            <!-- Date Range -->
+         
             <div class="col-md-4">
               <label class="form-label fw-semibold mb-1">Report Date</label>
               <mat-form-field appearance="outline" class="w-100 m-0">
@@ -49,14 +49,14 @@
               </mat-form-field>
             </div>
 
-            <!-- Buttons -->
+         
             <div
               class="col-md-6 d-flex justify-content-md-end justify-content-center gap-2 mt-3 mt-md-0"
             >
-              <button class="btn btn-danger" (click)="downloadReport()">
+              <button class="btn btn-danger" (click)="downloadReport()" [disabled]="!selectedRange?.start || !selectedRange?.end">
                 <i class="bi bi-download"></i> Download Report
               </button>
-              <button class="btn btn-primary" (click)="generateLink()">
+              <button class="btn btn-primary" (click)="generateLink()" [disabled]="!selectedRange?.start || !selectedRange?.end">
                 <i class="bi bi-link-45deg"></i> Generate Report Link
               </button>
               <button class="btn btn-secondary" (click)="resetFilters()">
@@ -67,7 +67,7 @@
 
           <hr class="my-4" />
 
-          <!-- Header + Refresh -->
+        
           <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
             <h5 class="mb-2">Reports</h5>
             <button class="btn btn-outline-primary btn-sm" (click)="refreshReports()">
@@ -75,7 +75,7 @@
             </button>
           </div>
 
-          <!-- Ag Grid -->
+       
           <div class="table-responsive">
             <ag-grid-angular
               style="width: 100%"
@@ -91,4 +91,4 @@
       </div>
     </div>
   </main>
-</div>
+</div> -->

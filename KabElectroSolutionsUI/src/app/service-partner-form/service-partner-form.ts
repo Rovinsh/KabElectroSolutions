@@ -66,7 +66,9 @@ export class ServicePartnerFormComponent implements OnInit {
 
     this.servicePartnerForm = this.fb.group({
       extraInfo: [null],
-      servicePartner: [null, Validators.required],
+      firstName:[null, Validators.required],
+      lastName:[null],
+      servicePartner: [null],
       pan: [null, Validators.required],
       gst: [null, Validators.required],
       phone: [null, Validators.required],
@@ -95,7 +97,8 @@ export class ServicePartnerFormComponent implements OnInit {
 
     this.servicePartnerForm.patchValue({
       extraInfo: record.extraInfo,
-      servicePartner: record.servicePartner,
+      firstName: record.firstName,
+      lastName: record.lastName,
       phone: record.phone,
       pan: record.pan,
       gst: record.gst,
@@ -158,6 +161,7 @@ export class ServicePartnerFormComponent implements OnInit {
     const formValue = this.servicePartnerForm.value;
     const formData = {
       ...formValue,
+      servicePartner: formValue.firstName+formValue.lastName,
       stateId: formValue.stateId?.id || formValue.stateId,
       cityId: formValue.cityId?.id || formValue.cityId,
       pinCodeId: formValue.pinCodeId?.id || formValue.pinCodeId,

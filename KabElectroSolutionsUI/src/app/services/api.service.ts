@@ -70,14 +70,13 @@ export class ApiService {
 
     return this.http.get<WarrantyDto[]>(`${this.baseUrl}Warranties/byparameter`, { params });
   }
-  
-  getReports(filters: { reportType: string; startDate: Date | null; endDate: Date | null }): Observable<ReportsResponseDto[]> {
-  const params = {
-    reportType: filters.reportType,
-    startDate: filters.startDate ? filters.startDate.toISOString() : '',
-    endDate: filters.endDate ? filters.endDate.toISOString() : ''
-  };
-  return this.http.get<ReportsResponseDto[]>(`${this.baseUrl}Reports/reports`, { params });
+
+  getReports(): Observable<ReportsResponseDto> {
+    return this.http.get<ReportsResponseDto>(`${this.baseUrl + "Reports/reports"}`);
+  }
+
+  postReport(reportData:ReportFilterDto): Observable<any> {
+  return this.http.post(`${this.baseUrl}reports`,reportData);
   }
 
   postCategory(categoryData: CategoryDto): Observable<any> {
@@ -249,6 +248,8 @@ export interface BrandResponseDto {
 export interface ServicePartnerDto {
   servicePartner: string;
   id: number;
+  firstName: string;
+  lastName: string;
   cityId: number;
   cityName: string;
   stateId: number;
@@ -268,6 +269,12 @@ export interface ServicePartnerResponseDto {
   status: number;
   message: string;
   data: ServicePartnerDto[];
+}
+
+export interface ReportFilterDto {
+  reportType: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
 }
 
 export interface ReportsDto {

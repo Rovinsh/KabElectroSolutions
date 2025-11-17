@@ -3,7 +3,9 @@
     public class ServicePartners
     {
         public int Id { get; set; }
-        public required string ServicePartner { get; set; }
+        public string ServicePartner { get; set; }
+        public required string FirstName { get; set; }
+        public string? LastName { get; set; }
         public int CityId { get; set; }
         public int StateId { get; set; }
         public int PinCodeId { get; set; }
