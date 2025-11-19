@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject  } from '@angular/core';
+import { Component, OnInit, inject  } from '@angular/core';
 import { ActivatedRoute,Router  } from '@angular/router';
 import { Claim } from '../models/claim.model';
 import { ApiService } from '../services/api.service';
@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AuditLogComponent } from '../audit-log/audit-log';
+import { ToastService } from '../services/toastService.service';
 
 @Component({
   selector: 'app-claim-details',
@@ -55,7 +56,7 @@ steps: string[] = [
 currentStep: number = 1; // index of the current completed step (0-based)
 currentStepIndex = 0;
 status : any[]= [];
-
+private toast = inject(ToastService);
 
   constructor(private route: ActivatedRoute,private apiService: ApiService,private router: Router) {}
 
@@ -104,6 +105,21 @@ status : any[]= [];
       } 
       close(): void {
     this.router.navigate(['/dashboard']); // 👈 back to list page
+  }
+
+  updateClaimStatus(status: string, remarks: string) {
+    this.isLoading = true;
+    this.apiService.AcceptOrRejectClaim(parseInt(this.claimId!), status, remarks).subscribe({
+      next: (res) => {
+        this.claim = res.data.results[0] as Claim;
+        this.toast.success(status +' Successfully!');
+        this.isLoading = false; // hide spinner
+      },
+      error: (err) => {
+        this.toast.error(err?.error || 'Error occured updating the claim!')
+        this.isLoading = false; // hide spinner even on error
+      }
+    });
   }
 
   tabClicked(tab: string) {

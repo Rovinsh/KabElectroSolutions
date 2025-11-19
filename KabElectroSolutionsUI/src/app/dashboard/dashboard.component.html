@@ -1,4 +1,10 @@
 <!-- dashboard.component.html -->
+
+@if (isLoading) {
+  <div class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+}
 <div class="dashboard-container">
     <!-- Tabs -->
     <div class="tabs">
@@ -66,7 +72,11 @@
           <td>{{ claim.statusName }}</td>
           <td>{{ claim.customerPhone }}</td>
           <td>{{ claim.customerName }}</td>
-          <td>{{ claim.customerName }}</td>
+          <td><mat-icon class="text-success icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned'" (click)="updateClaimStatus(claim.id,'Call Accepted By Service Center', 'Call Accepted' )">check_circle</mat-icon>
+            &nbsp; &nbsp;
+            <mat-icon class="text-danger icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned'" (click)="updateClaimStatus(claim.id,'Call Rejected By Service Center', 'Call rejected')">cancel</mat-icon>
+            <button class="claim-btn" *ngIf="claim.statusName ==='Call Accepted By Service Center'" (click)="openVerifyModal(claim.id)">CLAIM VERIFY</button>
+          </td>
           <td>{{ claim.customerName }}</td>
           <td>{{ claim.customerPhone }}</td>
           <td>{{ claim.customerName }}</td>

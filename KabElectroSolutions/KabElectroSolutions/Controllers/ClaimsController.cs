@@ -4,6 +4,7 @@ using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace KabElectroSolutions.Controllers
 {
@@ -24,12 +25,14 @@ namespace KabElectroSolutions.Controllers
         [HttpGet("claims")]
         public async Task<IActionResult> GetClaims([FromQuery] int? statusId)
         {
-            List<Claim> claims;
+            List<Models.Claim> claims;
             if (statusId != null && statusId > 0)
                 claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
             else
-                claims = await _context.Claims.ToListAsync();
-
+            {
+                var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
+                claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId).ToListAsync();
+            }
             var response = new ClaimsResponseDto
             {
                 Status = 200,
@@ -81,7 +84,7 @@ namespace KabElectroSolutions.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateClaim([FromBody] Claim claim)
+        public async Task<IActionResult> CreateClaim([FromBody] Models.Claim claim)
         {
             if (claim == null)
                 return BadRequest("Invalid claim data");
@@ -105,7 +108,7 @@ namespace KabElectroSolutions.Controllers
                 EntityName = entity,
                 EntityRecordId = recordId,
                 Status = status,
-                PerformerName = user?.Firstname +" " + user?.Lastname,
+                PerformerName = user?.Firstname + " " + user?.Lastname,
                 Designation = user?.BusinessroleName!,
                 Timestamp = DateTime.UtcNow,
                 Remarks = remarks
@@ -116,7 +119,7 @@ namespace KabElectroSolutions.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateClaimStatus(int id, [FromBody] Claim claim)
+        public async Task<IActionResult> UpdateClaimStatus(int id, [FromBody] Models.Claim claim)
         {
             if (claim == null)
                 return BadRequest("Invalid claim data");
@@ -131,6 +134,43 @@ namespace KabElectroSolutions.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(existingClaim);
+        }
+
+        [HttpPost("AcceptOrRejectClaim/{id}/{status}/{remarks}")]
+        public async Task<IActionResult> AcceptOrRejectClaim(int id, string status, string? remarks="")
+        {
+            if (id == 0)
+                return BadRequest("Invalid claim id");
+
+            var existingClaim = await _context.Claims.FindAsync(id);
+            if (existingClaim == null)
+                return NotFound("Claim not found");
+
+            //existingClaim.Status = claim.Status;            
+
+            existingClaim.PreviousStatus = existingClaim.Status;
+                existingClaim.StatusName = status;
+            existingClaim.Status = _context.SubStatuses.Where(substatus => substatus.Name == status).First().SubStatusId;
+            _context.Entry(existingClaim).Property(x => x.Status).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.StatusName).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.PreviousStatus).IsModified = true;
+            await _context.SaveChangesAsync();
+            await AddAuditLog("Claim", id, status, remarks);
+
+            var claims = await _context.Claims.Where(c => c.Id == id).ToListAsync();
+            
+            var response = new ClaimsResponseDto
+            {
+                Status = 200,
+                Message = "List of calls",
+                Data = new ClaimsDataDto
+                {
+                    Count = claims.Count,
+                    Results = claims
+                }
+            };
+
+            return Ok(response);
         }
 
     }
