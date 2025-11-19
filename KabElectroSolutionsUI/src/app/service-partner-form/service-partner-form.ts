@@ -68,7 +68,7 @@ export class ServicePartnerFormComponent implements OnInit {
       extraInfo: [null],
       firstName:[null, Validators.required],
       lastName:[null],
-      servicePartner: [null],
+      servicePartner: [null, Validators.required],
       pan: [null, Validators.required],
       gst: [null, Validators.required],
       phone: [null, Validators.required],
@@ -99,6 +99,7 @@ export class ServicePartnerFormComponent implements OnInit {
       extraInfo: record.extraInfo,
       firstName: record.firstName,
       lastName: record.lastName,
+      servicePartner: record.servicePartner,
       phone: record.phone,
       pan: record.pan,
       gst: record.gst,
@@ -161,7 +162,6 @@ export class ServicePartnerFormComponent implements OnInit {
     const formValue = this.servicePartnerForm.value;
     const formData = {
       ...formValue,
-      servicePartner: formValue.firstName+formValue.lastName,
       stateId: formValue.stateId?.id || formValue.stateId,
       cityId: formValue.cityId?.id || formValue.cityId,
       pinCodeId: formValue.pinCodeId?.id || formValue.pinCodeId,
