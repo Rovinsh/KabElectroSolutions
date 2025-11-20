@@ -1,7 +1,7 @@
-@if (!isLoginPage) {<app-header></app-header>}
+<app-header [class.d-none]="isLoginPage"></app-header>
 
 <div class="d-flex flex-column flex-md-row min-vh-100">
-  @if (!isLoginPage) {<app-sidebar class="sidebar bg-light"></app-sidebar>}
+ <app-sidebar [class.d-none]="isLoginPage"></app-sidebar>
   
   <main class="flex-fill p-3">
     <router-outlet></router-outlet>

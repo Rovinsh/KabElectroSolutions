@@ -147,3 +147,19 @@
   th{
     min-width: 200px;
   }
+
+  .claim-btn {
+  background-color: #75aaff;   /* same light blue */
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.claim-btn:hover {
+  background-color: #5d97ff; /* slightly darker on hover */
+}

@@ -138,9 +138,13 @@ export class ApiService {
   updateClaimStatus(id: number, claimData: ClaimDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Claims/UpdateClaimStatus/${id}`, claimData);
   }
+
+  AcceptOrRejectClaim(id: number, status: string, remarks?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims/AcceptOrRejectClaim/${id}/${status}/${remarks}`,{});
+  }
   
 }
-
+   
 export interface LocationResponseDto {
   status: number;
   message: string;

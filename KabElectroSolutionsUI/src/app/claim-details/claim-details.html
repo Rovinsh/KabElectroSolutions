@@ -9,8 +9,8 @@
   
 <div> <div class="actions">
     <h2 class="claim-code">Claim Code : <strong>{{ claimId }}</strong></h2>
-    <button class="reject">Reject Call</button>
-    <button class="accept">Accept Call</button>
+    <button class="reject" (click)="updateClaimStatus('Call Rejected By Service Center', 'Call rejected')">Reject Call</button>
+    <button class="accept" (click)="updateClaimStatus('Call Accepted By Service Center', 'Call accepted')">Accept Call</button>
       <button mat-icon-button (click)="close()" class="close-btn" style="background-color: black;">X</button>
   </div>
 <div class="container">

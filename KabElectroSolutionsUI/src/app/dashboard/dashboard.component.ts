@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../services/api.service';
@@ -6,7 +6,9 @@ import { Claim } from '../models/claim.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ClaimDetailsComponent } from '../claim-details/claim-details';
 import { RouterModule } from '@angular/router';
-
+import { MatIconModule } from '@angular/material/icon'
+import { ToastService } from '../services/toastService.service';
+import { VerifyDialog } from '../verify-dialog/verify-dialog';
 
 // interface Claim {
 //   //id:number,
@@ -25,7 +27,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports:[FormsModule,CommonModule, RouterModule],
+  imports:[FormsModule,CommonModule, RouterModule,MatIconModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -33,9 +35,10 @@ export class DashboardComponent {
   constructor(private apiService: ApiService,private dialog: MatDialog) {}
   claims: Claim[]=[];
   status : any[]= [];
-
+  private toast = inject(ToastService);
   tabs = ['Assigned Claims', 'Accepted Claims', 'Verified Claims', 'Invoices', 'All Claims'];
   activeTab = this.tabs[0];
+  isLoading: boolean = false;
 
   // claims: Claim[] = [
   //   {
@@ -82,6 +85,26 @@ export class DashboardComponent {
       // (!this.filter.status || c.status.includes(this.filter.status))
     );
   }
+
+  openVerifyModal(claimId: number) {
+  const dialogRef = this.dialog.open(VerifyDialog, {
+    width: '350px',
+    maxWidth: '95vw',  
+        maxHeight: '90vh',  
+        height: 'auto',
+        disableClose: true,
+        data: {
+          claimId: claimId
+        }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      // user clicked YES
+      //this.verifyClaim();
+    }
+  });
+}
 
   get sortedClaims(): Claim[] {
     if (!this.sortColumn) return this.filteredClaims;
@@ -193,4 +216,21 @@ loadClaimsByStatus(subStatusId: number): void {
     }
   });
 }
+
+
+updateClaimStatus(claimId: number,status: string, remarks:string) {
+    this.isLoading = true;
+    this.apiService.AcceptOrRejectClaim(claimId, status, remarks).subscribe({
+      next: (res) => {        
+        this.isLoading = false; // hide spinner
+         this.toast.success(status +' Successfully!');
+         this.selectTab(this.activeTab);
+      },
+      error: (err) => {
+        this.toast.error(err?.error || 'Error occured updating the claim!')
+        this.isLoading = false; // hide spinner even on error
+      }
+    });
+  }
+
 }
