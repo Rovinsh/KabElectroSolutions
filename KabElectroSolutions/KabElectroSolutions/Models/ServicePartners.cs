@@ -14,7 +14,7 @@
         public string? Gst { get; set; }
         public string? ExtraInfo { get; set; }
         public bool IsDisable { get; set; }
-        public required string Firstname { get; set; }
-        public string Lastname { get; set; }
+        public required string? Firstname { get; set; }
+        public string? Lastname { get; set; }
     }
 }

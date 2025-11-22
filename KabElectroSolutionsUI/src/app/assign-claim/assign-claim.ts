@@ -8,7 +8,7 @@ import { ClaimDetailsComponent } from '../claim-details/claim-details';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon'
 import { ToastService } from '../services/toastService.service';
-import { VerifyDialog } from '../verify-dialog/verify-dialog';
+import { AssignPartner } from '../assign-partner/assign-partner';
 
 @Component({
   selector: 'app-assign-claim',
@@ -53,9 +53,9 @@ filter = {
     );
   }
 
-  openVerifyModal(claimId: number) {
-  const dialogRef = this.dialog.open(VerifyDialog, {
-    width: '350px',
+  openAssignPartnerModal(claimId: number) {
+  const dialogRef = this.dialog.open(AssignPartner, {
+    width: '40%',
     maxWidth: '95vw',  
         maxHeight: '90vh',  
         height: 'auto',
@@ -66,9 +66,8 @@ filter = {
   });
 
   dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      // user clicked YES
-      //this.verifyClaim();
+    if (result == "") {
+      this.loadClaimsByStatus(this.getSubStatusId("Call Initiated"));
     }
   });
 }
@@ -178,7 +177,6 @@ updateClaimStatus(claimId: number,status: string, remarks:string) {
       next: (res) => {        
         //this.isLoading = false; // hide spinner
          this.toast.success(status +' Successfully!');
-        // this.selectTab(this.activeTab);
       },
       error: (err) => {
         this.toast.error(err?.error || 'Error occured updating the claim!')

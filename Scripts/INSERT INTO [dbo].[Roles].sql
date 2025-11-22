@@ -47,3 +47,15 @@ INSERT INTO [dbo].[Roles]
            ('List_visibility_action')
 GO
 
+GO
+
+INSERT INTO [dbo].[Roles]
+           ([RoleName])
+     VALUES
+           ('Super Admin')
+GO
+
+INSERT INTO [dbo].[Roles]
+           ([RoleName])
+     VALUES
+           ('Brand')

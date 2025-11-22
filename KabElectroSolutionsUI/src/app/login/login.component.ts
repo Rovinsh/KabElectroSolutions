@@ -58,6 +58,7 @@ export class LoginComponent {
         } else {
           this.router.navigate(['/dashboard']); // fallback route
         }
+        this.auth.isLoggedin$.next(loginData);
           },
           error: (error:any) => {
              this.isLoading = false;
