@@ -5,7 +5,7 @@ import { ClaimDetailsComponent } from './claim-details/claim-details';
 import { ClaimFormComponent } from './claim-form/claim-form';
 import { RoleGuard } from './guards/role-guard';
 import { MasterComponent } from '../app/master/master';
-// import { ReportComponent } from '../app/report/report';
+import { ReportComponent } from '../app/report/report';
 import { Warranties } from './warranties/warranties';
 import { UserComponent } from './user/user';
 export const routes: Routes = [
@@ -17,7 +17,7 @@ export const routes: Routes = [
   { path: 'claim-form', component: ClaimFormComponent },
   { path: 'user', component: UserComponent },
   { path: 'master', component: MasterComponent },
-  // { path: 'report', component: ReportComponent },
+  { path: 'report', component: ReportComponent },
   { path: 'warranties', component: Warranties },
 ];
 
