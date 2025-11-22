@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ClaimDetailsComponent } from './claim-details/claim-details';
+import { AssignClaim } from './assign-claim/assign-claim';
 import { ClaimFormComponent } from './claim-form/claim-form';
 import { RoleGuard } from './guards/role-guard';
 import { MasterComponent } from '../app/master/master';
@@ -14,6 +15,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'claim-details/:claimId', component: ClaimDetailsComponent },
   { path: 'claim-form', component: ClaimFormComponent },
+  { path: 'assign-claim', component: AssignClaim },
   { path: 'master', component: MasterComponent },
   // { path: 'report', component: ReportComponent },
   { path: 'warranties', component: Warranties },

@@ -27,6 +27,7 @@ export class SidebarComponent {
     { title: 'Home', icon: '🏠', roles: ['List_all_kits', 'Create Business'], route: '/dashboard' },
     { title: 'Claims', icon: '📋', roles: ['List_all_kits','Create Business'], route: '/dashboard' },
     { title: 'Create New Claim', icon: '➕', roles: ['Create Business'], route: '/claim-form' },
+    { title: 'Assign Claim', icon: '📨', roles: ['Create Business'], route: '/assign-claim' },
     { title: 'Master', icon: '📂', roles: ['Create Business'], route: '/master' },
     { title: 'Report', icon: '📄', roles: ['Create Business'], route: '/report' },
     { title: 'Warranties', icon: '🛡️', roles: ['Create Business'], route: '/warranties' },
