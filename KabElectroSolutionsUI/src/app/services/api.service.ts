@@ -63,6 +63,10 @@ export class ApiService {
     return this.http.get<ServicePartnerResponseDto>(`${this.baseUrl + "ServicePartners/servicePartners"}`);
   }
 
+  getUsers(): Observable<UserResponseDto> {
+    return this.http.get<UserResponseDto>(`${this.baseUrl + "Users/users"}`);
+  }
+
   getWarranties(phone?: string, email?: string): Observable<WarrantyDto[]> {
     const params: any = {};
     if (phone) params.phone = phone;
@@ -99,6 +103,10 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}ServicePartners`, servicePartnerData);
   }
 
+ postUser(userData: UserDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Users`, userData);
+  }
+
  updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Categories/${id}`, categoryData);
   }
@@ -117,6 +125,10 @@ export class ApiService {
   
   updateServicePartners(id: number, servicePartnerData: ServicePartnerDto): Observable<any> {
     return this.http.post(`${this.baseUrl}ServicePartners/${id}`, servicePartnerData);
+  }
+
+  updateUser(id: number, userData: UserDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Users/${id}`, userData);
   }
   
   postClaim(claimData: ClaimDto): Observable<any> {
@@ -273,6 +285,27 @@ export interface ServicePartnerResponseDto {
   status: number;
   message: string;
   data: ServicePartnerDto[];
+}
+
+export interface UserDto {
+  id: number;
+  firstName: string;
+  lastName: string;
+  cityId: number;
+  cityName: string;
+  stateId: number;
+  pinCodeId: number;
+  pinCode: string;
+  stateName: string;
+  address: string;
+  phone: string;
+  email:string;
+}
+
+export interface UserResponseDto {
+  status: number;
+  message: string;
+  data: UserDto[];
 }
 
 export interface ReportFilterDto {
