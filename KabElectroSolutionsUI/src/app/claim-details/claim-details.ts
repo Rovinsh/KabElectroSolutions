@@ -9,12 +9,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AuditLogComponent } from '../audit-log/audit-log';
 import { ToastService } from '../services/toastService.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-claim-details',
   templateUrl: './claim-details.html',
   styleUrls: ['./claim-details.css'],
-  imports: [CommonModule, MatDialogModule, MatButtonModule,MatIconModule,AuditLogComponent],
+  imports: [CommonModule, MatDialogModule, MatButtonModule,MatIconModule,AuditLogComponent,FormsModule ],
   providers: [DatePipe]
 })
 export class ClaimDetailsComponent implements OnInit {
@@ -23,6 +24,9 @@ claim: Claim | null = null;
 isLoading: boolean = false;
 selectedTab: string = 'details';
 auditData = [];
+showNotes = false;
+newNote = '';
+claimNotes: any = [];
 // auditData = [
 //   {
 //     status: 'Call Registered',
@@ -121,6 +125,24 @@ private toast = inject(ToastService);
       }
     });
   }
+
+  sendNote() {
+  if (!this.newNote.trim()) return;
+
+  const note = {
+    message: this.newNote,
+    user: 'RP', // from your auth
+    role: 'Call Center Executive',
+    timestamp: new Date().toLocaleString()
+  };
+
+  this.claimNotes.push(note);
+  this.newNote = '';
+  }
+
+  toggleNotes() {
+  this.showNotes = !this.showNotes;
+}
 
   tabClicked(tab: string) {
     this.selectedTab = tab;

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {jwtDecode} from 'jwt-decode';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,7 @@ import {jwtDecode} from 'jwt-decode';
 export class AuthService {
    //For local
    private apiUrl = 'https://localhost:7181/api';
+   isLoggedin$ = new Subject<number>();
   //for serve 
   //private apiUrl = 'https://kabelectro.in/API/api';
 

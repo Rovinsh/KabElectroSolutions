@@ -142,6 +142,10 @@ export class ApiService {
   AcceptOrRejectClaim(id: number, status: string, remarks?: string): Observable<any> {
     return this.http.post(`${this.baseUrl}Claims/AcceptOrRejectClaim/${id}/${status}/${remarks}`,{});
   }
+
+   AssignPartner(id: number, status: string,partnerId : number, remarks?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims/AssignPartner/${id}/${status}/${partnerId}/${remarks}`,{});
+  } 
   
 }
    

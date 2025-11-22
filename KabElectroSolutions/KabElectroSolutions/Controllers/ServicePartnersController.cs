@@ -67,6 +67,49 @@ namespace KabElectroSolutions.Controllers
             return Ok(result);
         }
 
+
+        [HttpGet("GetServicePartnersByStateandCity")]
+        public async Task<IActionResult> GetServicePartnersByStateandCity([FromQuery] int stateId, [FromQuery] int cityId)
+        {
+            var data = await _context.ServicePartner.Where(partner => partner.StateId == stateId && partner.CityId == cityId)
+                .Select(s => new ServicePartnersDTO
+                {
+                    Id = s.Id,
+                    ServicePartner = s.ServicePartner,
+                    Phone = s.Phone,
+                    Email = s.Email,
+                    Address = s.Address,
+                    Pan = s.Pan,
+                    Gst = s.Gst,
+                    CityName = _context.Cities
+                        .Where(c => c.Id == s.CityId)
+                        .Select(ct => ct.Name)
+                        .FirstOrDefault(),
+                    StateId = s.StateId,
+                    StateName = _context.Locations
+                        .Where(st => st.Id == s.StateId)
+                        .Select(c => c.Name)
+                        .FirstOrDefault(),
+                    PinCodeId = s.PinCodeId,
+                    PinCode = _context.Pincodes
+                        .Where(pin => pin.Id == s.PinCodeId)
+                        .Select(pn => pn.PincodeValue)
+                        .FirstOrDefault(),
+                    IsDisable = s.IsDisable
+                })
+                .ToListAsync();
+
+            var result = new ServicePartnersResponseDTO
+            {
+                Status = 200,
+                Message = "success, is_redis = True",
+                Data = data
+            };
+
+            return Ok(result);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> CreateServicePartners([FromBody] ServicePartners servicePartners)
         {

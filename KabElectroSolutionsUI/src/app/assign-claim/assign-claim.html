@@ -39,7 +39,7 @@
           <!-- <td><a href="javascript:void(0)" (click)="openClaimDetails(claim.id)">{{ claim.id }}</a></td> -->
            <td><a [routerLink]="['/claim-details', claim.id]">{{ claim.id }}</a></td>
            <td>
-            <button class="claim-btn" (click)="openVerifyModal(claim.id)">ASSIGN CLAIM</button>
+            <button class="claim-btn" (click)="openAssignPartnerModal(claim.id)">ASSIGN CLAIM</button>
           </td>
           <td>{{ claim.warrantyActivationCode }}</td>
           <td>{{ claim.warrantyType }}</td>

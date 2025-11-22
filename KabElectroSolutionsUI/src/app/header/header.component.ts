@@ -35,6 +35,13 @@ constructor(private auth: AuthService)
      window.location.href = '#/login';
   }
   ngOnInit(): void {
+this.auth.isLoggedin$.subscribe((loginData) => {
+  this.firstName = localStorage.getItem("firstName")!;
+  this.lastName = localStorage.getItem("lastName");
+  this.userRole = localStorage.getItem("userRole")!;
+  this.avatar= this.firstName.charAt(0)+this.lastName?.charAt(0);
+});
+
   this.firstName = localStorage.getItem("firstName")!;
   this.lastName = localStorage.getItem("lastName");
   this.userRole = localStorage.getItem("userRole")!;

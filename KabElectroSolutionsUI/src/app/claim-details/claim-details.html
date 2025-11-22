@@ -9,8 +9,8 @@
   
 <div> <div class="actions">
     <h2 class="claim-code">Claim Code : <strong>{{ claimId }}</strong></h2>
-    <button class="reject" (click)="updateClaimStatus('Call Rejected By Service Center', 'Call rejected')">Reject Call</button>
-    <button class="accept" (click)="updateClaimStatus('Call Accepted By Service Center', 'Call accepted')">Accept Call</button>
+    <button class="reject" *ngIf="claim!.statusName === 'Service Centre Assigned'" (click)="updateClaimStatus('Call Rejected By Service Center', 'Call rejected')">Reject Call</button>
+    <button class="accept" *ngIf="claim!.statusName === 'Service Centre Assigned'" (click)="updateClaimStatus('Call Accepted By Service Center', 'Call accepted')">Accept Call</button>
       <button mat-icon-button (click)="close()" class="close-btn" style="background-color: black;">X</button>
   </div>
 <div class="container">
@@ -116,5 +116,45 @@
   </div>
 </div>
 </div>
+<button class="send-note-btn" (click)="toggleNotes()">
+  <mat-icon>edit</mat-icon> SEND NOTE
+</button>
+
+<div class="notes-overlay" *ngIf="showNotes">
+  
+  <div class="notes-popup">
+    <div class="header">
+      <mat-icon>edit</mat-icon> Send Note
+      <button class="close-btn" (click)="toggleNotes()">✖</button>
+    </div>
+
+    <div class="notes-list">
+
+      <div class="note-item" *ngFor="let note of claimNotes">
+        <div class="avatar">👤</div>
+        <div>
+          <div class="msg">{{ note.message }}</div>
+          <div class="meta">{{ note.user }} ({{ note.role }})<br>{{ note.timestamp }}</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="input-row">
+      <input
+        type="text"
+        [(ngModel)]="newNote"
+        placeholder="Type your note..."
+        (keyup.enter)="sendNote()"
+      >
+      <button class="send-btn" (click)="sendNote()">
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
 }
 <!-- </mat-dialog-content> -->

@@ -24,17 +24,17 @@ export class SidebarComponent {
   }
 
   menu: SidebarItem[] = [
-    { title: 'Home', icon: '🏠', roles: ['List_all_kits', 'Create Business'], route: '/dashboard' },
-    { title: 'Claims', icon: '📋', roles: ['List_all_kits','Create Business'], route: '/dashboard' },
-    { title: 'Create New Claim', icon: '➕', roles: ['Create Business'], route: '/claim-form' },
-    { title: 'Assign Claim', icon: '📨', roles: ['Create Business'], route: '/assign-claim' },
-    { title: 'Master', icon: '📂', roles: ['Create Business'], route: '/master' },
-    { title: 'User', icon: '🧑', roles: ['Create Business'], route: '/user' },
-    { title: 'Report', icon: '📄', roles: ['Create Business'], route: '/report' },
-    { title: 'Warranties', icon: '🛡️', roles: ['Create Business'], route: '/warranties' },
-    { title: 'Support', icon: '📞', roles: ['Service Centre'], route: '/support' },
-    { title: 'Help', icon: '❓', roles: [], route: '/help' },
-    { title: 'Settings', icon: '⚙️', roles: ['List_all_kits'], route: '/settings' }
+    { title: 'Home', icon: '🏠', roles: ['Super Admin','Service Centre'], route: '/dashboard' },
+    { title: 'Claims', icon: '📋', roles: ['Super Admin','Service Centre'], route: '/dashboard' },
+    { title: 'Create New Claim', icon: '➕', roles: ['Super Admin'], route: '/claim-form' },
+    { title: 'Assign Claim', icon: '📨', roles: ['Super Admin'], route: '/assign-claim' },
+    { title: 'Master', icon: '📂', roles: ['Super Admin'], route: '/master' },
+    { title: 'User', icon: '🧑', roles: ['Super Admin'], route: '/user' },
+    { title: 'Report', icon: '📄', roles: ['Super Admin','Service Centre'], route: '/report' },
+    { title: 'Warranties', icon: '🛡️', roles: ['Super Admin'], route: '/warranties' },
+    { title: 'Support', icon: '📞', roles: ['Super Admin','Service Centre'], route: '/support' },
+    { title: 'Help', icon: '❓', roles: ['Super Admin','Service Centre'], route: '/help' },
+    { title: 'Settings', icon: '⚙️', roles: ['Super Admin'], route: '/settings' }
   ];
 
   hasAccess(item: SidebarItem): boolean {
