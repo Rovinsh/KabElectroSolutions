@@ -80,7 +80,7 @@ export class ApiService {
   }
 
   postReport(reportData:ReportFilterDto): Observable<any> {
-  return this.http.post(`${this.baseUrl}reports`,reportData);
+  return this.http.post(`${this.baseUrl}Reports`,reportData);
   }
 
   postCategory(categoryData: CategoryDto): Observable<any> {
@@ -316,13 +316,13 @@ export interface ReportFilterDto {
   reportType: string | null;
   startDate: Date | null;
   endDate: Date | null;
+  reportName:string;
 }
 
 export interface ReportsDto {
   fileName: string;
   id: number;
   dateRange: string;
-  link: string;
   timeStamp: string;
   status: string;
 }
@@ -332,6 +332,7 @@ export interface ReportsResponseDto {
   message: string;
   data: ReportsDto[];
 }
+
 export interface WarrantyDto {
   id: number;
   serialNumber: number;

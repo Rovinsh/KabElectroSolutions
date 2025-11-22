@@ -6,7 +6,7 @@ import { AssignClaim } from './assign-claim/assign-claim';
 import { ClaimFormComponent } from './claim-form/claim-form';
 import { RoleGuard } from './guards/role-guard';
 import { MasterComponent } from '../app/master/master';
-// import { ReportComponent } from '../app/report/report';
+import { ReportComponent } from '../app/report/report';
 import { Warranties } from './warranties/warranties';
 import { UserComponent } from './user/user';
 export const routes: Routes = [
@@ -19,7 +19,7 @@ export const routes: Routes = [
   { path: 'assign-claim', component: AssignClaim, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'master', component: MasterComponent,canActivate: [RoleGuard], data: { roles: ['Super Admin'] }} ,
-  // { path: 'report', component: ReportComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre'] }} },
+  { path: 'report', component: ReportComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre'] }} },
   { path: 'warranties', component: Warranties, canActivate: [RoleGuard], data: { roles: ['Super Admin'] }},
 ];
 
