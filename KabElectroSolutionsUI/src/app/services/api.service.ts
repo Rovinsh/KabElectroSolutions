@@ -79,6 +79,10 @@ export class ApiService {
     return this.http.get<ReportsResponseDto>(`${this.baseUrl + "Reports/reports"}`);
   }
 
+  getNotesByClaimId(claimId: number) {
+    return this.http.get<Note[]>(`${this.baseUrl}Claims/GetNotes/${claimId}`);
+  }
+
   postReport(reportData:ReportFilterDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Reports`,reportData);
   }
@@ -105,6 +109,10 @@ export class ApiService {
 
  postUser(userData: UserDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Users`, userData);
+  }
+
+  postNote(note: Note):Observable<any>{
+    return this.http.post(`${this.baseUrl}Claims/AddNote`, note);
   }
 
  updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
@@ -512,4 +520,12 @@ export interface ClaimResponseDto {
   status: number;
   message: string;
   data: ClaimDto[];
+}
+
+export interface Note {
+  claimId: number;
+  message: string;
+  userName: string;
+  role: string;
+  timeStamp?: string;   // server will set this
 }

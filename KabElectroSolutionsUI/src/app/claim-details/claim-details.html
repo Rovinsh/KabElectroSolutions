@@ -134,7 +134,7 @@
         <div class="avatar">👤</div>
         <div>
           <div class="msg">{{ note.message }}</div>
-          <div class="meta">{{ note.user }} ({{ note.role }})<br>{{ note.timestamp }}</div>
+          <div class="meta">{{ note.userName }} ({{ note.role }})<br>{{ note.timeStamp | date:'MMM d, y, h:mm:ss a'}}</div>
         </div>
       </div>
 
