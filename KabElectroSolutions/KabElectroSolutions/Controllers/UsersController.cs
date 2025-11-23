@@ -30,7 +30,7 @@ namespace KabElectroSolutions.Controllers
         public async Task<IActionResult> GetUsers()
         {
             var performerEmail = User?.Identity?.Name;
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail && !u.IsPartner);
 
             var data = await (
                 from u in _context.Users
@@ -106,7 +106,7 @@ namespace KabElectroSolutions.Controllers
                     BusinessroleName = "Customer Care Executive",
                     IsActiveBusiness = true,
                     PasswordHash = PasswordHelper.HashPassword(users.Phone),
-                    IsPartner = true,
+                    IsPartner = false,
                     PartnerId = currentUser.Id
                 };
 
@@ -176,7 +176,7 @@ namespace KabElectroSolutions.Controllers
                 existingUser.BusinessPan = currentUser.BusinessPan!;
                 existingUser.BusinessroleName = "Customer Care Executive";
                 existingUser.IsActiveBusiness = true;
-                existingUser.IsPartner = true;
+                existingUser.IsPartner = false;
                 existingUser.PartnerId = currentUser.Id;
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();

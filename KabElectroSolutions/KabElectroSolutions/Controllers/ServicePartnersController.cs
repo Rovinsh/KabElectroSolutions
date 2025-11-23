@@ -183,26 +183,37 @@ namespace KabElectroSolutions.Controllers
             if (updatedServicePartners == null)
                 return BadRequest("Invalid service partner data");
 
-            var existingServicePartner = await _context.ServicePartner.FindAsync(id);
-            if (existingServicePartner == null)
-                return NotFound("Service partner not found");
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var existingServicePartner = await _context.ServicePartner.FindAsync(id);
+                if (existingServicePartner == null)
+                    return NotFound("Service partner not found");
 
-            existingServicePartner.ServicePartner = updatedServicePartners.ServicePartner;
-            existingServicePartner.Gst = updatedServicePartners.Gst;
-            existingServicePartner.Phone = updatedServicePartners.Phone;
-            existingServicePartner.Email = updatedServicePartners.Email;
-            existingServicePartner.ExtraInfo = updatedServicePartners.ExtraInfo;
-            existingServicePartner.Pan = updatedServicePartners.Pan;
-            existingServicePartner.CityId = updatedServicePartners.CityId;
-            existingServicePartner.StateId = updatedServicePartners.StateId;
-            existingServicePartner.PinCodeId = updatedServicePartners.PinCodeId;
-            existingServicePartner.Address = updatedServicePartners.Address;
-            existingServicePartner.IsDisable = updatedServicePartners.IsDisable;
+                existingServicePartner.ServicePartner = updatedServicePartners.ServicePartner;
+                existingServicePartner.Gst = updatedServicePartners.Gst;
+                existingServicePartner.Phone = updatedServicePartners.Phone;
+                existingServicePartner.Email = updatedServicePartners.Email;
+                existingServicePartner.ExtraInfo = updatedServicePartners.ExtraInfo;
+                existingServicePartner.Pan = updatedServicePartners.Pan;
+                existingServicePartner.CityId = updatedServicePartners.CityId;
+                existingServicePartner.StateId = updatedServicePartners.StateId;
+                existingServicePartner.PinCodeId = updatedServicePartners.PinCodeId;
+                existingServicePartner.Address = updatedServicePartners.Address;
+                existingServicePartner.IsDisable = updatedServicePartners.IsDisable;
 
-            _context.ServicePartner.Update(existingServicePartner);
-            await _context.SaveChangesAsync();
+                _context.ServicePartner.Update(existingServicePartner);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
 
-            return Ok(existingServicePartner);
+                return Ok(existingServicePartner);
+            }
+            catch (Exception ex)
+            {
+                // Rollback if anything fails
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }
