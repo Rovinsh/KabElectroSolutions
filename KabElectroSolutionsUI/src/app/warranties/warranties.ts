@@ -67,7 +67,7 @@ export class Warranties implements OnInit {
     { headerName: 'End Date', field: 'warrantyEndDate', filter: true, width: 100 },
     { headerName: 'Invoice No', field: 'warrantyInvoiceNo', filter: true, width: 100 },
     { headerName: 'Purchase Date', field: 'warrantyPurchaseDate', filter: true, width: 100 },
-    { headerName: 'Product Name', field: 'productName', filter: true, width: 100 },
+    { headerName: 'Plan Name', field: 'productName', filter: true, width: 100 },
     { headerName: 'Seller', field: 'warrantySeller', filter: true, width: 100 },
     { headerName: 'Coupon Code', field: 'warrantyCouponCode', filter: true, width: 100 },
     { headerName: 'Customer Name', field: 'customerName', filter: true, width: 100 },

@@ -99,17 +99,37 @@ namespace KabElectroSolutions.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateClaim([FromBody] Models.Claim claim)
+        public async Task<IActionResult> CreateClaim([FromBody] Models.Claim? claim)
         {
+         
             if (claim == null)
                 return BadRequest("Invalid claim data");
+            try
+            {
+                var performerEmail = User?.Identity?.Name;
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                //var servicePartner = _context.ServicePartner.Where(s => s.Id == user.PartnerId).FirstOrDefault().ServicePartner;
+                var subStatus = _context.SubStatuses.Where(x => x.Name == "Call Initiated").First();
+                claim.ChannelId = user.Id;
+                claim.ChannelName = user.Businessname;
+                claim.CreatedTime = TimeOnly.FromDateTime(DateTime.Now);
+                claim.Status = subStatus.SubStatusId;
+                claim.StatusName = subStatus.Name;
+                claim.PreviousStatus = subStatus.SubStatusId;
+                claim.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
+                claim.StoreName = user.Businessname;
+                claim.RegisteredBy = user.Id;
+                claim.RegisteredByName = user.Firstname + " " + user.Lastname;
+                _context.Claims.Add(claim);
+                await _context.SaveChangesAsync();
 
-            _context.Claims.Add(claim);
-            await _context.SaveChangesAsync();
+                await AddAuditLog("Claim", claim.Id, "Call Registered", claim.Concern);
 
-            await AddAuditLog("Claim", claim.Id, "Call Registered", claim.Concern);
-
-            return CreatedAtAction(nameof(GetClaim), new { id = claim.Id }, claim);
+                return CreatedAtAction(nameof(GetClaim), new { id = claim.Id }, claim);
+            }
+            catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         private async Task AddAuditLog(string entity, int recordId, string status, string? remarks = "-")

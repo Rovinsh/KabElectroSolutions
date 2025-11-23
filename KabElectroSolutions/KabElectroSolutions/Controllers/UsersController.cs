@@ -132,7 +132,7 @@ namespace KabElectroSolutions.Controllers
                     UserId = user.Id,
                     RoleId = _context.Roles.Where(role => role.RoleName == "Customer Care Executive").First().RoleId
                 };
-
+                _context.UserRoles.Add(userRole);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
