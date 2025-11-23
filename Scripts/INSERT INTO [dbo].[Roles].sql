@@ -59,3 +59,10 @@ INSERT INTO [dbo].[Roles]
            ([RoleName])
      VALUES
            ('Brand')
+
+GO
+
+INSERT INTO [dbo].[Roles]
+           ([RoleName])
+     VALUES
+           ('Customer Care Executive')

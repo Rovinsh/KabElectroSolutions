@@ -115,55 +115,66 @@ namespace KabElectroSolutions.Controllers
         {
             if (servicePartners == null)
                 return BadRequest("Invalid service partner data");
-
-            _context.ServicePartner.Add(servicePartners);
-            await _context.SaveChangesAsync();
-
-            var user = new User
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                Firstname = servicePartners.Firstname,
-                Lastname = servicePartners.Lastname,
-                Phone = servicePartners.Phone,
-                Email = servicePartners.Email,
-                Business = 1,
-                BusinessPhone = servicePartners.Phone,
-                BusinessEmail = servicePartners.Email,
-                Businessname = servicePartners.ServicePartner,
-                Businessrole = 1,
-                BusinessGst = servicePartners.Gst!,
-                BusinessPan = servicePartners.Pan!,
-                BusinessroleName = "Service Center Head",
-                IsActiveBusiness = true,
-                PasswordHash = PasswordHelper.HashPassword(servicePartners.Phone),
-                IsPartner = true,
-                PartnerId = servicePartners.Id
-            };            
+                _context.ServicePartner.Add(servicePartners);
+                await _context.SaveChangesAsync();
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+                var user = new User
+                {
+                    Firstname = servicePartners.Firstname,
+                    Lastname = servicePartners.Lastname,
+                    Phone = servicePartners.Phone,
+                    Email = servicePartners.Email,
+                    Business = 1,
+                    BusinessPhone = servicePartners.Phone,
+                    BusinessEmail = servicePartners.Email,
+                    Businessname = servicePartners.ServicePartner,
+                    Businessrole = 1,
+                    BusinessGst = servicePartners.Gst!,
+                    BusinessPan = servicePartners.Pan!,
+                    BusinessroleName = "Service Center Head",
+                    IsActiveBusiness = true,
+                    PasswordHash = PasswordHelper.HashPassword(servicePartners.Phone),
+                    IsPartner = true,
+                    PartnerId = servicePartners.Id
+                };
 
-            var address = new Address
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                var address = new Address
+                {
+                    UserId = user.Id,
+                    IsBusinessAddress = true,
+                    AddressLine = servicePartners.Address!,
+                    Location = servicePartners.StateId,
+                    Pincode = _context.Pincodes.Where(pincode => pincode.Id == servicePartners.PinCodeId).First().PincodeValue,
+                    City = _context.Cities.Where(city => city.Id == servicePartners.CityId).First().Name,
+                    State = _context.Locations.Where(location => location.Id == servicePartners.StateId).First().Name
+                };
+
+                _context.Addresses.Add(address);
+                await _context.SaveChangesAsync();
+
+                var userRole = new UserRole
+                {
+                    UserId = user.Id,
+                    RoleId = _context.Roles.Where(role => role.RoleName == "Service Centre").First().RoleId
+                };
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return CreatedAtAction(nameof(GetServicePartners), new { id = servicePartners.Id }, servicePartners);
+            }
+            catch (Exception ex)
             {
-                UserId = user.Id,
-                IsBusinessAddress = true,
-                AddressLine = servicePartners.Address!,
-                Location = servicePartners.StateId,
-                Pincode = _context.Pincodes.Where(pincode => pincode.Id == servicePartners.PinCodeId).First().PincodeValue,
-                City = _context.Cities.Where(city => city.Id == servicePartners.CityId).First().Name,
-                State= _context.Locations.Where(location => location.Id == servicePartners.StateId).First().Name
-            };
-
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
-
-            var userRole = new UserRole
-            {
-                UserId = user.Id,
-                RoleId = _context.Roles.Where(role => role.RoleName == "Service Centre").First().RoleId
-            };
-
-
-            return CreatedAtAction(nameof(GetServicePartners), new { id = servicePartners.Id }, servicePartners);
+                // Rollback if anything fails
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPost("{id}")]

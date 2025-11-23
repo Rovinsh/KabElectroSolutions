@@ -28,6 +28,7 @@ namespace KabElectroSolutions.Models
         [NotMapped]
         public List<int?> Roles { get; set; }
         //public Dictionary<string, string> RolesNameMap { get; set; }
+        [NotMapped]
         public List<Role>? RolesNameMap { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
