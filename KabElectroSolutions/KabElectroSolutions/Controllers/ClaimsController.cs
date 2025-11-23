@@ -28,13 +28,25 @@ namespace KabElectroSolutions.Controllers
             List<Models.Claim> claims;
             var performerEmail = User?.Identity?.Name ?? "System";
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
-
-            if (statusId != null && statusId > 0)
-                claims = await _context.Claims.Where(claim => claim.Status == statusId && user.PartnerId != null ? claim.ServicePartner == user.PartnerId: user.BusinessroleName == "Super Admin").ToListAsync();
+            if (user.BusinessroleName == "Super Admin")
+            {
+                if (statusId != null && statusId > 0)
+                    claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
+                else
+                {
+                    var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
+                    claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId).ToListAsync();
+                }
+            }
             else
             {
-                var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
-                claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId && user.PartnerId != null ? claim.ServicePartner == user.PartnerId : user.BusinessroleName == "Super Admin").ToListAsync();
+                if (statusId != null && statusId > 0)
+                    claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
+                else
+                {
+                    var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
+                    claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId && claim.ServicePartner == user.PartnerId).ToListAsync();
+                }
             }
             var response = new ClaimsResponseDto
             {
