@@ -7,6 +7,7 @@ namespace KabElectroSolutions.Models
     {
         public int Id { get; set; }
         public long SerialNumber { get; set; }
+        public string? ItemSerialNumber { get; set; }     
         public int? WarrantyTypeId { get; set; } 
         public string? WarrantyDisplayName { get; set; }
         public string? WarrantyCode { get; set; }

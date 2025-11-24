@@ -241,14 +241,14 @@ getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto[]> 
     dialogRef.afterClosed().subscribe(selectedRow => {
       if (selectedRow) {
       this.claimForm.patchValue({
-          customerPhone:selectedRow.customerMobileNo,
-          customerEmail:selectedRow.customerEmail,
+        customerPhone:selectedRow.customerMobileNo,
+        customerEmail:selectedRow.customerEmail,
         customerName:selectedRow.customerName,
         customerState:selectedRow.customerStateName,
-         customerCity:selectedRow.customerCityName,
+        customerCity:selectedRow.customerCityName,
         customerAddress:selectedRow.customerAddress,
         customerPincode:selectedRow.customerPinCode,
-        itemSerialNumber:"25",
+        itemSerialNumber:selectedRow.itemSerialNumber,
         itemName:selectedRow.productName,
         categoryName:selectedRow.catgoryName,
         brandName:selectedRow.brandName,
@@ -308,7 +308,7 @@ getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto[]> 
     };
 this.apiService.postClaim(formData).subscribe({
         next: () => {
-          this.toast.success('Warranty Created Successfully!');
+          this.toast.success('Warranty Created Successfully!');this.claimForm.reset(); 
         },
         error: (err) => this.toast.error(err?.error || 'Error creating Warranty!')
       });

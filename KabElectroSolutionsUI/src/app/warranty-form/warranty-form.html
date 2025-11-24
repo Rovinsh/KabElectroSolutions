@@ -175,7 +175,13 @@
             <mat-error *ngIf="warrantyForm.get('productId')?.hasError('required')">Product is required</mat-error>
           </mat-form-field>
         </div>
-
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Item Serial Number</mat-label>
+            <input matInput formControlName="itemSerialNumber" />
+            <mat-error *ngIf="warrantyForm.get('itemSerialNumber')?.hasError('required')">Item Serial Number is required</mat-error>
+          </mat-form-field>
+        </div>
         <!-- Customer Name -->
         <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
@@ -283,7 +289,7 @@
 
         <!-- Active/Disable Warranty -->
         <div class="col-3 flex items-center">
-          <mat-checkbox formControlName="isDisable">Disable Warranty</mat-checkbox>
+          <mat-checkbox formControlName="isDisable">Enable Warranty</mat-checkbox>
         </div>
 
         <!-- Submit Button -->

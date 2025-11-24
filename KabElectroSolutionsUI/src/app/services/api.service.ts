@@ -355,6 +355,7 @@ export interface WarrantyDto {
   warrantyDescription?: string;
   warrantyCreatedBy?: string;
   productId: number;
+  itemSerialNumber?: string;
   productName: string;
   customerName: string;
   customerMobileNo: string;

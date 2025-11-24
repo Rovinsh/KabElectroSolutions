@@ -89,6 +89,7 @@ export class WarrantyFormComponent implements OnInit {
       warrantyDescription: [null],
       warrantyCreatedBy: [null],
       customerName: [null, Validators.required],
+      itemSerialNumber:[null, Validators.required],
       customerMobileNo: [null, Validators.required],
       customerEmail: [null, [Validators.required, Validators.email]],
       customerAddress: [null, Validators.required],
@@ -132,6 +133,7 @@ export class WarrantyFormComponent implements OnInit {
       warrantyCreatedBy: record.warrantyCreatedBy,
       productId: this.product.find(p => p.id === record.productId) || null,
       customerName: record.customerName,
+      itemSerialNumber:record.itemSerialNumber,
       customerMobileNo: record.customerMobileNo,
       customerEmail: record.customerEmail,
       customerAddress: record.customerAddress,
@@ -216,12 +218,13 @@ export class WarrantyFormComponent implements OnInit {
 
     if (this.mode === 'edit' && this.data.record) {
       this.apiService.updateWarranties(this.data.record.id, formData).subscribe({
-        next: () => { this.toast.success('Warranty Updated Successfully!'); this.dialogRef.close('success'); },
+        next: () => { this.toast.success('Warranty Updated Successfully!'); this.dialogRef.close('success');
+          this.warrantyForm.reset(); },
         error: err => this.toast.error(err?.error || 'Error updating Warranty!')
       });
     } else {
       this.apiService.postWarranties(formData).subscribe({
-        next: () => { this.toast.success('Warranty Created Successfully!'); this.dialogRef.close('success'); },
+        next: () => { this.toast.success('Warranty Created Successfully!'); this.dialogRef.close('success');this.warrantyForm.reset();  },
         error: err => this.toast.error(err?.error || 'Error creating Warranty!')
       });
     }
