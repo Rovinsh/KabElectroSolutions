@@ -1,7 +1,7 @@
 import { Component, OnInit, inject  } from '@angular/core';
 import { ActivatedRoute,Router  } from '@angular/router';
 import { Claim } from '../models/claim.model';
-import { ApiService } from '../services/api.service';
+import { ApiService, Note } from '../services/api.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuditLogComponent } from '../audit-log/audit-log';
 import { ToastService } from '../services/toastService.service';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-claim-details',
@@ -26,23 +27,7 @@ selectedTab: string = 'details';
 auditData = [];
 showNotes = false;
 newNote = '';
-claimNotes: any = [];
-// auditData = [
-//   {
-//     status: 'Call Registered',
-//     performerName: 'Croma claim',
-//     designation: 'Call Center Executive',
-//     timestamp: '2025-11-01 18:09:53',
-//     remarks: 'service request'
-//   },
-//   {
-//     status: 'AssignServicePartner',
-//     performerName: 'Partha Ghosh Chowdhury',
-//     designation: 'Service Executive',
-//     timestamp: '2025-11-01 18:54:17',
-//     remarks: '-'
-//   }
-// ];
+claimNotes: Note[] = [];
 
 steps: string[] = [
   'Claim Registered',
@@ -62,7 +47,7 @@ currentStepIndex = 0;
 status : any[]= [];
 private toast = inject(ToastService);
 
-  constructor(private route: ActivatedRoute,private apiService: ApiService,private router: Router) {}
+  constructor(private route: ActivatedRoute,private apiService: ApiService,private router: Router,private auth: AuthService) {}
 
   ngOnInit(): void {
 
@@ -129,19 +114,37 @@ private toast = inject(ToastService);
   sendNote() {
   if (!this.newNote.trim()) return;
 
-  const note = {
+  const note:Note = {
+    claimId: parseInt(this.claimId!),
     message: this.newNote,
-    user: 'RP', // from your auth
-    role: 'Call Center Executive',
-    timestamp: new Date().toLocaleString()
+    userName: this.auth.firstName + " " + this.auth.lastName, // from your auth
+    role: this.auth.userRole,
+    timeStamp: new Date().toISOString()
   };
 
   this.claimNotes.push(note);
   this.newNote = '';
+
+    this.apiService.postNote(note).subscribe({
+      next: (res) => { },
+      error: (err) => this.toast.error(err?.error || 'Error occured while sending notes!')
+    });  
   }
 
   toggleNotes() {
   this.showNotes = !this.showNotes;
+  if(this.showNotes)
+  {
+    this.loadNotes();
+  }
+}
+
+loadNotes() {
+  this.apiService.getNotesByClaimId(parseInt(this.claimId!)).subscribe({
+    next: (res) => {
+      this.claimNotes = res;
+    }
+  });
 }
 
   tabClicked(tab: string) {

@@ -98,6 +98,26 @@ namespace KabElectroSolutions.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetNotes/{claimId}")]
+        public async Task<IActionResult> GetNotes(int claimId)
+        {
+            var notes = await _context.Notes
+                .Where(n => n.ClaimId == claimId)
+                .OrderBy(n => n.TimeStamp)
+                .Select(n => new Note  // returning DTO
+                {
+                    Id = n.Id,
+                    ClaimId = n.ClaimId,
+                    Message = n.Message,
+                    UserName = n.UserName,
+                    Role = n.Role,
+                    TimeStamp = n.TimeStamp
+                })
+                .ToListAsync();
+
+            return Ok(notes);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateClaim([FromBody] Models.Claim? claim)
         {
@@ -131,6 +151,22 @@ namespace KabElectroSolutions.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpPost("AddNote")]
+        public async Task<IActionResult> AddNote([FromBody] Note note)
+        {
+            if (note == null)
+                return BadRequest("Invalid note data.");
+
+            // Set timestamp here to avoid dependency on client
+            note.TimeStamp = DateTime.Now;
+
+            _context.Notes.Add(note);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Note added successfully", note.Id });
+        }
+
 
         private async Task AddAuditLog(string entity, int recordId, string status, string? remarks = "-")
         {
