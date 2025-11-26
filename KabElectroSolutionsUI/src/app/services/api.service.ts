@@ -67,6 +67,10 @@ export class ApiService {
     return this.http.get<UserResponseDto>(`${this.baseUrl + "Users/users"}`);
   }
 
+   getRoles(): Observable<Role[]> {
+    return this.http.get<Role[]>(`${this.baseUrl + "Roles/roles"}`);
+  }
+
   getWarranties(phone?: string, email?: string): Observable<WarrantyDto[]> {
     const params: any = {};
     if (phone) params.phone = phone;
@@ -291,6 +295,7 @@ export interface ServicePartnerDto {
   gst: string;
   extraInfo:string;
   isDisable: boolean;
+  roleId: number
 }
 
 export interface ServicePartnerResponseDto {
@@ -528,4 +533,9 @@ export interface Note {
   userName: string;
   role: string;
   timeStamp?: string;   // server will set this
+}
+
+export interface Role{
+  roleId: number;
+  roleName: string;
 }

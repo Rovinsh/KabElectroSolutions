@@ -13,7 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiService, CitiesDto, PincodeDto, StateDto,ServicePartnerDto } from '../services/api.service';
+import { ApiService, CitiesDto, PincodeDto, StateDto,ServicePartnerDto,Role } from '../services/api.service';
 import { ToastService } from '../services/toastService.service';
 
 @Component({
@@ -39,11 +39,12 @@ export class UserFormComponent implements OnInit {
   userForm!: FormGroup;
   mode: 'add' | 'edit' = 'add';
   submitBtnLabel: string = 'Submit User';
-  title: string = 'Create Service Partner User';
+  title: string = 'Create User';
 
   states: StateDto[] = [];
   cities: CitiesDto[] = [];
   pincodes: PincodeDto[] = [];
+  roles: Role[] = [];
 
   filteredStates$!: Observable<StateDto[]>;
   filteredCities$!: Observable<CitiesDto[]>;
@@ -51,6 +52,7 @@ export class UserFormComponent implements OnInit {
 
   selectedStateId: number | null = null;
   selectedCityId: number | null = null;
+  selectedRoleId: number | null = null;
 
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
@@ -63,7 +65,7 @@ export class UserFormComponent implements OnInit {
     this.apiService.getStates().subscribe(res => (this.states = res.data));
     this.apiService.getCities().subscribe(res => (this.cities = res.data));
     this.apiService.getPincodes().subscribe(res => (this.pincodes = res.data));
-
+    this.getRoles();
     this.userForm = this.fb.group({
       firstName:[null, Validators.required],
       lastName:[null, Validators.required],
@@ -72,23 +74,31 @@ export class UserFormComponent implements OnInit {
       address: [null, Validators.required],
       stateId: [null, Validators.required],
       cityId: [null, Validators.required],
-      pinCodeId: [null, Validators.required]
+      pinCodeId: [null, Validators.required],
+      roleId: ['', Validators.required]
     });
 
     this.setupAutocompleteFilters();
 
     if (this.data?.mode === 'edit' && this.data.record) {
       this.mode = 'edit';
-      this.title = 'Edit Service Partner User';
+      this.title = 'Edit User';
       this.submitBtnLabel = 'Update User';
       setTimeout(() => this.patchEditData(), 0);
     }
   }
 
+   getRoles(){
+    this.apiService.getRoles().subscribe(res => {
+      this.roles = res;
+    });
+   }
+
   private patchEditData() {
     const record = this.data.record!;
     this.selectedStateId = record.stateId;
     this.selectedCityId = record.cityId;
+    this.selectedRoleId = record.roleId;
 
     this.userForm.patchValue({
       firstName: record.firstName,
@@ -98,7 +108,8 @@ export class UserFormComponent implements OnInit {
       address: record.address,
       stateId: this.states.find(s => s.id === record.stateId) || null,
       cityId: this.cities.find(c => c.id === record.cityId) || null,
-      pinCodeId: this.pincodes.find(p => p.id === record.pinCodeId) || null
+      pinCodeId: this.pincodes.find(p => p.id === record.pinCodeId) || null,
+      roleId: record.roleId,
     });
 
     this.showCities();
