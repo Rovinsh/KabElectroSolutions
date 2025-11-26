@@ -6,6 +6,7 @@ namespace KabElectroSolutions.DTOs
     {
         public int Id { get; set; }
         public long SerialNumber { get; set; }
+        public string? ItemSerialNumber { get; set; }
         public string? WarrantyType { get; set; }
         public int? WarrantyTypeId { get; set; }
         public string? WarrantyDisplayName { get; set; }

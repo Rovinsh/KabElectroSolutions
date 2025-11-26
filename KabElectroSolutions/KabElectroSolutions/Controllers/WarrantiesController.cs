@@ -29,6 +29,7 @@ namespace KabElectroSolutions.Controllers
                 {
                     Id = w.Id,
                     SerialNumber = w.SerialNumber,
+                    ItemSerialNumber = w.ItemSerialNumber,
                     WarrantyType = _context.WarrantyTypes.Where(wt => wt.Id == w.WarrantyTypeId).Select(c => c.Name).FirstOrDefault(),
                     WarrantyTypeId = w.WarrantyTypeId,
                     WarrantyDisplayName = w.WarrantyDisplayName,      
@@ -88,6 +89,7 @@ namespace KabElectroSolutions.Controllers
               {
                   Id = w.Id,
                   SerialNumber = w.SerialNumber,
+                  ItemSerialNumber = w.ItemSerialNumber,
                   ProductId = w.ProductId,
                   ProductName = p.PlanName,
                   CatgoryName = cat.CatName,
@@ -156,6 +158,7 @@ namespace KabElectroSolutions.Controllers
                 return NotFound("Warranty not found");
 
             existingWarranty.SerialNumber = warranties.SerialNumber;
+            existingWarranty.ItemSerialNumber = warranties.ItemSerialNumber;
             existingWarranty.WarrantyTypeId = warranties.WarrantyTypeId;
             existingWarranty.WarrantyDisplayName = warranties.WarrantyDisplayName;
             existingWarranty.WarrantyCode = warranties.WarrantyCode;
