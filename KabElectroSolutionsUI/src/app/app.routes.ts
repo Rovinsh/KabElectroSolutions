@@ -12,14 +12,15 @@ import { UserComponent } from './user/user';
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'crm/login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre'] }},
+  { path: 'dashboard', component: DashboardComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre','Brand'] }},
   { path: 'login', component: LoginComponent },
-  { path: 'claim-details/:claimId', component: ClaimDetailsComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre'] } },
+  { path: 'claim-details/:claimId', component: ClaimDetailsComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre','Brand'] } },
   { path: 'claim-form', component: ClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] }},
+  { path: 'brand-claim-form', component: ClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Brand'] }},
   { path: 'assign-claim', component: AssignClaim, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'master', component: MasterComponent,canActivate: [RoleGuard], data: { roles: ['Super Admin'] }} ,
-  { path: 'report', component: ReportComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre'] }},
+  { path: 'report', component: ReportComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre','Brand'] }},
   { path: 'warranties', component: Warranties, canActivate: [RoleGuard], data: { roles: ['Super Admin'] }},
 ];
 

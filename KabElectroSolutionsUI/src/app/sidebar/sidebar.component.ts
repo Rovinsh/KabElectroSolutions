@@ -24,16 +24,17 @@ export class SidebarComponent {
   }
 
   menu: SidebarItem[] = [
-    { title: 'Home', icon: '🏠', roles: ['Super Admin','Service Centre'], route: '/dashboard' },
-    { title: 'Claims', icon: '📋', roles: ['Super Admin','Service Centre'], route: '/dashboard' },
+    { title: 'Home', icon: '🏠', roles: ['Super Admin','Service Centre','Brand'], route: '/dashboard' },
+    { title: 'Claims', icon: '📋', roles: ['Super Admin','Service Centre','Brand'], route: '/dashboard' },
     { title: 'Create New Claim', icon: '➕', roles: ['Super Admin'], route: '/claim-form' },
+    { title: 'New Claim', icon: '➕', roles: ['Super Admin','Brand'], route: '/claim-form' },
     { title: 'Assign Claim', icon: '📨', roles: ['Super Admin'], route: '/assign-claim' },
     { title: 'Master', icon: '📂', roles: ['Super Admin'], route: '/master' },
     { title: 'User', icon: '🧑', roles: ['Super Admin'], route: '/user' },
-    { title: 'Report', icon: '📄', roles: ['Super Admin','Service Centre'], route: '/report' },
+    { title: 'Report', icon: '📄', roles: ['Super Admin','Service Centre','Brand'], route: '/report' },
     { title: 'Warranties', icon: '🛡️', roles: ['Super Admin'], route: '/warranties' },
-    { title: 'Support', icon: '📞', roles: ['Super Admin','Service Centre'], route: '/support' },
-    { title: 'Help', icon: '❓', roles: ['Super Admin','Service Centre'], route: '/help' },
+    { title: 'Support', icon: '📞', roles: ['Super Admin','Service Centre','Brand'], route: '/support' },
+    { title: 'Help', icon: '❓', roles: ['Super Admin','Service Centre','Brand'], route: '/help' },
     { title: 'Settings', icon: '⚙️', roles: ['Super Admin'], route: '/settings' }
   ];
 
