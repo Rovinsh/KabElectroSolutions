@@ -117,4 +117,5 @@ VALUES
     1                               -- IsDisable
 );
 
-
+ALTER TABLE Warranties
+ADD ItemSerialNumber varchar(255) NULL;
