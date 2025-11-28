@@ -160,7 +160,7 @@ export class UserFormComponent implements OnInit {
   displayState(state: StateDto | null) { return state?.name ?? ''; }
   displayCities(city: CitiesDto | null) { return city?.name ?? ''; }
   displayPincodes(pin: PincodeDto | null) { return pin?.pincode.toString() ?? ''; }
-
+  showState() { this.filteredStates$ = of(this.states); }
   showCities() { this.filteredCities$ = of(this.cities.filter(c => c.stateId === this.selectedStateId)); }
   showPincode() { this.filteredPincodes$ = of(this.pincodes.filter(p => p.cityId === this.selectedCityId)); }
 
