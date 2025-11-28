@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, startWith, map } from 'rxjs';
+import { Observable, of, startWith, map, forkJoin } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
@@ -13,7 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiService, CitiesDto, PincodeDto, StateDto,ServicePartnerDto } from '../services/api.service';
+import { ApiService, CitiesDto, PincodeDto, StateDto, ServicePartnerDto, Role } from '../services/api.service';
 import { ToastService } from '../services/toastService.service';
 
 @Component({
@@ -39,11 +39,12 @@ export class UserFormComponent implements OnInit {
   userForm!: FormGroup;
   mode: 'add' | 'edit' = 'add';
   submitBtnLabel: string = 'Submit User';
-  title: string = 'Create Service Partner User';
+  title: string = 'Create User';
 
   states: StateDto[] = [];
   cities: CitiesDto[] = [];
   pincodes: PincodeDto[] = [];
+  roles: Role[] = [];
 
   filteredStates$!: Observable<StateDto[]>;
   filteredCities$!: Observable<CitiesDto[]>;
@@ -53,40 +54,60 @@ export class UserFormComponent implements OnInit {
   selectedCityId: number | null = null;
 
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
   private apiService = inject(ApiService);
   private toast = inject(ToastService);
   private dialogRef = inject(MatDialogRef<UserFormComponent>);
   private data = inject(MAT_DIALOG_DATA) as { mode: 'add' | 'edit'; record?: ServicePartnerDto };
 
   ngOnInit(): void {
-    this.apiService.getStates().subscribe(res => (this.states = res.data));
-    this.apiService.getCities().subscribe(res => (this.cities = res.data));
-    this.apiService.getPincodes().subscribe(res => (this.pincodes = res.data));
 
+    // ✅ Create the form FIRST (prevents NG01052 error)
     this.userForm = this.fb.group({
       firstName:[null, Validators.required],
       lastName:[null, Validators.required],
       phone: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
       address: [null, Validators.required],
-      stateId: [null, Validators.required],
-      cityId: [null, Validators.required],
-      pinCodeId: [null, Validators.required]
+      stateId: [null, Validators.required],  // stores object
+      cityId: [null, Validators.required],   // stores object
+      pinCodeId: [null, Validators.required],// stores object
+      roleId: ['', Validators.required]      // stores roleId only
     });
 
-    this.setupAutocompleteFilters();
+    // ✅ Load all API data together
+    forkJoin({
+      states: this.apiService.getStates(),
+      cities: this.apiService.getCities(),
+      pincodes: this.apiService.getPincodes(),
+      roles: this.apiService.getRoles()
+    }).subscribe({
+      next: (result) => {
+        this.states = result.states.data;
+        this.cities = result.cities.data;
+        this.pincodes = result.pincodes.data;
+        this.roles = result.roles;
 
-    if (this.data?.mode === 'edit' && this.data.record) {
-      this.mode = 'edit';
-      this.title = 'Edit Service Partner User';
-      this.submitBtnLabel = 'Update User';
-      setTimeout(() => this.patchEditData(), 0);
-    }
+        this.setupAutocompleteFilters();
+
+        if (this.data.mode === 'edit') {
+          this.mode = 'edit';
+          this.title = 'Edit User';
+          this.submitBtnLabel = 'Update User';
+          this.patchEditData();
+        }
+      }
+    });
+
   }
 
+  // ✅ Perfect edit patching (no errors)
   private patchEditData() {
     const record = this.data.record!;
+
+    const stateObj = this.states.find(s => s.id === record.stateId) || null;
+    const cityObj = this.cities.find(c => c.id === record.cityId) || null;
+    const pinObj = this.pincodes.find(p => p.id === record.pinCodeId) || null;
+
     this.selectedStateId = record.stateId;
     this.selectedCityId = record.cityId;
 
@@ -96,76 +117,90 @@ export class UserFormComponent implements OnInit {
       phone: record.phone,
       email: record.email,
       address: record.address,
-      stateId: this.states.find(s => s.id === record.stateId) || null,
-      cityId: this.cities.find(c => c.id === record.cityId) || null,
-      pinCodeId: this.pincodes.find(p => p.id === record.pinCodeId) || null
+      stateId: stateObj,
+      cityId: cityObj,
+      pinCodeId: pinObj,
+      roleId: record.roleId
     });
 
     this.showCities();
     this.showPincode();
   }
 
+  // Autocomplete setup
   private setupAutocompleteFilters() {
- 
+
     this.filteredStates$ = this.userForm.get('stateId')!.valueChanges.pipe(
       startWith(''),
-      map(v => typeof v === 'string' ? v : v?.name || ''),
-      map(name => name ? this.states.filter(s => s.name.toLowerCase().includes(name.toLowerCase())) : this.states)
+      map(value => typeof value === 'string' ? value : value?.name || ''),
+      map(name => name ? this.states.filter(st => st.name.toLowerCase().includes(name.toLowerCase())) : this.states)
     );
 
     this.filteredCities$ = this.userForm.get('cityId')!.valueChanges.pipe(
       startWith(''),
-      map(v => typeof v === 'string' ? v : v?.name || ''),
-      map(name => name 
-        ? this.cities.filter(c => c.stateId === this.selectedStateId && c.name.toLowerCase().includes(name.toLowerCase()))
-        : this.cities.filter(c => c.stateId === this.selectedStateId))
+      map(value => typeof value === 'string' ? value : value?.name || ''),
+      map(name => this.cities.filter(c => 
+        c.stateId === this.selectedStateId &&
+        c.name.toLowerCase().includes(name.toLowerCase())
+      ))
     );
 
     this.filteredPincodes$ = this.userForm.get('pinCodeId')!.valueChanges.pipe(
       startWith(''),
-      map(v => typeof v === 'string' ? v : v?.pincode?.toString() || ''),
-      map(code => code 
-        ? this.pincodes.filter(p => p.cityId === this.selectedCityId && p.pincode.toString().includes(code))
-        : this.pincodes.filter(p => p.cityId === this.selectedCityId))
+      map(value => typeof value === 'string' ? value : value?.pincode?.toString() || ''),
+      map(p => this.pincodes.filter(pin =>
+        pin.cityId === this.selectedCityId &&
+        pin.pincode.toString().includes(p)
+      ))
     );
 
   }
 
-  onStateSelected(state: StateDto) { this.selectedStateId = state.id; this.selectedCityId = null; this.userForm.patchValue({ stateId: state, cityId: null, pinCodeId: null }); this.showCities(); this.showPincode(); }
-  onCitySelected(city: CitiesDto) { this.selectedCityId = city.id; this.userForm.patchValue({ cityId: city, pinCodeId: null }); this.showPincode(); }
+  // Display functions
+  displayState(state: StateDto | null) { return state?.name ?? ''; }
+  displayCities(city: CitiesDto | null) { return city?.name ?? ''; }
+  displayPincodes(pin: PincodeDto | null) { return pin?.pincode.toString() ?? ''; }
 
-  displayState(state: StateDto | null) { return state ? state.name : ''; }
-  displayCities(city: CitiesDto | null) { return city ? city.name : ''; }
-  displayPincodes(pin: PincodeDto | null) { return pin ? pin.pincode.toString() : ''; }
-
-
-  showState() { this.filteredStates$ = of(this.states); }
   showCities() { this.filteredCities$ = of(this.cities.filter(c => c.stateId === this.selectedStateId)); }
   showPincode() { this.filteredPincodes$ = of(this.pincodes.filter(p => p.cityId === this.selectedCityId)); }
 
+  onStateSelected(s: StateDto) {
+    this.selectedStateId = s.id;
+    this.selectedCityId = null;
+    this.userForm.patchValue({ cityId: null, pinCodeId: null });
+    this.showCities();
+    this.showPincode();
+  }
+
+  onCitySelected(c: CitiesDto) {
+    this.selectedCityId = c.id;
+    this.userForm.patchValue({ pinCodeId: null });
+    this.showPincode();
+  }
+
+  // Submit handler
   onSubmit() {
     if (this.userForm.invalid) {
       this.toast.error('Please fill all required fields correctly.');
       return;
     }
 
-    const formValue = this.userForm.value;
-    const formData = {
-      ...formValue,
-      stateId: formValue.stateId?.id || formValue.stateId,
-      cityId: formValue.cityId?.id || formValue.cityId,
-      pinCodeId: formValue.pinCodeId?.id || formValue.pinCodeId,
+    const f = this.userForm.value;
+
+    const payload = {
+      ...f,
+      stateId: f.stateId.id,
+      cityId: f.cityId.id,
+      pinCodeId: f.pinCodeId.id,
     };
 
     if (this.mode === 'edit' && this.data.record) {
-      this.apiService.updateUser(this.data.record.id, formData).subscribe({
-        next: () => { this.toast.success('User Data Updated Successfully!'); this.dialogRef.close('success'); },
-        error: err => this.toast.error(err?.error || 'Error updating User Data!')
+      this.apiService.updateUser(this.data.record.id, payload).subscribe({
+        next: () => { this.toast.success("User Updated"); this.dialogRef.close('success'); }
       });
     } else {
-      this.apiService.postUser(formData).subscribe({
-        next: () => { this.toast.success('User Data Created Successfully!'); this.dialogRef.close('success'); },
-        error: err => this.toast.error(err?.error || 'Error creating User Data!')
+      this.apiService.postUser(payload).subscribe({
+        next: () => { this.toast.success("User Created"); this.dialogRef.close('success'); }
       });
     }
   }
