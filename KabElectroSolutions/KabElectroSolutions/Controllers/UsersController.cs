@@ -40,7 +40,7 @@ namespace KabElectroSolutions.Controllers
                     join a in _context.Addresses
                         on u.Id equals a.UserId into addressGroup
                     from addr in addressGroup.DefaultIfEmpty()
-                    //where u.PartnerId == user.Id
+                    where !u.IsPartner && u.BusinessroleName != "Super Admin"
                     select new UsersDTO
                     {
                         Id = u.Id,

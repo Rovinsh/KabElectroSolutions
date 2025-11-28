@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon'
 import { ToastService } from '../services/toastService.service';
 import { VerifyDialog } from '../verify-dialog/verify-dialog';
+import { AppointmentComponent } from '../appointment/appointment';
 
 // interface Claim {
 //   //id:number,
@@ -39,22 +40,6 @@ export class DashboardComponent {
   tabs = ['Assigned Claims', 'Accepted Claims', 'Verified Claims', 'Invoices', 'All Claims'];
   activeTab = this.tabs[0];
   isLoading: boolean = false;
-
-  // claims: Claim[] = [
-  //   {
-  //     claimCode: '547343', warrantySerialNo: '12932038', warrantyType: 'DEVICE SECURE GOLD',
-  //     warrantyCode: 'URP9331392', createdBy: 'Suraj Choudhary', planName: 'DEVICE SECURE GOLD',
-  //     customerName: 'PRAMILA NAGBANSHI', customerPhone: '9026492590', cityState: 'Uttar Pradesh, Gorakhpur',
-  //     status: 'Appointment Taken'
-  //   },
-  //   {
-  //     claimCode: '547341', warrantySerialNo: '14189859', warrantyType: 'DEVICE SECURE',
-  //     warrantyCode: 'UNK9234021', createdBy: 'Suraj Choudhary', planName: 'DEVICE SECURE',
-  //     customerName: 'Kriti Gautam', customerPhone: '9051853678', cityState: 'Haryana, Ambala',
-  //     status: 'Call Aborted'
-  //   },
-  //   // Add more rows or connect to service
-  // ];
 
   filter = {
     warrantyType: '',
@@ -93,6 +78,27 @@ export class DashboardComponent {
         maxHeight: '90vh',  
         height: 'auto',
         disableClose: true,
+        data: {
+          claimId: claimId
+        }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      // user clicked YES
+      //this.verifyClaim();
+    }
+  });
+}
+
+openAppointmentPopup(claimId: number) {
+  const dialogRef = this.dialog.open(AppointmentComponent, {
+    width: '700px',
+    maxWidth: '150vw',  
+        maxHeight: '130vh',  
+        height: 'auto',
+        disableClose: true,
+        autoFocus: false,
         data: {
           claimId: claimId
         }
@@ -161,7 +167,9 @@ export class DashboardComponent {
     if(tab == 'Assigned Claims')
       subStatusId= this.getSubStatusId("Service Centre Assigned");
     if(tab == "Accepted Claims")
-      subStatusId= this.getSubStatusId("Call Accepted By Service Center");   
+      subStatusId= this.getSubStatusId("Call Accepted By Service Center");
+    if(tab == "Verified Claims")
+      subStatusId= this.getSubStatusId("Claim Verified");    
     if(tab == 'Invoices')
       subStatusId= this.getSubStatusId("Repair Completed");
      this.loadClaimsByStatus(subStatusId);     
