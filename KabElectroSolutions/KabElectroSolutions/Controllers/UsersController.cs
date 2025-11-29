@@ -216,14 +216,21 @@ namespace KabElectroSolutions.Controllers
                 _context.Addresses.Update(existingAddress);
                 await _context.SaveChangesAsync();
 
-                var existingUserRole = _context.UserRoles.Where(role => role.UserId == id).First();
-                //var userRole = new UserRole
-                //{
-                existingUserRole.UserId = id;
-                existingUserRole.RoleId = updateUserdata.RoleId;
-                //};
+                //var existingUserRole = _context.UserRoles.Where(role => role.UserId == id).First();
+                ////var userRole = new UserRole
+                ////{
+                //existingUserRole.RoleId = updateUserdata.RoleId;
+                ////};
 
-                _context.UserRoles.Update(existingUserRole);
+                var oldRoles = _context.UserRoles.Where(ur => ur.UserId == id).ToList();
+                _context.UserRoles.RemoveRange(oldRoles);
+                await _context.SaveChangesAsync();
+
+                _context.UserRoles.Add(new UserRole
+                {
+                    UserId = id,
+                    RoleId = updateUserdata.RoleId
+                });
                 await _context.SaveChangesAsync();
 
 
