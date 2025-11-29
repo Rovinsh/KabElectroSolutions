@@ -1,8 +1,9 @@
-<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start overflow-y-auto divheight">
-  <mat-card class="w-full max-w-6xl shadow-xl rounded-2xl">
-    <mat-card-header class="bg-blue-600 text-white p-4 flex justify-between items-center rounded-t-2xl">
-      <mat-card-title class="text-lg font-semibold text-black">{{ title }}</mat-card-title>
-      <button mat-icon-button (click)="onClose()" class="text-white hover:text-red-300 text-xl font-bold">✕</button>
+<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
+  <mat-card class="w-full max-w-5xl shadow-xl rounded-2xl">
+    
+     <mat-card-header class="bg-blue-50 text-blue-800 p-3 flex justify-between items-center">
+      <mat-card-title class="text-lg font-semibold">{{ title }}</mat-card-title>
+      <button mat-icon-button (click)="onClose()" class="close-btn">X</button>
     </mat-card-header>
 
     <hr class="my-0 marginbottom border-gray-300" />
@@ -31,8 +32,14 @@
         <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>User Mobile No</mat-label>
-            <input matInput formControlName="phone" />
-            <mat-error *ngIf="userForm.get('phone')?.hasError('required')">User Mobile No is required</mat-error>
+            <input matInput formControlName="phone" maxlength="10" />
+           <mat-error *ngIf="userForm.get('phone')?.hasError('required')">
+                Phone number is required
+              </mat-error>
+
+              <mat-error *ngIf="userForm.get('phone')?.hasError('pattern')">
+                Invalid phone number. Example: 9876543210
+              </mat-error>
           </mat-form-field>
         </div>
 
@@ -41,7 +48,13 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>User Email</mat-label>
             <input matInput formControlName="email" />
-            <mat-error *ngIf="userForm.get('email')?.hasError('required')">User is required</mat-error>
+             <mat-error *ngIf="userForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+
+            <mat-error *ngIf="userForm.get('email')?.hasError('pattern')">
+              Invalid email format. Example: example@domain.com
+            </mat-error>
           </mat-form-field>
         </div>
 

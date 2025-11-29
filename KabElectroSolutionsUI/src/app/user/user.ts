@@ -65,6 +65,7 @@ export class UserComponent implements OnInit {
     { headerName: 'State', field: 'stateName', filter: true, width: 100 },
     { headerName: 'Pincode', field: 'pinCode', filter: true, width: 100 },
     { headerName: 'Address', field: 'address', filter: true, width: 100 },
+    { headerName: 'Role', field: 'roleName', filter: true, width: 100 },
     {
       headerName: 'Action',
       width: 120,

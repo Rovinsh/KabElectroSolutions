@@ -65,8 +65,8 @@ export class UserFormComponent implements OnInit {
     this.userForm = this.fb.group({
       firstName:[null, Validators.required],
       lastName:[null, Validators.required],
-      phone: [null, Validators.required],
-      email: [null, [Validators.required, Validators.email]],
+      phone: [null, [Validators.required,Validators.pattern(/^[6-9]\d{9}$/)]],
+      email: [null,  [Validators.required,Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],    
       address: [null, Validators.required],
       stateId: [null, Validators.required],  // stores object
       cityId: [null, Validators.required],   // stores object
@@ -193,16 +193,30 @@ export class UserFormComponent implements OnInit {
       cityId: f.cityId.id,
       pinCodeId: f.pinCodeId.id,
     };
-
-    if (this.mode === 'edit' && this.data.record) {
-      this.apiService.updateUser(this.data.record.id, payload).subscribe({
-        next: () => { this.toast.success("User Updated"); this.dialogRef.close('success'); }
-      });
+  const handleError = (err: any) => {
+    if (err.status === 409) {
+      this.toast.error('User email already exists!');
     } else {
-      this.apiService.postUser(payload).subscribe({
-        next: () => { this.toast.success("User Created"); this.dialogRef.close('success'); }
-      });
+      this.toast.error(err?.error || 'An error occurred!');
     }
+  };
+  if (this.mode === 'edit' && this.data.record) {
+     this.apiService.updateUser(this.data.record.id, payload).subscribe({
+      next: () => {
+        this.toast.success('User Updated Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: handleError
+    });
+  } else {
+    this.apiService.postUser(payload).subscribe({
+      next: () => {
+        this.toast.success('User Created Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: handleError
+    });
+  }
   }
 
   onClose() { this.dialogRef.close(); }

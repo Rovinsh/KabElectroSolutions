@@ -53,7 +53,7 @@ namespace KabElectroSolutions.Controllers
                         StateName = addr.State,
                         PinCode = addr.Pincode,
                         RoleId = u.Businessrole,
-
+                        RoleName = u.BusinessroleName,
                         // Lookups
                         CityId = _context.Cities
                             .Where(c => c.Name == addr.City)
@@ -149,6 +149,15 @@ namespace KabElectroSolutions.Controllers
                 await transaction.CommitAsync();
                 return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, users);
             }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_Users_Email") == true)
+                {
+                    return Conflict("User email id already exists.");
+                }
+
+                return StatusCode(500, "An error occurred while saving the service partners.");
+            }
             catch (Exception ex)
             {
                 // Rollback if anything fails
@@ -220,6 +229,14 @@ namespace KabElectroSolutions.Controllers
 
                 await transaction.CommitAsync();
                 return Ok();
+            } catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_Users_Email") == true)
+                {
+                    return Conflict("User email id already exists.");
+                }
+
+                return StatusCode(500, "An error occurred while saving the service partners.");
             }
             catch (Exception ex)
             {
