@@ -69,10 +69,10 @@ export class ServicePartnerFormComponent implements OnInit {
       firstName:[null, Validators.required],
       lastName:[null],
       servicePartner: [null, Validators.required],
-      pan: [null, Validators.required],
-      gst: [null, Validators.required],
-      phone: [null, Validators.required],
-      email: [null, [Validators.required, Validators.email]],
+      pan: [ null,[Validators.required,Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i)]],
+      gst: [null,[Validators.required,Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
+      phone: [null, [Validators.required,Validators.pattern(/^[6-9]\d{9}$/)]],
+      email: [null,  [Validators.required,Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       address: [null, Validators.required],
       stateId: [null, Validators.required],
       cityId: [null, Validators.required],
@@ -153,33 +153,43 @@ export class ServicePartnerFormComponent implements OnInit {
   showCities() { this.filteredCities$ = of(this.cities.filter(c => c.stateId === this.selectedStateId)); }
   showPincode() { this.filteredPincodes$ = of(this.pincodes.filter(p => p.cityId === this.selectedCityId)); }
 
-  onSubmit() {
-    if (this.servicePartnerForm.invalid) {
-      this.toast.error('Please fill all required fields correctly.');
-      return;
-    }
+ onSubmit(): void {
+  if (this.servicePartnerForm.invalid) return;
 
-    const formValue = this.servicePartnerForm.value;
-    const formData = {
-      ...formValue,
-      stateId: formValue.stateId?.id || formValue.stateId,
-      cityId: formValue.cityId?.id || formValue.cityId,
-      pinCodeId: formValue.pinCodeId?.id || formValue.pinCodeId,
-      isDisable: !!formValue.isDisable
-    };
+  const formValue = this.servicePartnerForm.value;
+  const formData = {
+    ...formValue,
+    stateId: formValue.stateId?.id || formValue.stateId,
+    cityId: formValue.cityId?.id || formValue.cityId,
+    pinCodeId: formValue.pinCodeId?.id || formValue.pinCodeId,
+    isDisable: !!formValue.isDisable
+  };
 
-    if (this.mode === 'edit' && this.data.record) {
-      this.apiService.updateServicePartners(this.data.record.id, formData).subscribe({
-        next: () => { this.toast.success('Service Partner Updated Successfully!'); this.dialogRef.close('success'); },
-        error: err => this.toast.error(err?.error || 'Error updating Service Partner!')
-      });
+  const handleError = (err: any) => {
+    if (err.status === 409) {
+      this.toast.error('Service Partner email already exists!');
     } else {
-      this.apiService.postServicePartners(formData).subscribe({
-        next: () => { this.toast.success('Service Partner Created Successfully!'); this.dialogRef.close('success'); },
-        error: err => this.toast.error(err?.error || 'Error creating Service Partner!')
-      });
+      this.toast.error(err?.error || 'An error occurred!');
     }
-  }
+  };
 
+  if (this.mode === 'edit' && this.data.record) {
+    this.apiService.updateServicePartners(this.data.record.id, formData).subscribe({
+      next: () => {
+        this.toast.success('Service Partner Updated Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: handleError
+    });
+  } else {
+    this.apiService.postServicePartners(formData).subscribe({
+      next: () => {
+        this.toast.success('Service Partner Created Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: handleError
+    });
+  }
+}
   onClose() { this.dialogRef.close(); }
 }

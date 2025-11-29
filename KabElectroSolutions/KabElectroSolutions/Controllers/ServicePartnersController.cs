@@ -34,8 +34,11 @@ namespace KabElectroSolutions.Controllers
                 {
                     Id = s.Id,
                     ServicePartner = s.ServicePartner,
+                    FirstName = s.Firstname,
+                    LastName = s.Lastname,
                     Phone = s.Phone,
                     Email = s.Email,
+                    ExtraInfo=s.ExtraInfo,
                     Address = s.Address,
                     Pan = s.Pan,
                     Gst = s.Gst,
@@ -76,11 +79,14 @@ namespace KabElectroSolutions.Controllers
                 {
                     Id = s.Id,
                     ServicePartner = s.ServicePartner,
+                    FirstName = s.Firstname,
+                    LastName = s.Lastname,
                     Phone = s.Phone,
                     Email = s.Email,
                     Address = s.Address,
                     Pan = s.Pan,
                     Gst = s.Gst,
+                    ExtraInfo = s.ExtraInfo,
                     CityName = _context.Cities
                         .Where(c => c.Id == s.CityId)
                         .Select(ct => ct.Name)
@@ -169,6 +175,15 @@ namespace KabElectroSolutions.Controllers
 
                 return CreatedAtAction(nameof(GetServicePartners), new { id = servicePartners.Id }, servicePartners);
             }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_ServicePartner_Email") == true)
+                {
+                    return Conflict("Service patner email id already exists.");
+                }
+
+                return StatusCode(500, "An error occurred while saving the service partners.");
+            }
             catch (Exception ex)
             {
                 // Rollback if anything fails
@@ -204,9 +219,48 @@ namespace KabElectroSolutions.Controllers
 
                 _context.ServicePartner.Update(existingServicePartner);
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
 
+            
+                var existingUser = await _context.Users.Where(User=>User.IsPartner && User.PartnerId==id).FirstOrDefaultAsync();
+                if (existingUser == null)
+                    return NotFound("user not found");
+                existingUser.Phone = updatedServicePartners.Phone;
+                existingUser.Email = updatedServicePartners.Email;
+                existingUser.Firstname = updatedServicePartners.Firstname;
+                existingUser.Lastname = updatedServicePartners.Lastname;
+                existingUser.PasswordHash = PasswordHelper.HashPassword(updatedServicePartners.Phone);       
+                existingUser.BusinessPhone = updatedServicePartners.Phone;
+                existingUser.BusinessEmail = updatedServicePartners.Email;
+                existingUser.Businessname = updatedServicePartners.ServicePartner;
+                existingUser.BusinessGst = updatedServicePartners.Gst!;
+                existingUser.BusinessPan = updatedServicePartners.Pan!;
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+
+                var existingAddress = _context.Addresses.Where(x => x.UserId == existingUser.Id).FirstOrDefault();
+
+                //var address = new Address
+                //{
+                existingAddress.AddressLine = updatedServicePartners.Address;
+                existingAddress.Location = updatedServicePartners.StateId;
+                existingAddress.Pincode = _context.Pincodes.Where(pincode => pincode.Id == updatedServicePartners.PinCodeId).First().PincodeValue;
+                existingAddress.City = _context.Cities.Where(city => city.Id == updatedServicePartners.CityId).First().Name;
+                existingAddress.State = _context.Locations.Where(location => location.Id == updatedServicePartners.StateId).First().Name;
+                //};
+                _context.Addresses.Update(existingAddress);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
                 return Ok(existingServicePartner);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_ServicePartner_Email") == true)
+                {
+                    return Conflict("Service patner email id already exists.");
+                }
+
+                return StatusCode(500, "An error occurred while saving the service partners.");
             }
             catch (Exception ex)
             {

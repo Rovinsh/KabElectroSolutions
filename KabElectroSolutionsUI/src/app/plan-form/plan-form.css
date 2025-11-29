@@ -7,4 +7,6 @@ mat-card-header {
 .close-btn {
   font-weight: bold;
   font-size: 18px;
+  background-color: black;
+  color: white;
 }

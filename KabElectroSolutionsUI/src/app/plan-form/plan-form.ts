@@ -57,7 +57,7 @@ export class PlanFormComponent implements OnInit {
     });
 
     this.apiService.getCategories().subscribe(res => {
-      this.categories = res.data;
+      this.categories = res.data.filter(x => x.isDisable);
 
       if (this.data) {
         this.mode = this.data.mode;
@@ -88,35 +88,46 @@ export class PlanFormComponent implements OnInit {
     return category ? category.catName : '';
   }
 
-  onSubmit(): void {
-    if (this.planForm.invalid) return;
+ onSubmit(): void {
+  if (this.planForm.invalid) return;
 
-    const formData = {
-      ...this.planForm.value,
-      catId: typeof this.planForm.value.catId === 'object'
-        ? this.planForm.value.catId.id
-        : this.planForm.value.catId,
-      isDisable: this.planForm.value.isDisable ? true : false
-    };
-
-    if (this.mode === 'edit' && this.data.record) {
-      this.apiService.updatePlan(this.data.record.id, formData).subscribe({
-        next: () => {
-          this.toast.success('Plan Updated Successfully!');
-          this.dialogRef.close('success');
-        },
-        error: err => this.toast.error(err?.error || 'Error updating plan!')
-      });
-    } else {
-      this.apiService.postPlans(formData).subscribe({
-        next: () => {
-          this.toast.success('Plan Created Successfully!');
-          this.dialogRef.close('success');
-        },
-        error: err => this.toast.error(err?.error || 'Error creating plan!')
-      });
+  const formData = {
+    ...this.planForm.value,
+    catId: typeof this.planForm.value.catId === 'object'
+      ? this.planForm.value.catId.id
+      : this.planForm.value.catId,
+    isDisable: this.planForm.value.isDisable ? true : false
+  };
+const handleError = (err: any, action: string) => {
+    if (err?.status === 409) {
+      this.toast.error("A plan with the same name already exists in this category!");
+    } 
+    else if (err?.error) {
+      this.toast.error(err.error);
+    } 
+    else {
+      this.toast.error(`Error ${action} plan!`);
     }
+  };
+
+  if (this.mode === 'edit' && this.data.record) {
+    this.apiService.updatePlan(this.data.record.id, formData).subscribe({
+      next: () => {
+        this.toast.success('Plan Updated Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: (err) => handleError(err, 'updating')
+    });
+  } else {
+    this.apiService.postPlans(formData).subscribe({
+      next: () => {
+        this.toast.success('Plan Created Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: (err) => handleError(err, 'creating')
+    });
   }
+}
 
   onClose() {
     this.dialogRef.close();

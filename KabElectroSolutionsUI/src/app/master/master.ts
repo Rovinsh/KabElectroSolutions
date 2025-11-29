@@ -182,13 +182,13 @@ export class MasterComponent implements OnInit {
 
   brandCols: ColDef[] = [
     { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
-    { headerName: 'Category Name', field: 'categoryName', filter: true, width: 210 },
     { headerName: 'Brand Name', field: 'brandName', filter: true, width: 230 },
+    { headerName: 'Category Name', field: 'categoryName', filter: true, width: 210 },
     {
       headerName: 'Description',
       field: 'description',
       filter: false,
-      width: 350,
+      width: 180,
       cellRenderer: (params: any) => {
         const words = params.value ? params.value.split(' ') : [];
         if (words.length > 150) return words.slice(0, 150).join(' ') + '...';
@@ -215,13 +215,13 @@ export class MasterComponent implements OnInit {
 
   planCols: ColDef[] = [
     { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
-    { headerName: 'Category Name', field: 'categoryName', filter: true, width: 150 },
     { headerName: 'Plan Name', field: 'planName', filter: true, width: 200 },
+    { headerName: 'Category Name', field: 'categoryName', filter: true, width: 150 },
     {
       headerName: 'Description',
       field: 'description',
       filter: false,
-      width: 250,
+      width: 150,
       cellRenderer: (params: any) => {
         const words = params.value ? params.value.split(' ') : [];
         if (words.length > 150) return words.slice(0, 150).join(' ') + '...';
@@ -260,15 +260,28 @@ export class MasterComponent implements OnInit {
 
   servicePartnerCols: ColDef[] = [
   { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
-  { headerName: 'Service Partner', field: 'servicePartner', filter: true, width: 180 },
+  { headerName: 'Service Partner', field: 'servicePartner', filter: true, width: 150 },
+  { headerName: 'First Name', field: 'firstName', filter: true, width: 100 },
+  { headerName: 'Last Name', field: 'lastName', filter: true, width: 100 },
   { headerName: 'Phone', field: 'phone', filter: true, width: 130 },
   { headerName: 'Email', field: 'email', filter: true, width: 130 },
   { headerName: 'PAN', field: 'pan', filter: true, width: 130 },
-  { headerName: 'GST', field: 'gst', filter: true, width: 150 },
-  { headerName: 'City', field: 'cityName', filter: true, width: 150 },
-  { headerName: 'State', field: 'stateName', filter: true, width: 150 },
+  { headerName: 'GST', field: 'gst', filter: true, width: 130 },
+  { headerName: 'City', field: 'cityName', filter: true, width: 130 },
+  { headerName: 'State', field: 'stateName', filter: true, width: 130 },
   { headerName: 'Pincode', field: 'pinCode', filter: true, width: 100 },
-  { headerName: 'Address', field: 'address', filter: false, width: 250,
+  {
+      headerName: 'Extra Info',
+      field: 'extraInfo',
+      filter: false,
+      width: 180,
+      cellRenderer: (params: any) => {
+        const words = params.value ? params.value.split(' ') : [];
+        if (words.length > 150) return words.slice(0, 150).join(' ') + '...';
+        return params.value;
+      }
+    },
+  { headerName: 'Address', field: 'address', filter: false, width: 150,
     cellRenderer: (params: any) => {
       const words = params.value ? params.value.split(' ') : [];
       if (words.length > 150) return words.slice(0, 150).join(' ') + '...';

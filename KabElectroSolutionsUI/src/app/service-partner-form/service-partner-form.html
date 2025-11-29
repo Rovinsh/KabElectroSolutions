@@ -1,8 +1,9 @@
-<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start overflow-y-auto divheight">
-  <mat-card class="w-full max-w-6xl shadow-xl rounded-2xl">
-    <mat-card-header class="bg-blue-600 text-white p-4 flex justify-between items-center rounded-t-2xl">
-      <mat-card-title class="text-lg font-semibold text-black">{{ title }}</mat-card-title>
-      <button mat-icon-button (click)="onClose()" class="text-white hover:text-red-300 text-xl font-bold">✕</button>
+<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
+  <mat-card class="w-full max-w-5xl shadow-xl rounded-2xl">
+    
+     <mat-card-header class="bg-blue-50 text-blue-800 p-3 flex justify-between items-center">
+      <mat-card-title class="text-lg font-semibold">{{ title }}</mat-card-title>
+      <button mat-icon-button (click)="onClose()" class="close-btn">X</button>
     </mat-card-header>
 
     <hr class="my-0 marginbottom border-gray-300" />
@@ -37,41 +38,51 @@
         <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Service Partner PAN</mat-label>
-            <input matInput formControlName="pan" />
-            <mat-error *ngIf="servicePartnerForm.get('pan')?.hasError('required')">
-             Service Partner PAN is required
+            <input matInput formControlName="pan"  (input)="servicePartnerForm.get('pan')?.setValue($event.target.value.toUpperCase())" maxlength="10"/>
+           <mat-error *ngIf="servicePartnerForm.get('pan')?.hasError('required')">
+            Service Partner PAN is required
+            </mat-error>
+            <mat-error *ngIf="servicePartnerForm.get('pan')?.hasError('pattern')">
+              Invalid PAN format. Example: ABCDE1234F
             </mat-error>
           </mat-form-field>
         </div>
         <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Service Partner GST</mat-label>
-            <input matInput formControlName="gst" />
-            <mat-error *ngIf="servicePartnerForm.get('gst')?.hasError('required')">
-             Service Partner GST is required
+            <input matInput formControlName="gst" (input)="servicePartnerForm.get('gst')?.setValue($event.target.value.toUpperCase())" maxlength="15"/>
+            <mat-error *ngIf="servicePartnerForm.get('gst')?.hasError('required')">Service Partner GST is required</mat-error>
+            <mat-error *ngIf="servicePartnerForm.get('gst')?.hasError('pattern')">
+              Invalid GST format. Example: 22AAAAA0000A1Z5
             </mat-error>
           </mat-form-field>
         </div>
-
-        <!-- Customer Mobile No -->
         <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Service Partner Mobile No</mat-label>
-            <input matInput formControlName="phone" />
-            <mat-error *ngIf="servicePartnerForm.get('phone')?.hasError('required')">Service Partner Mobile No is required</mat-error>
-          </mat-form-field>
-        </div>
+            <input matInput formControlName="phone" maxlength="10"/>
+              <mat-error *ngIf="servicePartnerForm.get('phone')?.hasError('required')">
+                Phone number is required
+              </mat-error>
 
-        <!-- Customer Email -->
+              <mat-error *ngIf="servicePartnerForm.get('phone')?.hasError('pattern')">
+                Invalid phone number. Example: 9876543210
+              </mat-error>
+            </mat-form-field>
+        </div>
         <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Service Partner Email</mat-label>
             <input matInput formControlName="email" />
-            <mat-error *ngIf="servicePartnerForm.get('email')?.hasError('required')">Service Partner is required</mat-error>
+            <mat-error *ngIf="servicePartnerForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+
+            <mat-error *ngIf="servicePartnerForm.get('email')?.hasError('pattern')">
+              Invalid email format. Example: example@domain.com
+            </mat-error>
           </mat-form-field>
         </div>
-
-        <!-- Customer State -->
         <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Service Partner State</mat-label>
@@ -82,7 +93,7 @@
             <mat-autocomplete #stateAuto="matAutocomplete" [displayWith]="displayState" autoActiveFirstOption (optionSelected)="onStateSelected($event.option.value)">
               <mat-option *ngFor="let state of filteredStates$ | async" [value]="state">{{ state.name }}</mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="servicePartnerForm.get('stateId')?.hasError('required')">Service Partner State is required</mat-error>
+            <mat-error *ngIf="servicePartnerForm.get('stateId')?.hasError('required')">State is required</mat-error>
           </mat-form-field>
         </div>
 
@@ -97,7 +108,7 @@
             <mat-autocomplete #cityAuto="matAutocomplete" [displayWith]="displayCities" autoActiveFirstOption (optionSelected)="onCitySelected($event.option.value)">
               <mat-option *ngFor="let city of filteredCities$ | async" [value]="city">{{ city.name }}</mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="servicePartnerForm.get('cityId')?.hasError('required')">Service Partner City is required</mat-error>
+            <mat-error *ngIf="servicePartnerForm.get('cityId')?.hasError('required')">City is required</mat-error>
           </mat-form-field>
         </div>
 
@@ -106,7 +117,7 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Service Partner Address</mat-label>
             <textarea matInput formControlName="address" rows="2"></textarea>
-            <mat-error *ngIf="servicePartnerForm.get('address')?.hasError('required')">Service Partner Address is required</mat-error>
+            <mat-error *ngIf="servicePartnerForm.get('address')?.hasError('required')">Address is required</mat-error>
           </mat-form-field>
         </div>
 
@@ -121,7 +132,7 @@
             <mat-autocomplete #pincodeAuto="matAutocomplete" [displayWith]="displayPincodes">
               <mat-option *ngFor="let pin of filteredPincodes$ | async" [value]="pin">{{ pin.pincode }}</mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="servicePartnerForm.get('pinCodeId')?.hasError('required')">Service Partner Pincode is required</mat-error>
+            <mat-error *ngIf="servicePartnerForm.get('pinCodeId')?.hasError('required')">Pincode is required</mat-error>
           </mat-form-field>
         </div>
 
@@ -135,15 +146,14 @@
 
        
         <!-- Active/Disable Warranty -->
-        <div class="col-3 flex items-center">
-          <mat-checkbox formControlName="isDisable">Disable Service Partner</mat-checkbox>
+        <div class="col-4 flex items-center">
+          <mat-checkbox formControlName="isDisable">Active Service Partner</mat-checkbox>
         </div>
 
         <!-- Submit Button -->
-        <div class="col-12 text-end mt-4">
-          <button mat-raised-button color="primary" type="submit">{{ submitBtnLabel }}</button>
+        <div class="col-8 text-end mt-4">
+          <button mat-raised-button color="primary" type="submit" class="px-5 py-2 text-lg" [disabled]="servicePartnerForm.invalid">{{ submitBtnLabel }}</button>
         </div>
-
       </form>
     </mat-card-content>
   </mat-card>

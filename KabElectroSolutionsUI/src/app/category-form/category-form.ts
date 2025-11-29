@@ -60,28 +60,43 @@ export class CategoryFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.categoryForm.invalid) return;
+  if (this.categoryForm.invalid) return;
 
-    const formData = { ...this.categoryForm.value, isDisable: this.categoryForm.value.isDisable ? true : false };
+  const formData = {
+    ...this.categoryForm.value,
+    isDisable: this.categoryForm.value.isDisable ? true : false
+  };
 
-    if (this.mode === 'edit' && this.data.record) {
-      this.apiService.updateCategory(this.data.record.id, formData).subscribe({
-        next: () => {
-          this.toast.success('Category Updated Successfully!');
-          this.dialogRef.close('success');
-        },
-        error: (err) => this.toast.error(err?.error || 'Error updating category!')
-      });
+  const handleError = (err: any) => {
+    if (err.status === 409) {
+      this.toast.error('Category name already exists!');
     } else {
-      this.apiService.postCategory(formData).subscribe({
-        next: () => {
-          this.toast.success('Category Created Successfully!');
-          this.dialogRef.close('success');
-        },
-        error: (err) => this.toast.error(err?.error || 'Error creating category!')
-      });
+      this.toast.error(err?.error || 'An error occurred!');
     }
+  };
+
+  if (this.mode === 'edit' && this.data.record) {
+
+    this.apiService.updateCategory(this.data.record.id, formData).subscribe({
+      next: () => {
+        this.toast.success('Category Updated Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: handleError
+    });
+
+  } else {
+
+    this.apiService.postCategory(formData).subscribe({
+      next: () => {
+        this.toast.success('Category Created Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: handleError
+    });
+
   }
+}
 
   onClose() {
     this.dialogRef.close();

@@ -54,13 +54,26 @@ namespace KabElectroSolutions.Controllers
         {
             if (plans == null)
                 return BadRequest("Invalid plan data");
+            bool exists = await _context.Plans.AnyAsync(p => p.CatId == plans.CatId &&
+                       p.PlanName == plans.PlanName);
 
-            _context.Plans.Add(plans);
-            await _context.SaveChangesAsync();
+            if (exists)
+                return Conflict("A plan with the same name already exists in this category.");
+            try
+            {
+                _context.Plans.Add(plans);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPlans), new { id = plans.Id }, plans);
+                return CreatedAtAction(nameof(GetPlans), new { id = plans.Id }, plans);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_Plans_Cat_PlanName") == true)
+                    return Conflict("Plan already exists for this category.");
+                throw;
+            }
         }
-
+        
         [HttpPost("{id}")]
         public async Task<IActionResult> UpdatePlan(int id, [FromBody] Plans updatedPlan)
         {
@@ -71,16 +84,31 @@ namespace KabElectroSolutions.Controllers
             if (existingPlan == null)
                 return NotFound("Plan not found");
 
+            bool duplicateExists = await _context.Plans.AnyAsync(p => p.Id != id &&
+                               p.CatId == updatedPlan.CatId &&
+                               p.PlanName == updatedPlan.PlanName);
+
+            if (duplicateExists)
+                return Conflict("A plan with the same name already exists in this category.");
+
             existingPlan.CatId = updatedPlan.CatId;
             existingPlan.PlanName = updatedPlan.PlanName;
             existingPlan.Description = updatedPlan.Description;
             existingPlan.Remark = updatedPlan.Remark;
             existingPlan.IsDisable = updatedPlan.IsDisable;
 
-            _context.Plans.Update(existingPlan);
-            await _context.SaveChangesAsync();
-
-            return Ok(existingPlan);
+            try
+            {
+                _context.Plans.Update(existingPlan);
+                await _context.SaveChangesAsync();
+                return Ok(existingPlan);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_Plans_Cat_PlanName") == true)
+                    return Conflict("Plan already exists for this category.");
+                throw;
+            }
         }
     }
 }

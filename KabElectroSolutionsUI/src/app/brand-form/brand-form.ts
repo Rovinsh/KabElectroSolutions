@@ -53,7 +53,7 @@ export class BrandFormComponent implements OnInit {
     });
 
     this.apiService.getCategories().subscribe(res => {
-      this.categories = res.data;
+      this.categories = res.data.filter(x => x.isDisable);
 
       if (this.data) {
         this.mode = this.data.mode;
@@ -82,33 +82,45 @@ export class BrandFormComponent implements OnInit {
     return category ? category.catName : '';
   }
 
-  onSubmit(): void {
-    if (this.brandForm.invalid) return;
+ onSubmit(): void {
+  if (this.brandForm.invalid) return;
 
-    const formData = {
-      ...this.brandForm.value,
-      isDisable: this.brandForm.value.isDisable ? true : false,
-      categoryId: this.brandForm.value.categoryId?.id ?? this.brandForm.value.categoryId
-    };
+  const formData = {
+    ...this.brandForm.value,
+    isDisable: this.brandForm.value.isDisable ? true : false,
+    categoryId: this.brandForm.value.categoryId?.id ?? this.brandForm.value.categoryId
+  };
 
-    if (this.mode === 'edit' && this.data.record) {
-      this.apiService.updateBrand(this.data.record.id, formData).subscribe({
-        next: () => {
-          this.toast.success('Brand Updated Successfully!');
-          this.dialogRef.close('success');
-        },
-        error: (err) => this.toast.error(err?.error || 'Error updating brand!')
-      });
-    } else {
-      this.apiService.postBarands(formData).subscribe({
-        next: () => {
-          this.toast.success('Brand Created Successfully!');
-          this.dialogRef.close('success');
-        },
-        error: (err) => this.toast.error(err?.error || 'Error creating Brand!')
-      });
+  const handleError = (err: any, action: string) => {
+    if (err?.status === 409) {
+      this.toast.error("A Brand with the same name already exists in this category!");
+    } 
+    else if (err?.error) {
+      this.toast.error(err.error);
+    } 
+    else {
+      this.toast.error(`Error ${action} brand!`);
     }
+  };
+
+  if (this.mode === 'edit' && this.data.record) {
+    this.apiService.updateBrand(this.data.record.id, formData).subscribe({
+      next: () => {
+        this.toast.success('Brand Updated Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: (err) => handleError(err, 'updating')
+    });
+  } else {
+    this.apiService.postBarands(formData).subscribe({
+      next: () => {
+        this.toast.success('Brand Created Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: (err) => handleError(err, 'creating')
+    });
   }
+}
 
   onClose() {
     this.dialogRef.close();

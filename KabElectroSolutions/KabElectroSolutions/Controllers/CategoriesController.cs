@@ -52,10 +52,23 @@ namespace KabElectroSolutions.Controllers
             if (categories == null)
                 return BadRequest("Invalid categories data");
 
-            _context.Categories.Add(categories);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Categories.Add(categories);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCategories), new { id = categories.Id }, categories);
+                return CreatedAtAction(nameof(GetCategories),
+                    new { id = categories.Id }, categories);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_Categories_CatName") == true)
+                {
+                    return Conflict("Category name already exists.");
+                }
+
+                return StatusCode(500, "An error occurred while saving the category.");
+            }
         }
 
         [HttpPost("{id}")]
@@ -67,15 +80,26 @@ namespace KabElectroSolutions.Controllers
             var existingCategory = await _context.Categories.FindAsync(id);
             if (existingCategory == null)
                 return NotFound("Category not found");
+            try
+            {
+                existingCategory.CatName = updatedCategory.CatName;
+                existingCategory.Description = updatedCategory.Description;
+                existingCategory.IsDisable = updatedCategory.IsDisable;
 
-            existingCategory.CatName = updatedCategory.CatName;
-            existingCategory.Description = updatedCategory.Description;
-            existingCategory.IsDisable = updatedCategory.IsDisable;
+                _context.Categories.Update(existingCategory);
+                await _context.SaveChangesAsync();
 
-            _context.Categories.Update(existingCategory);
-            await _context.SaveChangesAsync();
+                return Ok(existingCategory);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_Categories_CatName") == true)
+                {
+                    return Conflict("Category name already exists.");
+                }
 
-            return Ok(existingCategory);
+                return StatusCode(500, "An error occurred while saving the category.");
+            }
         }
 
     }

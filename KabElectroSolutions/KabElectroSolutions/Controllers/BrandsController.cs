@@ -54,10 +54,24 @@ namespace KabElectroSolutions.Controllers
             if (brands == null)
                 return BadRequest("Invalid brand data");
 
-            _context.Brands.Add(brands);
-            await _context.SaveChangesAsync();
+            bool exists = await _context.Brands.AnyAsync(b => b.CategoryId == brands.CategoryId
+                    && b.BrandName == brands.BrandName);
 
-            return CreatedAtAction(nameof(GetBrands), new { id = brands.Id }, brands);
+            if (exists)
+                return Conflict("A brand with the same name already exists in this category.");
+            try
+            {
+                _context.Brands.Add(brands);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetBrands), new { id = brands.Id }, brands);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_Brands_Category_BrandName") == true)
+                    return Conflict("Brand already exists for this category.");
+                throw; 
+            }
         }
 
         [HttpPost("{id}")]
@@ -70,15 +84,30 @@ namespace KabElectroSolutions.Controllers
             if (existingBrand == null)
                 return NotFound("Brand not found");
 
+            bool duplicateExists = await _context.Brands.AnyAsync(b => b.Id != id &&
+                      b.CategoryId == updatedBrand.CategoryId &&
+                      b.BrandName == updatedBrand.BrandName);
+
+            if (duplicateExists)
+                return Conflict("A brand with the same name already exists in this category.");
+
             existingBrand.CategoryId = updatedBrand.CategoryId;
             existingBrand.BrandName = updatedBrand.BrandName;
             existingBrand.Description = updatedBrand.Description;
             existingBrand.IsDisable = updatedBrand.IsDisable;
 
-            _context.Brands.Update(existingBrand);
-            await _context.SaveChangesAsync();
-
-            return Ok(existingBrand);
+            try
+            {
+                _context.Brands.Update(existingBrand);
+                await _context.SaveChangesAsync();
+                return Ok(existingBrand);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("UQ_Brands_Category_BrandName") == true)
+                    return Conflict("Brand already exists for this category.");
+                throw; 
+            }
         }
     }
 }
