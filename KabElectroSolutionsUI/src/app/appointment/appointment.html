@@ -1,0 +1,80 @@
+<div mat-dialog-title class="dialog-header">
+  <h2>Appointment</h2>
+
+  <button mat-icon-button class="close-btn" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <hr/>
+</div>
+<div class="header-divider"></div>
+<div class="popup-container">
+
+  <div class="row">
+    <div class="column">
+      <label>Appointment date: *</label>
+      <input type="date" [(ngModel)]="appointmentDate">
+    </div>
+
+    <div class="column">
+      <label>Appointment time: *</label>
+      <input type="time" [(ngModel)]="appointmentTime">
+    </div>
+  </div>
+
+  <label>Remarks *</label>
+  <select [(ngModel)]="remarks">    
+    <option value="">Select</option>
+    <option value="Same as before">Same as before</option>
+    <option value="Changed according to the Customer">Changed according to the Customer</option>
+    <option value="Changed according to the Service Centre">Changed according to the Service Centre</option>
+    <option value="Visit scheduled by Customer">Visit scheduled by Customer</option>
+    <option value="Visit Scheduled by ASC">Visit Scheduled by ASC</option>
+    <option value="Visit Rescheduled by Customer">Visit Rescheduled by Customer</option>
+    <!-- <option value="Customer not reachable">Customer not reachable</option>
+    <option value="Service Center Dependency">Service Center Dependency</option>
+    <option value="Upcountry Area">Upcountry Area</option> -->
+  </select>
+
+
+  <div class="radio-group">
+  <label>Visit Pending Reason</label>
+
+  <div class="radio-row">
+    <input type="radio" 
+           name="pending" 
+           value="Customer not reachable" 
+           [(ngModel)]="pendingReason"
+           (ngModelChange)="onPendingReasonChange()">
+    <span><b>&nbsp;&nbsp;Customer not reachable/not responding</b></span>
+  </div>
+
+  <div class="radio-row">
+    <input type="radio" 
+           name="pending" 
+           value="Service Center Dependency" 
+           [(ngModel)]="pendingReason"
+           (ngModelChange)="onPendingReasonChange()">
+    <span><b>&nbsp;&nbsp;Service Center Dependency</b></span>
+  </div>
+
+ <div class="radio-row">
+    <input type="radio" 
+           name="pending" 
+           value="Upcountry Area" 
+           [(ngModel)]="pendingReason"
+           (ngModelChange)="onPendingReasonChange()">
+    <span><b>&nbsp;&nbsp;Upcountry Area</b></span>
+ </div>
+</div>
+
+
+  <select [(ngModel)]="visitPendingReason">
+  <option value="">Select Visit Reason</option>
+  <option *ngFor="let item of visitReasons" [value]="item">
+    {{ item }}
+  </option>
+</select>
+<div class="submit-wrapper">
+  <button class="submit-btn" [disabled]="!isFormValid()" (click)="submitAppointment()">SUBMIT APPOINTMENT</button>
+</div>
+</div>
