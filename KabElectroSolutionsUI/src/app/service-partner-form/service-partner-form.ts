@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, startWith, map } from 'rxjs';
+import { Observable, of, startWith, map, forkJoin } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
@@ -80,18 +80,37 @@ export class ServicePartnerFormComponent implements OnInit {
       isDisable: [true],
     });
 
-    this.setupAutocompleteFilters();
+  // ✅ Load all API data together
+    forkJoin({
+      states: this.apiService.getStates(),
+      cities: this.apiService.getCities(),
+      pincodes: this.apiService.getPincodes(),
+    }).subscribe({
+      next: (result) => {
+        this.states = result.states.data;
+        this.cities = result.cities.data;
+        this.pincodes = result.pincodes.data;
 
-    if (this.data?.mode === 'edit' && this.data.record) {
-      this.mode = 'edit';
-      this.title = 'Edit Service Partner';
-      this.submitBtnLabel = 'Update ServicePartner';
-      setTimeout(() => this.patchEditData(), 0);
-    }
+        this.setupAutocompleteFilters();
+
+        if (this.data.mode === 'edit') {
+          this.mode = 'edit';
+          this.title = 'Edit Service Partner';
+          this.submitBtnLabel = 'Update ServicePartner';
+          this.patchEditData();
+        }
+      }
+    });
   }
 
   private patchEditData() {
     const record = this.data.record!;
+    const stateObj = this.states.find(s => s.id === record.stateId) || null;
+    const cityObj = this.cities.find(c => c.id === record.cityId) || null;
+    const pinObj = this.pincodes.find(p => p.id === record.pinCodeId) || null;
+
+
+
     this.selectedStateId = record.stateId;
     this.selectedCityId = record.cityId;
 
@@ -105,9 +124,9 @@ export class ServicePartnerFormComponent implements OnInit {
       gst: record.gst,
       email: record.email,
       address: record.address,
-      stateId: this.states.find(s => s.id === record.stateId) || null,
-      cityId: this.cities.find(c => c.id === record.cityId) || null,
-      pinCodeId: this.pincodes.find(p => p.id === record.pinCodeId) || null,
+      stateId: stateObj,
+      cityId: cityObj,
+      pinCodeId: pinObj,
       isDisable: !!record.isDisable
     });
 
@@ -153,6 +172,7 @@ export class ServicePartnerFormComponent implements OnInit {
   showCities() { this.filteredCities$ = of(this.cities.filter(c => c.stateId === this.selectedStateId)); }
   showPincode() { this.filteredPincodes$ = of(this.pincodes.filter(p => p.cityId === this.selectedCityId)); }
 
+  
  onSubmit(): void {
   if (this.servicePartnerForm.invalid) return;
 

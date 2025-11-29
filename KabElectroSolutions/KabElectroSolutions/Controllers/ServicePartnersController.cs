@@ -42,6 +42,7 @@ namespace KabElectroSolutions.Controllers
                     Address = s.Address,
                     Pan = s.Pan,
                     Gst = s.Gst,
+                    CityId = s.CityId,
                     CityName = _context.Cities
                         .Where(c => c.Id == s.CityId)
                         .Select(ct => ct.Name)
@@ -87,6 +88,7 @@ namespace KabElectroSolutions.Controllers
                     Pan = s.Pan,
                     Gst = s.Gst,
                     ExtraInfo = s.ExtraInfo,
+                    CityId = s.CityId,
                     CityName = _context.Cities
                         .Where(c => c.Id == s.CityId)
                         .Select(ct => ct.Name)
