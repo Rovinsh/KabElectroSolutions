@@ -51,6 +51,17 @@ export class ReportComponent implements OnInit {
 
   reportCols: ColDef<ReportsDto>[] = [
     { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1, cellClass: 'excelCell' },
+      {
+      headerName: 'Link',
+      field: 'fileName',
+      cellRenderer: (params: any) => {
+        const file = params.value;
+        if (!file) return '-';
+        return `<a href="/Reports/${file}" target="_blank" download>
+                  ${file}
+                </a>`;
+      }
+    },
     { headerName: 'File Name', field: 'fileName', cellClass: 'excelCell' },
     { headerName: 'Date Range', field: 'dateRange', cellClass: 'excelCell' },
     { headerName: 'Time Stamp', field: 'timeStamp', cellClass: 'excelCell' },
@@ -111,23 +122,49 @@ export class ReportComponent implements OnInit {
     });
   }
 
-  loadFilteredReports(reportName:string) {
+//   loadFilteredReports(reportName:string) {
+//   const payload: ReportFilterDto = {
+//     reportType: this.selectedReportType,
+//     startDate: this.selectedRange.start!,
+//     endDate: this.selectedRange.end!,
+//     reportName:reportName
+//   };
+
+//   this.apiService.postReport(payload).subscribe((res) => {
+//     this.reports = res.report;
+//     this.claims = res.claims.results;
+//     this.cdr.detectChanges();
+//     setTimeout(() => {
+//       this.exportToExcel();
+//     }, 50);
+//   });
+// }
+
+loadFilteredReports(reportName: string) {
   const payload: ReportFilterDto = {
     reportType: this.selectedReportType,
     startDate: this.selectedRange.start!,
     endDate: this.selectedRange.end!,
-    reportName:reportName
+    reportName
   };
 
   this.apiService.postReport(payload).subscribe((res) => {
-    this.reports = res.report;
+
     this.claims = res.claims.results;
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      this.exportToExcel();
-    }, 50);
+
+    // 🔥 Auto download
+    if (reportName === "downloadReport") {
+      window.open(res.fileUrl, "_blank");
+      return;
+    }
+
+    // 🔥 For generateLink → update Ag Grid list
+    if (reportName === "generateLink") {
+      this.loadReports(); // reload table with fresh DB rows
+    }
   });
 }
+
 
   exportToExcel() {
     if (!this.reports || this.reports.length === 0) return;
