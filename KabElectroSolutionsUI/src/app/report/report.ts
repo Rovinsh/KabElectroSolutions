@@ -51,17 +51,17 @@ export class ReportComponent implements OnInit {
 
   reportCols: ColDef<ReportsDto>[] = [
     { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1, cellClass: 'excelCell' },
-      {
-      headerName: 'Link',
-      field: 'fileName',
-      cellRenderer: (params: any) => {
-        const file = params.value;
-        if (!file) return '-';
-        return `<a href="/Reports/${file}" target="_blank" download>
-                  ${file}
-                </a>`;
-      }
-    },
+    {
+    headerName: 'Link',
+    field: 'fileName',
+    cellRenderer: (params: any) => {
+      const file = params.value;
+      if (!file) return '-';
+      return `<a href="/Reports/${file}" target="_blank" download>
+                ${file}
+              </a>`;
+    }
+  },
     { headerName: 'File Name', field: 'fileName', cellClass: 'excelCell' },
     { headerName: 'Date Range', field: 'dateRange', cellClass: 'excelCell' },
     { headerName: 'Time Stamp', field: 'timeStamp', cellClass: 'excelCell' },
@@ -88,26 +88,25 @@ export class ReportComponent implements OnInit {
     if (this.canFilter()) { }
   }
 
-  private canFilter(): boolean {
-    return !!this.selectedReportType &&
-           !!this.selectedRange.start &&
-           !!this.selectedRange.end;
+  canFilter() {
+    return (
+      !!this.selectedReportType &&
+      !!this.selectedRange.start &&
+      !!this.selectedRange.end
+    );
   }
 
   refreshReports() {
     this.loadReports();
   }
-
-  downloadReport() {
-   if (this.canFilter()) {
-      this.loadFilteredReports("downloadReport");
-    }
+   downloadReport() {
+    if (!this.canFilter()) return;
+    this.loadFilteredReports("downloadReport");
   }
 
   generateLink() {
-    if (this.canFilter()) {
-      this.loadFilteredReports("generateLink");
-    }
+    if (!this.canFilter()) return;
+    this.loadFilteredReports("generateLink");
   }
 
   resetFilters() {
@@ -122,48 +121,26 @@ export class ReportComponent implements OnInit {
     });
   }
 
-//   loadFilteredReports(reportName:string) {
-//   const payload: ReportFilterDto = {
-//     reportType: this.selectedReportType,
-//     startDate: this.selectedRange.start!,
-//     endDate: this.selectedRange.end!,
-//     reportName:reportName
-//   };
+ loadFilteredReports(reportName: string) {
+    const payload: ReportFilterDto = {
+      reportType: this.selectedReportType,
+      startDate: this.selectedRange.start!,
+      endDate: this.selectedRange.end!,
+      reportName
+    };
 
-//   this.apiService.postReport(payload).subscribe((res) => {
-//     this.reports = res.report;
-//     this.claims = res.claims.results;
-//     this.cdr.detectChanges();
-//     setTimeout(() => {
-//       this.exportToExcel();
-//     }, 50);
-//   });
-// }
+    this.apiService.postReport(payload).subscribe(res => {
 
-loadFilteredReports(reportName: string) {
-  const payload: ReportFilterDto = {
-    reportType: this.selectedReportType,
-    startDate: this.selectedRange.start!,
-    endDate: this.selectedRange.end!,
-    reportName
-  };
+      if (reportName === "downloadReport") {
+        this.exportToExcel();
+        return;
+      }
 
-  this.apiService.postReport(payload).subscribe((res) => {
-
-    this.claims = res.claims.results;
-
-    // 🔥 Auto download
-    if (reportName === "downloadReport") {
-      window.open(res.fileUrl, "_blank");
-      return;
-    }
-
-    // 🔥 For generateLink → update Ag Grid list
-    if (reportName === "generateLink") {
-      this.loadReports(); // reload table with fresh DB rows
-    }
-  });
-}
+      if (reportName === "generateLink") {
+        this.loadReports();
+      }
+    });
+  }
 
 
   exportToExcel() {
@@ -177,40 +154,6 @@ const worksheet = XLSX.utils.json_to_sheet(this.claims);
       this.selectedRange.end!.toISOString().split("T")[0] +
       ".xlsx";
   XLSX.writeFile(workbook, fileName);
-    
-
-  
-
-    // // Add custom header rows
-    // const headerRows = [
-    //   ["CRM Report"],
-    //   [`Report Type: ${this.selectedReportType}`],
-    //   [
-    //     `Date Range: ${this.selectedRange.start!.toISOString().split("T")[0]
-    //     } to ${this.selectedRange.end!.toISOString().split("T")[0]}`
-    //   ],
-    //   []
-    // ];
-
-    // XLSX.utils.sheet_add_aoa(worksheet, headerRows, { origin: "A1" });
-
-    // // Auto column width
-    // const colWidths = Object.keys(this.reports[0]).map(col => ({ wch: 20 }));
-    // worksheet["!cols"] = colWidths;
-
-    // // Create workbook
-    // const wb = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(wb, worksheet, "Report");
-
-    // // Convert to Excel buffer
-    // const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-
-    // // Save file
-    // const blob = new Blob([excelBuffer], {
-    //   type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    // });
-
-    // saveAs(blob, fileName);
   }
 
 }

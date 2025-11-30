@@ -1,100 +1,94 @@
-<div class="d-flex flex-column flex-md-row min-vh-100">
-  <main class="flex-fill p-3">
-    <div class="container-fluid dashboard-container">
-      <div class="card shadow-sm border-0">
-        <div
-          class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap"
-        >
-          <h5 class="mb-0">Reports</h5>
-        </div>
+<div class="container-fluid p-3">
 
-        <div class="card-body">
-          <div class="row g-3 align-items-center">
-            <div class="col-md-2">
-              <label class="form-label fw-semibold mb-1">Report Type</label>
-              <select
-                class="form-select"
-                [(ngModel)]="selectedReportType"
-                name="reportType"
-                (change)="onFiltersChanged()"
-              >
-                <option *ngFor="let type of reportTypes" [value]="type">
-                  {{ type }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label fw-semibold mb-1">Report Date</label>
-
-              <mat-form-field appearance="outline" class="w-100 m-0">
-                <mat-date-range-input [rangePicker]="rangePicker">
-
-                  <input
-                    matStartDate
-                    placeholder="From date"
-                    [(ngModel)]="selectedRange.start"
-                    (dateChange)="onDateChanged()"
-                    name="startDate"
-                  />
-
-                  <input
-                    matEndDate
-                    placeholder="To date"
-                    [(ngModel)]="selectedRange.end"
-                    (dateChange)="onDateChanged()"
-                    name="endDate"
-                  />
-
-                </mat-date-range-input>
-
-                <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
-                <mat-date-range-picker #rangePicker></mat-date-range-picker>
-              </mat-form-field>
-            </div>
-            <div
-              class="col-md-6 d-flex justify-content-md-end justify-content-center gap-2 mt-3 mt-md-0"
-            >
-              <button
-                class="btn btn-danger"
-                (click)="downloadReport()"
-              >
-                <i class="bi bi-download"></i> Download Report
-              </button>
-
-              <button
-                class="btn btn-primary"
-                (click)="generateLink()"
-              >
-                <i class="bi bi-link-45deg"></i> Generate Report Link
-              </button>
-
-              <button class="btn btn-secondary" (click)="resetFilters()">
-                <i class="bi bi-arrow-counterclockwise"></i> Reset
-              </button>
-            </div>
-
-          </div>
-
-          <hr class="my-4" />
-          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-            <h5 class="mb-2">Reports</h5>
-            <button class="btn btn-outline-primary btn-sm" (click)="refreshReports()">
-              ♻️ Refresh
-            </button>
-          </div>
-          <div class="table-responsive">
-            <ag-grid-angular
-              style="width: 100%"
-              domLayout="autoHeight"
-              class="ag-theme-alpine"
-              [rowData]="reports"
-              [columnDefs]="reportCols"
-              [animateRows]="true"
-            >
-            </ag-grid-angular>
-          </div>
-        </div>
-      </div>
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Reports</h5>
     </div>
-  </main>
+
+    <div class="card-body">
+
+      <div class="row g-3">
+
+        <div class="col-md-2">
+          <label class="fw-semibold">Report Type</label>
+          <select class="form-select" [(ngModel)]="selectedReportType">
+            <option *ngFor="let type of reportTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="fw-semibold">Report Date</label>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-date-range-input [rangePicker]="picker">
+              <input 
+                matStartDate 
+                placeholder="From" 
+                [(ngModel)]="selectedRange.start"
+              />
+              <input 
+                matEndDate 
+                placeholder="To" 
+                [(ngModel)]="selectedRange.end"
+              />
+            </mat-date-range-input>
+
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 d-flex align-items-end justify-content-end gap-2">
+
+          <button 
+            class="btn btn-danger"
+            (click)="downloadReport()"
+            [disabled]="!canFilter()"
+          >
+            <i class="bi bi-download"></i> Download Report
+          </button>
+
+          <button 
+            class="btn btn-primary"
+            (click)="generateLink()"
+            [disabled]="!canFilter()"
+          >
+            <i class="bi bi-link-45deg"></i> Generate Link
+          </button>
+
+          <button class="btn btn-secondary" (click)="resetFilters()">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset
+          </button>
+        </div>
+
+      </div>
+
+      <hr>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">Reports</h5>
+
+        <button 
+          class="btn btn-outline-primary btn-sm"
+          (click)="refreshReports()"
+        >
+          ♻️ Refresh
+        </button>
+      </div>
+
+      <div class="mt-3">
+        <ag-grid-angular
+          class="ag-theme-alpine"
+          style="width: 100%;"
+          domLayout="autoHeight"
+          [rowData]="reports"
+          [columnDefs]="reportCols"
+          [animateRows]="true"
+        >
+        </ag-grid-angular>
+      </div>
+
+    </div>
+  </div>
 </div>

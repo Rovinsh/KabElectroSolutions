@@ -2,11 +2,9 @@
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Helper;
 using KabElectroSolutions.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
+using ClosedXML.Excel;
 
 namespace KabElectroSolutions.Controllers
 {
@@ -23,101 +21,29 @@ namespace KabElectroSolutions.Controllers
             _context = context;
         }
 
+        // GET: All stored reports
         [HttpGet("Reports")]
         public async Task<IActionResult> GetReports()
         {
             var data = await _context.Reports
-            .Select(r => new ReportsDTO
-            {
-                Id = r.Id,
-                FileName = r.FileName,
-                TimeStamp = r.TimeStamp,
-                DateRange = r.DateRange,
-                Status = r.Status
-            })
-            .ToListAsync();
-            var result = new ReportsResponseDTO
+                .Select(r => new ReportsDTO
+                {
+                    Id = r.Id,
+                    FileName = r.FileName,
+                    TimeStamp = r.TimeStamp,
+                    DateRange = r.DateRange,
+                    Status = r.Status
+                })
+                .ToListAsync();
+
+            return Ok(new
             {
                 Status = 200,
-                Message = "success, is_redis = True",
+                Message = "success",
                 Data = data
-            };
-
-            return Ok(result);
+            });
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateReports([FromBody] ReportsFilter report)
-        //{
-        //    if (report == null)
-        //        return BadRequest("Invalid report data");
-
-        //    var start = DateOnly.FromDateTime(report.StartDate);
-        //    var end = DateOnly.FromDateTime(report.EndDate);
-
-        //    var reportData = new Reports
-        //    {
-        //        CreatedDate = DateOnly.FromDateTime(DateTime.UtcNow),
-        //        StartDate = start,
-        //        EndDate = end,
-        //        Status = "Uploaded",
-        //        DateRange = $"{report.StartDate:yyyy-MM-dd} - {report.EndDate:yyyy-MM-dd}",
-        //        FileName = $"crm_report_{report.StartDate:yyyy-MM-dd}_{report.EndDate:yyyy-MM-dd}.csv",
-        //        TimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
-        //    };
-        //    var claims = await _context.Claims
-        //          .Where(c => c.CreatedDate >= start && c.CreatedDate <= end)
-        //          .ToListAsync();
-        //    object response;
-        //    if (report.ReportName == "generateLink")
-        //    {
-        //        _context.Reports.Add(reportData);
-        //        await _context.SaveChangesAsync();
-        //        response = new
-        //        {
-        //            Status = 201,
-        //            Message = "Report created successfully",
-
-        //            Report = new ReportsDTO
-        //            {
-        //                Id = reportData.Id,
-        //                FileName = reportData.FileName,
-        //                TimeStamp = reportData.TimeStamp,
-        //                DateRange = reportData.DateRange,
-        //                Status = reportData.Status
-        //            },
-
-        //            Claims = new
-        //            {
-        //                Count = claims.Count,
-        //                Results = claims
-        //            }
-        //        };
-        //    }
-        //    else {
-        //         response = new
-        //        {
-        //            Status = 201,
-        //            Message = "Report download successfully",
-
-        //            Report = new ReportsDTO
-        //            {
-        //                Id = 0,
-        //                FileName = "",
-        //                TimeStamp = "",
-        //                DateRange = "",
-        //                Status = ""
-        //            },
-
-        //            Claims = new
-        //            {
-        //                Count = claims.Count,
-        //                Results = claims
-        //            }
-        //        };
-        //    }
-        //        return Ok(response);
-        //}
         [HttpPost]
         public async Task<IActionResult> CreateReports([FromBody] ReportsFilter report)
         {
@@ -127,39 +53,38 @@ namespace KabElectroSolutions.Controllers
             var start = DateOnly.FromDateTime(report.StartDate);
             var end = DateOnly.FromDateTime(report.EndDate);
 
-            var fileName = $"crm_report_{report.StartDate:yyyy-MM-dd}_{report.EndDate:yyyy-MM-dd}.csv";
+            string fileName = $"crm_report_{report.StartDate:yyyy-MM-dd}_{report.EndDate:yyyy-MM-dd}.xlsx";
 
             var claims = await _context.Claims
-                  .Where(c => c.CreatedDate >= start && c.CreatedDate <= end)
-                  .ToListAsync();
+                .Where(c => c.CreatedDate >= start && c.CreatedDate <= end)
+                .ToListAsync();
 
-            // 🔥 CREATE /wwwroot/Reports FOLDER IF NOT EXISTS
-            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Reports");
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            // 🔥 SAVE CSV FILE
             string filePath = Path.Combine(folderPath, fileName);
-            using (var writer = new StreamWriter(filePath))
+
+            using (var workbook = new XLWorkbook())
             {
+                var ws = workbook.Worksheets.Add("Report");
+
                 var props = typeof(Claim).GetProperties();
 
-                // Write header
-                writer.WriteLine(string.Join(",", props.Select(p => p.Name)));
+                for (int i = 0; i < props.Length; i++)
+                    ws.Cell(1, i + 1).Value = props[i].Name;
 
-                // Write rows
-                foreach (var c in claims)
+                for (int row = 0; row < claims.Count; row++)
                 {
-                    var values = props.Select(p => p.GetValue(c)?.ToString()?.Replace(",", " "));
-                    writer.WriteLine(string.Join(",", values));
+                    for (int col = 0; col < props.Length; col++)
+                    {
+                        var value = props[col].GetValue(claims[row]);
+                        ws.Cell(row + 2, col + 1).Value = value?.ToString() ?? "";
+                    }
                 }
+                workbook.SaveAs(filePath);
             }
-
-            // 🔥 URL RETURNED TO ANGULAR
             string fileUrl = $"/Reports/{fileName}";
-
-            object response;
-
             if (report.ReportName == "generateLink")
             {
                 var reportData = new Reports
@@ -176,36 +101,22 @@ namespace KabElectroSolutions.Controllers
                 _context.Reports.Add(reportData);
                 await _context.SaveChangesAsync();
 
-                response = new
+                return Ok(new
                 {
                     status = 201,
-                    message = "Report created",
-                    fileUrl = fileUrl,    // 🔥 IMPORTANT
-                    report = new
-                    {
-                        reportData.Id,
-                        reportData.FileName,
-                        reportData.TimeStamp,
-                        reportData.DateRange,
-                        reportData.Status,
-                        link = fileUrl      // 🔥 IMPORTANT
-                    },
-                    claims = new { Count = claims.Count, Results = claims }
-                };
+                    message = "Report link generated",
+                    fileUrl,
+                    report = reportData,
+                    claims = new { Count = claims.Count }
+                });
             }
-            else
+            return Ok(new
             {
-                // download only → do not save in DB
-                response = new
-                {
-                    status = 200,
-                    message = "Report downloaded",
-                    fileUrl = fileUrl, 
-                    claims = new { Count = claims.Count, Results = claims }
-                };
-            }
-
-            return Ok(response);
+                status = 200,
+                message = "Report downloaded",
+                fileUrl,
+                claims = new { Count = claims.Count }
+            });
         }
     }
 }

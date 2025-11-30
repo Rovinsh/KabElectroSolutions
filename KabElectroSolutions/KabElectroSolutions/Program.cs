@@ -59,14 +59,21 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseStaticFiles(); 
 
+// Create folder: /Reports (root-level, outside wwwroot)
+var reportsPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+if (!Directory.Exists(reportsPath))
+    Directory.CreateDirectory(reportsPath);
+
+// Expose /Reports as a public static path
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "Reports")),
-    RequestPath = "/Reports"  // This becomes the URL prefix
+    FileProvider = new PhysicalFileProvider(reportsPath),
+    RequestPath = "/Reports"
 });
+
+// Keep default static files for wwwroot
+app.UseStaticFiles();
 
 app.MapControllers();
 
