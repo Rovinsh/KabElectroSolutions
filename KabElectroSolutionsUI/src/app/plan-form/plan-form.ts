@@ -34,6 +34,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   styleUrls: ['./plan-form.css']
 })
 export class PlanFormComponent implements OnInit {
+  isSubmitting = false;
   planForm!: FormGroup;
   categories: CategoryDto[] = [];
   filteredcategories$!: Observable<CategoryDto[]>;
@@ -98,21 +99,22 @@ export class PlanFormComponent implements OnInit {
       : this.planForm.value.catId,
     isDisable: this.planForm.value.isDisable ? true : false
   };
+ this.isSubmitting = true;
 const handleError = (err: any, action: string) => {
-    if (err?.status === 409) {
+    if (err?.status === 409) {this.isSubmitting = false;
       this.toast.error("A plan with the same name already exists in this category!");
     } 
-    else if (err?.error) {
+    else if (err?.error) {this.isSubmitting = false;
       this.toast.error(err.error);
     } 
-    else {
+    else {this.isSubmitting = false;
       this.toast.error(`Error ${action} plan!`);
     }
   };
 
   if (this.mode === 'edit' && this.data.record) {
     this.apiService.updatePlan(this.data.record.id, formData).subscribe({
-      next: () => {
+      next: () => {this.isSubmitting = false;
         this.toast.success('Plan Updated Successfully!');
         this.dialogRef.close('success');
       },
@@ -120,7 +122,7 @@ const handleError = (err: any, action: string) => {
     });
   } else {
     this.apiService.postPlans(formData).subscribe({
-      next: () => {
+      next: () => {this.isSubmitting = false;
         this.toast.success('Plan Created Successfully!');
         this.dialogRef.close('success');
       },

@@ -36,6 +36,7 @@ import { ToastService } from '../services/toastService.service';
   styleUrls: ['./service-partner-form.css'],
 })
 export class ServicePartnerFormComponent implements OnInit {
+  isSubmitting = false;
   servicePartnerForm!: FormGroup;
   mode: 'add' | 'edit' = 'add';
   submitBtnLabel: string = 'Submit ServicePartner';
@@ -184,18 +185,18 @@ export class ServicePartnerFormComponent implements OnInit {
     pinCodeId: formValue.pinCodeId?.id || formValue.pinCodeId,
     isDisable: !!formValue.isDisable
   };
-
+  this.isSubmitting = true;
   const handleError = (err: any) => {
-    if (err.status === 409) {
+    if (err.status === 409) { this.isSubmitting = false;
       this.toast.error('Service Partner email already exists!');
-    } else {
+    } else {this.isSubmitting = false;
       this.toast.error(err?.error || 'An error occurred!');
     }
   };
 
   if (this.mode === 'edit' && this.data.record) {
     this.apiService.updateServicePartners(this.data.record.id, formData).subscribe({
-      next: () => {
+      next: () => {this.isSubmitting = false;
         this.toast.success('Service Partner Updated Successfully!');
         this.dialogRef.close('success');
       },
@@ -203,7 +204,7 @@ export class ServicePartnerFormComponent implements OnInit {
     });
   } else {
     this.apiService.postServicePartners(formData).subscribe({
-      next: () => {
+      next: () => {this.isSubmitting = false;
         this.toast.success('Service Partner Created Successfully!');
         this.dialogRef.close('success');
       },

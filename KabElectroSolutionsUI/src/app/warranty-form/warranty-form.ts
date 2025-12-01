@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, startWith, map } from 'rxjs';
+import { Observable, of, startWith, map, forkJoin } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
@@ -36,6 +36,7 @@ import { ToastService } from '../services/toastService.service';
   styleUrls: ['./warranty-form.css'],
 })
 export class WarrantyFormComponent implements OnInit {
+  isSubmitting = false;
   warrantyForm!: FormGroup;
   mode: 'add' | 'edit' = 'add';
   submitBtnLabel: string = 'Submit Warranty';
@@ -64,11 +65,11 @@ export class WarrantyFormComponent implements OnInit {
   private data = inject(MAT_DIALOG_DATA) as { mode: 'add' | 'edit'; record?: WarrantyDto };
 
   ngOnInit(): void {
-    this.apiService.getWarrantyTypes().subscribe(res => (this.warrantyTypes = res.data));
-    this.apiService.getStates().subscribe(res => (this.states = res.data));
-    this.apiService.getCities().subscribe(res => (this.cities = res.data));
-    this.apiService.getPincodes().subscribe(res => (this.pincodes = res.data));
-    this.apiService.getPlans().subscribe(res => (this.product = res.data));
+    // this.apiService.getWarrantyTypes().subscribe(res => (this.warrantyTypes = res.data));
+    // this.apiService.getStates().subscribe(res => (this.states = res.data));
+    // this.apiService.getCities().subscribe(res => (this.cities = res.data));
+    // this.apiService.getPincodes().subscribe(res => (this.pincodes = res.data));
+    // this.apiService.getPlans().subscribe(res => (this.product = res.data.filter(x => x.isDisable)));
 
     this.warrantyForm = this.fb.group({
       serialNumber: [null, [Validators.required, Validators.pattern('^[0-9]*$')]],
@@ -90,25 +91,42 @@ export class WarrantyFormComponent implements OnInit {
       warrantyCreatedBy: [null],
       customerName: [null, Validators.required],
       itemSerialNumber:[null, Validators.required],
-      customerMobileNo: [null, Validators.required],
-      customerEmail: [null, [Validators.required, Validators.email]],
+      customerMobileNo: [null,[Validators.required,Validators.pattern(/^[6-9]\d{9}$/)]],
+      customerEmail: [null,[Validators.required,Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       customerAddress: [null, Validators.required],
       stateId: [null, Validators.required],
       cityId: [null, Validators.required],
       pinCodeId: [null, Validators.required],
       isDisable: [true],
-    });
+    } );
 
-    this.setupAutocompleteFilters();
+     // ✅ Load all API data together
+        forkJoin({
+          states: this.apiService.getStates(),
+          cities: this.apiService.getCities(),
+          pincodes: this.apiService.getPincodes(),
+          warrantyTypes: this.apiService.getWarrantyTypes(),
+          plans: this.apiService.getPlans(),
+        }).subscribe({
+          next: (result) => {
+            this.states = result.states.data;
+            this.cities = result.cities.data;
+            this.pincodes = result.pincodes.data;
+            this.warrantyTypes = result.warrantyTypes.data;
+            this.product = result.plans.data.filter(x => x.isDisable);
 
-    if (this.data?.mode === 'edit' && this.data.record) {
-      this.mode = 'edit';
-      this.title = 'Edit Warranty';
-      this.submitBtnLabel = 'Update Warranty';
-      setTimeout(() => this.patchEditData(), 0);
-    }
-  }
-
+            this.setupAutocompleteFilters();
+    
+            if (this.data.mode === 'edit') {
+              this.mode = 'edit';
+              this.title = 'Edit Warranty';
+              this.submitBtnLabel = 'Update Warranty';
+              this.patchEditData();
+            }
+          }
+        });
+      }
+  
   private patchEditData() {
     const record = this.data.record!;
     this.selectedStateId = record.stateId;
@@ -215,20 +233,35 @@ export class WarrantyFormComponent implements OnInit {
       pinCodeId: formValue.pinCodeId?.id || formValue.pinCodeId,
       isDisable: !!formValue.isDisable
     };
-
+    this.isSubmitting = true;
     if (this.mode === 'edit' && this.data.record) {
       this.apiService.updateWarranties(this.data.record.id, formData).subscribe({
-        next: () => { this.toast.success('Warranty Updated Successfully!'); this.dialogRef.close('success');
+        next: () => { this.toast.success('Warranty Updated Successfully!'); this.dialogRef.close('success');this.isSubmitting = false;
           this.warrantyForm.reset(); },
-        error: err => this.toast.error(err?.error || 'Error updating Warranty!')
+         error: (err) => {
+        this.toast.error(err?.error || 'Error creating Warranty!');
+        this.isSubmitting = false;
+      }
       });
     } else {
       this.apiService.postWarranties(formData).subscribe({
-        next: () => { this.toast.success('Warranty Created Successfully!'); this.dialogRef.close('success');this.warrantyForm.reset();  },
-        error: err => this.toast.error(err?.error || 'Error creating Warranty!')
+        next: () => { this.toast.success('Warranty Created Successfully!'); this.dialogRef.close('success');this.warrantyForm.reset();this.isSubmitting = false;  },
+        error: (err) => {
+        this.toast.error(err?.error || 'Error creating Warranty!');
+        this.isSubmitting = false;
+      }
       });
     }
   }
+  dateRangeValidator(form: FormGroup) {
+    const start = form.get('warrantyStartDate')?.value;
+    const end = form.get('warrantyEndDate')?.value;
 
+    if (!start || !end) return null;
+
+    return new Date(start) <= new Date(end)
+      ? null
+      : { dateRangeInvalid: true };
+  }
   onClose() { this.dialogRef.close(); }
 }

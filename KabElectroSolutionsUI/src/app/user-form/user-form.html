@@ -127,7 +127,7 @@
         </div>
 
         <div class="col-12 text-end mt-4">
-          <button mat-raised-button color="primary" type="submit">{{ submitBtnLabel }}</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid || isSubmitting">{{ submitBtnLabel }}</button>
         </div>
 
       </form>

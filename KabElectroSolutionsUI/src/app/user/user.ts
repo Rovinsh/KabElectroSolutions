@@ -14,15 +14,17 @@ import { UserFormComponent } from '../user-form/user-form';
   styleUrl: './user.css'
 })
 export class UserComponent implements OnInit {
+  isLoading = false;
   constructor(private dialog: MatDialog, private apiService: ApiService) {}
   users: UserDto[] = [];
   ngOnInit(): void {
     this.loadUsers();
   }
 
-  loadUsers() {
+  loadUsers() {this.isLoading = true;
     this.apiService.getUsers().subscribe(res => {
       this.users = res.data.sort((a: any, b: any) => a.firstName.localeCompare(b.firstName));
+      this.isLoading = false;
     });
   }
 

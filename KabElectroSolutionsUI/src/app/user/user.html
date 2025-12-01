@@ -7,7 +7,11 @@
           <i class="bi bi-plus-lg"></i> Add User
         </button>
       </div>
-
+      <div *ngIf="isLoading" class="loader-overlay">
+              <div class="spinner-border text-primary" role="status">
+              </div>
+              <p class="text-white mt-2">Please wait...</p>
+            </div>
       <div class="mt-3">
         <ag-grid-angular
         class="ag-theme-alpine"

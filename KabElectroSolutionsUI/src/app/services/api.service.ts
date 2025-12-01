@@ -338,6 +338,7 @@ export interface ReportFilterDto {
 
 export interface ReportsDto {
   fileName: string;
+  link?: string;
   id: number;
   dateRange: string;
   timeStamp: string;

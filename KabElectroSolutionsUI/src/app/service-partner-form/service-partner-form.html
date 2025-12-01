@@ -152,7 +152,7 @@
 
         <!-- Submit Button -->
         <div class="col-8 text-end mt-4">
-          <button mat-raised-button color="primary" type="submit" class="px-5 py-2 text-lg" [disabled]="servicePartnerForm.invalid">{{ submitBtnLabel }}</button>
+          <button mat-raised-button color="primary" type="submit" class="px-5 py-2 text-lg" [disabled]="servicePartnerForm.invalid || isSubmitting">{{ submitBtnLabel }}</button>
         </div>
       </form>
     </mat-card-content>

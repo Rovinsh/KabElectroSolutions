@@ -17,6 +17,7 @@ import { ApiService, CategoryDto, PlanDto, BrandDto, ServicePartnerDto } from '.
   styleUrls: ['./master.css']
 })
 export class MasterComponent implements OnInit {
+  isLoading = false;
   activeTab: string = 'category';
   categories: CategoryDto[] = [];
   brands: BrandDto[] = [];
@@ -51,28 +52,32 @@ export class MasterComponent implements OnInit {
     }
   }
 
-  loadCategories() {
+  loadCategories() {this.isLoading = true;
     this.apiService.getCategories().subscribe(res => {
       this.categories = res.data.sort((a: any, b: any) => a.catName.localeCompare(b.catName));
+      this.isLoading = false;
     });
   }
 
-  loadBrands() {
+  loadBrands() {this.isLoading = true;
     this.apiService.getBrands().subscribe(res => {
       this.brands = res.data.sort((a: any, b: any) => a.brandName.localeCompare(b.brandName));
+       this.isLoading = false;
     });
   }
 
-  loadPlans() {
+  loadPlans() {this.isLoading = true;
     this.apiService.getPlans().subscribe(res => {
     this.plans = res.data.sort((a: any, b: any) => a.planName.localeCompare(b.planName));
+     this.isLoading = false;
     });
   }
 
-  loadServicePartners() {
+  loadServicePartners() {this.isLoading = true;
     this.apiService.getServicePartners().subscribe(res => {
     this.servicePartner = res.data.sort((a: any, b: any) => a.servicePartner.localeCompare(b.servicePartner));
-    });
+    this.isLoading = false;
+  });
   }
 
   openPopup(data?: any) {

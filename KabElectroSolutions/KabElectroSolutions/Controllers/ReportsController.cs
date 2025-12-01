@@ -1,17 +1,17 @@
-﻿using KabElectroSolutions.Data;
+﻿using ClosedXML.Excel;
+using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Helper;
 using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReportsController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;
@@ -23,27 +23,29 @@ namespace KabElectroSolutions.Controllers
             _context = context;
         }
 
+        // GET: All stored reports
+       
         [HttpGet("Reports")]
         public async Task<IActionResult> GetReports()
-        {
-            var data = await _context.Reports
-            .Select(r => new ReportsDTO
-            {
-                Id = r.Id,
-                FileName = r.FileName,
-                TimeStamp = r.TimeStamp,
-                DateRange = r.DateRange,
-                Status = r.Status
-            })
-            .ToListAsync();
-            var result = new ReportsResponseDTO
+        { var performerEmail = User?.Identity?.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+            var data = await _context.Reports.Where(r=>r.CreatedById == user.Id)
+                .Select(r => new ReportsDTO
+                {
+                    Id = r.Id,
+                    FileName = r.FileName,
+                    TimeStamp = r.TimeStamp,
+                    DateRange = r.DateRange,
+                    Status = r.Status
+                })
+                .ToListAsync();
+
+            return Ok(new
             {
                 Status = 200,
-                Message = "success, is_redis = True",
+                Message = "success",
                 Data = data
-            };
-
-            return Ok(result);
+            });
         }
 
         [HttpPost]
@@ -51,72 +53,77 @@ namespace KabElectroSolutions.Controllers
         {
             if (report == null)
                 return BadRequest("Invalid report data");
-
+            var performerEmail = User?.Identity?.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
             var start = DateOnly.FromDateTime(report.StartDate);
             var end = DateOnly.FromDateTime(report.EndDate);
 
-            var reportData = new Reports
-            {
-                CreatedDate = DateOnly.FromDateTime(DateTime.UtcNow),
-                StartDate = start,
-                EndDate = end,
-                Status = "Uploaded",
-                DateRange = $"{report.StartDate:yyyy-MM-dd} - {report.EndDate:yyyy-MM-dd}",
-                FileName = $"crm_report_{report.StartDate:yyyy-MM-dd}_{report.EndDate:yyyy-MM-dd}.csv",
-                TimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
-            };
+            string fileName = $"crm_report_{report.StartDate:yyyy-MM-dd}_{report.EndDate:yyyy-MM-dd}.xlsx";
+
             var claims = await _context.Claims
-                  .Where(c => c.CreatedDate >= start && c.CreatedDate <= end)
-                  .ToListAsync();
-            object response;
+                .Where(c => c.CreatedDate >= start && c.CreatedDate <= end)
+                .ToListAsync();
+
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            string filePath = Path.Combine(folderPath, fileName);
+
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.Worksheets.Add("Report");
+
+                var props = typeof(Claim).GetProperties();
+
+                for (int i = 0; i < props.Length; i++)
+                    ws.Cell(1, i + 1).Value = props[i].Name;
+
+                for (int row = 0; row < claims.Count; row++)
+                {
+                    for (int col = 0; col < props.Length; col++)
+                    {
+                        var value = props[col].GetValue(claims[row]);
+                        ws.Cell(row + 2, col + 1).Value = value?.ToString() ?? "";
+                    }
+                }
+                workbook.SaveAs(filePath);
+            }
+            string fileUrl = $"/Reports/{fileName}";
             if (report.ReportName == "generateLink")
             {
+                var reportData = new Reports
+                {
+                    CreatedDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                    StartDate = start,
+                    CreatedById = user.Id,
+                    CreatedByName = user.Businessname,
+                    EndDate = end,
+                    Status = "Uploaded",
+                    DateRange = $"{report.StartDate:yyyy-MM-dd} - {report.EndDate:yyyy-MM-dd}",
+                    FileName = fileName,
+                    TimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+
                 _context.Reports.Add(reportData);
                 await _context.SaveChangesAsync();
-                response = new
+
+                return Ok(new
                 {
-                    Status = 201,
-                    Message = "Report created successfully",
-
-                    Report = new ReportsDTO
-                    {
-                        Id = reportData.Id,
-                        FileName = reportData.FileName,
-                        TimeStamp = reportData.TimeStamp,
-                        DateRange = reportData.DateRange,
-                        Status = reportData.Status
-                    },
-
-                    Claims = new
-                    {
-                        Count = claims.Count,
-                        Results = claims
-                    }
-                };
+                    status = 201,
+                    message = "Report link generated",
+                    fileUrl,
+                    report = reportData,
+                    claims = new { Count = claims.Count }
+                });
             }
-            else {
-                 response = new
-                {
-                    Status = 201,
-                    Message = "Report download successfully",
-
-                    Report = new ReportsDTO
-                    {
-                        Id = 0,
-                        FileName = "",
-                        TimeStamp = "",
-                        DateRange = "",
-                        Status = ""
-                    },
-
-                    Claims = new
-                    {
-                        Count = claims.Count,
-                        Results = claims
-                    }
-                };
-            }
-                return Ok(response);
+            return Ok(new
+            {
+                status = 200,
+                message = "Report downloaded",
+                fileUrl,
+                claims = new { Count = claims.Count }
+            });
         }
     }
-    }
+}

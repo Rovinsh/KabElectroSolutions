@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +58,22 @@ app.UseCors("AllowAngularApp");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+
+// Create folder: /Reports (root-level, outside wwwroot)
+var reportsPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+if (!Directory.Exists(reportsPath))
+    Directory.CreateDirectory(reportsPath);
+
+// Expose /Reports as a public static path
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(reportsPath),
+    RequestPath = "/Reports"
+});
+
+// Keep default static files for wwwroot
+app.UseStaticFiles();
 
 app.MapControllers();
 

@@ -31,6 +31,7 @@ import { ToastService } from '../services/toastService.service';
   styleUrls: ['./brand-form.css']
 })
 export class BrandFormComponent implements OnInit {
+  isSubmitting = false;
   brandForm!: FormGroup;
   categories: CategoryDto[] = [];
   filteredcategories$!: Observable<CategoryDto[]>;
@@ -90,16 +91,18 @@ export class BrandFormComponent implements OnInit {
     isDisable: this.brandForm.value.isDisable ? true : false,
     categoryId: this.brandForm.value.categoryId?.id ?? this.brandForm.value.categoryId
   };
-
+  this.isSubmitting = true;
   const handleError = (err: any, action: string) => {
-    if (err?.status === 409) {
+    if (err?.status === 409) {this.isSubmitting = false;
       this.toast.error("A Brand with the same name already exists in this category!");
     } 
     else if (err?.error) {
       this.toast.error(err.error);
+      this.isSubmitting = false;
     } 
     else {
       this.toast.error(`Error ${action} brand!`);
+      this.isSubmitting = false;
     }
   };
 
@@ -107,7 +110,7 @@ export class BrandFormComponent implements OnInit {
     this.apiService.updateBrand(this.data.record.id, formData).subscribe({
       next: () => {
         this.toast.success('Brand Updated Successfully!');
-        this.dialogRef.close('success');
+        this.dialogRef.close('success');this.isSubmitting = false;
       },
       error: (err) => handleError(err, 'updating')
     });
@@ -115,7 +118,7 @@ export class BrandFormComponent implements OnInit {
     this.apiService.postBarands(formData).subscribe({
       next: () => {
         this.toast.success('Brand Created Successfully!');
-        this.dialogRef.close('success');
+        this.dialogRef.close('success');this.isSubmitting = false;
       },
       error: (err) => handleError(err, 'creating')
     });
