@@ -36,6 +36,7 @@ import { ToastService } from '../services/toastService.service';
   styleUrl: './user-form.css'
 })
 export class UserFormComponent implements OnInit {
+  isSubmitting = false;
   userForm!: FormGroup;
   mode: 'add' | 'edit' = 'add';
   submitBtnLabel: string = 'Submit User';
@@ -193,16 +194,17 @@ export class UserFormComponent implements OnInit {
       cityId: f.cityId.id,
       pinCodeId: f.pinCodeId.id,
     };
+     this.isSubmitting = true;
   const handleError = (err: any) => {
-    if (err.status === 409) {
+    if (err.status === 409) {this.isSubmitting = false;
       this.toast.error('User email already exists!');
-    } else {
+    } else {this.isSubmitting = false;
       this.toast.error(err?.error || 'An error occurred!');
     }
   };
   if (this.mode === 'edit' && this.data.record) {
      this.apiService.updateUser(this.data.record.id, payload).subscribe({
-      next: () => {
+      next: () => {this.isSubmitting = false;
         this.toast.success('User Updated Successfully!');
         this.dialogRef.close('success');
       },
@@ -210,7 +212,7 @@ export class UserFormComponent implements OnInit {
     });
   } else {
     this.apiService.postUser(payload).subscribe({
-      next: () => {
+      next: () => {this.isSubmitting = false;
         this.toast.success('User Created Successfully!');
         this.dialogRef.close('success');
       },

@@ -14,16 +14,17 @@ import { WarrantyFormComponent } from '../warranty-form/warranty-form';
   styleUrl: './warranties.css'
 })
 export class Warranties implements OnInit {
+  isLoading = false;
   constructor(private dialog: MatDialog, private apiService: ApiService) {}
   warranties: WarrantyDto[] = [];
   ngOnInit(): void {
     this.loadWarranties();
   }
 
-  loadWarranties() {
+  loadWarranties() {this.isLoading = true;
     this.apiService.getWarranty().subscribe(res => {
       this.warranties = res.data.sort((a: any, b: any) => a.warrantyDisplayName.localeCompare(b.warrantyDisplayName));
-    });
+    this.isLoading = false;});
   }
 
   openPopup(data?: any) {

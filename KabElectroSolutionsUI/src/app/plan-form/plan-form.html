@@ -69,7 +69,7 @@
             color="primary"
             type="submit"
             class="px-5 py-2 text-lg"
-            [disabled]="planForm.invalid"
+            [disabled]="planForm.invalid || isSubmitting"
           >
             {{ submitBtnLabel }}
           </button>

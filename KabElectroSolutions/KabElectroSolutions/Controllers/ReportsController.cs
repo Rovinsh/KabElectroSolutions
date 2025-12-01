@@ -1,15 +1,17 @@
-﻿using KabElectroSolutions.Data;
+﻿using ClosedXML.Excel;
+using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Helper;
 using KabElectroSolutions.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ClosedXML.Excel;
 
 namespace KabElectroSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReportsController : ControllerBase
     {
         private readonly KabElectroSolutionsDbContext _context;
@@ -22,10 +24,12 @@ namespace KabElectroSolutions.Controllers
         }
 
         // GET: All stored reports
+       
         [HttpGet("Reports")]
         public async Task<IActionResult> GetReports()
-        {
-            var data = await _context.Reports
+        { var performerEmail = User?.Identity?.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+            var data = await _context.Reports.Where(r=>r.CreatedById == user.Id)
                 .Select(r => new ReportsDTO
                 {
                     Id = r.Id,
@@ -49,7 +53,8 @@ namespace KabElectroSolutions.Controllers
         {
             if (report == null)
                 return BadRequest("Invalid report data");
-
+            var performerEmail = User?.Identity?.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
             var start = DateOnly.FromDateTime(report.StartDate);
             var end = DateOnly.FromDateTime(report.EndDate);
 
@@ -91,6 +96,8 @@ namespace KabElectroSolutions.Controllers
                 {
                     CreatedDate = DateOnly.FromDateTime(DateTime.UtcNow),
                     StartDate = start,
+                    CreatedById = user.Id,
+                    CreatedByName = user.Businessname,
                     EndDate = end,
                     Status = "Uploaded",
                     DateRange = $"{report.StartDate:yyyy-MM-dd} - {report.EndDate:yyyy-MM-dd}",

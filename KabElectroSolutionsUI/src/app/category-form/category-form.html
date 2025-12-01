@@ -33,7 +33,7 @@
 
         <div class="col-12 text-end">
           <button mat-raised-button color="primary" type="submit" class="px-5 py-2 text-lg"
-            [disabled]="categoryForm.invalid">
+            [disabled]="categoryForm.invalid || isSubmitting">
             {{ submitBtnLabel }}
           </button>
         </div>
