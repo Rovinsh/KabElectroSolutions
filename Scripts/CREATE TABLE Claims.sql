@@ -114,7 +114,7 @@ CREATE TABLE Claims (
     Remarks NVARCHAR(MAX),
     Type NVARCHAR(50),
     ClaimAmount DECIMAL(18,2),
-    Appointment BIGINT,
+    Appointment DATE NULL,
     SolvyStateCode NVARCHAR(10),
     PaymentTxnId NVARCHAR(100),
     PaymentAmount DECIMAL(18,2),

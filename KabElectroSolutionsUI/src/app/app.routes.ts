@@ -24,3 +24,4 @@ export const routes: Routes = [
   { path: 'warranties', component: Warranties, canActivate: [RoleGuard], data: { roles: ['Super Admin'] }},
 ];
 
+ 

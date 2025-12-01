@@ -122,7 +122,7 @@ namespace KabElectroSolutions.Models
         public string? Remarks { get; set; }
         public string? Type { get; set; }
         public decimal? ClaimAmount { get; set; }
-        public long Appointment { get; set; }
+        public DateOnly? Appointment { get; set; }
         public string? SolvyStateCode { get; set; }
         public string? PaymentTxnId { get; set; }
         public decimal? PaymentAmount { get; set; }

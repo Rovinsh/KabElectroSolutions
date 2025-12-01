@@ -91,7 +91,7 @@ export class DashboardComponent {
   });
 }
 
-openAppointmentPopup(claimId: number) {
+openAppointmentPopup(claimId: number, claim : Claim) {
   const dialogRef = this.dialog.open(AppointmentComponent, {
     width: '700px',
     maxWidth: '150vw',  
@@ -100,14 +100,27 @@ openAppointmentPopup(claimId: number) {
         disableClose: true,
         autoFocus: false,
         data: {
-          claimId: claimId
+          claimId: claimId,
+          appointmentDate: claim.appointment,
+          appointmentTime: claim.appointmentConfirmationTime,
+          pendingReason : claim.appointmentPendingReason
         }
   });
 
   dialogRef.afterClosed().subscribe(result => {
     if (result) {
-      // user clicked YES
-      //this.verifyClaim();
+     this.isLoading = true;
+    this.apiService.ScheduleAppointment(claimId, "Appointment Taken",result, "Appointment Taken").subscribe({
+      next: (res:any) => {        
+        this.isLoading = false; // hide spinner
+         this.toast.success("Appointment Taken" +' Successfully!');
+         this.selectTab(this.activeTab);
+      },
+      error: (err:any) => {
+        this.toast.error(err?.error || 'Error occured while taking appointment!')
+        this.isLoading = false; // hide spinner even on error
+      }
+    });
     }
   });
 }
