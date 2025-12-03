@@ -304,12 +304,64 @@ this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
   showProduct() { this.filteredProduct$ = of(this.product.filter(p => p.brandId === this.selectedBrand)); }
 
   onSubmit(): void {
-    if (this.directClaimForm.valid) {
- const formData = {
+ this.directClaimForm.patchValue({
+        servicePartnerName:"",
+        servicePartner:"0",
+        claimApproved:"0",
+        channelId:"0",
+        channelName:"",
+        createdTime:"16:04:56.0000000",
+        servicePartnerCity:"",
+        status:"0",
+        servicePartnerPhone:"",
+        created:"2025-07-18",
+        servicePartnerGST:"",
+        solvyGST:"",
+        paymentDone:"",
+        servicePartnerPincode:"0",
+        insured:"NOT_INSURED",
+        statusName:"",
+        servicePartnerPAN:"",
+        servicePartnerAddress:"",
+        storeName:"",
+        previousStatus:"0",
+        registeredBy:"0",
+        item:"0",
+        registeredByName:"",
+        createdDate:"2025-07-18",
+        claimType:"0",
+        appointment:"0",
+        solvyStateCode:"0"       
+    });
+ const allFormData = this.directClaimForm.value;
+  const item = allFormData.itemName;
+    const warrantyType = allFormData.warrantyType;
+    const customerPincode = allFormData.customerPincode;
+     const customerState = allFormData.customerState;
+    
+      const formData = {
       ...this.directClaimForm.value,
+      
       claimRegisteredPhoneNumber: this.directClaimForm.value.customerMobileNo,
+      categoryName:  item?.catId ?? null,
+      itemCategory:  item?.categoryName ?? null,
+      itemCategoryId:  item?.catId ?? null,
+      brandName: item?.brandName ?? '',
+      planSoldDate: this.directClaimForm.value.planSoldDate.toISOString().slice(0, 10),
+      displayName:item?.planName ?? null,
+      solvyPan:item?.planName ?? null,
+      itemBrand:item?.brandId ?? '',
+      warrantyStartDate:"0000-00-00",
+      pincode:customerPincode?.id ?? 0,
+      address:this.directClaimForm.value.customerAddress,
+      warrantyDuration:5,
+      customerState:customerState?.id,
+      customerCity:customerPincode?.cityId,
+      warrantyTypeId:warrantyType?.id ?? 0,
     };
-this.apiService.postClaim(formData).subscribe({
+
+    if (this.directClaimForm.valid) {  
+        this.apiService.postClaim(formData).subscribe({
         next: () => {
           this.toast.success('Warranty Created Successfully!');this.directClaimForm.reset(); 
         },
