@@ -25,55 +25,62 @@ namespace KabElectroSolutions.Controllers
         [HttpGet("claims")]
         public async Task<IActionResult> GetClaims([FromQuery] int? statusId)
         {
-            List<Models.Claim> claims;
-            var performerEmail = User?.Identity?.Name ?? "System";
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
-            if (user.BusinessroleName == "Super Admin")
+            try
             {
-
-                if (statusId != null && statusId > 0)
+                List<Models.Claim> claims;
+                var performerEmail = User?.Identity?.Name ?? "System";
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                if (user.BusinessroleName == "Super Admin")
                 {
-                    var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
-                    if (substatus.Name == "Claim Verified")
-                    claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken").ToListAsync();
-                    else
-                        claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
 
+                    if (statusId != null && statusId > 0)
+                    {
+                        var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
+                        if (substatus.Name == "Claim Verified")
+                            claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken").ToListAsync();
+                        else
+                            claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
+
+                    }
+                    else
+                    {
+                        var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
+                        claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId).ToListAsync();
+                    }
                 }
                 else
                 {
-                    var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
-                    claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId).ToListAsync();
-                }
-            }
-            else
-            {
-                if (statusId != null && statusId > 0)
-                {
-                    var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
-                    if (substatus.Name == "Claim Verified")
-                        claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || claim.StatusName == "Appointment Taken").ToListAsync();
+                    if (statusId != null && statusId > 0)
+                    {
+                        var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
+                        if (substatus.Name == "Claim Verified")
+                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || claim.StatusName == "Appointment Taken").ToListAsync();
+                        else
+                            claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
+                    }
                     else
-                        claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
+                    {
+                        var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
+                        claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId && claim.ServicePartner == user.PartnerId).ToListAsync();
+                    }
                 }
-                else
+                var response = new ClaimsResponseDto
                 {
-                    var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
-                    claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId && claim.ServicePartner == user.PartnerId).ToListAsync();
-                }
-            }
-            var response = new ClaimsResponseDto
-            {
-                Status = 200,
-                Message = "List of calls",
-                Data = new ClaimsDataDto
-                {
-                    Count = claims.Count,
-                    Results = claims
-                }
-            };
+                    Status = 200,
+                    Message = "List of calls",
+                    Data = new ClaimsDataDto
+                    {
+                        Count = claims.Count,
+                        Results = claims
+                    }
+                };
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("claim")]
