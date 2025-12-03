@@ -358,15 +358,16 @@ this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
       customerState:customerState?.id,
       customerCity:customerPincode?.cityId,
       warrantyTypeId:warrantyType?.id ?? 0,
+      warrantyType:warrantyType?.name ?? '',
+      customerPincode:customerPincode?.pincode ?? 0,
     };
 
-    if (this.directClaimForm.valid) {  
+ 
         this.apiService.postClaim(formData).subscribe({
         next: () => {
           this.toast.success('Warranty Created Successfully!');this.directClaimForm.reset(); 
         },
         error: (err) => this.toast.error(err?.error || 'Error creating Warranty!')
       });
-    }
   }
 }
