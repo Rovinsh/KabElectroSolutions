@@ -14,7 +14,7 @@
   <div class="upload-box">
     <h3>Estimation image</h3>
     <div class="upload-content">
-      <input type="file" (change)="onFileSelected($event, 'estimationImage')">
+      <input type="file" formControlName="estimationImage" (change)="onFileSelected($event, 'estimationImage')">
       <img *ngIf="previewUrls['estimationImage']" [src]="previewUrls['estimationImage']" class="preview-thumb">
     </div>
   </div>
@@ -22,7 +22,7 @@
   <div class="upload-box required-field">
     <h3>Product serial number <span class="required-star">*</span></h3>
     <div class="upload-content">
-      <input type="file" (change)="onFileSelected($event, 'productSerialNumber')">
+      <input type="file" formControlName="productSerialNumber" (change)="onFileSelected($event, 'productSerialNumber')">
       <img *ngIf="previewUrls['productSerialNumber']" [src]="previewUrls['productSerialNumber']" class="preview-thumb">
     </div>
   </div>
@@ -30,7 +30,7 @@
   <div class="upload-box required-field">
     <h3>Product image <span class="required-star">*</span></h3>
     <div class="upload-content">
-      <input type="file" (change)="onFileSelected($event, 'productImage')">
+      <input type="file" formControlName="productImage"  (change)="onFileSelected($event, 'productImage')">
       <img *ngIf="previewUrls['productImage']" [src]="previewUrls['productImage']" class="preview-thumb">
     </div>
   </div>
@@ -39,7 +39,7 @@
   <div class="upload-box required-field">
     <h3>Product defect image <span class="required-star">*</span></h3>
     <div class="upload-content">
-      <input type="file" (change)="onFileSelected($event, 'productDefectImage')">
+      <input type="file" formControlName="productDefectImage" (change)="onFileSelected($event, 'productDefectImage')">
       <img *ngIf="previewUrls['productDefectImage']" [src]="previewUrls['productDefectImage']" class="preview-thumb">
     </div>
   </div>
@@ -60,21 +60,28 @@
     <h3>Others</h3>
 
     <div class="upload-content">
-      <input type="file" (change)="onFileSelected($event, i, true)">
+      <input type="file" formControlName="i" (change)="onFileSelected($event, i, true)">
       <img *ngIf="othersPreviewUrls[i]" [src]="othersPreviewUrls[i]" class="preview-thumb">
     </div>
   </div>
-
   <!-- Add Button (same grid) -->
   <div class="add-button-container">
     <button mat-icon-button class="add-button" (click)="addOthersUpload()">
       <mat-icon>add_circle</mat-icon>
     </button>
   </div>
-
+<div class="remarks-container">
+  <textarea 
+      formControlName="remarks"
+      placeholder="Any remarks ?"
+      rows="3"
+      class="remarks-box">
+  </textarea>
+</div>
 </form>
 
 </mat-dialog-content>
+
 
 <mat-dialog-actions align="center">
   <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="visitForm.invalid">

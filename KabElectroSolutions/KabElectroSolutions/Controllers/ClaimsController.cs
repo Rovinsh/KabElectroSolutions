@@ -1,4 +1,5 @@
-﻿using KabElectroSolutions.Data;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -37,7 +38,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken").ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done").ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
 
@@ -188,6 +189,72 @@ namespace KabElectroSolutions.Controllers
             return Ok(new { message = "Note added successfully", note.Id });
         }
 
+        [HttpPost("upload-images")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadClaimImages([FromForm] ClaimImageUploadRequest request)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var entries = new List<ClaimImage>();
+
+                if (request.EstimationImage != null)
+                    entries.Add(await CreateRow(request, request.EstimationImage, "Estimation"));
+
+                if (request.ProductSerialNumber != null)
+                    entries.Add(await CreateRow(request, request.ProductSerialNumber, "ProductSerialNumber"));
+
+                if (request.ProductImage != null)
+                    entries.Add(await CreateRow(request, request.ProductImage, "ProductImage"));
+
+                if (request.ProductDefectImage != null)
+                    entries.Add(await CreateRow(request, request.ProductDefectImage, "ProductDefectImage"));
+
+                // Multiple OthersImages
+                if (request.OthersImages != null)
+                {
+                    foreach (var file in request.OthersImages)
+                    {
+                        entries.Add(await CreateRow(request, file, "Others"));
+                    }
+                }
+
+                _context.ClaimImages.AddRange(entries);
+                await _context.SaveChangesAsync();
+
+                var existingClaim = await _context.Claims.FindAsync(request.ClaimId);
+                if (existingClaim == null)
+                    return NotFound("Claim not found");
+
+                await UpdateStatus(request.ClaimId, "Visit Done", "Visit Done", existingClaim);
+                await transaction.CommitAsync();
+
+
+                return Ok(new { message = "Images saved", total = entries.Count });
+            }
+            catch(Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private async Task<ClaimImage> CreateRow(ClaimImageUploadRequest req, IFormFile file, string type)
+        {
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+
+            return new ClaimImage
+            {
+                ClaimId = req.ClaimId,
+                ImageType = type,
+                ImageData = ms.ToArray(),
+                Remarks = req.Remarks,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = req.CreatedBy
+            };
+        }
+
 
         private async Task AddAuditLog(string entity, int recordId, string status, string? remarks = "-")
         {
@@ -236,19 +303,12 @@ namespace KabElectroSolutions.Controllers
 
             var existingClaim = await _context.Claims.FindAsync(id);
             if (existingClaim == null)
-                return NotFound("Claim not found");           
+                return NotFound("Claim not found");
 
-            existingClaim.PreviousStatus = existingClaim.Status;
-                existingClaim.StatusName = status;
-            existingClaim.Status = _context.SubStatuses.Where(substatus => substatus.Name == status).First().SubStatusId;
-            _context.Entry(existingClaim).Property(x => x.Status).IsModified = true;
-            _context.Entry(existingClaim).Property(x => x.StatusName).IsModified = true;
-            _context.Entry(existingClaim).Property(x => x.PreviousStatus).IsModified = true;
-            await _context.SaveChangesAsync();
-            await AddAuditLog("Claim", id, status, remarks);
+            await UpdateStatus(id, status, remarks, existingClaim);
 
             var claims = await _context.Claims.Where(c => c.Id == id).ToListAsync();
-            
+
             var response = new ClaimsResponseDto
             {
                 Status = 200,
@@ -261,6 +321,18 @@ namespace KabElectroSolutions.Controllers
             };
 
             return Ok(response);
+        }
+
+        private async Task UpdateStatus(int id, string status, string? remarks, Models.Claim existingClaim)
+        {
+            existingClaim.PreviousStatus = existingClaim.Status;
+            existingClaim.StatusName = status;
+            existingClaim.Status = _context.SubStatuses.Where(substatus => substatus.Name == status).First().SubStatusId;
+            _context.Entry(existingClaim).Property(x => x.Status).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.StatusName).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.PreviousStatus).IsModified = true;
+            await _context.SaveChangesAsync();
+            await AddAuditLog("Claim", id, status, remarks);
         }
 
         [HttpPost("ScheduleAppointment/{id}/{status}/{remarks}")]

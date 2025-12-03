@@ -80,6 +80,7 @@
             <button class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken'" (click)="openVisitPopup(claim.id, claim)">CUSTOMER VISIT</button>
             <br>
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken'" (click)="openAppointmentPopup(claim.id, claim)">Re-appointment</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Visit Done'">Share Estimation</button>
             
           </td>
           <td>{{ claim.customerName }}</td>

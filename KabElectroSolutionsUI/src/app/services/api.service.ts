@@ -119,6 +119,10 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Claims/AddNote`, note);
   }
 
+  uploadClaimImages(formData: FormData) {
+    return this.http.post(`${this.baseUrl}Claims/upload-images`, formData);
+}
+
  updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Categories/${id}`, categoryData);
   }

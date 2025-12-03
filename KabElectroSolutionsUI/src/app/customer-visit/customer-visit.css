@@ -180,3 +180,17 @@ mat-dialog-content {
 .word-icon { background: #cce0ff; color: #0055cc; }
 .excel-icon { background: #ccffcc; color: #009933; }
 .txt-icon { background: #e8e8e8; color: #666; }
+.remarks-container {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.remarks-box {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #c5c5c5;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+}

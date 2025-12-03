@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule,FormArray, FormControl } from '@angular/forms';
-import { MatDialogRef,MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef,MatDialogModule,MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-customer-visit',
@@ -13,90 +15,105 @@ import { CommonModule } from '@angular/common';
   templateUrl: './customer-visit.html',
   styleUrls: ['./customer-visit.css']
 })
-export class CustomerVisitComponent implements OnInit {
+export class CustomerVisitComponent {
   visitForm!: FormGroup;
-  previewUrls: { [key: string]: string | null } = {};
+  previewUrls: any = {};
   othersPreviewUrls: string[] = [];
- previewTypes: any = {};
+
+  files: any = {
+    estimationImage: null,
+    productSerialNumber: null,
+    productImage: null,
+    productDefectImage: null,
+    othersImages: []
+  };
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<CustomerVisitComponent> // For closing the dialog
-  ) {}
-
-  ngOnInit(): void {
+    private api: ApiService,
+    public dialogRef: MatDialogRef<CustomerVisitComponent> ,   
+    private auth: AuthService
+  ) {
     this.visitForm = this.fb.group({
       estimationImage: [null],
       productSerialNumber: [null, Validators.required],
       productImage: [null, Validators.required],
       productDefectImage: [null, Validators.required],
-       othersImages: this.fb.array([this.createOthersUploadControl()]),
-      remarks: ['']
+      remarks: [null],
+      othersImages: this.fb.array([this.fb.control('')])
     });
   }
 
-  get othersImagesArray(): FormArray<FormControl<File | null>> {
-  return this.visitForm.get('othersImages') as FormArray<FormControl<File | null>>;
-}
+  private data = inject(MAT_DIALOG_DATA) as {claimId:number };
+  claimId =  this.data.claimId;
 
-  // Method to create a new FormControl for a file upload
-  createOthersUploadControl(): FormControl {
-    // We use a simple FormControl initialized to null for the file object
-    return this.fb.control(null);
+  get othersImagesArray(): FormArray {
+    return this.visitForm.get('othersImages') as FormArray;
   }
 
-onFileSelected(event: any, controlName: string | number, isArray: boolean = false): void {
-  const file: File = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    if (isArray) {
-      // Save file object in form
-      this.othersImagesArray.at(controlName as number).setValue(file);
-
-      // Save preview URL for dynamic others
-      this.othersPreviewUrls[controlName as number] = reader.result as string;
-    } else {
-      // Save file in form
-      this.visitForm.get(controlName as string)?.setValue(file);
-
-      // Save preview URL
-      this.previewUrls[controlName as string] = reader.result as string;
-    }
-  };
-
-  reader.readAsDataURL(file);
-}
-
-removeOthersUpload(index: number): void {
-  this.othersImagesArray.removeAt(index);
-  this.othersPreviewUrls.splice(index, 1);
-}
-
-
-  // Method to handle file selection
-  // onFileSelected(event: any, controlName: string): void {
-  //   const file: File = event.target.files[0];
-  //   if (file) {
-  //     this.visitForm.get(controlName)?.setValue(file);
-  //     // Optional: Set a flag to show the file name
-  //   }
-  // }
-
- addOthersUpload(): void {
-  this.othersImagesArray.push(this.createOthersUploadControl());
-}
-
-  onSubmit(): void {
-    // The submission logic remains similar, FormArray data will be included
-    if (this.visitForm.valid) {
-      // ... Submission logic ...
-      console.log('Form Data Ready for Submission:', this.visitForm.value);
-      this.dialogRef.close(true);
-    } else {
-      this.visitForm.markAllAsTouched();
-    }
+  addOthersUpload() {
+    this.othersImagesArray.push(this.fb.control(''));
+    this.files.othersImages.push(null);
   }
+
+  removeOthersUpload(index: number) {
+    this.othersImagesArray.removeAt(index);
+    this.files.othersImages.splice(index, 1);
+    this.othersPreviewUrls.splice(index, 1);
+  }
+
+  // MAIN FILE SELECTOR
+  onFileSelected(event: any, field: any, isOthers: boolean = false) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (isOthers) {
+        this.othersPreviewUrls[field] = reader.result as string;
+        this.files.othersImages[field] = file;
+      } else {
+        this.previewUrls[field] = reader.result as string;
+        this.files[field] = file;
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  onSubmit() {
+  const formData = new FormData();
+
+  formData.append("ClaimId", this.claimId.toString());
+  formData.append("Remarks", this.visitForm.value.remarks || "");
+  formData.append("CreatedBy", this.auth.firstName + " " + this.auth.lastName);
+
+  // Add single images
+  if (this.files.estimationImage)
+    formData.append("EstimationImage", this.files.estimationImage);
+
+  if (this.files.productSerialNumber)
+    formData.append("ProductSerialNumber", this.files.productSerialNumber);
+
+  if (this.files.productImage)
+    formData.append("ProductImage", this.files.productImage);
+
+  if (this.files.productDefectImage)
+    formData.append("ProductDefectImage", this.files.productDefectImage);
+
+  // Add multiple othersImages
+  this.files.othersImages.forEach((file: File) => {
+    formData.append("OthersImages", file);
+  });
+
+  this.api.uploadClaimImages(formData).subscribe({
+    next: (res) => {
+      console.log("Uploaded Successfully", res);
+      this.dialogRef.close("Uploaded");
+    },
+    error: (err) => {
+      console.error("Upload failed", err);
+    }
+  });
+}
 }

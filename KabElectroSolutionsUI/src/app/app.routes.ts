@@ -17,7 +17,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'claim-details/:claimId', component: ClaimDetailsComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre','Brand','Customer Care Executive'] } },
   { path: 'claim-form', component: ClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] }},
-  { path: 'direct-claim-form', component: DirectClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] }},
+  { path: 'direct-claim-form', component: DirectClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin','Brand'] }},
   { path: 'brand-claim-form', component: ClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Brand'] }},
   { path: 'assign-claim', component: AssignClaim, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },

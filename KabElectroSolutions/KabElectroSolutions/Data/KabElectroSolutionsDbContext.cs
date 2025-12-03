@@ -30,6 +30,7 @@ namespace KabElectroSolutions.Data
         public DbSet<Reports> Reports { get; set; }        
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<ClaimImage> ClaimImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here
@@ -70,7 +71,19 @@ namespace KabElectroSolutions.Data
 
             modelBuilder.Entity<Claim>().ToTable("Claims");
 
-            // Add any other entity configurations here...
+            modelBuilder.Entity<ClaimImage>(entity =>
+            {
+                entity.ToTable("ClaimImages");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.ClaimId).IsRequired();
+                entity.Property(e => e.ImageType).HasMaxLength(50).IsRequired();
+                entity.Property(e => e.ImageData).IsRequired();
+                entity.Property(e => e.Remarks).HasMaxLength(500);
+                entity.Property(e => e.CreatedAt).IsRequired();
+                entity.Property(e => e.CreatedBy).HasMaxLength(100).IsRequired();
+            });
         }
+    }
     } 
-}
