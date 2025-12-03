@@ -286,7 +286,7 @@ getWarrantyByParameter(phone: string, email: string): Observable<WarrantyDto[]> 
         registeredByName:"",
         createdDate:"2025-07-18",
         claimType:"0",
-        appointment:"0",
+        appointment:null,
         solvyStateCode:"0",
         warrantyStartDate:selectedRow.warrantyStartDate.toISOString().slice(0, 10),
         itemCategoryId:selectedRow.categoryId,
