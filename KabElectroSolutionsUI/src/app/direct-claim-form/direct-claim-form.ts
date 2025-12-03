@@ -272,6 +272,7 @@ this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
   onCategorySelected(s: CategoryDto) {
     this.selectedCategory = s.id;
     this.selectedBrand = null;
+    this.selectedProduct = null;
     this.directClaimForm.patchValue({ brandId: null,itemName :null});
     this.showBrand();this.showProduct();
   }
@@ -330,7 +331,7 @@ this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
         registeredByName:"",
         createdDate:"2025-07-18",
         claimType:"0",
-        appointment:"0",
+       appointment:null,
         solvyStateCode:"0"       
     });
  const allFormData = this.directClaimForm.value;
@@ -338,6 +339,8 @@ this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
     const warrantyType = allFormData.warrantyType;
     const customerPincode = allFormData.customerPincode;
      const customerState = allFormData.customerState;
+     const customerCity = allFormData.customerCity;
+     
     
       const formData = {
       ...this.directClaimForm.value,
@@ -350,16 +353,18 @@ this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
       planSoldDate: this.directClaimForm.value.planSoldDate.toISOString().slice(0, 10),
       displayName:item?.planName ?? null,
       solvyPan:item?.planName ?? null,
-      itemBrand:item?.brandId ?? '',
-      warrantyStartDate:"0000-00-00",
+      itemBrand:item?.brandName ?? '',
+      warranty:1451260,
+      warrantyStartDate:"2025-08-25",
       pincode:customerPincode?.id ?? 0,
-      address:this.directClaimForm.value.customerAddress,
+      address:customerPincode?.id ?? 0,
       warrantyDuration:5,
-      customerState:customerState?.id,
-      customerCity:customerPincode?.cityId,
+      customerState:customerState?.name ?? '',
+      customerCity:customerCity?.name ?? '',
       warrantyTypeId:warrantyType?.id ?? 0,
       warrantyType:warrantyType?.name ?? '',
       customerPincode:customerPincode?.pincode ?? 0,
+      itemName:item?.planName ?? null,
     };
 
  
