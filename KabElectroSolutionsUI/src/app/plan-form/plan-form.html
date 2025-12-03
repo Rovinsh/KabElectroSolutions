@@ -10,32 +10,36 @@
     <mat-card-content class="p-4">
       <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="row gy-2" style="row-gap: 8px; margin-top: 14px;">
 
-        <div class="col-6">
+    
+        <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Category</mat-label>
-            <input
-              type="text"
-              matInput
-              [matAutocomplete]="categoryAuto"
-              formControlName="catId"
-              (focus)="showAllCategoriesTypes()"
-            >
-            <mat-autocomplete
-              #categoryAuto="matAutocomplete"
-              [displayWith]="displayCategoryName"
-              autoActiveFirstOption
-            >
-              <mat-option *ngFor="let category of filteredcategories$ | async" [value]="category">
-                {{ category.catName }}
-              </mat-option>
+            <input matInput formControlName="catId"
+                   [matAutocomplete]="categoryAuto"
+                   (focus)="showCategory()"
+                   (input)="showCategory()" />
+            <mat-autocomplete #categoryAuto="matAutocomplete" [displayWith]="displayCategory" autoActiveFirstOption (optionSelected)="onCategorySelected($event.option.value)">
+              <mat-option *ngFor="let cat of filteredcategories$ | async" [value]="cat">{{ cat.catName }}</mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="planForm.get('catId')?.hasError('required')">
-              Category is required
-            </mat-error>
+            <mat-error *ngIf="planForm.get('catId')?.hasError('required')">Category is required</mat-error>
+          </mat-form-field>
+        </div>
+        <!-- Customer City -->
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Brand</mat-label>
+            <input matInput formControlName="brandId"
+                   [matAutocomplete]="brandAuto"
+                   (focus)="showBrand()"
+                   (input)="showBrand()" />
+            <mat-autocomplete #brandAuto="matAutocomplete" [displayWith]="displayBrand" autoActiveFirstOption (optionSelected)="onBrandSelected($event.option.value)">
+              <mat-option *ngFor="let brand of filteredBrands$ | async" [value]="brand">{{ brand.brandName }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="planForm.get('brandId')?.hasError('required')">Brand is required</mat-error>
           </mat-form-field>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Plan Name</mat-label>
             <input matInput formControlName="planName" required />

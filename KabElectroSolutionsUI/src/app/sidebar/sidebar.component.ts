@@ -26,8 +26,8 @@ export class SidebarComponent {
   menu: SidebarItem[] = [
     { title: 'Home', icon: '🏠', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/dashboard' },
     { title: 'Claims', icon: '📋', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/dashboard' },
-    { title: 'Create New Claim', icon: '➕', roles: ['Super Admin'], route: '/claim-form' },
-    { title: 'New Claim', icon: '➕', roles: ['Super Admin','Brand'], route: '/claim-form' },
+    { title: 'Warranty Claim', icon: '➕', roles: ['Super Admin'], route: '/claim-form' },
+    { title: 'Direct Claim', icon: '➕', roles: ['Super Admin','Brand'], route: '/direct-claim-form' },
     { title: 'Assign Claim', icon: '📨', roles: ['Super Admin'], route: '/assign-claim' },
     { title: 'Master', icon: '📂', roles: ['Super Admin'], route: '/master' },
     { title: 'User', icon: '🧑', roles: ['Super Admin'], route: '/user' },

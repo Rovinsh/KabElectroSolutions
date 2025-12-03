@@ -31,7 +31,9 @@ namespace KabElectroSolutions.Controllers
          {
              Id = p.Id,
              CatId = p.CatId,
+             BrandId = p.BrandId,
              CategoryName = _context.Categories.Where(c => c.Id == p.CatId).Select(c => c.CatName).FirstOrDefault(),
+             BrandName = _context.Brands.Where(b => b.Id == p.BrandId).Select(c => c.BrandName).FirstOrDefault(),
              PlanName = p.PlanName,
              Description = p.Description,
              Remark = p.Remark,
@@ -54,11 +56,11 @@ namespace KabElectroSolutions.Controllers
         {
             if (plans == null)
                 return BadRequest("Invalid plan data");
-            bool exists = await _context.Plans.AnyAsync(p => p.CatId == plans.CatId &&
+            bool exists = await _context.Plans.AnyAsync(p => p.CatId == plans.CatId && p.BrandId == plans.BrandId &&
                        p.PlanName == plans.PlanName);
 
             if (exists)
-                return Conflict("A plan with the same name already exists in this category.");
+                return Conflict("A plan with the same name already exists in this category and brand.");
             try
             {
                 _context.Plans.Add(plans);
@@ -68,8 +70,8 @@ namespace KabElectroSolutions.Controllers
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException?.Message.Contains("UQ_Plans_Cat_PlanName") == true)
-                    return Conflict("Plan already exists for this category.");
+                if (ex.InnerException?.Message.Contains("UQ_Plans_Cat_Brand_PlanName") == true)
+                    return Conflict("Plan already exists for this category and brand.");
                 throw;
             }
         }
@@ -84,14 +86,16 @@ namespace KabElectroSolutions.Controllers
             if (existingPlan == null)
                 return NotFound("Plan not found");
 
-            bool duplicateExists = await _context.Plans.AnyAsync(p => p.Id != id &&
+            bool duplicateExists = await _context.Plans.AnyAsync(p => p.Id != id && p.BrandId == updatedPlan.BrandId &&
                                p.CatId == updatedPlan.CatId &&
                                p.PlanName == updatedPlan.PlanName);
 
+
             if (duplicateExists)
-                return Conflict("A plan with the same name already exists in this category.");
+                return Conflict("A plan with the same name already exists for this category and brand.");
 
             existingPlan.CatId = updatedPlan.CatId;
+            existingPlan.BrandId = updatedPlan.BrandId;
             existingPlan.PlanName = updatedPlan.PlanName;
             existingPlan.Description = updatedPlan.Description;
             existingPlan.Remark = updatedPlan.Remark;

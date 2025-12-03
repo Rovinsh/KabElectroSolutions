@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ClaimDetailsComponent } from './claim-details/claim-details';
 import { AssignClaim } from './assign-claim/assign-claim';
 import { ClaimFormComponent } from './claim-form/claim-form';
+import { DirectClaimFormComponent } from './direct-claim-form/direct-claim-form';
 import { RoleGuard } from './guards/role-guard';
 import { MasterComponent } from '../app/master/master';
 import { ReportComponent } from '../app/report/report';
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'claim-details/:claimId', component: ClaimDetailsComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre','Brand','Customer Care Executive'] } },
   { path: 'claim-form', component: ClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] }},
+  { path: 'direct-claim-form', component: DirectClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] }},
   { path: 'brand-claim-form', component: ClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Brand'] }},
   { path: 'assign-claim', component: AssignClaim, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },

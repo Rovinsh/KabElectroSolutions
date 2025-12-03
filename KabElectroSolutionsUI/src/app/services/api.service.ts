@@ -250,8 +250,10 @@ export interface CategoryResponseDto {
 export interface PlanDto {
   planName: string;
   categoryName:string,
+  barandName:string,
   id: number;
   catId: number;
+  brandId: number;
   description: string;
   remark: string;
   isDisable: boolean;

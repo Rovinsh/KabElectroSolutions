@@ -222,6 +222,7 @@ export class MasterComponent implements OnInit {
     { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
     { headerName: 'Plan Name', field: 'planName', filter: true, width: 200 },
     { headerName: 'Category Name', field: 'categoryName', filter: true, width: 150 },
+    { headerName: 'Brand Name', field: 'brandName', filter: true, width: 110 },
     {
       headerName: 'Description',
       field: 'description',

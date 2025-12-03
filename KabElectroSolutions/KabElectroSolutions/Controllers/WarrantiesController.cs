@@ -80,11 +80,13 @@ namespace KabElectroSolutions.Controllers
               join p in _context.Plans on w.ProductId equals p.Id
               join c in _context.Categories on p.CatId equals c.Id into categoryGroup
               from cat in categoryGroup.DefaultIfEmpty()
-              join b in _context.Brands on cat.Id equals b.CategoryId into brandGroup
-              from brand in brandGroup.DefaultIfEmpty() // LEFT JOIN Brands
+              join b in _context.Brands on p.BrandId equals b.Id into brandGroup
+              from brand in brandGroup.DefaultIfEmpty() 
               where
+              w.IsDisable == true &&                                     
+                  (
                   (!string.IsNullOrEmpty(phone) && w.CustomerMobileNo == phone) ||
-                  (!string.IsNullOrEmpty(email) && w.CustomerEmail == email)
+                  (!string.IsNullOrEmpty(email) && w.CustomerEmail == email))
               select new WarrantiesDTO
               {
                   Id = w.Id,
