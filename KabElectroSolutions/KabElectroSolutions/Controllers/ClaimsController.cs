@@ -30,8 +30,16 @@ namespace KabElectroSolutions.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
             if (user.BusinessroleName == "Super Admin")
             {
+
                 if (statusId != null && statusId > 0)
-                    claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
+                {
+                    var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
+                    if (substatus.Name == "Claim Verified")
+                    claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken").ToListAsync();
+                    else
+                        claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
+
+                }
                 else
                 {
                     var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
@@ -41,7 +49,13 @@ namespace KabElectroSolutions.Controllers
             else
             {
                 if (statusId != null && statusId > 0)
-                    claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
+                {
+                    var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
+                    if (substatus.Name == "Claim Verified")
+                        claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || claim.StatusName == "Appointment Taken").ToListAsync();
+                    else
+                        claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
+                }
                 else
                 {
                     var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
@@ -228,6 +242,47 @@ namespace KabElectroSolutions.Controllers
 
             var claims = await _context.Claims.Where(c => c.Id == id).ToListAsync();
             
+            var response = new ClaimsResponseDto
+            {
+                Status = 200,
+                Message = "List of calls",
+                Data = new ClaimsDataDto
+                {
+                    Count = claims.Count,
+                    Results = claims
+                }
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost("ScheduleAppointment/{id}/{status}/{remarks}")]
+        public async Task<IActionResult> ScheduleAppointment([FromBody] AppointmentRequest appointment, int id, string status, string? remarks = "")
+        {
+            if (id == 0)
+                return BadRequest("Invalid claim id");
+
+            var existingClaim = await _context.Claims.FindAsync(id);
+            if (existingClaim == null)
+                return NotFound("Claim not found");
+
+            existingClaim.PreviousStatus = existingClaim.Status;
+            existingClaim.StatusName = status;
+            existingClaim.Status = _context.SubStatuses.Where(substatus => substatus.Name == status).First().SubStatusId;
+            existingClaim.AppointmentConfirmationTime = appointment.AppointmentDate.Value.ToDateTime(appointment.AppointmentTime.Value); ;
+            existingClaim.Appointment = appointment.AppointmentDate;
+            existingClaim.AppointmentPendingReason = appointment.PendingReason;
+            _context.Entry(existingClaim).Property(x => x.Status).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.StatusName).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.PreviousStatus).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.AppointmentConfirmationTime).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.Appointment).IsModified = true;
+            _context.Entry(existingClaim).Property(x => x.AppointmentPendingReason).IsModified = true;
+            await _context.SaveChangesAsync();
+            await AddAuditLog("Claim", id, status, remarks);
+
+            var claims = await _context.Claims.Where(c => c.Id == id).ToListAsync();
+
             var response = new ClaimsResponseDto
             {
                 Status = 200,

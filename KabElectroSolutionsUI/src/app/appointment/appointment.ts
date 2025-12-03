@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -40,21 +40,37 @@ upcountryAreaReasons = [
 
 
   constructor(
-    public dialogRef: MatDialogRef<AppointmentComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    public dialogRef: MatDialogRef<AppointmentComponent>
   ) {}
 
+  private data = inject(MAT_DIALOG_DATA) as {claimId:number , appointmentDate: string, appointmentTime: string, pendingReason: string};
+ claimId =  this.data.claimId;
+// existingappointmentDate = this.data.appointmentDate;
+// existingappointmentTime = this.data.appointmentTime;
+// existingpendingReason = this.data.pendingReason;
   closeDialog() {
     this.dialogRef.close();
   }
 
+ ngOnInit(): void {
+this.appointmentDate = this.data.appointmentDate;
+if(this.data.appointmentTime){
+const dt = new Date(this.data.appointmentTime);
+const hours = dt.getHours().toString().padStart(2, '0');
+const minutes = dt.getMinutes().toString().padStart(2, '0');
+
+this.appointmentTime = hours +":" + minutes;
+}
+this.pendingReason = this.data.pendingReason
+ }
+
   submitAppointment() {
     const obj = {
-      date: this.appointmentDate,
-      time: this.appointmentTime,
+      appointmentDate: this.appointmentDate,
+      appointmentTime: this.appointmentTime,
       remarks: this.remarks,
       pendingReason: this.pendingReason,
-      reason: this.visitPendingReason
+      visitPendingReason: this.visitPendingReason
     };
 
     this.dialogRef.close(obj);
