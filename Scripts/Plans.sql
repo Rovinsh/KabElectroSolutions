@@ -7,6 +7,13 @@ CREATE TABLE Plans (
     IsDisable BIT NOT NULL DEFAULT 1,
     CONSTRAINT FK_Plan_Categories FOREIGN KEY (CatId) REFERENCES Categories(id)
 );
+  ALTER TABLE plans
+ADD BrandId INT NOT NULL DEFAULT 0;
+
+ALTER TABLE Plans
+ADD CONSTRAINT UQ_Plans_Cat_Brand_PlanName
+UNIQUE (CatId, BrandId, PlanName);
+
 
  INSERT INTO Plans (CatId, PlanName, Description, Remark, IsDisable)
  VALUES
