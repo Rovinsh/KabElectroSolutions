@@ -11,21 +11,8 @@ import { ToastService } from '../services/toastService.service';
 import { VerifyDialog } from '../verify-dialog/verify-dialog';
 import { AppointmentComponent } from '../appointment/appointment';
 import { CustomerVisitComponent } from '../customer-visit/customer-visit';
-
-// interface Claim {
-//   //id:number,
-//   claimCode: string;
-//   warrantySerialNo: string;
-//   warrantyType: string;
-//   //warrantyActivationCode:string;
-//   warrantyCode: string;
-//   createdBy: string;
-//   planName: string;
-//   customerName: string;
-//   customerPhone: string;
-//   cityState: string;
-//   status:string;
-// }
+import { AuthService } from '../services/auth';
+import { ShareEstimationComponent } from '../share-estimation/share-estimation';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,13 +21,14 @@ import { CustomerVisitComponent } from '../customer-visit/customer-visit';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-  constructor(private apiService: ApiService,private dialog: MatDialog) {}
+  constructor(private apiService: ApiService,private dialog: MatDialog,private auth: AuthService) {}
   claims: Claim[]=[];
   status : any[]= [];
   private toast = inject(ToastService);
   tabs = ['Assigned Claims', 'Accepted Claims', 'Verified Claims', 'Invoices', 'All Claims'];
   activeTab = this.tabs[0];
   isLoading: boolean = false;
+  role:string | null = null;
 
   filter = {
     warrantyType: '',
@@ -122,6 +110,36 @@ openAppointmentPopup(claimId: number, claim : Claim) {
         this.isLoading = false; // hide spinner even on error
       }
     });
+    }
+  });
+}
+
+openShareEstimationPopup(claimId: number, claim : Claim) {
+  const dialogRef = this.dialog.open(ShareEstimationComponent, {
+    width: '1200px',
+    maxWidth: '300vw',   
+        height: '300vw',
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          claimId: claimId
+        }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+    //  this.isLoading = true;
+    // this.apiService.ScheduleAppointment(claimId, "Appointment Taken",result, "Appointment Taken").subscribe({
+    //   next: (res:any) => {        
+    //     this.isLoading = false; // hide spinner
+    //      this.toast.success("Appointment Taken" +' Successfully!');
+    //      this.selectTab(this.activeTab);
+    //   },
+    //   error: (err:any) => {
+    //     this.toast.error(err?.error || 'Error occured while taking appointment!')
+    //     this.isLoading = false; // hide spinner even on error
+    //   }
+    // });
     }
   });
 }
@@ -244,6 +262,7 @@ openClaimDetails(claimId: number): void {
   }
 
   ngOnInit(): void {
+    this.role = this.auth.userRole;
     this.apiService.getStatus('Status/status').subscribe({
       next: (status) => {
         this.status = Object.values(status.data);

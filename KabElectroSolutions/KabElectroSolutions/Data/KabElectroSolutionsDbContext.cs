@@ -31,6 +31,9 @@ namespace KabElectroSolutions.Data
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<ClaimImage> ClaimImages { get; set; }
+        public DbSet<EstimationDetail> EstimationDetails { get; set; } = null!;
+        // DbSet for EstimationImages table
+        public DbSet<EstimationImage> EstimationImages { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here

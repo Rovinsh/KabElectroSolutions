@@ -1,11 +1,9 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using KabElectroSolutions.Data;
+﻿using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace KabElectroSolutions.Controllers
 {
@@ -435,6 +433,50 @@ namespace KabElectroSolutions.Controllers
 
             return Ok(response);
         }
+       
+        [HttpPost("ShareEstimation/{id}/{status}/{remarks}")]
+        public async Task<IActionResult> CreateEstimation([FromForm] EstimationDetailDto dto)
+        {
+            var estimation = new EstimationDetail
+            {
+                ClaimId = dto.ClaimId,
+                ClaimType = dto.ClaimType,
+                Observation = dto.Observation,
+                Symptom = dto.Symptom,
+                Type = dto.Type,
+                Material = dto.Material,
+                HSNCode = dto.HSNCode,
+                Price = dto.Price,
+                TaxPercent = dto.TaxPercent,
+                Remarks = dto.Remarks,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            if (dto.Images is not null && dto.Images.Count > 0)
+            {
+                foreach (var file in dto.Images)
+                {
+                    await using var ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+
+                    var image = new EstimationImage
+                    {
+                        ClaimId = dto.ClaimId,
+                        Image = ms.ToArray(),
+                        FileName = file.FileName,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    estimation.Images.Add(image);
+                }
+            }
+
+            _context.EstimationDetails.Add(estimation);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { estimation.Id, Message = "Estimation created successfully." });
+        }
+
 
     }
 }

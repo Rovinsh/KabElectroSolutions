@@ -72,15 +72,15 @@
           <td>{{ claim.statusName }}</td>
           <td>{{ claim.customerPhone }}</td>
           <td>{{ claim.appointment  | date:'MMM d, y'}} at {{claim.appointmentConfirmationTime | date:'hh:mm a'}}</td>
-          <td><mat-icon class="text-success icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned'" (click)="updateClaimStatus(claim.id,'Call Accepted By Service Center', 'Call Accepted' )">check_circle</mat-icon>
+          <td><mat-icon class="text-success icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned' && role != 'Brand'" (click)="updateClaimStatus(claim.id,'Call Accepted By Service Center', 'Call Accepted' )">check_circle</mat-icon>
             &nbsp; &nbsp;
-            <mat-icon class="text-danger icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned'" (click)="updateClaimStatus(claim.id,'Call Rejected By Service Center', 'Call rejected')">cancel</mat-icon>
-            <button class="claim-btn" *ngIf="claim.statusName ==='Call Accepted By Service Center'" (click)="openVerifyModal(claim.id)">CLAIM VERIFY</button>
-            <button class="claim-btn" *ngIf="claim.statusName ==='Claim Verified'" (click)="openAppointmentPopup(claim.id, claim)">CONFIRM APPOINTMENT</button>
-            <button class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken'" (click)="openVisitPopup(claim.id, claim)">CUSTOMER VISIT</button>
+            <mat-icon class="text-danger icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned' && role != 'Brand'" (click)="updateClaimStatus(claim.id,'Call Rejected By Service Center', 'Call rejected')">cancel</mat-icon>
+            <button class="claim-btn" *ngIf="claim.statusName ==='Call Accepted By Service Center' && role != 'Brand'" (click)="openVerifyModal(claim.id)">CLAIM VERIFY</button>
+            <button class="claim-btn" *ngIf="claim.statusName ==='Claim Verified' && role != 'Brand'" (click)="openAppointmentPopup(claim.id, claim)">CONFIRM APPOINTMENT</button>
+            <button class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken' && role != 'Brand'" (click)="openVisitPopup(claim.id, claim)">CUSTOMER VISIT</button>
             <br>
-            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken'" (click)="openAppointmentPopup(claim.id, claim)">Re-appointment</button>
-            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Visit Done'">Share Estimation</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken' && role != 'Brand'" (click)="openAppointmentPopup(claim.id, claim)">Re-appointment</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Visit Done' && role != 'Brand'" (click)="openShareEstimationPopup(claim.id, claim)">Share Estimation</button>
             
           </td>
           <td>{{ claim.customerName }}</td>

@@ -1,0 +1,126 @@
+.dialog-container {
+  width: 100%;
+  padding: 20px;
+}
+
+.dialog-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.table-header,
+.row {
+  display: grid;
+  grid-template-columns: 130px 150px 110px 120px 120px 120px 120px 50px;
+  gap: 10px;
+  align-items: center;
+}
+
+.table-header {
+  font-weight: bold;
+  background: #f3f3f3;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.items-wrapper .row {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.amount {
+  padding-top: 10px;
+}
+
+.add-btn {
+  margin: 10px 0;
+}
+
+.total-section {
+  text-align: right;
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.form-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.required {
+  color: red;
+}
+
+textarea {
+  min-height: 80px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+.actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 8px;
+}
+.image-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.image-box {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+}
+
+.upload-btn {
+  background: #6ea8fe;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 20px 20px 20px 20px;
+}
+
+.action-row {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+  border: 1px solid #e5e5e5;
+}
+
+.add-btn,
+.share-btn {
+  background: #6ea8fe;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12%;
+  width: 100%;
+}

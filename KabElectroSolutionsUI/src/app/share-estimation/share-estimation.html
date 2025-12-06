@@ -1,0 +1,181 @@
+<form [formGroup]="shareForm">
+<div class="dialog-container">
+
+  <h2 class="dialog-header"><span>Share Estimation</span>  
+    <button mat-icon-button (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+  
+  <!-- Table Headers -->
+  <div class="table-header">
+    <div>Type</div>
+    <div>Material</div>
+    <div>HSN Code</div>
+    <div>Price</div>
+    <div>Tax (%)</div>
+    <div>Tax amount</div>
+    <div>Total cost</div>
+    <div></div>
+  </div>
+
+  <!-- Dynamic Items -->
+  <div formArrayName="items" class="items-wrapper">
+    <div *ngFor="let item of items.controls; let i = index" 
+         [formGroupName]="i" 
+         class="row">
+
+      <!-- Type -->
+      <mat-form-field appearance="outline">
+        <mat-select formControlName="type">
+          <mat-option value="Services">Services</mat-option>
+          <mat-option value="Spare Parts">Spare Parts</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Material -->
+      <mat-form-field appearance="outline">
+        <mat-select formControlName="material">
+          <mat-option *ngFor="let m of materialList" [value]="m">{{ m }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- HSN -->
+      <mat-form-field appearance="outline">
+        <input matInput type="number" placeholder="HSN" formControlName="hsn" />
+      </mat-form-field>
+
+      <!-- Price -->
+      <mat-form-field appearance="outline">
+        <input matInput type="number" placeholder="Price" formControlName="price" />
+      </mat-form-field>
+
+      <!-- Tax -->
+      <mat-form-field appearance="outline">
+        <mat-select formControlName="tax">
+            <mat-option value="0">0%</mat-option>
+            <mat-option value="5">5%</mat-option>          
+          <mat-option value="12">12%</mat-option>
+          <mat-option value="18">18%</mat-option>
+          <mat-option value="28">28%</mat-option>
+          
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Calculated Tax Amount -->
+      <div class="amount">{{ getTaxAmount(i) }}</div>
+
+      <!-- Calculated Total -->
+      <div class="amount">{{ getTotal(i) }}</div>
+
+      <!-- Remove Button -->
+      <!-- <button mat-icon-button color="warn"
+        (click)="removeRow(i)"
+        [disabled]="!item.get('removable')?.value">
+  <mat-icon>remove_circle</mat-icon>
+</button> 
+ <button mat-mini-fab color="primary" class="add-btn" (click)="addRow()">
+    <mat-icon>add</mat-icon>
+  </button> -->
+
+<div class="actions">
+  
+  <!-- Remove Button -->
+  <button mat-icon-button color="warn"
+          (click)="removeRow(i)"
+          [disabled]="!item.get('removable')?.value">
+    <mat-icon>remove_circle</mat-icon>
+  </button>
+
+  <!-- Add Button (only for last row) -->
+   <!-- <button mat-mini-fab color="primary" class="add-btn" (click)="addRow()" *ngIf="i === items.length - 1" [disabled]="!isLastRowValid()">
+    <mat-icon>add</mat-icon>
+  </button> -->
+  <button *ngIf="i === items.length - 1"
+          mat-icon-button color="primary"
+          (click)="addRow()" [disabled]="!isLastRowValid()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
+
+</div>
+
+<!-- Add Button (Only on Last Row) -->
+<!-- <button *ngIf="i === items.length - 1"
+        mat-icon-button color="primary"
+        (click)="addRow()">
+  <mat-icon>add_circle</mat-icon>
+</button> -->
+    </div>
+  </div>
+
+  <!-- Add Button -->
+ 
+
+  <!-- Total -->
+  <div class="total-section">
+    Total : <strong>{{ getGrandTotal() }}</strong>
+  </div>
+
+  <!-- Form Sections -->
+  <div class="form-section">
+
+    <!-- Observation -->
+    <label>Observation: <span class="required">*</span></label>
+    <textarea matInput maxlength="200" formControlName="observation"></textarea>
+
+    <!-- Claim Type -->
+    <label>Claim Type: <span class="required">*</span></label>
+    <mat-radio-group class="radio-group" formControlName="claimType">
+  <mat-radio-button value="Repair">Repair</mat-radio-button>
+  <mat-radio-button value="Replace">Replace</mat-radio-button>
+  <mat-radio-button value="Repair and Replace">Repair and Replace</mat-radio-button>
+</mat-radio-group>
+
+    <!-- Symptom -->
+    <label>Symptom: <span class="required">*</span></label>
+    <textarea matInput maxlength="200" formControlName="symptom"></textarea>
+
+    <!-- Remarks -->
+    <mat-form-field appearance="outline" class="remarks-field">
+      <input matInput placeholder="Any remarks ?" formControlName="remarks" />
+    </mat-form-field>
+
+  </div>
+</div>
+<!-- EXISTING CONTENT ABOVE -->
+
+<!-- IMAGES UPLOAD SECTION -->
+<div class="image-container">
+<div class="upload-grid">
+  <button *ngFor="let img of imagesArray.controls; let i = index"
+         class="upload-btn">
+    UPLOAD IMAGE
+  </button>
+</div>
+
+  <!-- <div class="image-box" *ngFor="let img of imagesArray.controls; let i = index">
+    <button class="upload-btn" (click)="onSelectImage(i)">
+      <mat-icon>upload</mat-icon> UPLOAD IMAGE
+    </button>
+  </div> -->
+</div>
+
+<!-- ACTION BUTTON ROW -->
+<div class="action-row">
+  <button
+    class="add-btn"
+    (click)="addImage()"
+  >
+    + ADD IMAGE
+  </button>
+
+  <button
+    class="add-btn"
+    (click)="shareEstimate()"
+    [disabled]="imagesArray.length === 0"
+  >
+    SHARE ESTIMATE
+  </button>
+</div>
+
+</form>

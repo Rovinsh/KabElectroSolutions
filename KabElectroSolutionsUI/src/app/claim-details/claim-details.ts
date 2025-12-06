@@ -28,6 +28,7 @@ auditData = [];
 showNotes = false;
 newNote = '';
 claimNotes: Note[] = [];
+role:string | null = null;
 
 steps: string[] = [
   'Claim Registered',
@@ -51,6 +52,7 @@ private toast = inject(ToastService);
 
   ngOnInit(): void {
 
+    this.role = this.auth.userRole;
     const statusToStepMap: Record<string, number> = {
     'Claim Registered': 0,
     'Claim Allocated': 1,
