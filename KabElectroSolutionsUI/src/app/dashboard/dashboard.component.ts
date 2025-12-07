@@ -129,7 +129,7 @@ openShareEstimationPopup(claimId: number, claim : Claim) {
   dialogRef.afterClosed().subscribe(result => {
     if (result) {
      this.isLoading = true;
-    this.apiService.ScheduleAppointment(claimId, "Estimation Shared",result, "Estimation Shared").subscribe({
+    this.apiService.ShareEstimation(claimId, "Estimation Shared",result, "Estimation Shared").subscribe({
       next: (res:any) => {        
         this.isLoading = false; // hide spinner
          this.toast.success("Estimation Shared" +' Successfully!');
