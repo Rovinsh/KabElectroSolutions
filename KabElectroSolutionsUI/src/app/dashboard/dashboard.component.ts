@@ -162,6 +162,7 @@ openVisitPopup(claimId: number, claim : Claim) {
 
   dialogRef.afterClosed().subscribe(result => {
     if (result) {
+       this.selectTab(this.activeTab);
     //  this.isLoading = true;
     // this.apiService.ScheduleAppointment(claimId, "Appointment Taken",result, "Appointment Taken").subscribe({
     //   next: (res:any) => {        
