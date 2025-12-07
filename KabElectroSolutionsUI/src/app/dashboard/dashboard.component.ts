@@ -41,7 +41,7 @@ export class DashboardComponent {
   };
 
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 100;
   sortColumn: keyof Claim | null = null;
   sortAsc = true;
 

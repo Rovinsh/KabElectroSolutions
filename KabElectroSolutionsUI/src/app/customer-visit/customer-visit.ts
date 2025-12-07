@@ -86,7 +86,7 @@ export class CustomerVisitComponent {
 
   formData.append("ClaimId", this.claimId.toString());
   formData.append("Remarks", this.visitForm.value.remarks || "");
-  formData.append("CreatedBy", this.auth.firstName + " " + this.auth.lastName);
+  formData.append("CreatedBy", "Test");
 
   // Add single images
   if (this.files.estimationImage)

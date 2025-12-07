@@ -213,6 +213,10 @@ namespace KabElectroSolutions.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var performerEmail = User?.Identity?.Name;
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                request.CreatedBy = user.Firstname + " " + user.Lastname;
+
                 var entries = new List<ClaimImage>();
 
                 if (request.EstimationImage != null)
