@@ -4,6 +4,7 @@ using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace KabElectroSolutions.Controllers
 {
@@ -45,6 +46,24 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
                         claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId).ToListAsync();
+                    }
+                }
+                else if (user.BusinessroleName == "Brand")
+                {
+
+                    if (statusId != null && statusId > 0)
+                    {
+                        var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
+                        if (substatus.Name == "Claim Verified")
+                            claims = await _context.Claims.Where(claim =>  claim.RegisteredBy == user.Id && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done").ToListAsync();
+                        else
+                            claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.RegisteredBy == user.Id).ToListAsync();
+
+                    }
+                    else
+                    {
+                        var substatus = _context.SubStatuses.Where(substatus => substatus.Name == "Call Rejected By Service Center").FirstOrDefault();
+                        claims = await _context.Claims.Where(claim => claim.Status != substatus!.SubStatusId && claim.RegisteredBy == user.Id).ToListAsync();
                     }
                 }
                 else

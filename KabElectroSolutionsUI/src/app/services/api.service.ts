@@ -159,6 +159,10 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Claims/ScheduleAppointment/${id}/${status}/${remarks}`,appointment);
   }
 
+   ShareEstimation(id: number, status: string,appointment : AppointmentRequest, remarks?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims/ScheduleAppointment/${id}/${status}/${remarks}`,appointment);
+  }
+
    AcceptOrRejectClaim(id: number, status: string, remarks?: string): Observable<any> {
     return this.http.post(`${this.baseUrl}Claims/AcceptOrRejectClaim/${id}/${status}/${remarks}`,{});
   }

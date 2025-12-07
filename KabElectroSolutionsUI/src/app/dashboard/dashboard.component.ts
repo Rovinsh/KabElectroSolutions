@@ -128,18 +128,18 @@ openShareEstimationPopup(claimId: number, claim : Claim) {
 
   dialogRef.afterClosed().subscribe(result => {
     if (result) {
-    //  this.isLoading = true;
-    // this.apiService.ScheduleAppointment(claimId, "Appointment Taken",result, "Appointment Taken").subscribe({
-    //   next: (res:any) => {        
-    //     this.isLoading = false; // hide spinner
-    //      this.toast.success("Appointment Taken" +' Successfully!');
-    //      this.selectTab(this.activeTab);
-    //   },
-    //   error: (err:any) => {
-    //     this.toast.error(err?.error || 'Error occured while taking appointment!')
-    //     this.isLoading = false; // hide spinner even on error
-    //   }
-    // });
+     this.isLoading = true;
+    this.apiService.ScheduleAppointment(claimId, "Estimation Shared",result, "Estimation Shared").subscribe({
+      next: (res:any) => {        
+        this.isLoading = false; // hide spinner
+         this.toast.success("Estimation Shared" +' Successfully!');
+         this.selectTab(this.activeTab);
+      },
+      error: (err:any) => {
+        this.toast.error(err?.error || 'Error occured while  Sharing estimation!')
+        this.isLoading = false; // hide spinner even on error
+      }
+    });
     }
   });
 }
@@ -162,18 +162,18 @@ openVisitPopup(claimId: number, claim : Claim) {
 
   dialogRef.afterClosed().subscribe(result => {
     if (result) {
-     this.isLoading = true;
-    this.apiService.ScheduleAppointment(claimId, "Appointment Taken",result, "Appointment Taken").subscribe({
-      next: (res:any) => {        
-        this.isLoading = false; // hide spinner
-         this.toast.success("Appointment Taken" +' Successfully!');
-         this.selectTab(this.activeTab);
-      },
-      error: (err:any) => {
-        this.toast.error(err?.error || 'Error occured while taking appointment!')
-        this.isLoading = false; // hide spinner even on error
-      }
-    });
+    //  this.isLoading = true;
+    // this.apiService.ScheduleAppointment(claimId, "Appointment Taken",result, "Appointment Taken").subscribe({
+    //   next: (res:any) => {        
+    //     this.isLoading = false; // hide spinner
+    //      this.toast.success("Appointment Taken" +' Successfully!');
+    //      this.selectTab(this.activeTab);
+    //   },
+    //   error: (err:any) => {
+    //     this.toast.error(err?.error || 'Error occured while taking appointment!')
+    //     this.isLoading = false; // hide spinner even on error
+    //   }
+    // });
     }
   });
 }
