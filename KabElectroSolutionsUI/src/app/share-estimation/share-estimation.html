@@ -3,9 +3,9 @@
 
   <h2 class="dialog-header"><span>Share Estimation</span>  
     <button mat-icon-button (click)="onClose()">
-    <mat-icon>close</mat-icon>
-  </button>
-</h2>
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
   
   <!-- Table Headers -->
   <div class="table-header">
@@ -53,12 +53,11 @@
       <!-- Tax -->
       <mat-form-field appearance="outline">
         <mat-select formControlName="tax">
-            <mat-option value="0">0%</mat-option>
-            <mat-option value="5">5%</mat-option>          
+          <mat-option value="0">0%</mat-option>
+          <mat-option value="5">5%</mat-option>          
           <mat-option value="12">12%</mat-option>
           <mat-option value="18">18%</mat-option>
           <mat-option value="28">28%</mat-option>
-          
         </mat-select>
       </mat-form-field>
 
@@ -68,48 +67,24 @@
       <!-- Calculated Total -->
       <div class="amount">{{ getTotal(i) }}</div>
 
-      <!-- Remove Button -->
-      <!-- <button mat-icon-button color="warn"
-        (click)="removeRow(i)"
-        [disabled]="!item.get('removable')?.value">
-  <mat-icon>remove_circle</mat-icon>
-</button> 
- <button mat-mini-fab color="primary" class="add-btn" (click)="addRow()">
-    <mat-icon>add</mat-icon>
-  </button> -->
+      <div class="actions">
+        <!-- Remove Button -->
+        <button mat-icon-button color="warn"
+                (click)="removeRow(i)"
+                [disabled]="!item.get('removable')?.value">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
 
-<div class="actions">
-  
-  <!-- Remove Button -->
-  <button mat-icon-button color="warn"
-          (click)="removeRow(i)"
-          [disabled]="!item.get('removable')?.value">
-    <mat-icon>remove_circle</mat-icon>
-  </button>
-
-  <!-- Add Button (only for last row) -->
-   <!-- <button mat-mini-fab color="primary" class="add-btn" (click)="addRow()" *ngIf="i === items.length - 1" [disabled]="!isLastRowValid()">
-    <mat-icon>add</mat-icon>
-  </button> -->
-  <button *ngIf="i === items.length - 1"
-          mat-icon-button color="primary"
-          (click)="addRow()" [disabled]="!isLastRowValid()">
-    <mat-icon>add_circle</mat-icon>
-  </button>
-
-</div>
-
-<!-- Add Button (Only on Last Row) -->
-<!-- <button *ngIf="i === items.length - 1"
-        mat-icon-button color="primary"
-        (click)="addRow()">
-  <mat-icon>add_circle</mat-icon>
-</button> -->
+        <!-- Add Button -->
+        <button *ngIf="i === items.length - 1"
+                mat-icon-button color="primary"
+                (click)="addRow()" 
+                [disabled]="!isLastRowValid()">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
-
-  <!-- Add Button -->
- 
 
   <!-- Total -->
   <div class="total-section">
@@ -126,10 +101,10 @@
     <!-- Claim Type -->
     <label>Claim Type: <span class="required">*</span></label>
     <mat-radio-group class="radio-group" formControlName="claimType">
-  <mat-radio-button value="Repair">Repair</mat-radio-button>
-  <mat-radio-button value="Replace">Replace</mat-radio-button>
-  <mat-radio-button value="Repair and Replace">Repair and Replace</mat-radio-button>
-</mat-radio-group>
+      <mat-radio-button value="Repair">Repair</mat-radio-button>
+      <mat-radio-button value="Replace">Replace</mat-radio-button>
+      <mat-radio-button value="Repair and Replace">Repair and Replace</mat-radio-button>
+    </mat-radio-group>
 
     <!-- Symptom -->
     <label>Symptom: <span class="required">*</span></label>
@@ -139,41 +114,56 @@
     <mat-form-field appearance="outline" class="remarks-field">
       <input matInput placeholder="Any remarks ?" formControlName="remarks" />
     </mat-form-field>
-
   </div>
 </div>
-<!-- EXISTING CONTENT ABOVE -->
 
-<!-- IMAGES UPLOAD SECTION -->
-<div class="image-container">
-<div class="upload-grid">
-  <button *ngFor="let img of imagesArray.controls; let i = index"
-         class="upload-btn">
-    UPLOAD IMAGE
-  </button>
+<!-- IMAGE UPLOAD SECTION -->
+<div class="image-grid" formArrayName="imagesArray">
+  
+  <div class="image-card mat-elevation-z2"
+       *ngFor="let img of imagesArray.controls; let i = index"
+       [formGroupName]="i">
+
+    <!-- Title -->
+    <div class="image-title">
+      {{ img.value.label }}
+      <span *ngIf="img.value.required" class="required">*</span>
+    </div>
+
+    <!-- Upload Box -->
+    <div class="upload-box" (click)="triggerFile(i)">
+      
+      <!-- Preview -->
+      <img *ngIf="img.value.previewUrl"
+           [src]="img.value.previewUrl"
+           class="preview-image">
+
+      <!-- Placeholder -->
+      <div class="placeholder" *ngIf="!img.value.previewUrl">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>{{ img.value.fileName || 'Choose File' }}</span>
+      </div>
+    </div>
+
+    <!-- Hidden Input -->
+ <input #fileInputs
+       type="file"
+       hidden
+       accept="image/*"
+       (change)="onSelectImage($event, i)">
+  </div>
 </div>
 
-  <!-- <div class="image-box" *ngFor="let img of imagesArray.controls; let i = index">
-    <button class="upload-btn" (click)="onSelectImage(i)">
-      <mat-icon>upload</mat-icon> UPLOAD IMAGE
-    </button>
-  </div> -->
-</div>
 
 <!-- ACTION BUTTON ROW -->
 <div class="action-row">
-  <button
-    class="add-btn"
-    (click)="addImage()"
-  >
+  <button class="add-btn" (click)="addImage('Upload image')">
     + ADD IMAGE
   </button>
 
-  <button
-    class="add-btn"
-    (click)="shareEstimate()"
-    [disabled]="imagesArray.length === 0"
-  >
+  <button class="add-btn"
+          (click)="shareEstimate()"
+          [disabled]="imagesArray.length === 0">
     SHARE ESTIMATE
   </button>
 </div>
