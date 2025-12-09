@@ -499,7 +499,64 @@ namespace KabElectroSolutions.Controllers
 
             return Ok(new { estimation.Id, Message = "Estimation created successfully." });
         }
+        
+       [HttpPost("ShareEstimate")]
+        public async Task<IActionResult> ShareEstimation([FromForm] ShareEstimationDetailDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            // Create estimation entity
+            var estimation = new EstimationDetail
+            {
+                ClaimId = dto.ClaimId,
+                Observation = dto.Observation,
+                ClaimType = dto.ClaimType,
+                Symptom = dto.Symptom,
+                Remarks = dto.Remarks,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            //// Map Items
+            //if (dto.Items != null && dto.Items.Count > 0)
+            //{
+            //    foreach (var item in dto.Items)
+            //    {
+            //        estimation.Items.Add(new EstimationItem
+            //        {
+            //            Type = item.Type,
+            //            Material = item.Material,
+            //            HSNCode = item.HSNCode,
+            //            Price = item.Price,
+            //            TaxPercent = item.Tax
+            //        });
+            //    }
+            //}
+
+            //// Map Images
+            //if (dto.Images != null && dto.Images.Count > 0)
+            //{
+            //    foreach (var file in dto.Images)
+            //    {
+            //        using var ms = new MemoryStream();
+            //        await file.CopyToAsync(ms);
+
+            //        estimation.Images.Add(new EstimationImage
+            //        {
+            //            ClaimId = dto.ClaimId,
+            //            FileName = file.FileName,
+            //            Image = ms.ToArray(),
+            //            CreatedAt = DateTime.UtcNow
+            //        });
+            //    }
+            //}
+
+            // Save to DB
+            _context.EstimationDetails.Add(estimation);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { estimation.Id, Message = "Estimation created successfully." });
+        }
 
     }
 }

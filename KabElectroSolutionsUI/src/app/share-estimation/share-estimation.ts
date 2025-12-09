@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, ElementRef, inject } from '@angular/core';
+import { Component, ViewChildren, QueryList, ElementRef, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -8,8 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ApiService, ShareEstimationDto } from '../services/api.service';
 
 @Component({
   selector: 'app-share-estimation',
@@ -25,15 +25,17 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]  
 })
 export class ShareEstimationComponent {
 
- @ViewChildren("fileInputs") fileInputs!: QueryList<ElementRef<HTMLInputElement>>;
+  @ViewChildren("fileInputs") fileInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   materialList = ['PCB Replace', 'Service Valv', 'Motor', 'Wiring', 'Compressor'];
   shareForm!: FormGroup;
 
+  private apiService = inject(ApiService);
   private data = inject(MAT_DIALOG_DATA) as { claimId: number };
   claimId = this.data.claimId;
 
@@ -41,107 +43,55 @@ export class ShareEstimationComponent {
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<ShareEstimationComponent>
   ) {
-
     this.shareForm = this.fb.group({
       items: this.fb.array([]),
       observation: ['', Validators.required],
       claimType: ['', Validators.required],
       symptom: ['', Validators.required],
       remarks: [''],
-      imagesArray: this.fb.array([])            // ✅ FIXED: images inside FormGroup
+      imagesArray: this.fb.array([])
     });
 
     this.addRow();
   }
 
-
   ngOnInit() {
-  this.addImage("Upload image");
-  this.addImage("Upload image", true);
-  this.addImage("Upload image", true);
-}
-triggerFile(index: number) {
-  const inputList = this.fileInputs.toArray();
-  if (inputList[index]) {
-    inputList[index].nativeElement.click();
-  } else {
-    console.warn("File input not found for index", index);
-  }
-}
-  /** GETTERS **/
-  get items(): FormArray {
-    return this.shareForm.get('items') as FormArray;
+    this.addImage("Upload image");
+    this.addImage("Upload image", true);
+    this.addImage("Upload image", true);
   }
 
-  get imagesArray(): FormArray {
-    return this.shareForm.get('imagesArray') as FormArray;
-  }
-
-  get imagesArrayControls() {
-    return this.imagesArray.controls;
-  }
-
-  /** IMAGE METHODS **/
+  get items(): FormArray { return this.shareForm.get('items') as FormArray; }
+  get imagesArray(): FormArray { return this.shareForm.get('imagesArray') as FormArray; }
 
   addImage(label: string, required = false) {
-  this.imagesArray.push(
-    this.fb.group({
+    this.imagesArray.push(this.fb.group({
       label,
       required,
       file: null,
       fileName: '',
       previewUrl: ''
-    })
-  );
-}
-
-  removeImage(i: number) {
-    if (this.imagesArray.length > 1) {
-      this.imagesArray.removeAt(i);
-    }
-  }
-onSelectImage(event: any, index: number) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    this.imagesArray.at(index).patchValue({
-      file,
-      fileName: file.name,
-      previewUrl: reader.result
-    });
-  };
-  reader.readAsDataURL(file);
-}
-
-  /** SUBMIT SHARE ESTIMATE **/
-
-  shareEstimate() {
-    const formData = new FormData();
-
-    formData.append("claimId", this.claimId.toString());
-    formData.append("observation", this.shareForm.value.observation);
-    formData.append("claimType", this.shareForm.value.claimType);
-    formData.append("symptom", this.shareForm.value.symptom);
-    formData.append("remarks", this.shareForm.value.remarks);
-
-    // Add Items
-    formData.append("items", JSON.stringify(this.shareForm.value.items));
-
-    // Add Images
-    this.imagesArray.controls.forEach((ctrl, index) => {
-      if (ctrl.value.file) {
-        formData.append("files", ctrl.value.file);
-      }
-    });
-
-    console.log("Final FormData ready to upload");
+    }));
   }
 
-  /** UI METHODS **/
-  onClose() {
-    this.dialogRef.close();
+  triggerFile(index: number) {
+    const inputList = this.fileInputs.toArray();
+    inputList[index]?.nativeElement.click();
+  }
+
+  onSelectImage(event: any, index: number) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagesArray.at(index).patchValue({
+        file,
+        fileName: file.name,
+        previewUrl: reader.result
+      });
+    };
+    reader.readAsDataURL(file);
   }
 
   addRow() {
@@ -158,9 +108,7 @@ onSelectImage(event: any, index: number) {
   }
 
   removeRow(i: number) {
-    if (this.items.at(i).get('removable')?.value) {
-      this.items.removeAt(i);
-    }
+    if (this.items.at(i).get('removable')?.value) this.items.removeAt(i);
   }
 
   isLastRowValid(): boolean {
@@ -178,8 +126,88 @@ onSelectImage(event: any, index: number) {
   }
 
   getGrandTotal(): number {
-    return this.items.controls
-      .map((_, i) => this.getTotal(i))
-      .reduce((a, b) => a + b, 0);
+    return this.items.controls.map((_, i) => this.getTotal(i)).reduce((a, b) => a + b, 0);
   }
+
+//   shareEstimate() {
+//   if (this.shareForm.invalid) {
+//     this.shareForm.markAllAsTouched();
+//     return;
+//   }
+
+//   const dto: ShareEstimationDto = {
+//     claimId: this.claimId,
+//     observation: this.shareForm.value.observation,
+//     claimType: this.shareForm.value.claimType,
+//     symptom: this.shareForm.value.symptom,
+//     remarks: this.shareForm.value.remarks,
+//     items: this.items.value.map((item: any) => ({
+//       type: item.type,
+//       material: item.material,
+//       hsn: item.hsn,
+//       price: item.price,
+//       tax: item.tax
+//     })),
+//     files: this.imagesArray.controls
+//       .map(ctrl => ctrl.value.file)
+//       .filter(file => file) 
+//   };
+
+//   const formData = new FormData();
+//   formData.append("data", JSON.stringify(dto));
+//   dto.files?.forEach(file => formData.append("files", file));
+
+//   this.apiService.updateShareEstimation(formData).subscribe({
+//     next: res => this.dialogRef.close({ success: true, data: res }),
+//     error: err => console.error(err)
+//   });
+// }
+
+shareEstimate() {
+  if (this.shareForm.invalid) {
+    this.shareForm.markAllAsTouched();
+    return;
+  }
+
+  const formData = new FormData();
+
+  // Append primitive fields
+  formData.append('ClaimId', this.claimId.toString());
+  formData.append('Observation', this.shareForm.value.observation);
+  formData.append('ClaimType', this.shareForm.value.claimType);
+  formData.append('Symptom', this.shareForm.value.symptom);
+  formData.append('Remarks', this.shareForm.value.remarks || '');
+
+  // Append items individually so ASP.NET Core model binder can map to List<EstimationItem>
+  this.items.controls.forEach((item, index) => {
+    formData.append(`Items[${index}].Type`, item.value.type);
+    formData.append(`Items[${index}].Material`, item.value.material);
+    formData.append(`Items[${index}].HSNCode`, item.value.hsn.toString());
+    formData.append(`Items[${index}].Price`, item.value.price.toString());
+    formData.append(`Items[${index}].TaxPercent`, item.value.tax.toString());
+  });
+
+  // Append images
+  this.imagesArray.controls.forEach(ctrl => {
+    if (ctrl.value.file) {
+      formData.append('Images', ctrl.value);
+    }
+  });
+
+  console.log('FormData ready', formData);
+
+  // Call API
+  this.apiService.updateShareEstimation(formData).subscribe({
+    next: res => {
+      console.log('Upload success', res);
+      this.dialogRef.close({ success: true, data: res });
+    },
+    error: err => {
+      console.error('Upload failed', err);
+    }
+  });
+}
+
+  onClose() { this.dialogRef.close(); }
+
 }

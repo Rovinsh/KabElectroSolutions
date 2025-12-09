@@ -171,6 +171,10 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Claims/AssignPartner/${id}/${status}/${partnerId}/${remarks}`,{});
   } 
   
+    updateShareEstimation(formData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims/ShareEstimate`,formData);
+  }
+  
 }
    
 export interface LocationResponseDto {
@@ -562,4 +566,20 @@ export interface AppointmentRequest {
   remarks: string;
   pendingReason: string;
   visitPendingReason: string;
+}
+
+export interface ShareEstimationDto {
+  claimId: number;
+  observation: string;
+  claimType: string;
+  symptom: string;
+  remarks?: string;
+  items: {
+    type: string;
+    material: string;
+    hsn: number;
+    price: number;
+    tax: number;
+  }[];
+  files?: File[]; // for uploaded images
 }
