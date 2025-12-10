@@ -187,15 +187,16 @@ shareEstimate() {
     formData.append(`Items[${index}].TaxPercent`, item.value.tax.toString());
   });
 
-  // Append images
-  this.imagesArray.controls.forEach(ctrl => {
-    if (ctrl.value.file) {
-      formData.append('Images', ctrl.value);
-    }
-  });
+this.imagesArray.controls.forEach(ctrl => {
+  if (ctrl.value.file) {
+    formData.append('Images', ctrl.value.file, ctrl.value.file.name);
+  }
+});
 
-  console.log('FormData ready', formData);
-
+// Check if files are appended
+formData.forEach((value, key) => {
+  console.log("KEY:", key, "VALUE:", value);
+});
   // Call API
   this.apiService.updateShareEstimation(formData).subscribe({
     next: res => {

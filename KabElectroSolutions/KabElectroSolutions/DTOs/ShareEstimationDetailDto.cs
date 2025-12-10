@@ -11,7 +11,7 @@
         public DateTime CreatedAt { get; set; }
 
         public List<EstimationItem> Items { get; set; } = new List<EstimationItem>();
-        public List<EstimationImages> Images { get; set; } = new List<EstimationImages>();
+        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
     }
 
     public class EstimationItem

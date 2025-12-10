@@ -505,7 +505,21 @@ namespace KabElectroSolutions.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var imageList = new List<EstimationImages>();
 
+            foreach (var file in dto.Images)
+            {
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+
+                imageList.Add(new EstimationImages
+                {
+                    ClaimId = dto.ClaimId,
+                    FileName = file.FileName,
+                    Image = ms.ToArray(),
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
             // Create estimation entity
             var estimation = new EstimationDetail
             {
