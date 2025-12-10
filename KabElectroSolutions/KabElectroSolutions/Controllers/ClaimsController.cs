@@ -542,15 +542,16 @@ namespace KabElectroSolutions.Controllers
                     using var ms = new MemoryStream();
                     await file.CopyToAsync(ms);
 
-                    var image = new EstimationImages
+                    var imageRequest = new EstimationImage
                     {
                         ClaimId = dto.ClaimId,
+                        EstimationId = 1,
                         FileName = file.FileName,
                         Image = ms.ToArray(),
                         CreatedAt = DateTime.UtcNow
                     };
 
-                    //_context.EstimationImages.Add(image);
+                    _context.EstimationImages.Add(imageRequest);
                 }
 
                 await _context.SaveChangesAsync();

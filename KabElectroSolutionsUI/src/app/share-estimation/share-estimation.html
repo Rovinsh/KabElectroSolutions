@@ -163,7 +163,7 @@
 
   <button class="add-btn"
           (click)="shareEstimate()"
-          [disabled]="imagesArray.length === 0">
+          [disabled]="imagesArray.length === 0 && shareForm.invalid || isSubmitting">
     SHARE ESTIMATE
   </button>
 </div>

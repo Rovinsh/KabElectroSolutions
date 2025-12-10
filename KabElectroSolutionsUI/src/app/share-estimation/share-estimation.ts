@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService, ShareEstimationDto } from '../services/api.service';
+import { ToastService } from '../services/toastService.service';
 
 @Component({
   selector: 'app-share-estimation',
@@ -34,10 +35,12 @@ export class ShareEstimationComponent {
 
   materialList = ['PCB Replace', 'Service Valv', 'Motor', 'Wiring', 'Compressor'];
   shareForm!: FormGroup;
-
+  isSubmitting = false;
   private apiService = inject(ApiService);
+   private toast = inject(ToastService);
   private data = inject(MAT_DIALOG_DATA) as { claimId: number };
   claimId = this.data.claimId;
+
 
   constructor(
     private fb: FormBuilder,
@@ -129,40 +132,6 @@ export class ShareEstimationComponent {
     return this.items.controls.map((_, i) => this.getTotal(i)).reduce((a, b) => a + b, 0);
   }
 
-//   shareEstimate() {
-//   if (this.shareForm.invalid) {
-//     this.shareForm.markAllAsTouched();
-//     return;
-//   }
-
-//   const dto: ShareEstimationDto = {
-//     claimId: this.claimId,
-//     observation: this.shareForm.value.observation,
-//     claimType: this.shareForm.value.claimType,
-//     symptom: this.shareForm.value.symptom,
-//     remarks: this.shareForm.value.remarks,
-//     items: this.items.value.map((item: any) => ({
-//       type: item.type,
-//       material: item.material,
-//       hsn: item.hsn,
-//       price: item.price,
-//       tax: item.tax
-//     })),
-//     files: this.imagesArray.controls
-//       .map(ctrl => ctrl.value.file)
-//       .filter(file => file) 
-//   };
-
-//   const formData = new FormData();
-//   formData.append("data", JSON.stringify(dto));
-//   dto.files?.forEach(file => formData.append("files", file));
-
-//   this.apiService.updateShareEstimation(formData).subscribe({
-//     next: res => this.dialogRef.close({ success: true, data: res }),
-//     error: err => console.error(err)
-//   });
-// }
-
 shareEstimate() {
   if (this.shareForm.invalid) {
     this.shareForm.markAllAsTouched();
@@ -170,15 +139,12 @@ shareEstimate() {
   }
 
   const formData = new FormData();
-
-  // Append primitive fields
   formData.append('ClaimId', this.claimId.toString());
   formData.append('Observation', this.shareForm.value.observation);
   formData.append('ClaimType', this.shareForm.value.claimType);
   formData.append('Symptom', this.shareForm.value.symptom);
   formData.append('Remarks', this.shareForm.value.remarks || '');
 
-  // Append items individually so ASP.NET Core model binder can map to List<EstimationItem>
   this.items.controls.forEach((item, index) => {
     formData.append(`Items[${index}].Type`, item.value.type);
     formData.append(`Items[${index}].Material`, item.value.material);
@@ -193,22 +159,17 @@ this.imagesArray.controls.forEach(ctrl => {
   }
 });
 
-// Check if files are appended
-formData.forEach((value, key) => {
-  console.log("KEY:", key, "VALUE:", value);
-});
-  // Call API
+  this.isSubmitting = true;
   this.apiService.updateShareEstimation(formData).subscribe({
     next: res => {
-      console.log('Upload success', res);
-      this.dialogRef.close({ success: true, data: res });
+      this.toast.success('Estimation created successfully.!');
+      this.dialogRef.close('success');this.isSubmitting = false;
     },
-    error: err => {
-      console.error('Upload failed', err);
+    error: err => {  this.toast.error('Something went wrong!');
+     this.isSubmitting = false;
     }
   });
 }
-
-  onClose() { this.dialogRef.close(); }
+ onClose() { this.dialogRef.close(); }
 
 }

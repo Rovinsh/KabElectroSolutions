@@ -34,6 +34,7 @@ namespace KabElectroSolutions.Data
         public DbSet<EstimationDetail> EstimationDetails { get; set; } = null!;
         // DbSet for EstimationImages table
         public DbSet<EstimationImage> EstimationImages { get; set; } = null!;
+        public DbSet<EstimationImages> ShareEstimationImages { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here
