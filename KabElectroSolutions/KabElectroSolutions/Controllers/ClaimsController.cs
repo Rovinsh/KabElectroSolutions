@@ -1,4 +1,5 @@
-﻿using KabElectroSolutions.Data;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -499,77 +500,63 @@ namespace KabElectroSolutions.Controllers
 
             return Ok(new { estimation.Id, Message = "Estimation created successfully." });
         }
-        
-       [HttpPost("ShareEstimate")]
+
+        [HttpPost("ShareEstimate")]
         public async Task<IActionResult> ShareEstimation([FromForm] ShareEstimationDetailDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var imageList = new List<EstimationImages>();
 
-            foreach (var file in dto.Images)
+            var estimations = new List<EstimationDetail>();
+
+            if (dto.Items != null)
             {
-                using var ms = new MemoryStream();
-                await file.CopyToAsync(ms);
-
-                imageList.Add(new EstimationImages
+                foreach (var item in dto.Items)
                 {
-                    ClaimId = dto.ClaimId,
-                    FileName = file.FileName,
-                    Image = ms.ToArray(),
-                    CreatedAt = DateTime.UtcNow
-                });
+                    var estimation = new EstimationDetail
+                    {
+                        ClaimId = dto.ClaimId,
+                        ClaimType = dto.ClaimType,
+                        Observation = dto.Observation,
+                        Symptom = dto.Symptom,
+                        Type = item.Type,
+                        Material = item.Material,
+                        HSNCode = item.HSNCode,
+                        Price = item.Price,
+                        TaxPercent = item.TaxPercent,
+                        Remarks = dto.Remarks,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    estimations.Add(estimation);
+                    _context.EstimationDetails.Add(estimation);
+                }
             }
-            // Create estimation entity
-            var estimation = new EstimationDetail
-            {
-                ClaimId = dto.ClaimId,
-                Observation = dto.Observation,
-                ClaimType = dto.ClaimType,
-                Symptom = dto.Symptom,
-                Remarks = dto.Remarks,
-                CreatedAt = DateTime.UtcNow
-            };
 
-            //// Map Items
-            //if (dto.Items != null && dto.Items.Count > 0)
-            //{
-            //    foreach (var item in dto.Items)
-            //    {
-            //        estimation.Items.Add(new EstimationItem
-            //        {
-            //            Type = item.Type,
-            //            Material = item.Material,
-            //            HSNCode = item.HSNCode,
-            //            Price = item.Price,
-            //            TaxPercent = item.Tax
-            //        });
-            //    }
-            //}
-
-            //// Map Images
-            //if (dto.Images != null && dto.Images.Count > 0)
-            //{
-            //    foreach (var file in dto.Images)
-            //    {
-            //        using var ms = new MemoryStream();
-            //        await file.CopyToAsync(ms);
-
-            //        estimation.Images.Add(new EstimationImage
-            //        {
-            //            ClaimId = dto.ClaimId,
-            //            FileName = file.FileName,
-            //            Image = ms.ToArray(),
-            //            CreatedAt = DateTime.UtcNow
-            //        });
-            //    }
-            //}
-
-            // Save to DB
-            _context.EstimationDetails.Add(estimation);
             await _context.SaveChangesAsync();
 
-            return Ok(new { estimation.Id, Message = "Estimation created successfully." });
+            if (dto.Images != null && dto.Images.Count > 0)
+            {
+                foreach (var file in dto.Images)
+                {
+                    using var ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+
+                    var image = new EstimationImages
+                    {
+                        ClaimId = dto.ClaimId,
+                        FileName = file.FileName,
+                        Image = ms.ToArray(),
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    //_context.EstimationImages.Add(image);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new { Message = "Estimation created successfully." });
         }
 
     }

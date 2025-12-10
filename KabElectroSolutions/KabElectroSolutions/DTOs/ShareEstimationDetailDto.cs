@@ -11,7 +11,7 @@
         public DateTime CreatedAt { get; set; }
 
         public List<EstimationItem> Items { get; set; } = new List<EstimationItem>();
-        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
+        public List<IFormFile> Images { get; set; }
     }
 
     public class EstimationItem
@@ -19,7 +19,7 @@
         public int Id { get; set; }
         public string Type { get; set; }
         public string Material { get; set; }
-        public int HSNCode { get; set; }
+        public string HSNCode { get; set; }
         public decimal Price { get; set; }
         public decimal TaxPercent { get; set; }
 
