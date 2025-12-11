@@ -81,7 +81,7 @@
             <br>
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken' && role != 'Brand'" (click)="openAppointmentPopup(claim.id, claim)">Re-appointment</button>
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Visit Done' && role != 'Brand'" (click)="openShareEstimationPopup(claim.id, claim)">Share Estimation</button>
-            
+            <label *ngIf="claim.statusName ==='Estimation Shared' && role != 'Brand'">Awaiting Estimate Approval</label>
           </td>
           <td>{{ claim.customerName }}</td>
           <td>{{ claim.customerPhone }}</td>

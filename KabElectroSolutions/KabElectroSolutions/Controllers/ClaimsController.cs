@@ -1,4 +1,6 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using Azure.Core;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Models;
@@ -38,7 +40,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done").ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared").ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
 
@@ -56,7 +58,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim =>  claim.RegisteredBy == user.Id && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done").ToListAsync();
+                            claims = await _context.Claims.Where(claim =>  claim.RegisteredBy == user.Id && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared").ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.RegisteredBy == user.Id).ToListAsync();
 
@@ -73,7 +75,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || claim.StatusName == "Appointment Taken").ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared").ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
                     }
@@ -507,57 +509,71 @@ namespace KabElectroSolutions.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var estimations = new List<EstimationDetail>();
-
-            if (dto.Items != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                foreach (var item in dto.Items)
+
+                var estimations = new List<EstimationDetail>();
+
+                if (dto.Items != null)
                 {
-                    var estimation = new EstimationDetail
+                    foreach (var item in dto.Items)
                     {
-                        ClaimId = dto.ClaimId,
-                        ClaimType = dto.ClaimType,
-                        Observation = dto.Observation,
-                        Symptom = dto.Symptom,
-                        Type = item.Type,
-                        Material = item.Material,
-                        HSNCode = item.HSNCode,
-                        Price = item.Price,
-                        TaxPercent = item.TaxPercent,
-                        Remarks = dto.Remarks,
-                        CreatedAt = DateTime.UtcNow
-                    };
+                        var estimation = new EstimationDetail
+                        {
+                            ClaimId = dto.ClaimId,
+                            ClaimType = dto.ClaimType,
+                            Observation = dto.Observation,
+                            Symptom = dto.Symptom,
+                            Type = item.Type,
+                            Material = item.Material,
+                            HSNCode = item.HSNCode,
+                            Price = item.Price,
+                            TaxPercent = item.TaxPercent,
+                            Remarks = dto.Remarks,
+                            CreatedAt = DateTime.UtcNow
+                        };
 
-                    estimations.Add(estimation);
-                    _context.EstimationDetails.Add(estimation);
-                }
-            }
-
-            await _context.SaveChangesAsync();
-
-            if (dto.Images != null && dto.Images.Count > 0)
-            {
-                foreach (var file in dto.Images)
-                {
-                    using var ms = new MemoryStream();
-                    await file.CopyToAsync(ms);
-
-                    var imageRequest = new EstimationImage
-                    {
-                        ClaimId = dto.ClaimId,
-                        EstimationId = 1,
-                        FileName = file.FileName,
-                        Image = ms.ToArray(),
-                        CreatedAt = DateTime.UtcNow
-                    };
-
-                    _context.EstimationImages.Add(imageRequest);
+                        estimations.Add(estimation);
+                        _context.EstimationDetails.Add(estimation);
+                    }
                 }
 
                 await _context.SaveChangesAsync();
-            }
 
-            return Ok(new { Message = "Estimation created successfully." });
+                if (dto.Images != null && dto.Images.Count > 0)
+                {
+                    foreach (var file in dto.Images)
+                    {
+                        using var ms = new MemoryStream();
+                        await file.CopyToAsync(ms);
+
+                        var imageRequest = new EstimationImage
+                        {
+                            ClaimId = dto.ClaimId,
+                            EstimationId = 1,
+                            FileName = file.FileName,
+                            Image = ms.ToArray(),
+                            CreatedAt = DateTime.UtcNow
+                        };
+
+                        _context.EstimationImages.Add(imageRequest);
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+                var existingClaim = await _context.Claims.FindAsync(dto.ClaimId);
+                await UpdateStatus(dto.ClaimId, "Estimation Shared", "Estimation Shared", existingClaim);
+                await transaction.CommitAsync();
+
+                return Ok(new { Message = "Estimation created successfully." });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
     }
