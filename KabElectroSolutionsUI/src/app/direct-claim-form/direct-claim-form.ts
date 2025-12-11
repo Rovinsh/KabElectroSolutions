@@ -370,9 +370,9 @@ this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
  
         this.apiService.postClaim(formData).subscribe({
         next: () => {
-          this.toast.success('Warranty Created Successfully!');this.directClaimForm.reset(); 
+          this.toast.success('Claim Created Successfully!');this.directClaimForm.reset(); 
         },
-        error: (err) => this.toast.error(err?.error || 'Error creating Warranty!')
+        error: (err) => this.toast.error(err?.error || 'Error occured while creating claim!')
       });
   }
 }
