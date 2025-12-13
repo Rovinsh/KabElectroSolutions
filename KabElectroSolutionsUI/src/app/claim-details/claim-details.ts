@@ -11,6 +11,7 @@ import { AuditLogComponent } from '../audit-log/audit-log';
 import { ToastService } from '../services/toastService.service';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-claim-details',
@@ -22,7 +23,7 @@ import { AuthService } from '../services/auth';
 export class ClaimDetailsComponent implements OnInit {
 claimId: string | null = null;
 claim: Claim | null = null;
-isLoading: boolean = false;
+isLoading: boolean = true;
 selectedTab: string = 'details';
 auditData = [];
 showNotes = false;
@@ -52,7 +53,7 @@ private toast = inject(ToastService);
 
   ngOnInit(): void {
 
-    this.role = this.auth.userRole;
+    this.role = localStorage.getItem("userRole")!;;
     const statusToStepMap: Record<string, number> = {
     'Claim Registered': 0,
     'Claim Allocated': 1,
@@ -67,32 +68,39 @@ private toast = inject(ToastService);
   };
 
     this.claimId = this.route.snapshot.paramMap.get('claimId');
-    this.apiService.getStatus('Status/status').subscribe({
-      next: (status) => {
-        this.status = status.data;
-        const currentStatus = this.status[this.claim!.status].name || 'Claim Registered';
-        this.currentStepIndex = statusToStepMap[currentStatus] ?? 0;
-      },
-      error: (err) => {
-        console.error('API error:', err);
-      }
-    });
+    this.isLoading = true;
+
+forkJoin({
+  statusRes: this.apiService.getStatus('Status/status'),
+  claimRes: this.apiService.getClaims('Claims/claim?claimId=' + this.claimId)
+}).subscribe({
+  next: ({ statusRes, claimRes }) => {
+
+    // Assign data
+    this.status = statusRes.data;
+    this.claim = claimRes.data.results[0] as Claim;
+
+    // Safely calculate current status name
+    const currentStatus =
+      Object.values(this.status)
+        .find((v: any) =>
+          v.substatus?.some((s: any) => s.substatusid === this.claim?.status)
+        )?.name ?? 'Claim Registered';
+
+    // Map to step index
+    this.currentStepIndex = statusToStepMap[currentStatus] ?? 0;
+
+    this.isLoading = false;
+  },
+  error: (err) => {
+    console.error('API error:', err);
+    this.isLoading = false;
+  }
+});
     //this.claimId = this.data.claimId;    
 
-    console.log('Claim ID:', this.claimId);
+    console.log('Claim ID:', this.claimId);   
     
-    this.isLoading = true; // show spinner
-        this.apiService.getClaims('Claims/claim?claimId='+this.claimId).subscribe({
-          next: (res) => {
-            this.claim = res.data.results[0] as Claim;
-            console.log('API response:', res);
-            this.isLoading = false; // hide spinner
-          },
-          error: (err) => {
-            console.error('API error:', err);
-            this.isLoading = false; // hide spinner even on error
-          }
-        });
       } 
       close(): void {
     this.router.navigate(['/dashboard']); // 👈 back to list page

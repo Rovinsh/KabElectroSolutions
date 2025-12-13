@@ -40,7 +40,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared").ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared" || claim.StatusName == "Re Estimate" || claim.StatusName == "Estimate Accepted").ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
 
@@ -58,7 +58,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim =>  claim.RegisteredBy == user.Id && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared").ToListAsync();
+                            claims = await _context.Claims.Where(claim =>  claim.RegisteredBy == user.Id && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared" || claim.StatusName == "Re Estimate" || claim.StatusName == "Estimate Accepted").ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.RegisteredBy == user.Id).ToListAsync();
 
@@ -75,7 +75,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared").ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared" || claim.StatusName == "Re Estimate" || claim.StatusName == "Estimate Accepted").ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
                     }

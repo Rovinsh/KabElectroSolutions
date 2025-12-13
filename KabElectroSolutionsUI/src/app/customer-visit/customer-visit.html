@@ -1,3 +1,8 @@
+<div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
 <div class="custom-dialog-header">
   <h2 class="dialog-title">Customer Visit</h2>
   <button mat-icon-button class="close-button" (click)="dialogRef.close()">

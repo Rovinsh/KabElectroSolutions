@@ -40,7 +40,7 @@ export class ShareEstimationComponent {
    private toast = inject(ToastService);
   private data = inject(MAT_DIALOG_DATA) as { claimId: number };
   claimId = this.data.claimId;
-
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -160,13 +160,17 @@ this.imagesArray.controls.forEach(ctrl => {
 });
 
   this.isSubmitting = true;
+  this.isLoading = true;
   this.apiService.updateShareEstimation(formData).subscribe({
     next: res => {
-      this.toast.success('Estimation created successfully.!');
-      this.dialogRef.close('success');this.isSubmitting = false;
+      this.toast.success('Estimation shared successfully.!');
+      this.dialogRef.close('success');
+      this.isSubmitting = false;
+      this.isLoading = false;
     },
     error: err => {  this.toast.error('Something went wrong!');
      this.isSubmitting = false;
+     this.isLoading = false;
     }
   });
 }

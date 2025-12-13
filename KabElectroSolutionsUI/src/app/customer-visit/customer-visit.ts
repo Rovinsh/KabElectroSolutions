@@ -19,7 +19,7 @@ export class CustomerVisitComponent {
   visitForm!: FormGroup;
   previewUrls: any = {};
   othersPreviewUrls: string[] = [];
-
+  isLoading: boolean = false;
   files: any = {
     estimationImage: null,
     productSerialNumber: null,
@@ -82,6 +82,7 @@ export class CustomerVisitComponent {
   }
 
   onSubmit() {
+    this.isLoading = true;
   const formData = new FormData();
 
   formData.append("ClaimId", this.claimId.toString());
@@ -110,9 +111,11 @@ export class CustomerVisitComponent {
     next: (res) => {
       console.log("Uploaded Successfully", res);
       this.dialogRef.close("Uploaded");
+      this.isLoading = false;
     },
     error: (err) => {
       console.error("Upload failed", err);
+      this.isLoading = false;
     }
   });
 }

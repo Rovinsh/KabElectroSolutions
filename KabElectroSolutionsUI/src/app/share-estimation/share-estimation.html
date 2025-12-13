@@ -1,4 +1,9 @@
 <form [formGroup]="shareForm">
+  <div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
 <div class="dialog-container">
 
   <h2 class="dialog-header"><span>Share Estimation</span>  
@@ -7,6 +12,7 @@
     </button>
   </h2>
   
+
   <!-- Table Headers -->
   <div class="table-header">
     <div>Type</div>

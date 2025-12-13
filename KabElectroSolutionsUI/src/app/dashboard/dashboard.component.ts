@@ -128,6 +128,7 @@ openShareEstimationPopup(claimId: number, claim : Claim) {
 
   dialogRef.afterClosed().subscribe(result => {
     if (result) {
+      this.selectTab(this.activeTab);
     //  this.isLoading = true;
     // this.apiService.ShareEstimation(claimId, "Estimation Shared",result, "Estimation Shared").subscribe({
     //   next: (res:any) => {        
