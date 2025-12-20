@@ -25,6 +25,7 @@
           <th (click)="sortData('id')">Claim Code 
             <input placeholder="Claim Code" [(ngModel)]="filter.id">
             <span [class]="getSortIcon('claimCode')"></span></th>
+             <th>Action</th>
           <th (click)="sortData('warrantyActivationCode')">Warranty Serial No.
             <input placeholder="Warranty Serial No." [(ngModel)]="filter.warrantySerialNo"> 
             <span [class]="getSortIcon('warrantySerialNo')"></span></th>
@@ -45,8 +46,7 @@
           <th>Status<input placeholder="Status" [(ngModel)]="filter.status">
           <span [class]="getSortIcon('status')"></span></th>
           <th>Claim Date</th>
-          <th>Appointment</th>
-          <th>Action</th>
+          <th>Appointment</th>         
           <th>Channel Name</th>
           <th>Store Name</th>
           <th>IMEI number</th>
@@ -58,6 +58,20 @@
           <!-- <td><a href="javascript:void(0)" (click)="openClaimDetails(claim.id)">{{ claim.id }}</a></td> -->
            <td><a [routerLink]="['/claim-details', claim.id]">{{ claim.id }}</a></td>
            
+           <td><mat-icon class="text-success icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned' && role != 'Brand'" (click)="updateClaimStatus(claim.id,'Call Accepted By Service Center', 'Call Accepted' )">check_circle</mat-icon>
+            &nbsp; &nbsp;
+            <mat-icon class="text-danger icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned' && role != 'Brand'" (click)="updateClaimStatus(claim.id,'Call Rejected By Service Center', 'Call rejected')">cancel</mat-icon>
+            <button class="claim-btn" *ngIf="claim.statusName ==='Call Accepted By Service Center' && role != 'Brand'" (click)="openVerifyModal(claim.id)">CLAIM VERIFY</button>
+            <button class="claim-btn" *ngIf="claim.statusName ==='Claim Verified' && role != 'Brand'" (click)="openAppointmentPopup(claim.id, claim)">CONFIRM APPOINTMENT</button>
+            <button class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken' && role != 'Brand'" (click)="openVisitPopup(claim.id, claim)">CUSTOMER VISIT</button>
+            <br>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken' && role != 'Brand'" (click)="openAppointmentPopup(claim.id, claim)">Re-appointment</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Visit Done' && role != 'Brand'" (click)="openShareEstimationPopup(claim.id, claim)">Share Estimation</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Re Estimate' && role != 'Brand'" (click)="openShareEstimationPopup(claim.id, claim)">Re-Share Estimation</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Estimate Accepted' && role != 'Brand'">Start Repair</button>
+            <label *ngIf="claim.statusName ==='Estimation Shared' && role != 'Brand'">Awaiting Estimate Approval</label>
+          </td>
+
           <td>{{ claim.warrantyActivationCode }}</td>
           <td>{{ claim.warrantyType }}</td>
           <td>{{ claim.warrantyActivationCode }}</td>
@@ -72,19 +86,6 @@
           <td>{{ claim.statusName }}</td>
           <td>{{ claim.customerPhone }}</td>
           <td>{{ claim.appointment  | date:'MMM d, y'}} at {{claim.appointmentConfirmationTime | date:'hh:mm a'}}</td>
-          <td><mat-icon class="text-success icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned' && role != 'Brand'" (click)="updateClaimStatus(claim.id,'Call Accepted By Service Center', 'Call Accepted' )">check_circle</mat-icon>
-            &nbsp; &nbsp;
-            <mat-icon class="text-danger icon-btn" *ngIf="claim.statusName ==='Service Centre Assigned' && role != 'Brand'" (click)="updateClaimStatus(claim.id,'Call Rejected By Service Center', 'Call rejected')">cancel</mat-icon>
-            <button class="claim-btn" *ngIf="claim.statusName ==='Call Accepted By Service Center' && role != 'Brand'" (click)="openVerifyModal(claim.id)">CLAIM VERIFY</button>
-            <button class="claim-btn" *ngIf="claim.statusName ==='Claim Verified' && role != 'Brand'" (click)="openAppointmentPopup(claim.id, claim)">CONFIRM APPOINTMENT</button>
-            <button class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken' && role != 'Brand'" (click)="openVisitPopup(claim.id, claim)">CUSTOMER VISIT</button>
-            <br>
-            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken' && role != 'Brand'" (click)="openAppointmentPopup(claim.id, claim)">Re-appointment</button>
-            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Visit Done' && role != 'Brand'" (click)="openShareEstimationPopup(claim.id, claim)">Share Estimation</button>
-            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Re Estimate' && role != 'Brand'" (click)="openShareEstimationPopup(claim.id, claim)">Re-Share Estimation</button>
-            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Estimate Accepted' && role != 'Brand'">Start Repair</button>
-            <label *ngIf="claim.statusName ==='Estimation Shared' && role != 'Brand'">Awaiting Estimate Approval</label>
-          </td>
           <td>{{ claim.customerName }}</td>
           <td>{{ claim.customerPhone }}</td>
           <td>{{ claim.customerName }}</td>
