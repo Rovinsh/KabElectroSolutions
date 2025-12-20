@@ -28,6 +28,18 @@ namespace KabElectroSolutions.Controllers
         [HttpGet("claims")]
         public async Task<IActionResult> GetClaims([FromQuery] int? statusId)
         {
+            var validStatusNames = new[]
+{
+    "Appointment Taken",
+    "Visit Done",
+    "Estimation Shared",
+    "Re Estimate",
+    "Estimate Accepted",
+    "Repair Completed",
+    "Call Closed Without Repair",
+    "Repair at Home",
+    "Repair at SVC"
+};
             try
             {
                 List<Models.Claim> claims;
@@ -40,7 +52,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared" || claim.StatusName == "Re Estimate" || claim.StatusName == "Estimate Accepted").ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.Status == statusId || validStatusNames.Contains(claim.StatusName)).ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
 
@@ -58,7 +70,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim =>  claim.RegisteredBy == user.Id && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared" || claim.StatusName == "Re Estimate" || claim.StatusName == "Estimate Accepted").ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.RegisteredBy == user.Id && claim.Status == statusId || validStatusNames.Contains(claim.StatusName)).ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.RegisteredBy == user.Id).ToListAsync();
 
@@ -75,7 +87,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || claim.StatusName == "Appointment Taken" || claim.StatusName == "Visit Done" || claim.StatusName == "Estimation Shared" || claim.StatusName == "Re Estimate" || claim.StatusName == "Estimate Accepted").ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || validStatusNames.Contains(claim.StatusName)).ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
                     }
@@ -163,7 +175,7 @@ namespace KabElectroSolutions.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateClaim([FromBody] Models.Claim? claim)
         {
-         
+
             if (claim == null)
                 return BadRequest("Invalid claim data");
             try
@@ -189,7 +201,8 @@ namespace KabElectroSolutions.Controllers
 
                 return CreatedAtAction(nameof(GetClaim), new { id = claim.Id }, claim);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -256,7 +269,7 @@ namespace KabElectroSolutions.Controllers
 
                 return Ok(new { message = "Images saved", total = entries.Count });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
@@ -320,7 +333,7 @@ namespace KabElectroSolutions.Controllers
         }
 
         [HttpPost("AcceptOrRejectClaim/{id}/{status}/{remarks}")]
-        public async Task<IActionResult> AcceptOrRejectClaim(int id, string status, string? remarks="")
+        public async Task<IActionResult> AcceptOrRejectClaim(int id, string status, string? remarks = "")
         {
             if (id == 0)
                 return BadRequest("Invalid claim id");
@@ -401,7 +414,7 @@ namespace KabElectroSolutions.Controllers
         }
 
         [HttpPost("AssignPartner/{id}/{status}/{partnerId}/{remarks}")]
-        public async Task<IActionResult> AssignPartner(int id, string status,int partnerId, string? remarks = "")
+        public async Task<IActionResult> AssignPartner(int id, string status, int partnerId, string? remarks = "")
         {
             if (id == 0)
                 return BadRequest("Invalid claim id");
@@ -459,7 +472,7 @@ namespace KabElectroSolutions.Controllers
 
             return Ok(response);
         }
-       
+
         [HttpPost("ShareEstimation/{id}/{status}/{remarks}")]
         public async Task<IActionResult> CreateEstimation([FromForm] EstimationDetailDto dto)
         {
@@ -576,5 +589,121 @@ namespace KabElectroSolutions.Controllers
             }
         }
 
+        [HttpPost("ClaimRepair")]
+        public async Task<IActionResult> ClaimRepair(
+        [FromBody] CreateClaimRepairDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // 🔐 Get UserId from JWT (recommended)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var performerEmail = User?.Identity?.Name;
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+
+                var entity = new ClaimRepairDetail
+                {
+                    ClaimId = dto.ClaimId,
+                    RepairedAt = dto.RepairedAt,
+                    Reason = dto.Reason,
+                    Remarks = dto.Remarks,
+                    ClosureDate = dto.ClosureDate,
+                    RepairedByUserId = user.Id,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.ClaimRepairDetails.Add(entity);
+                await _context.SaveChangesAsync();
+
+                var status = "Repair at Home";
+                if (dto.RepairedAt == "Repair Started at Service Center")
+                {
+                    status = "Repair at SVC";
+                }
+
+                var existingClaim = await _context.Claims.FindAsync(dto.ClaimId);
+                await UpdateStatus(dto.ClaimId, status, status, existingClaim);
+                await transaction.CommitAsync();
+
+                return Ok(new
+                {
+                    message = "Repair details saved successfully",
+                    repairId = entity.RepairId
+                });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("CloseWithOrWithoutRepair")]
+        public async Task<IActionResult> CloseClaim(
+        [FromForm] ClaimCloseRequestDto request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var performerEmail = User?.Identity?.Name;
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var entity = new ClaimClosedWithOrWithoutRepairDetail
+                {
+                    ClaimId = request.ClaimId,
+                    ClaimType = request.ClaimType,
+                    Remarks = request.Remarks,
+
+                    JobSheetFileName = request.JobSheet.FileName,
+                    JobSheetImage = await ReadFileAsync(request.JobSheet),
+
+                    CustomerSatisfactionFileName = request.CustomerSatisfaction.FileName,
+                    CustomerSatisfactionImage = await ReadFileAsync(request.CustomerSatisfaction),
+                    CreatedBy = user.Id,
+                    CreatedOn = DateTime.Now
+                };
+
+                if (request.Additional != null)
+                {
+                    entity.AdditionalFileName = request.Additional.FileName;
+                    entity.AdditionalImage = await ReadFileAsync(request.Additional);
+                }
+
+                _context.ClaimClosedWithOrWithoutRepairDetails.Add(entity);
+                await _context.SaveChangesAsync();
+
+                var status = "Repair Completed";
+                if (request.ClaimType == "Close Without Repair")
+                {
+                    status = "Call Closed Without Repair";
+                }
+
+                var existingClaim = await _context.Claims.FindAsync(request.ClaimId);
+                await UpdateStatus(request.ClaimId, status, status, existingClaim);
+                await transaction.CommitAsync();
+
+                return Ok(new
+                {
+                    message = "Claim closed successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
+        }
+
+        private static async Task<byte[]> ReadFileAsync(IFormFile file)
+        {
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            return ms.ToArray();
+        }
     }
 }

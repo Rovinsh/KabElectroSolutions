@@ -13,6 +13,8 @@ import { AppointmentComponent } from '../appointment/appointment';
 import { CustomerVisitComponent } from '../customer-visit/customer-visit';
 import { AuthService } from '../services/auth';
 import { ShareEstimationComponent } from '../share-estimation/share-estimation';
+import { CloseWithOrWithoutRepairDialog } from '../close-with-or-without-repair-dialog/close-with-or-without-repair-dialog';
+import { RepairDialogComponent } from '../repair/repair';
 
 @Component({
   selector: 'app-dashboard',
@@ -110,6 +112,47 @@ openAppointmentPopup(claimId: number, claim : Claim) {
         this.isLoading = false; // hide spinner even on error
       }
     });
+    }
+  });
+}
+
+openRepairPopup(claimId: number, claim : Claim) {
+  const dialogRef = this.dialog.open(RepairDialogComponent, {
+    width: '600px',
+    maxWidth: '100vw',   
+    maxHeight: '75vh',   // 👈 reduces popup height
+    height: 'auto',
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          claimId: claimId
+        }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.selectTab(this.activeTab);    
+    }
+  });
+}
+
+openWithOrWithoutRepairPopup(claimId: number, claim : Claim,CloseWithOrWithoutRepair: string) {
+  const dialogRef = this.dialog.open(CloseWithOrWithoutRepairDialog, {
+    width: '350px',
+    maxWidth: '100vw',   
+    maxHeight: '75vh',   // 👈 reduces popup height
+    height: 'auto',
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          claimId: claimId,
+          closeWithOrWithoutRepair: CloseWithOrWithoutRepair
+        }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.selectTab(this.activeTab);    
     }
   });
 }
@@ -283,12 +326,15 @@ getSubStatusId(subStatusName: string): number{
 }
 
 loadClaimsByStatus(subStatusId: number): void {
+  this.isLoading = true;
   this.apiService.getClaims(`Claims/claims?statusId=${subStatusId}`).subscribe({
     next: (res) => {
       this.claims = res.data.results as Claim[];
+      this.isLoading = false;
       console.log('API response:', res);
     },
     error: (err) => {
+      this.isLoading = false;
       console.error('API error:', err);
     }
   });

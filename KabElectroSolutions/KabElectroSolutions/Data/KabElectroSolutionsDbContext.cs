@@ -35,6 +35,8 @@ namespace KabElectroSolutions.Data
         // DbSet for EstimationImages table
         public DbSet<EstimationImage> EstimationImages { get; set; } = null!;
         public DbSet<EstimationImages> ShareEstimationImages { get; set; } = null!;
+        public DbSet<ClaimRepairDetail> ClaimRepairDetails => Set<ClaimRepairDetail>();
+        public DbSet<ClaimClosedWithOrWithoutRepairDetail> ClaimClosedWithOrWithoutRepairDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here
@@ -87,6 +89,19 @@ namespace KabElectroSolutions.Data
                 entity.Property(e => e.Remarks).HasMaxLength(500);
                 entity.Property(e => e.CreatedAt).IsRequired();
                 entity.Property(e => e.CreatedBy).HasMaxLength(100).IsRequired();
+            });
+
+            modelBuilder.Entity<ClaimRepairDetail>(entity =>
+            {
+                entity.ToTable("ClaimRepairDetails");
+                entity.HasKey(e => e.RepairId);
+
+                entity.Property(e => e.RepairedAt).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.Reason).HasMaxLength(100);
+                entity.Property(e => e.Remarks).HasMaxLength(500);
+                entity.Property(e => e.ClosureDate).HasColumnType("date");
+                entity.Property(e => e.CreatedAt)
+                      .HasDefaultValueSql("GETDATE()");
             });
         }
     }

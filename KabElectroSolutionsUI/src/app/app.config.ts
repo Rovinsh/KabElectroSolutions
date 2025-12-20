@@ -5,6 +5,7 @@ import {authInterceptor} from './interceptors/auth-interceptor'
 import { routes } from './app.routes';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 
 export const appConfig: ApplicationConfig = {
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
     provideHttpClient(withInterceptors([authInterceptor])),
-    importProvidersFrom(MatSnackBarModule, MatButtonModule)
+    importProvidersFrom(MatSnackBarModule, MatButtonModule),
+    provideNativeDateAdapter()
   ]
 };

@@ -6,6 +6,11 @@
   </div>
 }
 <div class="dashboard-container">
+  <div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
     <!-- Tabs -->
     <div class="tabs">
         <button *ngFor="let tab of tabs"
@@ -68,7 +73,10 @@
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Appointment Taken' && role != 'Brand'" (click)="openAppointmentPopup(claim.id, claim)">Re-appointment</button>
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Visit Done' && role != 'Brand'" (click)="openShareEstimationPopup(claim.id, claim)">Share Estimation</button>
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim.statusName ==='Re Estimate' && role != 'Brand'" (click)="openShareEstimationPopup(claim.id, claim)">Re-Share Estimation</button>
-            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Estimate Accepted' && role != 'Brand'">Start Repair</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Estimate Accepted' && role != 'Brand'" (click)="openRepairPopup(claim.id, claim)">Start Repair</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Repair at Home' || claim?.statusName === 'Repair at SVC' && role != 'Brand'" (click)="openWithOrWithoutRepairPopup(claim.id, claim, 'Close With Repair')">Close With Repair</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Repair at Home' || claim?.statusName === 'Repair at SVC' && role != 'Brand'" (click)="openWithOrWithoutRepairPopup(claim.id, claim, 'Close Without Repair')">Close Without Repair</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Call Closed Without Repair' || claim?.statusName === 'Repair Completed' && role != 'Brand'">RAISE INVOICE</button>
             <label *ngIf="claim.statusName ==='Estimation Shared' && role != 'Brand'">Awaiting Estimate Approval</label>
           </td>
 

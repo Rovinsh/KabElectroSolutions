@@ -1,0 +1,70 @@
+<div class="dialog-header">
+  <span>Repair</span>
+  <button mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div class="dialog-body" [formGroup]="form">
+ <div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
+  <!-- Row 1 -->
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Select</mat-label>
+      <mat-select formControlName="repairedAt">
+        <mat-option value="Repair Started at Customer's Home">
+          Repair Started at Customer's Home
+        </mat-option>
+        <mat-option value="Repair Started at Service Center">
+          Repair Started at Service Center
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="remarks">
+      <mat-label>Remarks</mat-label>
+      <textarea matInput rows="3" formControlName="remarks"></textarea>
+    </mat-form-field>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="row">
+
+    <!-- Closure Date -->
+    <mat-form-field appearance="outline">
+      <mat-label>Closure Date</mat-label>
+      <input matInput
+             [matDatepicker]="picker"
+             formControlName="closeDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- Reason Dropdown (Conditional) -->
+    <mat-form-field appearance="outline" *ngIf="showReason">
+      <mat-label>Reasons</mat-label>
+      <mat-select formControlName="reason">
+        <mat-option value="">Select</mat-option>
+        <mat-option *ngFor="let r of reasonList" [value]="r">
+          {{ r }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button mat-raised-button
+            color="primary"
+            (click)="submit()"
+            [disabled]="form.invalid">
+      SUBMIT
+    </button>
+  </div>
+
+</div>

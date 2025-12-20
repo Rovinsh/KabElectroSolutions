@@ -174,6 +174,15 @@ export class ApiService {
     updateShareEstimation(formData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}Claims/ShareEstimate`,formData);
   }
+
+    CloseWithOrWithoutRepair(formData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims/CloseWithOrWithoutRepair`,formData);
+  }
+
+
+  repairClaim(payload: CreateClaimRepairPayload): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims/ClaimRepair`, payload);
+  }
   
 }
    
@@ -582,4 +591,12 @@ export interface ShareEstimationDto {
     tax: number;
   }[];
   files?: File[]; // for uploaded images
+}
+
+export interface CreateClaimRepairPayload {
+  claimId: number;
+  repairedAt: string;
+  reason?: string | null;
+  remarks?: string | null;
+  closureDate: string; // yyyy-MM-dd
 }
