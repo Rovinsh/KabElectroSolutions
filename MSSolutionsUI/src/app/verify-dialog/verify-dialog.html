@@ -1,0 +1,31 @@
+<h2 mat-dialog-title class="dialog-header">
+  <span>Verify Claim</span>
+
+  <button mat-icon-button (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content>
+
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Select Rejection Reason</mat-label>
+
+    <mat-select [(ngModel)]="selectedReason">
+      <mat-option value="Customer not contactable">Customer not contactable</mat-option>
+      <mat-option value="PJP Call, more than 30 kms from city">PJP Call, more than 30 kms from city</mat-option>
+      <mat-option value="Incomplete Details">Incomplete Details</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close (click)="updateClaimStatus(claimId,'Claim Verified', 'Claim Verified')">Accept</button>
+
+  <button mat-button color="primary"
+          [disabled]="!selectedReason"
+          [mat-dialog-close]="selectedReason" (click)="updateClaimStatus(claimId,'Call Rejected By Service Center', 'Call rejected')">
+    Reject
+  </button>
+</mat-dialog-actions>

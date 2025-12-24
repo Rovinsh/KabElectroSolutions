@@ -1,0 +1,40 @@
+<h2 mat-dialog-title class="dialog-header">
+  <span>ASSIGN PARTNER</span>
+
+  <button mat-icon-button (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content>
+
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Select Partner</mat-label>
+
+    <input
+      matInput
+      type="text"
+      placeholder="Search Partner"
+      [formControl]="partnerCtrl"
+      [matAutocomplete]="auto"
+    />
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPartnerSelected($event)">
+      <mat-option *ngFor="let partner of filteredPartners" [value]="partner.servicePartner">
+        {{ partner.servicePartner }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="!selectedPartner" (click)="AssignPartner(claimId,'Service Centre Assigned', 'Service partner assigned')">Assign</button>
+
+  <button mat-button color="primary"
+         
+          [mat-dialog-close]="selectedPartner" (click)="onClose()">
+    Cancel
+  </button>
+</mat-dialog-actions>

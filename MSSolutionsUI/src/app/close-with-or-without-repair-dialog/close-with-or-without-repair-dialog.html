@@ -1,0 +1,63 @@
+<h5 mat-dialog-title class="dialog-header">
+  <span>{{closeWithOrWithoutRepair}}</span> 
+  <button mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</h5>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+<div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
+    <div class="upload-grid">
+
+      <!-- Job Sheet -->
+      <div class="upload-box">
+        <label>Jobsheet *</label>
+        <input type="file" required formControlName="jobSheet"
+  (change)="onFileChange($event, 'jobSheet')" />
+      </div>
+<div class="error" *ngIf="form.get('jobSheet')?.touched && form.get('jobSheet')?.invalid">
+  Jobsheet is required
+</div>
+      <!-- Additional -->
+      <div class="upload-box">
+        <label>Additional</label>
+        <input type="file" (change)="onFileChange($event, 'additional')" />
+      </div>
+
+      <!-- Customer Satisfaction -->
+      <div class="upload-box">
+        <label>Customer Satisfaction *</label>
+        <input formControlName="customerSatisfaction" type="file" required (change)="onFileChange($event, 'customerSatisfaction')" />
+      </div>
+      <div class="error" *ngIf="form.get('customerSatisfaction')?.touched && form.get('customerSatisfaction')?.invalid">
+  customer Satisfaction is required
+</div>
+
+    </div>
+
+    <!-- Remarks Dropdown -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Remarks</mat-label>
+      <mat-select formControlName="remarks" required>
+        <mat-option *ngFor="let r of remarkOptions" [value]="r">
+          {{ r }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Submit -->
+    <div class="actions">
+      <button mat-raised-button color="primary"
+              [disabled]="form.invalid"
+              (click)="submit()">
+        Submit
+      </button>
+    </div>
+
+  </form>
+</mat-dialog-content>
