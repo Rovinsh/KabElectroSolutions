@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2016.Excel;
 using DocumentFormat.OpenXml.Wordprocessing;
 using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
@@ -38,7 +39,10 @@ namespace KabElectroSolutions.Controllers
     "Repair Completed",
     "Call Closed Without Repair",
     "Repair at Home",
-    "Repair at SVC"
+    "Repair at SVC",
+    "Invoice Claimed",
+    "Invoice Rejected By Service",
+    "Invoice Accepted By Service"
 };
             try
             {
@@ -368,6 +372,12 @@ namespace KabElectroSolutions.Controllers
             _context.Entry(existingClaim).Property(x => x.Status).IsModified = true;
             _context.Entry(existingClaim).Property(x => x.StatusName).IsModified = true;
             _context.Entry(existingClaim).Property(x => x.PreviousStatus).IsModified = true;
+            if(status == "Invoice Rejected By Service")
+            {
+                var invoice = await _context.InvoiceDetails.FirstOrDefaultAsync(x => x.ClaimId == id && !x.IsRejected);
+                invoice!.IsRejected = true;
+                await _context.SaveChangesAsync();
+            }
             await _context.SaveChangesAsync();
             await AddAuditLog("Claim", id, status, remarks);
         }
@@ -697,6 +707,196 @@ namespace KabElectroSolutions.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
 
+        }
+
+        [HttpPost("RaiseInvoice")]
+        //[Consumes("multipart/form-data")]
+        public async Task<IActionResult> RaiseInvoice([FromForm] CreateInvoiceDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (dto.InvoiceImage.Length == 0)
+                return BadRequest("Invoice image is required.");
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                using var ms = new MemoryStream();
+                await dto.InvoiceImage.CopyToAsync(ms);
+                var performerEmail = User?.Identity?.Name;
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+
+                var invoice = new InvoiceDetail
+                {
+                    ClaimId = dto.ClaimId,
+                    InvoiceDate = dto.InvoiceDate,
+                    InvoiceNumber = dto.InvoiceNumber,
+                    BillAmountBeforeTax = dto.BillAmountBeforeTax,
+                    TaxAmount = dto.TaxAmount,
+                    TotalBillAmount = dto.TotalBillAmount,
+                    Remarks = dto.Remarks,
+                    InvoiceFileName = dto.InvoiceImage.FileName,
+                    InvoiceImage = ms.ToArray(),
+                    IsRejected = dto.IsRejected,
+                    CreatedBy = user.Id,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _context.InvoiceDetails.Add(invoice);
+                await _context.SaveChangesAsync();
+                var existingClaim = await _context.Claims.FindAsync(dto.ClaimId);
+                await UpdateStatus(dto.ClaimId, "Invoice Claimed", "Invoice Claimed", existingClaim);
+                await transaction.CommitAsync();
+
+                return Ok(new
+                {
+                    message = "Invoice Raised successfully",
+                    invoiceId = invoice.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetCustomerVisitImages/{claimId}")]
+        public async Task<IActionResult> GetCustomerVisitImages(int claimId)
+        {
+            var images = await _context.ClaimImages
+                .Where(x => x.ClaimId == claimId)
+                .ToListAsync();
+
+            if (!images.Any())
+                return NotFound("No images found for this claim");
+
+            string ToBase64(byte[] data) =>
+                $"data:image/jpeg;base64,{Convert.ToBase64String(data)}";
+
+            var response = new ClaimCustomerVisitImagesResponse
+            {
+                ClaimId = claimId,
+
+                EstimationImage = images
+                    .FirstOrDefault(x => x.ImageType == "Estimation")?
+                    .ImageData is byte[] est ? ToBase64(est) : null,
+
+                ProductSerialNumber = images
+                    .FirstOrDefault(x => x.ImageType == "ProductSerialNumber")?
+                    .ImageData is byte[] ps ? ToBase64(ps) : null,
+
+                ProductImage = images
+                    .FirstOrDefault(x => x.ImageType == "ProductImage")?
+                    .ImageData is byte[] pi ? ToBase64(pi) : null,
+
+                ProductDefectImage = images
+                    .FirstOrDefault(x => x.ImageType == "ProductDefectImage")?
+                    .ImageData is byte[] pd ? ToBase64(pd) : null,
+
+                Others = images
+                    .Where(x => x.ImageType == "Others")
+                    .Select(x => ToBase64(x.ImageData))
+                    .ToList(),
+
+                Remarks = images.First().Remarks,
+                CreatedBy = images.First().CreatedBy,
+                CreatedAt = images.First().CreatedAt
+            };
+
+            return Ok(response);
+        }
+
+
+        [HttpGet("GetRepairDoneImages/{claimId}")]
+        public async Task<IActionResult> GetRepairDoneImages(int claimId)
+        {
+            var record = await _context.ClaimClosedWithOrWithoutRepairDetails
+        .Where(x => x.ClaimId == claimId)
+        .FirstOrDefaultAsync();
+
+            if (record == null)
+                return NotFound("No record found for this claim");
+            string ToBase64(byte[] data) =>
+                $"data:image/jpeg;base64,{Convert.ToBase64String(data)}";
+
+            var response = new ClaimClosedWithOrWithoutRepairDTO
+            {
+                Id = record.Id,
+                ClaimId = record.ClaimId,
+                ClaimType = record.ClaimType,
+                Remarks = record.Remarks,
+
+                JobSheetFileName = record.JobSheetFileName,
+                JobSheetImageBase64 = record.JobSheetImage != null ? ToBase64(record.JobSheetImage) : null,
+
+                AdditionalFileName = record.AdditionalFileName,
+                AdditionalImageBase64 = record.AdditionalImage != null
+                    ? ToBase64(record.AdditionalImage)
+                    : null,
+
+                CustomerSatisfactionFileName = record.CustomerSatisfactionFileName,
+                CustomerSatisfactionImageBase64 = record.CustomerSatisfactionImage !=null ?
+                    ToBase64(record.CustomerSatisfactionImage): null,
+
+                CreatedBy = record.CreatedBy,
+                CreatedOn = record.CreatedOn
+            };
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetClaimInvoiceDetail/{claimId}")]
+        public async Task<IActionResult> GetClaimInvoiceDetail(int claimId)
+        {
+            var invoice = await _context.InvoiceDetails
+                .Where(x => x.ClaimId == claimId && !x.IsRejected)
+                .FirstOrDefaultAsync();
+
+            if (invoice == null)
+                return NotFound("Invoice not found");
+
+            //string ToBase64(byte[] data) =>
+            //    $"data:image/jpeg;base64,{Convert.ToBase64String(data)}";
+
+            string ToBase64(byte[] data, string fileName)
+            {
+                var mimeType = GetMimeTypeFromFileName(fileName);
+                return $"data:{mimeType};base64,{Convert.ToBase64String(data)}";
+            }
+
+            var response = new InvoiceDetailDto
+            {
+                Id = invoice.Id,
+                ClaimId = invoice.ClaimId,
+                InvoiceDate = invoice.InvoiceDate,
+                InvoiceNumber = invoice.InvoiceNumber,
+                BillAmountBeforeTax = invoice.BillAmountBeforeTax,
+                TaxAmount = invoice.TaxAmount,
+                TotalBillAmount = invoice.TotalBillAmount,
+                Remarks = invoice.Remarks,
+                InvoiceFileName = invoice.InvoiceFileName,
+                InvoiceImageBase64 = invoice.InvoiceImage != null ? ToBase64(invoice.InvoiceImage, invoice.InvoiceFileName) : null,
+                IsRejected = invoice.IsRejected,
+                CreatedBy = invoice.CreatedBy,
+                CreatedOn = invoice.CreatedOn
+            };
+
+            return Ok(response);
+        }
+
+      private string GetMimeTypeFromFileName(string fileName)
+        {
+            var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
+
+            return ext switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".pdf" => "application/pdf",
+                _ => "application/octet-stream"
+            };
         }
 
         private static async Task<byte[]> ReadFileAsync(IFormFile file)

@@ -37,6 +37,7 @@ namespace KabElectroSolutions.Data
         public DbSet<EstimationImages> ShareEstimationImages { get; set; } = null!;
         public DbSet<ClaimRepairDetail> ClaimRepairDetails => Set<ClaimRepairDetail>();
         public DbSet<ClaimClosedWithOrWithoutRepairDetail> ClaimClosedWithOrWithoutRepairDetails { get; set; }
+        public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here
