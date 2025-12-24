@@ -1,0 +1,95 @@
+<div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
+<div class="custom-dialog-header">
+  <h2 class="dialog-title">Customer Visit</h2>
+  <button mat-icon-button class="close-button" (click)="dialogRef.close()">
+    <mat-icon>close</mat-icon>
+  </button>
+  </div>
+
+<mat-dialog-content class="mat-typography">
+  <p>Please upload following images captured during visit to customer</p>
+
+  <form [formGroup]="visitForm" class="upload-grid">
+
+  <!-- Row 1 -->
+  <div class="upload-box">
+    <h3>Estimation image</h3>
+    <div class="upload-content">
+      <input type="file" formControlName="estimationImage" (change)="onFileSelected($event, 'estimationImage')">
+      <img *ngIf="previewUrls['estimationImage']" [src]="previewUrls['estimationImage']" class="preview-thumb">
+    </div>
+  </div>
+
+  <div class="upload-box required-field">
+    <h3>Product serial number <span class="required-star">*</span></h3>
+    <div class="upload-content">
+      <input type="file" formControlName="productSerialNumber" (change)="onFileSelected($event, 'productSerialNumber')">
+      <img *ngIf="previewUrls['productSerialNumber']" [src]="previewUrls['productSerialNumber']" class="preview-thumb">
+    </div>
+  </div>
+
+  <div class="upload-box required-field">
+    <h3>Product image <span class="required-star">*</span></h3>
+    <div class="upload-content">
+      <input type="file" formControlName="productImage"  (change)="onFileSelected($event, 'productImage')">
+      <img *ngIf="previewUrls['productImage']" [src]="previewUrls['productImage']" class="preview-thumb">
+    </div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="upload-box required-field">
+    <h3>Product defect image <span class="required-star">*</span></h3>
+    <div class="upload-content">
+      <input type="file" formControlName="productDefectImage" (change)="onFileSelected($event, 'productDefectImage')">
+      <img *ngIf="previewUrls['productDefectImage']" [src]="previewUrls['productDefectImage']" class="preview-thumb">
+    </div>
+  </div>
+
+  <!-- Dynamic OTHERS inside the same grid -->
+  <div class="upload-box others-box"
+       formArrayName="othersImages"
+       *ngFor="let ctrl of othersImagesArray.controls; let i = index">
+
+    <!-- corner delete icon -->
+    <button *ngIf="i > 0"
+            mat-icon-button
+            class="delete-floating"
+            (click)="removeOthersUpload(i)">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <h3>Others</h3>
+
+    <div class="upload-content">
+      <input type="file" formControlName="i" (change)="onFileSelected($event, i, true)">
+      <img *ngIf="othersPreviewUrls[i]" [src]="othersPreviewUrls[i]" class="preview-thumb">
+    </div>
+  </div>
+  <!-- Add Button (same grid) -->
+  <div class="add-button-container">
+    <button mat-icon-button class="add-button" (click)="addOthersUpload()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </div>
+<div class="remarks-container">
+  <textarea 
+      formControlName="remarks"
+      placeholder="Any remarks ?"
+      rows="3"
+      class="remarks-box">
+  </textarea>
+</div>
+</form>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="center">
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="visitForm.invalid">
+    SUBMIT VISIT
+  </button>
+</mat-dialog-actions>

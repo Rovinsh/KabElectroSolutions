@@ -1,0 +1,25 @@
+<div class="audit-log-container">
+  <table class="table table-striped custom-table">
+    <thead>
+      <tr>
+        <th>Claim Status</th>
+        <th>Action Performer Name</th>
+        <th>Timestamp</th>
+        <th>Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of auditLogs; track  $index) {
+      <tr>
+        <td>{{ item.status }}</td>
+        <td>
+          <div>{{ item.performerName }}</div>
+          <small class="text-muted">({{ item.designation }})</small>
+        </td>
+        <td>{{ item.timestamp | date:'MMM d, y HH:mm:ss' }}</td>
+        <td>{{ item.remarks || '-' }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

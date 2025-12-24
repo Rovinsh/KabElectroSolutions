@@ -1,0 +1,33 @@
+.audit-log-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.custom-table thead tr {
+  background-color: #f5f5f5;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 12px;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.fw-bold {
+  font-weight: 600;
+}
+
+.text-muted {
+  color: #6c757d;
+}

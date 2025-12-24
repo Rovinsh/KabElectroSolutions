@@ -1,0 +1,71 @@
+
+<div class="dashboard-container">
+<table class="claims-table">
+      <thead>
+        <tr>
+          <th (click)="sortData('id')">Claim Code 
+            <input placeholder="Claim Code" [(ngModel)]="filter.id">
+            <span [class]="getSortIcon('claimCode')"></span></th>
+            <th>Action</th>
+          <th (click)="sortData('warrantyActivationCode')">Warranty Serial No.
+            <input placeholder="Warranty Serial No." [(ngModel)]="filter.warrantySerialNo"> 
+            <span [class]="getSortIcon('warrantySerialNo')"></span></th>
+          <th>
+            Warranty Type
+            <select [(ngModel)]="filter.warrantyType">
+              <option value="">Select</option>
+              <option *ngFor="let type of uniqueWarrantyTypes">{{ type }}</option>
+            </select>
+          </th>
+          <th>Warranty Code</th>
+          <th>Created By</th>
+          <th>Plan Name</th>
+          <th>Customer Name<input placeholder="Customer Name" [(ngModel)]="filter.customerName"></th>
+          <th>Customer Phone<input placeholder="Customer Phone" [(ngModel)]="filter.customerPhone"></th>
+          <th>City, State</th>
+          <th>Category ,Brand</th>
+          <th>Status<input placeholder="Status" [(ngModel)]="filter.status">
+          <span [class]="getSortIcon('status')"></span></th>
+          <th>Claim Date</th>
+          <th>Appointment</th>          
+          <th>Channel Name</th>
+          <th>Store Name</th>
+          <th>IMEI number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let claim of pagedClaims">
+          <!-- <td><a href="claim-details?claimId= + {{claim.id}}"  target="_blank"  rel="noopener noreferrer">{{ claim.id }}</a></td> -->
+          <!-- <td><a href="javascript:void(0)" (click)="openClaimDetails(claim.id)">{{ claim.id }}</a></td> -->
+           <td><a [routerLink]="['/claim-details', claim.id]">{{ claim.id }}</a></td>
+           <td>
+            <button class="claim-btn" (click)="openAssignPartnerModal(claim.id)">ASSIGN CLAIM</button>
+          </td>
+          <td>{{ claim.warrantyActivationCode }}</td>
+          <td>{{ claim.warrantyType }}</td>
+          <td>{{ claim.warrantyActivationCode }}</td>
+          <td>{{ claim.registeredByName }}</td>
+          <td>{{ claim. warrantyType}}</td>
+          <td>{{ claim.customerName }}</td>
+          <td>{{ claim.customerPhone }}</td>
+          <td>{{ claim.customerState }},{{claim.customerCity}}</td>
+
+          
+          <td>{{ claim.customerName }}</td>
+          <td>{{ claim.statusName }}</td>
+          <td>{{ claim.customerPhone }}</td>
+          <td>{{ claim.customerName }}</td>          
+          <td>{{ claim.customerName }}</td>
+          <td>{{ claim.customerPhone }}</td>
+          <td>{{ claim.customerName }}</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+  </div>

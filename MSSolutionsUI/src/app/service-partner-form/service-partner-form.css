@@ -1,0 +1,14 @@
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  font-weight: bold;
+  font-size: 18px;
+  background-color: black;
+  color: white;
+}
+
+.mrgtop{margin-top: 11px;}

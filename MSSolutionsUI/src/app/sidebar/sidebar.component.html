@@ -1,0 +1,16 @@
+<nav class="sidebar" *ngIf="!isLoginPage">
+  <ul class="sidebar-menu">
+    <ng-container *ngFor="let item of menu">
+      <li *ngIf="hasAccess(item)" class="sidebar-item">
+        <a [routerLink]="item.route"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="sidebar-link"
+           [title]="item.title">
+          <span class="icon">{{ item.icon }}</span>
+          <span class="label">{{ item.title }}</span>
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+</nav>
