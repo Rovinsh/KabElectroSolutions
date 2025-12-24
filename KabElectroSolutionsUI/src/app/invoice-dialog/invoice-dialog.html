@@ -1,0 +1,76 @@
+<div class="invoice-header">
+    <span class="title">Invoice</span>
+    <span class="close" (click)="close()">×</span>
+</div>
+
+<div class="invoice-body">
+
+    <form [formGroup]="form">
+        <div *ngIf="isLoading" class="loader-overlay">
+            <div class="spinner-border text-primary" role="status">
+            </div>
+            <p class="text-white mt-2">Please wait...</p>
+        </div>
+        <button type="button" class="upload-btn" (click)="fileInput.click()" *ngIf="!selectedFile">
+            ⬆ UPLOAD MANUAL INVOICE <span class="required">*</span>
+        </button>
+
+        <!-- Selected File -->
+        <div class="selected-file" *ngIf="selectedFile">
+            <span class="file-name">{{ selectedFile.name }}</span>
+            <span class="remove" (click)="removeFile()">×</span>
+        </div>
+
+        <!-- Required error -->
+        <div class="file-error" *ngIf="form.get('invoiceImage')?.touched && form.get('invoiceImage')?.invalid">
+            Invoice file is required
+        </div>
+
+        <input #fileInput formControlName="invoiceImage" type="file" hidden required (change)="onFileChange($event)" />
+
+        <!-- Form -->
+
+
+        <div class="form-grid">
+
+            <mat-form-field appearance="outline" class="date-mat-field">
+                <input matInput [matDatepicker]="picker" placeholder="dd-mm-yyyy" formControlName="invoiceDate" />
+                <mat-datepicker-toggle matSuffix [for]="picker">
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <div class="field">
+                <label>Invoice Number <span>*</span></label>
+                <input matInput placeholder="Invoice Number" formControlName="invoiceNumber">
+            </div>
+
+            <div class="field">
+                <label>Tax Amount <span>*</span></label>
+                <input matInput placeholder="Tax Amount" type="number" formControlName="taxAmount">
+            </div>
+
+            <div class="field">
+                <label>Bill Amount Before Tax <span>*</span></label>
+                <input matInput placeholder="Bill Amount Before Tax" type="number"
+                    formControlName="billAmountBeforeTax">
+            </div>
+
+            <div class="field">
+                <label>Total Bill Amount <span>*</span></label>
+                <input matInput placeholder="Total Bill Amount" type="number" formControlName="totalBillAmount">
+            </div>
+
+            <div class="field">
+                <label>Remarks :</label>
+                <textarea matInput rows="3" placeholder="Remarks" formControlName="remarks"></textarea>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <button class="submit-btn" [disabled]="form.invalid"  (click)="submit()">SUBMIT</button>
+        </div>
+
+    </form>
+</div>

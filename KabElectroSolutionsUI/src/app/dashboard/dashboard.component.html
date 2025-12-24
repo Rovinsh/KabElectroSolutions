@@ -76,8 +76,10 @@
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Estimate Accepted' && role != 'Brand'" (click)="openRepairPopup(claim.id, claim)">Start Repair</button>
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Repair at Home' || claim?.statusName === 'Repair at SVC' && role != 'Brand'" (click)="openWithOrWithoutRepairPopup(claim.id, claim, 'Close With Repair')">Close With Repair</button>
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Repair at Home' || claim?.statusName === 'Repair at SVC' && role != 'Brand'" (click)="openWithOrWithoutRepairPopup(claim.id, claim, 'Close Without Repair')">Close Without Repair</button>
-            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Call Closed Without Repair' || claim?.statusName === 'Repair Completed' && role != 'Brand'">RAISE INVOICE</button>
+            <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Call Closed Without Repair' || claim?.statusName === 'Repair Completed' || claim?.statusName === 'Invoice Rejected By Service' && role != 'Brand'" (click)="openRaiseInvoicePopup(claim.id, claim)">RAISE INVOICE</button>
             <label *ngIf="claim.statusName ==='Estimation Shared' && role != 'Brand'">Awaiting Estimate Approval</label>
+            <label *ngIf="claim.statusName ==='Invoice Claimed' && role != 'Brand'">Awaiting Invoice Approval</label>
+            <label *ngIf="claim.statusName ==='Invoice Accepted By Service' && role != 'Brand'">Awaiting Invoice Finance Approval</label>                  
           </td>
 
           <td>{{ claim.warrantyActivationCode }}</td>

@@ -179,11 +179,72 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Claims/CloseWithOrWithoutRepair`,formData);
   }
 
+    raiseInvoice(formData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}Claims/RaiseInvoice`,formData);
+  }
 
   repairClaim(payload: CreateClaimRepairPayload): Observable<any> {
     return this.http.post(`${this.baseUrl}Claims/ClaimRepair`, payload);
   }
-  
+
+    getCustomerVisitImages(claimId: number): Observable<ClaimCustomerVisitImages> {
+    return this.http.get<ClaimCustomerVisitImages>(
+      `${this.baseUrl}Claims/GetCustomerVisitImages/${claimId}`
+    );
+  }   
+
+  GetRepairDoneImages(claimId: number): Observable<ClaimClosedWithOrWithoutRepair> {
+    return this.http.get<ClaimClosedWithOrWithoutRepair>(
+      `${this.baseUrl}Claims/GetRepairDoneImages/${claimId}`
+    );
+  }  
+
+  GetClaimInvoiceDetail(claimId: number): Observable<InvoiceDetail> {
+    return this.http.get<InvoiceDetail>(
+      `${this.baseUrl}Claims/GetClaimInvoiceDetail/${claimId}`
+    );
+  }
+}
+
+export interface InvoiceDetail {
+  id: number;
+  claimId: number;
+
+  invoiceDate: string;          // ISO date string (YYYY-MM-DD)
+  invoiceNumber: string;
+
+  billAmountBeforeTax: number;
+  taxAmount: number;
+  totalBillAmount: number;
+
+  remarks?: string | null;
+
+  invoiceFileName: string;
+  invoiceImageBase64: string;
+
+  isRejected: boolean;
+
+  createdBy?: number | null;
+  createdOn: string;            // ISO datetime
+}
+
+export interface ClaimClosedWithOrWithoutRepair {
+  id: number;
+  claimId: number;
+  claimType: string;
+  remarks: string;
+
+  jobSheetFileName: string;
+  jobSheetImageBase64: string;
+
+  additionalFileName?: string | null;
+  additionalImageBase64?: string | null;
+
+  customerSatisfactionFileName: string;
+  customerSatisfactionImageBase64: string;
+
+  createdBy?: number | null;
+  createdOn: string; // ISO date string
 }
    
 export interface LocationResponseDto {
@@ -599,4 +660,15 @@ export interface CreateClaimRepairPayload {
   reason?: string | null;
   remarks?: string | null;
   closureDate: string; // yyyy-MM-dd
+}
+export interface ClaimCustomerVisitImages {
+  claimId: number;
+  estimationImage?: string;
+  productSerialNumber?: string;
+  productImage?: string;
+  productDefectImage?: string;
+  others: string[];
+  remarks?: string;
+  createdBy: string;
+  createdAt: string;
 }

@@ -1,0 +1,165 @@
+/* Dialog panel */
+.invoice-dialog-panel .mat-mdc-dialog-container {
+  padding: 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Header */
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.invoice-header .close {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Body */
+.invoice-body {
+  padding: 20px;
+}
+
+/* Upload Button */
+.upload-btn {
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+
+/* Field */
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-size: 13px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.field label span {
+  color: red;
+}
+
+/* Inputs */
+.field input,
+.field textarea {
+  border: 1px solid #dcdcdc;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+/* Submit */
+.submit-btn {
+  background: #9be0ea;
+  border: none;
+  padding: 10px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.date-mat-field {
+  width: 100%;
+}
+
+/* Input container */
+.date-mat-field .mat-mdc-text-field-wrapper {
+  height: 36px;           /* 👈 key */
+  padding: 0 8px;
+}
+
+/* Input itself */
+.date-mat-field input {
+  height: 36px;
+  font-size: 13px;
+}
+
+/* Remove extra vertical padding */
+.date-mat-field .mat-mdc-form-field-infix {
+  padding: 0;
+  min-height: 36px;
+}
+
+/* Calendar icon alignment */
+.date-mat-field .mat-mdc-icon-button {
+  height: 32px;
+  width: 32px;
+}
+.selected-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f5f7ff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.file-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove {
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+}
+.required {
+  color: red;
+}
+
+.file-error {
+  color: #d32f2f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}

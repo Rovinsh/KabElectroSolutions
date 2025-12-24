@@ -37,6 +37,11 @@
 .actions .accept {
   background-color: #a464e5;
 }
+.actions .images {
+  background-color: #2db6bd;
+    margin-left: 65%;
+}
+
 
 .actions button:hover {
   opacity: 0.9;

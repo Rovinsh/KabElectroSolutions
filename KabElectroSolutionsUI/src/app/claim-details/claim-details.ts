@@ -12,6 +12,8 @@ import { ToastService } from '../services/toastService.service';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth';
 import { forkJoin } from 'rxjs';
+import { ClaimImages } from '../claim-images/claim-images';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-claim-details',
@@ -49,11 +51,11 @@ currentStepIndex = 0;
 status : any[]= [];
 private toast = inject(ToastService);
 
-  constructor(private route: ActivatedRoute,private apiService: ApiService,private router: Router,private auth: AuthService) {}
+  constructor(private route: ActivatedRoute,private apiService: ApiService,private router: Router,private auth: AuthService,private dialog: MatDialog) {}
 
   ngOnInit(): void {
 
-    this.role = localStorage.getItem("userRole")!;;
+    this.role = localStorage.getItem("userRole")!;
     const statusToStepMap: Record<string, number> = {
     'Claim Registered': 0,
     'Claim Allocated': 1,
@@ -104,6 +106,25 @@ forkJoin({
       } 
       close(): void {
     this.router.navigate(['/dashboard']); // 👈 back to list page
+  }
+
+  OpenClaimImagesPopup(claimId: any) {
+    const dialogRef = this.dialog.open(ClaimImages, {
+     width: '90vw',
+    maxWidth: '800px',
+    maxHeight: '90vh',
+          disableClose: true,
+          autoFocus: false,
+          data: {
+            claimId: claimId,
+            claim: this.claim
+          }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { 
+      }
+    });
   }
 
   updateClaimStatus(status: string, remarks: string) {

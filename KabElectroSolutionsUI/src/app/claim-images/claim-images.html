@@ -1,0 +1,172 @@
+  
+<div class="dialog-header">
+  <h2>Following are the Images</h2>
+  <button mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div class="dialog-content">
+<div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
+  <!-- CUSTOMER VISIT -->
+  <div class="section" *ngIf="!isLoading && data">
+    <div class="section-header">
+      <span>Customer Visit</span>
+      <button mat-raised-button style="background-color: #2db6bd; color: white;" (click)="downloadAll()">
+        DOWNLOAD BULK IMAGES
+      </button>
+    </div>
+
+    <div class="grid">
+      <!-- SERIAL VIDEO -->
+      <div class="card">
+        <div class="card-title">Product serial number</div>
+        <!-- <a class="link">View Video</a> -->
+         <!-- <a *ngIf="data.productSerialNumber" class="link" [href]="data.productSerialNumber" target="_blank">
+        View Video
+      </a> -->
+      <img
+  *ngIf="data.productSerialNumber && !data.productSerialNumber.startsWith('data:application/pdf')"
+  [src]="data.productSerialNumber"
+  class="thumb"
+  (click)="openInNewTab(data.productSerialNumber)"
+/>
+<mat-icon *ngIf="data.productSerialNumber && data.productSerialNumber.startsWith('data:application/pdf')"
+  class="pdf-icon"
+  (click)="openInNewTab(data.productSerialNumber)">
+  picture_as_pdf
+</mat-icon>
+      </div>
+
+      <!-- PRODUCT IMAGE -->
+      <div class="card">
+        <div class="card-title">Product image</div>
+       <!-- <img *ngIf="data.productImage" [src]="data.productImage" /> -->
+        <a *ngIf="data.productImage"
+   [href]="data.productImage"
+   target="_blank"
+   rel="noopener noreferrer">
+
+  <!-- <img [src]="data.productImage" class="thumb" /> -->
+   <img
+  *ngIf="data.productImage && !data.productImage.startsWith('data:application/pdf')"
+  [src]="data.productImage"
+  class="thumb"
+  (click)="openInNewTab(data.productImage)"
+/>
+<mat-icon *ngIf="data.productDefectImage && data.productDefectImage.startsWith('data:application/pdf')"
+  class="pdf-icon"
+  (click)="openInNewTab(data.productDefectImage)">
+  picture_as_pdf
+</mat-icon>
+</a>
+      </div>
+
+      <!-- DEFECT IMAGE -->
+      <div class="card">
+        <div class="card-title">Product defect image</div>
+         <!-- <img *ngIf="data.productDefectImage" [src]="data.productDefectImage" /> -->
+          <img
+  *ngIf="data.productDefectImage && !data.productDefectImage.startsWith('data:application/pdf')"
+  [src]="data.productDefectImage"
+  class="thumb"
+  (click)="openInNewTab(data.productDefectImage)"
+/>
+<mat-icon *ngIf="data.productDefectImage && data.productDefectImage.startsWith('data:application/pdf')"
+  class="pdf-icon"
+  (click)="openInNewTab(data.productDefectImage)">
+  picture_as_pdf
+</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPAIR DONE -->
+  <div class="section" *ngIf="!isLoading && repairImages">
+    <div class="section-header">
+      <span>Repair Done</span>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">Customer Satisfaction</div>
+        <img
+  *ngIf="repairImages.customerSatisfactionImageBase64 && !repairImages.customerSatisfactionImageBase64.startsWith('data:application/pdf')"
+  [src]="repairImages.customerSatisfactionImageBase64"
+  class="thumb"
+  (click)="openInNewTab(repairImages.customerSatisfactionImageBase64)"
+/>
+<mat-icon *ngIf=" repairImages.customerSatisfactionImageBase64 && repairImages.customerSatisfactionImageBase64.startsWith('data:application/pdf')"
+  class="pdf-icon"
+  (click)="openInNewTab(repairImages.customerSatisfactionImageBase64)">
+  picture_as_pdf
+</mat-icon>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Jobsheet</div>
+        <img
+  *ngIf="repairImages.jobSheetImageBase64 && !repairImages.jobSheetImageBase64.startsWith('data:application/pdf')"
+  [src]="repairImages.jobSheetImageBase64"
+  class="thumb"
+  (click)="openInNewTab(repairImages.jobSheetImageBase64)"
+/>
+
+<mat-icon *ngIf=" repairImages.jobSheetImageBase64 && repairImages.jobSheetImageBase64.startsWith('data:application/pdf')"
+  class="pdf-icon"
+  (click)="openInNewTab(repairImages.jobSheetImageBase64)">
+  picture_as_pdf
+</mat-icon>
+      </div>
+    </div>
+  </div>
+
+   <div class="section" *ngIf="!isLoading && invoice">
+    <div class="section-header">
+      <span>Invoice Details</span>
+      <button class="reject" *ngIf="claim?.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Rejected By Service', 'Invoice Rejected By Service')">Reject Invoice</button>
+    <button class="accept" *ngIf="claim?.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Accepted By Service', 'Invoice Accepted By Service')">Accept Invoice</button>
+    </div>
+
+    <div class="grid">
+      <div class="card"><table><th>
+        <div class="card-title">Invoice</div></th>
+        <th><div class="card-title">Invoice Date</div></th>
+        <th><div class="card-title">Invoice Number</div></th>
+        <th><div class="card-title">Bill Amount Before Tax</div></th>
+        <th><div class="card-title">Tax Amount</div></th>
+        <th><div class="card-title">Total Bill Amount</div></th>
+        <th><div class="card-title">Remarks</div></th>
+        <tr><td><img
+  *ngIf="invoice.invoiceImageBase64 && !invoice.invoiceImageBase64.startsWith('data:application/pdf')"
+  [src]="invoice.invoiceImageBase64"
+  class="thumb"
+  (click)="openInNewTab(invoice.invoiceImageBase64)"
+/>
+<mat-icon *ngIf=" invoice.invoiceImageBase64 && invoice.invoiceImageBase64.startsWith('data:application/pdf')"
+  class="pdf-icon"
+  (click)="openInNewTab(invoice.invoiceImageBase64)">
+  picture_as_pdf
+</mat-icon></td><td>{{invoice.invoiceDate}}</td><td>{{invoice.invoiceNumber}}</td>
+<td><mat-icon>currency_rupee</mat-icon>{{invoice.billAmountBeforeTax}}</td><td><mat-icon>currency_rupee</mat-icon>{{invoice.taxAmount}}</td>
+<td><mat-icon>currency_rupee</mat-icon>{{invoice.totalBillAmount}}</td><td>{{invoice.remarks}}</td></tr>
+    </table>
+      </div>
+
+      <!-- <div class="card">
+        <div class="card-title">Jobsheet</div>
+        <img
+  *ngIf="repairImages.jobSheetImageBase64"
+  [src]="repairImages.jobSheetImageBase64"
+  class="thumb"
+  (click)="openInNewTab(repairImages.jobSheetImageBase64)"
+/>
+      </div> -->
+    </div>
+  </div>
+
+</div>

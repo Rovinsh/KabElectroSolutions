@@ -15,6 +15,7 @@ import { AuthService } from '../services/auth';
 import { ShareEstimationComponent } from '../share-estimation/share-estimation';
 import { CloseWithOrWithoutRepairDialog } from '../close-with-or-without-repair-dialog/close-with-or-without-repair-dialog';
 import { RepairDialogComponent } from '../repair/repair';
+import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog';
 
 @Component({
   selector: 'app-dashboard',
@@ -184,6 +185,26 @@ openShareEstimationPopup(claimId: number, claim : Claim) {
     //     this.isLoading = false; // hide spinner even on error
     //   }
     // });
+    }
+  });
+}
+
+openRaiseInvoicePopup(claimId: number, claim : Claim) {
+  const dialogRef = this.dialog.open(InvoiceDialogComponent, {
+  width: '700px',
+  maxWidth: '95vw',
+  maxHeight: '85vh',
+  panelClass: 'invoice-dialog-panel',
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          claimId: claimId
+        }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.selectTab(this.activeTab);    
     }
   });
 }
