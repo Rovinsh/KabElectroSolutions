@@ -82,6 +82,22 @@
   picture_as_pdf
 </mat-icon>
       </div>
+
+      <div class="card" *ngFor="let img of data.others; let i = index">
+        <div class="card-title">Other</div>
+         <!-- <img *ngIf="data.productDefectImage" [src]="data.productDefectImage" /> -->
+          <img
+  *ngIf="img && !img.startsWith('data:application/pdf')"
+  [src]="img"
+  class="thumb"
+  (click)="openInNewTab(img)"
+/>
+<mat-icon *ngIf="img && img.startsWith('data:application/pdf')"
+  class="pdf-icon"
+  (click)="openInNewTab(img)">
+  picture_as_pdf
+</mat-icon>
+      </div>
     </div>
   </div>
 
