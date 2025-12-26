@@ -10,10 +10,16 @@ namespace MSSolutions.Data
         public DbSet<Status> Statuses => Set<Status>();
         public DbSet<SubStatus> SubStatuses => Set<SubStatus>();
         public DbSet<User> Users => Set<User>();
+        public DbSet<MsUser> Msusers => Set<MsUser>();
         public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<MsAddress> MsAddresses => Set<MsAddress>();
+        
         public DbSet<UserRole> UserRoles => Set<UserRole>();
+        //public DbSet<MsUserRole> MsUserRoles => Set<MsUserRole>();
         public DbSet<Role> Roles => Set<Role>();
+        //public DbSet<MsRole> MsRoles => Set<MsRole>();
         public DbSet<UserPrivilege> UserPrivileges => Set<UserPrivilege>();
+        //public DbSet<MsUserPrivilege> MsUserPrivileges => Set<MsUserPrivilege>();
         //public DbSet<Location> Locations => Set<Location>();
 
         public DbSet<State> Locations { get; set; }
@@ -22,10 +28,14 @@ namespace MSSolutions.Data
         public DbSet<WarrantyStatus> WarrantyStatuses { get; set; }
         public DbSet<WarrantyType> WarrantyTypes { get; set; }
         public DbSet<Claim> Claims { get; set; }
-        public DbSet<Brands> Brands { get; set; }
+        public DbSet<MsBrands> MsBrands { get; set; }
         public DbSet<ServicePartners> ServicePartner { get; set; }       
-        public DbSet<Categories> Categories { get; set; }
+        public DbSet<MsCategories> MsCategories { get; set; }
         public DbSet<Plans> Plans { get; set; }
+        public DbSet<MsCoupons> MsCoupons { get; set; }
+        public DbSet<MsGst> MsGst { get; set; }
+        public DbSet<MsProductImage> ProductImages { get; set; } = null!;
+        public DbSet<MsProducts> MsProducts { get; set; }
         public DbSet<Warranties> Warranties { get; set; }
         public DbSet<Reports> Reports { get; set; }        
         public DbSet<AuditLog> AuditLogs { get; set; }

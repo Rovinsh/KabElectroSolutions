@@ -1,0 +1,120 @@
+<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
+  <mat-card class="w-full max-w-5xl shadow-xl rounded-2xl">
+    
+     <mat-card-header class="bg-blue-50 text-blue-800 p-3 flex justify-between items-center">
+      <mat-card-title class="text-lg font-semibold">{{ title }}</mat-card-title>
+      <button mat-icon-button (click)="onClose()" class="close-btn">X</button>
+    </mat-card-header>
+    <hr class="my-0" />
+
+    <mat-card-content class="p-4">
+      <form [formGroup]="couponForm" (ngSubmit)="onSubmit()" class="row gy-2" style="row-gap: 8px; margin-top: 14px;">
+
+    <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="couponTitle" required />
+            <mat-error *ngIf="couponForm.get('couponTitle')?.hasError('required')">
+              Title is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <!-- Customer City -->
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Code</mat-label>
+            <input matInput formControlName="couponCode" required />
+            <mat-error *ngIf="couponForm.get('couponCode')?.hasError('required')">
+              Code is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Discount Type</mat-label>
+            <mat-select formControlName="discountType" required>
+              <mat-option value="percentage">Percentage</mat-option>
+              <mat-option value="fixed">Fixed</mat-option>
+            </mat-select>
+            <mat-error *ngIf="couponForm.get('discountType')?.hasError('required')">
+              Discount Type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+         <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Amount</mat-label>
+            <input matInput formControlName="couponAmount" required />
+            <mat-error *ngIf="couponForm.get('couponAmount')?.hasError('required')">
+              Amount is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="couponStartDate" />
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+            <mat-error *ngIf="couponForm.get('couponStartDate')?.hasError('required')">
+              Warranty Start Date is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- End Date -->
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="couponEndDate" />
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+            <mat-error *ngIf="couponForm.get('couponEndDate')?.hasError('required')">
+              Warranty End Date is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Remark</mat-label>
+            <textarea matInput formControlName="remark" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="col-3">
+          <mat-checkbox formControlName="isExpired">Is Expired</mat-checkbox>
+        </div>
+        <div class="col-3">
+          <mat-checkbox formControlName="isFirstOrder">Is First Order</mat-checkbox>
+        </div>
+        <div class="col-3">
+          <mat-checkbox formControlName="isAllProducts">Apply To All Products</mat-checkbox>
+        </div>
+        <div class="col-3">
+          <mat-checkbox formControlName="isDisable">Is Active</mat-checkbox>
+        </div>
+        <div class="col-12 text-end mt-2">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="px-5 py-2 text-lg"
+            [disabled]="couponForm.invalid || isSubmitting"
+          >
+            {{ submitBtnLabel }}
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

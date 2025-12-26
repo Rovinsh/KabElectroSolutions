@@ -1,0 +1,132 @@
+<div class="w-full min-h-screen bg-gray-100 p-8 flex justify-center items-start">
+  <mat-card class="w-full max-w-5xl shadow-xl rounded-2xl">
+    
+     <mat-card-header class="bg-blue-50 text-blue-800 p-3 flex justify-between items-center">
+      <mat-card-title class="text-lg font-semibold">{{ title }}</mat-card-title>
+      <button mat-icon-button (click)="onClose()" class="close-btn">X</button>
+    </mat-card-header>
+    <hr class="my-0" />
+
+    <mat-card-content class="p-4">
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="row gy-2" style="row-gap: 8px; margin-top: 14px;">
+
+    
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Category</mat-label>
+            <input matInput formControlName="categoryId"
+                   [matAutocomplete]="categoryAuto"
+                   (focus)="showCategory()"
+                   (input)="showCategory()" />
+            <mat-autocomplete #categoryAuto="matAutocomplete" [displayWith]="displayCategory" autoActiveFirstOption (optionSelected)="onCategorySelected($event.option.value)">
+              <mat-option *ngFor="let cat of filteredcategories$ | async" [value]="cat">{{ cat.catName }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="productForm.get('categoryId')?.hasError('required')">Category is required</mat-error>
+          </mat-form-field>
+        </div>
+        <!-- Customer City -->
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Brand</mat-label>
+            <input matInput formControlName="brandId"
+                   [matAutocomplete]="brandAuto"
+                   (focus)="showBrand()"
+                   (input)="showBrand()" />
+            <mat-autocomplete #brandAuto="matAutocomplete" [displayWith]="displayBrand" autoActiveFirstOption (optionSelected)="onBrandSelected($event.option.value)">
+              <mat-option *ngFor="let brand of filteredBrands$ | async" [value]="brand">{{ brand.brandName }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="productForm.get('brandId')?.hasError('required')">Brand is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Gst</mat-label>
+            <input matInput formControlName="gstId"
+       [matAutocomplete]="gstAuto"
+       (focus)="showGst()"
+       (input)="showGst()" />
+            <mat-autocomplete #gstAuto="matAutocomplete" [displayWith]="displayGst" autoActiveFirstOption (optionSelected)="onGstSelected($event.option.value)">
+              <mat-option *ngFor="let gst of filteredGsts$ | async" [value]="gst">{{ gst.gstValue }}</mat-option>
+            </mat-autocomplete>
+           <mat-error *ngIf="productForm.get('gstId')?.hasError('required')">GST is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Product Name</mat-label>
+            <input matInput formControlName="productName" required />
+            <mat-error *ngIf="productForm.get('productName')?.hasError('required')">
+              Product Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+  <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>SKU</mat-label>
+            <input matInput formControlName="sku" required />
+            <mat-error *ngIf="productForm.get('sku')?.hasError('required')">
+              SKU is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+         <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Base Amount</mat-label>
+            <input matInput formControlName="baseAmount" (input)="recalculateGst()" required />
+            <mat-error *ngIf="productForm.get('baseAmount')?.hasError('required')">
+              Amount is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Stock Qty</mat-label>
+            <input matInput formControlName="stockQty" required />
+            <mat-error *ngIf="productForm.get('stockQty')?.hasError('required')">
+              Stock Qty is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+         <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Discount Price</mat-label>
+            <input matInput formControlName="discountPrice" required />
+            <mat-error *ngIf="productForm.get('discountPrice')?.hasError('required')">
+              Discount Price is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Short Description</mat-label>
+            <textarea matInput formControlName="shortDescription" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          <mat-checkbox formControlName="isActive">Active Plan</mat-checkbox>
+        </div>
+
+        <div class="col-12 text-end mt-2">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="px-5 py-2 text-lg"
+            [disabled]="productForm.invalid || isSubmitting"
+          >
+            {{ submitBtnLabel }}
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

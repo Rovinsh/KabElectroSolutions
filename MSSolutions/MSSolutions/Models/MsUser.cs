@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSSolutions.Models
-{   
+{
 
-    public class User
+    public class MsUser
     {
-        [Key]       
+        [Key]
         public int Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
@@ -46,10 +46,10 @@ namespace MSSolutions.Models
         public bool IsPartner { get; set; }
     }
 
-    //public class ApiResponse
-    //{
-    //    public int Status { get; set; }
-    //    public string Message { get; set; }
-    //    public User Data { get; set; }
-    //}
+    public class ApiResponse
+    {
+        public int Status { get; set; }
+        public string Message { get; set; }
+        public User Data { get; set; }
+    }
 }

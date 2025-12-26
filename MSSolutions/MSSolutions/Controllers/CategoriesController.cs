@@ -26,7 +26,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
         [HttpGet("categories")]
         public async Task<IActionResult> GetCategories()
         {
-            var data = await _context.Categories
+            var data = await _context.MsCategories
          .Select(c => new CategoriesDTO
          {
              Id = c.Id,
@@ -47,14 +47,14 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateCategories([FromBody] Categories categories)
+        public async Task<IActionResult> CreateCategories([FromBody] MsCategories categories)
         {
             if (categories == null)
                 return BadRequest("Invalid categories data");
 
             try
             {
-                _context.Categories.Add(categories);
+                _context.MsCategories.Add(categories);
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetCategories),
@@ -72,12 +72,12 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] Categories updatedCategory)
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] MsCategories updatedCategory)
         {
             if (updatedCategory == null)
                 return BadRequest("Invalid category data");
 
-            var existingCategory = await _context.Categories.FindAsync(id);
+            var existingCategory = await _context.MsCategories.FindAsync(id);
             if (existingCategory == null)
                 return NotFound("Category not found");
             try
@@ -86,7 +86,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
                 existingCategory.Description = updatedCategory.Description;
                 existingCategory.IsDisable = updatedCategory.IsDisable;
 
-                _context.Categories.Update(existingCategory);
+                _context.MsCategories.Update(existingCategory);
                 await _context.SaveChangesAsync();
 
                 return Ok(existingCategory);
