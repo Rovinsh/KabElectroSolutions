@@ -6,6 +6,7 @@ using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace KabElectroSolutions.Controllers
 {
@@ -29,7 +30,10 @@ namespace KabElectroSolutions.Controllers
         public async Task<IActionResult> GetReports()
         { var performerEmail = User?.Identity?.Name;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
-            var data = await _context.Reports.Where(r=>r.CreatedById == user.Id)
+            var data = new List<ReportsDTO>();
+            if (user.BusinessroleName == "Brand")
+            {
+                data = await _context.Reports.Where(r => r.CreatedById == user.Id)
                 .Select(r => new ReportsDTO
                 {
                     Id = r.Id,
@@ -39,8 +43,37 @@ namespace KabElectroSolutions.Controllers
                     Status = r.Status
                 })
                 .ToListAsync();
+            }
+            if (user.BusinessroleName == "Service Center Head")
+            {
+                var userIds = _context.Users.Where(u => u.PartnerId == user.Id).Select(u => u.Id);
 
-            return Ok(new
+                data = await _context.Reports
+                    .Where(r => userIds.Contains(r.CreatedById))
+                    .Select(r => new ReportsDTO
+                {
+                    Id = r.Id,
+                    FileName = r.FileName,
+                    TimeStamp = r.TimeStamp,
+                    DateRange = r.DateRange,
+                    Status = r.Status
+                })
+                .ToListAsync();
+            }
+            if(user.BusinessroleName == "Super Admin" || user.BusinessroleName == "Customer Care Executive")
+                {
+                data = await _context.Reports
+                .Select(r => new ReportsDTO
+                {
+                    Id = r.Id,
+                    FileName = r.FileName,
+                    TimeStamp = r.TimeStamp,
+                    DateRange = r.DateRange,
+                    Status = r.Status
+                })
+                .ToListAsync();
+            }
+                return Ok(new
             {
                 Status = 200,
                 Message = "success",
@@ -59,10 +92,26 @@ namespace KabElectroSolutions.Controllers
             var end = DateOnly.FromDateTime(report.EndDate);
 
             string fileName = $"crm_report_{report.StartDate:yyyy-MM-dd}_{report.EndDate:yyyy-MM-dd}.xlsx";
+            var claims = new List<Models.Claim>();
 
-            var claims = await _context.Claims
+            if (user.BusinessroleName == "Brand")
+            {
+                claims = await _context.Claims
+                .Where(c => c.RegisteredBy == user.Id && c.CreatedDate >= start && c.CreatedDate <= end)
+                .ToListAsync();
+            }
+            if (user.BusinessroleName == "Service Center Head")
+            {
+                claims = await _context.Claims
+                .Where(c => c.ServicePartner == user.Id && c.CreatedDate >= start && c.CreatedDate <= end)
+                .ToListAsync();
+            }
+            if (user.BusinessroleName == "Super Admin" || user.BusinessroleName == "Customer Care Executive")
+            {
+                claims = await _context.Claims
                 .Where(c => c.CreatedDate >= start && c.CreatedDate <= end)
                 .ToListAsync();
+            }
 
             //string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
             //if (!Directory.Exists(folderPath))
@@ -94,7 +143,7 @@ namespace KabElectroSolutions.Controllers
             {
                 var reportData = new Reports
                 {
-                    CreatedDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                    CreatedDate = DateOnly.FromDateTime(DateTime.Now),
                     StartDate = start,
                     CreatedById = user.Id,
                     CreatedByName = user.Businessname,
@@ -134,15 +183,35 @@ namespace KabElectroSolutions.Controllers
             var performerEmail = User?.Identity?.Name;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
             var parts = dateRange.Split(" - ", StringSplitOptions.TrimEntries);
-            var claims = new List<Claim>();
+            var claims = new List<Models.Claim>();
             if (parts.Length == 2 &&
                 DateOnly.TryParse(parts[0], out var fromDate) &&
                 DateOnly.TryParse(parts[1], out var toDate))
             {
-
-              claims = await _context.Claims
+                if (user.BusinessroleName == "Brand") 
+                { 
+                    claims = await _context.Claims
+                    .Where(c => c.RegisteredBy == user.Id && c.CreatedDate >= fromDate && c.CreatedDate <= toDate)
+                    .ToListAsync();
+                }
+                if (user.BusinessroleName == "Service Center Head")
+                {
+                    claims = await _context.Claims
+                    .Where(c => c.ServicePartner == user.Id  && c.CreatedDate >= fromDate && c.CreatedDate <= toDate)
+                    .ToListAsync();
+                }
+                if (user.BusinessroleName == "Super Admin" || user.BusinessroleName == "Customer Care Executive")
+                {
+                    claims = await _context.Claims
                     .Where(c => c.CreatedDate >= fromDate && c.CreatedDate <= toDate)
                     .ToListAsync();
+                }
+                //else
+                //{
+                //    claims = await _context.Claims
+                //    .Where(c => c.RegisteredBy == user.Id && c.CreatedDate >= fromDate && c.CreatedDate <= toDate)
+                //    .ToListAsync();
+                //}
             }
                 return Ok(new
                 {

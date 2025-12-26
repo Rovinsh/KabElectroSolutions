@@ -39,7 +39,12 @@
 }
 .actions .images {
   background-color: #2db6bd;
-    margin-left: 65%;
+    margin-left: 63%;
+}
+
+.actions .jobsheet {
+  background-color: #74397c;
+    margin-left: 10%;
 }
 
 

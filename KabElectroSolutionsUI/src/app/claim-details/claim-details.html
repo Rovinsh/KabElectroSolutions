@@ -14,7 +14,8 @@
     <button class="reject" *ngIf="claim?.statusName === 'Estimation Shared' && (role == 'Customer Care Executive' || role == 'Super Admin')" (click)="updateClaimStatus('Re Estimate', 'Estimate Rejected')">Reject Estimate</button>
     <button class="accept" *ngIf="claim?.statusName === 'Estimation Shared' && (role == 'Customer Care Executive' || role == 'Super Admin')" (click)="updateClaimStatus('Estimate Accepted', 'Estimate Accepted')">Accept Estimate</button>
     <!-- <button class="images" *ngIf="role == 'Customer Care Executive' || role == 'Super Admin'" (click)="OpenClaimImagesPopup(claimId)">Images</button> -->
-         <button class="images" (click)="OpenClaimImagesPopup(claimId)">Images</button> 
+    <button mat-raised-button class="jobsheet" (click)="downloadPdf()">Download JobSheet</button>
+    <button class="images" style="margin-right:20px;" (click)="OpenClaimImagesPopup(claimId)">Images</button> 
     <button mat-icon-button (click)="close()" class="close-btn" style="background-color: black;">X</button>
   </div>
 <div class="container">

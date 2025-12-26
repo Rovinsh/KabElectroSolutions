@@ -109,6 +109,13 @@ forkJoin({
     this.router.navigate(['/dashboard']); // 👈 back to list page
   }
 
+downloadPdf() {
+  const link = document.createElement('a');
+  link.href = 'assets/JobSheet.pdf';
+  link.download = 'JobSheet.pdf';
+  link.click();
+}
+
   OpenClaimImagesPopup(claimId: any) {
     const dialogRef = this.dialog.open(ClaimImages, {
      width: '90vw',
