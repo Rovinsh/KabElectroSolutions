@@ -23,16 +23,14 @@ export class SidebarComponent {
       });
   }
 
-  menu: SidebarItem[] = [
-    { title: 'Home', icon: '🏠', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/dashboard' },
-    { title: 'Claims', icon: '📋', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/dashboard' },
-    { title: 'Warranty Claim', icon: '➕', roles: ['Super Admin'], route: '/claim-form' },
-    { title: 'Direct Claim', icon: '➕', roles: ['Super Admin','Brand'], route: '/direct-claim-form' },
-    { title: 'Assign Claim', icon: '📨', roles: ['Super Admin'], route: '/assign-claim' },
-    { title: 'Master', icon: '📂', roles: ['Super Admin'], route: '/master' },
+ menu: SidebarItem[] = [
+    { title: 'Dashboard', icon: '🏠', roles: ['Super Admin','Sub Admin Executive'], route: '/dashboard' },
+    { title: 'Master', icon: '📂', roles: ['Super Admin','Sub Admin Executive'], route: '/master' },
+    { title: 'Product', icon: '➕', roles: ['Super Admin'], route: '/product-form' },
+    { title: 'Oders', icon: '📋', roles: ['Super Admin'], route: '/oders' },
     { title: 'User', icon: '🧑', roles: ['Super Admin'], route: '/user' },
-    { title: 'Report', icon: '📄', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/report' },
-    { title: 'Warranties', icon: '🛡️', roles: ['Super Admin'], route: '/warranties' },
+    { title: 'Customer', icon: '🧑', roles: ['Super Admin'], route: '/user' },
+    { title: 'Invoice', icon: '📄', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/report' },
     { title: 'Support', icon: '📞', roles: ['Super Admin','Service Centre','Brand'], route: '/support' },
     { title: 'Help', icon: '❓', roles: ['Super Admin','Service Centre','Brand'], route: '/help' },
     { title: 'Settings', icon: '⚙️', roles: ['Super Admin'], route: '/settings' }

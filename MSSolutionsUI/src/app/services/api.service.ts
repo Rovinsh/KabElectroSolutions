@@ -46,9 +46,17 @@ export class ApiService {
   getCategories(): Observable<CategoryResponseDto> {
     return this.http.get<CategoryResponseDto>(`${this.baseUrl + "Categories/categories"}`);
   }
-
+ getGst(): Observable<GstResponseDto> {
+    return this.http.get<GstResponseDto>(`${this.baseUrl + "Gst/gst"}`);
+  }
   getPlans(): Observable<PlanResponseDto> {
     return this.http.get<PlanResponseDto>(`${this.baseUrl + "Plans/plans"}`);
+  }
+   getProduct(): Observable<ProductResponseDto> {
+    return this.http.get<ProductResponseDto>(`${this.baseUrl + "Product/products"}`);
+  }
+  getCoupon(): Observable<CouponResponseDto> {
+    return this.http.get<CouponResponseDto>(`${this.baseUrl + "Coupon/coupons"}`);
   }
 
   getBrands(): Observable<BrandResponseDto> {
@@ -95,12 +103,23 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Categories`, categoryData);
   }
 
+  postGst(GstData: GstDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Gst`, GstData);
+  }
+
   postBarands(brandData: BrandDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Brands`, brandData);
   }
 
   postPlans(planData: PlanDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Plans`, planData);
+  }
+
+postProduct(productData: ProductDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Product`, productData);
+  }
+  postCoupon(couponData: CouponDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Coupon`, couponData);
   }
 
   postWarranties(warrantyData: WarrantyDto): Observable<any> {
@@ -127,6 +146,10 @@ export class ApiService {
   return this.http.post(`${this.baseUrl}Categories/${id}`, categoryData);
   }
 
+ updateGst(id: number, gstData: GstDto): Observable<any> {
+  return this.http.post(`${this.baseUrl}Gst/${id}`, gstData);
+  }
+
  updateBrand(id: number, brandData: BrandDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Brands/${id}`, brandData);
   }
@@ -134,7 +157,13 @@ export class ApiService {
   updatePlan(id: number, planData: PlanDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Plans/${id}`, planData);
   }
-  
+ updateProduct(id: number, productData: ProductDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Product/${id}`, productData);
+  }
+   updateCoupon(id: number, couponData: CouponDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Coupon/${id}`, couponData);
+  }
+
   updateWarranties(id: number, warranties: WarrantyDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Warranties/${id}`, warranties);
   }
@@ -173,6 +202,10 @@ export class ApiService {
   
     updateShareEstimation(formData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}Claims/ShareEstimate`,formData);
+  }
+
+ updateProductImages(formData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}product/AddImages`,formData);
   }
 
     CloseWithOrWithoutRepair(formData: any): Observable<any> {
@@ -271,7 +304,18 @@ export interface CategoryResponseDto {
   message: string;
   data: CategoryDto[];
 }
+export interface GstDto {
+  gstValue: string;
+  description: string;
+  isDisable: boolean;
+  id: number;
+}
 
+export interface GstResponseDto {
+  status: number;
+  message: string;
+  data: GstDto[];
+}
 export interface PlanDto {
   planName: string;
   categoryName:string,
@@ -288,6 +332,28 @@ export interface PlanResponseDto {
   status: number;
   message: string;
   data: PlanDto[];
+}
+
+export interface CouponDto {
+  id: number;
+  couponTitle: string;
+  couponCode: string;
+  discountType: 'percentage' | 'fixed';
+  couponAmount: number;
+  couponStartDate: string; // ISO date
+  couponEndDate: string;
+  description?: string;
+  remark?: string;
+  isExpired: boolean;
+  isFirstOrder: boolean;
+  isAllProducts: boolean;
+  isDisable: boolean;
+}
+
+export interface CouponResponseDto {
+  status: number;
+  message: string;
+  data: CouponDto[];
 }
 
 export interface BrandDto {
@@ -329,6 +395,30 @@ export interface ServicePartnerResponseDto {
   status: number;
   message: string;
   data: ServicePartnerDto[];
+}
+export interface ProductDto {
+  id: number;
+  productName: string;
+  sku: string;
+  categoryId: number;
+  categoryName: string;
+  brandId: number;
+  brandName: string;
+  baseAmount: number;
+  gstId: number;
+  gstPercentage: number;
+  gstAmount: number;
+  withGstAmount: number;
+  stockQty: number;
+  discountPrice: number;
+  shortDescription: string;
+  description: string;
+  isActive: boolean;
+}
+export interface ProductResponseDto {
+  status: number;
+  message: string;
+  data: ProductDto[];
 }
 
 export interface UserDto {

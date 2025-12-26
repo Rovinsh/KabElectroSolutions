@@ -4,10 +4,14 @@ import { ColDef } from 'ag-grid-community';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
 import { CategoryFormComponent } from '../../app/category-form/category-form';
+import { ShareEstimationComponent } from '../../app/share-estimation/share-estimation';
 import { BrandFormComponent } from '../../app/brand-form/brand-form';
-import { PlanFormComponent } from '../../app/plan-form/plan-form';
-import { ServicePartnerFormComponent } from '../../app/service-partner-form/service-partner-form';
-import { ApiService, CategoryDto, PlanDto, BrandDto, ServicePartnerDto } from '../services/api.service';
+import { CouponFormComponent } from '../../app/coupon-form/coupon-form';
+import { GstFormComponent } from '../../app/gst-form/gst-form';
+import { ProductFormComponent } from '../../app/product-form/product-form';
+import { ApiService, CategoryDto, BrandDto,CouponDto, GstDto,ProductDto } from '../services/api.service';
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-master',
@@ -21,9 +25,9 @@ export class MasterComponent implements OnInit {
   activeTab: string = 'category';
   categories: CategoryDto[] = [];
   brands: BrandDto[] = [];
-  plans: PlanDto[] = [];
-  servicePartner: ServicePartnerDto[] = [];
-
+  coupons: CouponDto[] = [];
+  gst: GstDto[] = [];
+  product: ProductDto[] = [];
   constructor(private dialog: MatDialog, private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -43,11 +47,14 @@ export class MasterComponent implements OnInit {
       case 'brand':
         this.loadBrands();
         break;
-      case 'plan':
-        this.loadPlans();
+      case 'coupon':
+        this.loadCoupons();
         break;
-      case 'servicePartner':
-        this.loadServicePartners();
+      case 'gst':
+        this.loadGst();
+        break;
+      case 'product':
+        this.loadProduct();
         break;
     }
   }
@@ -66,19 +73,73 @@ export class MasterComponent implements OnInit {
     });
   }
 
-  loadPlans() {this.isLoading = true;
-    this.apiService.getPlans().subscribe(res => {
-    this.plans = res.data.sort((a: any, b: any) => a.planName.localeCompare(b.planName));
-     this.isLoading = false;
-    });
-  }
+loadCoupons() {
+  this.isLoading = true;
 
-  loadServicePartners() {this.isLoading = true;
-    this.apiService.getServicePartners().subscribe(res => {
-    this.servicePartner = res.data.sort((a: any, b: any) => a.servicePartner.localeCompare(b.servicePartner));
+  this.apiService.getCoupon().subscribe({
+    next: res => {
+      this.coupons = (res.data || [])
+        .map((c: any) => ({
+          ...c,
+          couponStartDate: this.formatDate(c.couponStartDate),
+          couponEndDate: this.formatDate(c.couponEndDate)
+        }))
+        .sort((a: any, b: any) => a.couponCode.localeCompare(b.couponCode));
+
+      this.isLoading = false;
+    },
+    error: err => {
+      console.error(err);
+      this.isLoading = false;
+    }
+  });
+}
+
+formatDate(value: string): string {
+  if (!value) return '';
+  const d = new Date(value);
+  return d.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit'
+  });
+}
+loadGst() {this.isLoading = true;
+    this.apiService.getGst().subscribe(res => {
+    this.gst = res.data.sort((a: any, b: any) => a.gstValue.localeCompare(b.gstValue));
     this.isLoading = false;
   });
   }
+  
+ loadProduct() {this.isLoading = true;
+    this.apiService.getProduct().subscribe(res => {
+    this.product = res.data.sort((a: any, b: any) => a.productName.localeCompare(b.productName));
+    this.isLoading = false;
+  });
+  }
+
+  openImagePopup(data?: any) {
+  const isEdit = !!data; 
+  let dialogRef;
+ dialogRef = this.dialog.open(ShareEstimationComponent, {
+        width: '800px',
+        maxWidth: '95vw',  
+        maxHeight: '90vh',  
+        height: 'auto',
+        disableClose: true,
+        data: {
+          mode: isEdit ? 'edit' : 'add',
+          record: data || null
+        }
+      });
+  
+
+  dialogRef?.afterClosed().subscribe(result => {
+    if (result === 'success') {
+      this.reloadData();
+    }
+  });
+}
 
   openPopup(data?: any) {
   const isEdit = !!data; 
@@ -111,8 +172,8 @@ export class MasterComponent implements OnInit {
         }
       });
       break;
-    case 'plan':
-      dialogRef = this.dialog.open(PlanFormComponent, {
+    case 'coupon':
+      dialogRef = this.dialog.open(CouponFormComponent, {
         width: '800px',
         maxWidth: '95vw',   
         maxHeight: '90vh',  
@@ -124,8 +185,21 @@ export class MasterComponent implements OnInit {
         }
       });
       break;
-      case 'servicePartner':
-      dialogRef = this.dialog.open(ServicePartnerFormComponent, {
+      case 'gst':
+      dialogRef = this.dialog.open(GstFormComponent, {
+        width: '800px',
+        maxWidth: '95vw',   
+        maxHeight: '90vh',  
+        height: 'auto',
+        disableClose: true,
+        data: {
+          mode: isEdit ? 'edit' : 'add',
+          record: data || null
+        }
+      });
+      break;
+      case 'product':
+      dialogRef = this.dialog.open(ProductFormComponent, {
         width: '800px',
         maxWidth: '95vw',   
         maxHeight: '90vh',  
@@ -150,6 +224,8 @@ export class MasterComponent implements OnInit {
   onCellClicked(event: any) {
     if (event.colDef.headerName === 'Action' && event.event.target.classList.contains('edit-link')) {
       this.openPopup(event.data); 
+    }else if (event.colDef.headerName === 'Image' && event.event.target.classList.contains('image-link')) {
+      this.openImagePopup(event.data); 
     }
   }
 
@@ -218,11 +294,46 @@ export class MasterComponent implements OnInit {
     }
   ];
 
-  planCols: ColDef[] = [
+ gstCols: ColDef[] = [
     { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
-    { headerName: 'Plan Name', field: 'planName', filter: true, width: 200 },
-    { headerName: 'Category Name', field: 'categoryName', filter: true, width: 150 },
-    { headerName: 'Brand Name', field: 'brandName', filter: true, width: 110 },
+    { headerName: 'Name %', field: 'gstValue', filter: true, width: 250 },
+    {
+      headerName: 'Description',
+      field: 'description',
+      filter: false,
+      width:300,
+      cellRenderer: (params: any) => {
+        const words = params.value ? params.value.split(' ') : [];
+        if (words.length > 150) return words.slice(0, 150).join(' ') + '...';
+        return params.value;
+      }
+    },
+    {
+      headerName: 'Active',
+      field: 'isDisable',
+      filter: true,
+      cellRenderer: (params: any) =>
+        params.value == 1
+          ? '<span class="badge bg-success">Active</span>'
+          : '<span class="badge bg-danger">Inactive</span>'
+    },
+    {
+      headerName: 'Action',
+      width: 120,
+      cellRenderer: (params: any) => {
+        return `<a href="javascript:void(0)" class="edit-link" data-id="${params.data.id}">✏️</a>`;
+      }
+    }
+  ];
+
+ couponCols: ColDef[] = [
+    { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
+    { headerName: 'Coupon Title', field: 'couponTitle', filter: true, width: 200 },
+    { headerName: 'Coupon Code', field: 'couponCode', filter: true, width: 150 },
+    { headerName: 'Discount Type', field: 'discountType', filter: true, width: 110 },
+    { headerName: 'Coupon Amount', field: 'couponAmount', filter: true, width: 110 },
+    { headerName: 'Coupon Start Date', field: 'couponStartDate', filter: true, width: 110 },
+    { headerName: 'Coupon End Date', field: 'couponEndDate', filter: true, width: 110 },
     {
       headerName: 'Description',
       field: 'description',
@@ -246,6 +357,36 @@ export class MasterComponent implements OnInit {
       }
     },
     {
+      headerName: 'All Products',
+      field: 'isAllProducts',
+      filter: true,
+      width: 100,
+      cellRenderer: (params: any) =>
+        params.value == 1
+          ? '<span class="badge bg-success">Active</span>'
+          : '<span class="badge bg-danger">Inactive</span>'
+    },
+    {
+      headerName: 'First Order',
+      field: 'isFirstOrder',
+      filter: true,
+      width: 100,
+      cellRenderer: (params: any) =>
+        params.value == 1
+          ? '<span class="badge bg-success">Active</span>'
+          : '<span class="badge bg-danger">Inactive</span>'
+    },
+    {
+      headerName: 'Expired',
+      field: 'isExpired',
+      filter: true,
+      width: 100,
+      cellRenderer: (params: any) =>
+        params.value == 1
+          ? '<span class="badge bg-success">Active</span>'
+          : '<span class="badge bg-danger">Inactive</span>'
+    },
+    {
       headerName: 'Active',
       field: 'isDisable',
       filter: true,
@@ -264,54 +405,64 @@ export class MasterComponent implements OnInit {
     }
   ];
 
-  servicePartnerCols: ColDef[] = [
+productCols: ColDef[] = [
   { headerName: 'Sno', width: 60, valueGetter: (params: any) => params.node.rowIndex + 1 },
-  { headerName: 'Service Partner', field: 'servicePartner', filter: true, width: 150 },
-  { headerName: 'First Name', field: 'firstName', filter: true, width: 100 },
-  { headerName: 'Last Name', field: 'lastName', filter: true, width: 100 },
-  { headerName: 'Phone', field: 'phone', filter: true, width: 130 },
-  { headerName: 'Email', field: 'email', filter: true, width: 130 },
-  { headerName: 'PAN', field: 'pan', filter: true, width: 130 },
-  { headerName: 'GST', field: 'gst', filter: true, width: 130 },
-  { headerName: 'City', field: 'cityName', filter: true, width: 130 },
-  { headerName: 'State', field: 'stateName', filter: true, width: 130 },
-  { headerName: 'Pincode', field: 'pinCode', filter: true, width: 100 },
+  { headerName: 'Product Name', field: 'productName', filter: true, width: 200 },
+  { headerName: 'SKU', field: 'sku', filter: true, width: 120 },
+  { headerName: 'Category', field: 'categoryName', filter: true, width: 150 },
+  { headerName: 'Brand', field: 'brandName', filter: true, width: 150 },
+  { headerName: 'Base Price', field: 'baseAmount', filter: true, width: 110 },
+  { headerName: 'GST %', field: 'gstPercentage', filter: true, width: 80 },
+  { headerName: 'GST Amount', field: 'gstAmount', filter: true, width: 110 },
+  { headerName: 'Discount Price', field: 'discountPrice', filter: true, width: 110 },
+  { headerName: 'Final Price', field: 'withGstAmount', filter: true, width: 120 },
+  { headerName: 'Stock', field: 'stockQty', filter: true, width: 90 },
   {
-      headerName: 'Extra Info',
-      field: 'extraInfo',
+      headerName: 'Description',
+      field: 'description',
       filter: false,
-      width: 180,
+      width: 150,
       cellRenderer: (params: any) => {
         const words = params.value ? params.value.split(' ') : [];
         if (words.length > 150) return words.slice(0, 150).join(' ') + '...';
         return params.value;
       }
     },
-  { headerName: 'Address', field: 'address', filter: false, width: 150,
-    cellRenderer: (params: any) => {
-      const words = params.value ? params.value.split(' ') : [];
-      if (words.length > 150) return words.slice(0, 150).join(' ') + '...';
-      return params.value;
-    }
-  },
- 
+    {
+      headerName: 'Short Description',
+      field: 'shortDescription',
+      filter: false,
+      width: 250,
+      cellRenderer: (params: any) => {
+        const words = params.value ? params.value.split(' ') : [];
+        if (words.length > 150) return words.slice(0, 150).join(' ') + '...';
+        return params.value;
+      }
+    },
   {
     headerName: 'Active',
-    field: 'isDisable',
+    field: 'isActive',
     filter: true,
     width: 100,
     cellRenderer: (params: any) =>
-      params.value == 1
+      params.value == false || params.value == 0
         ? '<span class="badge bg-success">Active</span>'
         : '<span class="badge bg-danger">Inactive</span>'
   },
+
   {
     headerName: 'Action',
     width: 100,
-    cellRenderer: (params: any) => {
-      return `<a href="javascript:void(0)" class="edit-link" data-id="${params.data.id}">✏️</a>`;
-    }
+    cellRenderer: (params: any) =>
+      `<a href="javascript:void(0)" class="edit-link" data-id="${params.data.id}">✏️</a>`
+  },
+  {
+    headerName: 'Image',
+    width: 100,
+    cellRenderer: (params: any) =>
+      `<a href="javascript:void(0)" class="image-link" data-id="${params.data.id}">🖼️</a>`
   }
 ];
+
 
 }

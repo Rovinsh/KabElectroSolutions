@@ -13,14 +13,19 @@
             <i class="bi bi-building"></i> Brand
           </a>
         </li>
-        <li class="nav-item" (click)="setActiveTab('plan')">
-          <a class="nav-link" [class.active]="activeTab === 'plan'" href="javascript:void(0)">
-            <i class="bi bi-credit-card"></i> Plan
+        <li class="nav-item" (click)="setActiveTab('coupon')">
+          <a class="nav-link" [class.active]="activeTab === 'coupon'" href="javascript:void(0)">
+            <i class="bi bi-credit-card"></i> Coupon
           </a>
         </li>
-        <li class="nav-item" (click)="setActiveTab('servicePartner')">
-          <a class="nav-link" [class.active]="activeTab === 'servicePartner'" href="javascript:void(0)">
-            <i class="bi bi-credit-card"></i> Service Partner
+        <li class="nav-item" (click)="setActiveTab('gst')">
+          <a class="nav-link" [class.active]="activeTab === 'gst'" href="javascript:void(0)">
+            <i class="bi bi-credit-card"></i> GST
+          </a>
+        </li>
+        <li class="nav-item" (click)="setActiveTab('product')">
+          <a class="nav-link" [class.active]="activeTab === 'product'" href="javascript:void(0)">
+            <i class="bi bi-credit-card"></i> Product
           </a>
         </li>
       </ul>
@@ -41,8 +46,8 @@
           style="width: 100%;"
           domLayout="autoHeight"
           class="ag-theme-alpine"
-          [rowData]="activeTab === 'category' ? categories :activeTab === 'brand' ? brands :activeTab === 'plan' ? plans :activeTab === 'servicePartner' ? servicePartner : []"
-          [columnDefs]="activeTab === 'category' ? categoryCols :activeTab === 'brand' ? brandCols :activeTab === 'plan' ? planCols :activeTab === 'servicePartner' ? servicePartnerCols : []"
+          [rowData]="activeTab === 'category' ? categories :activeTab === 'brand' ? brands :activeTab === 'coupon' ? coupons :activeTab === 'gst' ? gst:activeTab === 'product' ? product : []"
+          [columnDefs]="activeTab === 'category' ? categoryCols :activeTab === 'brand' ? brandCols :activeTab === 'coupon' ? couponCols :activeTab === 'gst' ? gstCols :activeTab === 'product' ? productCols: []"
           [animateRows]="true"
           (cellClicked)="onCellClicked($event)"
         >

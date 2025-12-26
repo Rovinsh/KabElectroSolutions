@@ -26,12 +26,12 @@ namespace MSSolutions.Controllers
         [HttpGet("brands")]
         public async Task<IActionResult> GetBrands()
         {
-            var data = await _context.Brands
+            var data = await _context.MsBrands
          .Select(b => new BrandsDTO
          {
              Id = b.Id,
              CategoryId = b.CategoryId,
-             CategoryName = _context.Categories.Where(c => c.Id == b.CategoryId).Select(c => c.CatName).FirstOrDefault(),
+             CategoryName = _context.MsCategories.Where(c => c.Id == b.CategoryId).Select(c => c.CatName).FirstOrDefault(),
              BrandName = b.BrandName,
              Description = b.Description,
              IsDisable = b.IsDisable,
@@ -49,19 +49,19 @@ namespace MSSolutions.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBrands([FromBody] Brands brands)
+        public async Task<IActionResult> CreateBrands([FromBody] MsBrands brands)
         {
             if (brands == null)
                 return BadRequest("Invalid brand data");
 
-            bool exists = await _context.Brands.AnyAsync(b => b.CategoryId == brands.CategoryId
+            bool exists = await _context.MsBrands.AnyAsync(b => b.CategoryId == brands.CategoryId
                     && b.BrandName == brands.BrandName);
 
             if (exists)
                 return Conflict("A brand with the same name already exists in this category.");
             try
             {
-                _context.Brands.Add(brands);
+                _context.MsBrands.Add(brands);
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetBrands), new { id = brands.Id }, brands);
@@ -75,16 +75,16 @@ namespace MSSolutions.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> UpdateBrand(int id, [FromBody] Brands updatedBrand)
+        public async Task<IActionResult> UpdateBrand(int id, [FromBody] MsBrands updatedBrand)
         {
             if (updatedBrand == null)
                 return BadRequest("Invalid brand data");
 
-            var existingBrand = await _context.Brands.FindAsync(id);
+            var existingBrand = await _context.MsBrands.FindAsync(id);
             if (existingBrand == null)
                 return NotFound("Brand not found");
 
-            bool duplicateExists = await _context.Brands.AnyAsync(b => b.Id != id &&
+            bool duplicateExists = await _context.MsBrands.AnyAsync(b => b.Id != id &&
                       b.CategoryId == updatedBrand.CategoryId &&
                       b.BrandName == updatedBrand.BrandName);
 
@@ -98,7 +98,7 @@ namespace MSSolutions.Controllers
 
             try
             {
-                _context.Brands.Update(existingBrand);
+                _context.MsBrands.Update(existingBrand);
                 await _context.SaveChangesAsync();
                 return Ok(existingBrand);
             }

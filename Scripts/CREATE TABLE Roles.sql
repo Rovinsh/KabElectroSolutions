@@ -1,0 +1,4 @@
+CREATE TABLE MsRoles (
+    RoleId INT PRIMARY KEY IDENTITY(1,1),
+    RoleName NVARCHAR(100)
+);

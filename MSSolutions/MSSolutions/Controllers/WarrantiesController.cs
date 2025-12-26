@@ -78,9 +78,9 @@ namespace MSSolutions.Controllers
             var warranties = await (
               from w in _context.Warranties
               join p in _context.Plans on w.ProductId equals p.Id
-              join c in _context.Categories on p.CatId equals c.Id into categoryGroup
+              join c in _context.MsCategories on p.CatId equals c.Id into categoryGroup
               from cat in categoryGroup.DefaultIfEmpty()
-              join b in _context.Brands on p.BrandId equals b.Id into brandGroup
+              join b in _context.MsBrands on p.BrandId equals b.Id into brandGroup
               from brand in brandGroup.DefaultIfEmpty() 
               where
               w.IsDisable == true &&                                     
