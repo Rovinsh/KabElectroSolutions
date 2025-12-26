@@ -415,8 +415,8 @@ export interface UserResponseDto {
 
 export interface ReportFilterDto {
   reportType: string | null;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: string | null;
+  endDate: string | null;
   reportName:string;
 }
 

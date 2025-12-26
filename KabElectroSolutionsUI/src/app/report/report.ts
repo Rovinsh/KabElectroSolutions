@@ -35,8 +35,8 @@ export class ReportComponent implements OnInit {
   isSubmitting = false;
  claims: Claim[]=[];
  isLoading = false;
-  reportTypes: string[] = ['Zopper Call Report', 'Open', 'Closed', 'Aborted'];
-  selectedReportType = 'Zopper Call Report';
+  reportTypes: string[] = ['Kab Call Report', 'Open', 'Closed', 'Aborted'];
+  selectedReportType = 'Kab Call Report';
 
   selectedRange = {
     start: null as Date | null,
@@ -117,9 +117,19 @@ export class ReportComponent implements OnInit {
 
   resetFilters() {  this.isLoading = true;
     this.selectedRange = { start: null, end: null };
-    this.selectedReportType = 'Zopper Call Report';
+    this.selectedReportType = 'Kab Call Report';
     this.loadReports();  
   }
+
+  formatDateOnly(date: Date | null): string | null {
+  if (!date) return null;
+
+  const y = date.getFullYear();
+  const m = (date.getMonth() + 1).toString().padStart(2, '0');
+  const d = date.getDate().toString().padStart(2, '0');
+
+  return `${y}-${m}-${d}`;
+}
 
   loadReports() {
     this.apiService.getReports().subscribe((res) => {
@@ -132,8 +142,8 @@ export class ReportComponent implements OnInit {
  loadFilteredReports(reportName: string) {
     const payload: ReportFilterDto = {
       reportType: this.selectedReportType,
-      startDate: this.selectedRange.start!,
-      endDate: this.selectedRange.end!,
+      startDate: this.formatDateOnly(this.selectedRange.start!),
+      endDate: this.formatDateOnly(this.selectedRange.end!),      
       reportName
     };
     this.apiService.postReport(payload).subscribe(res => {

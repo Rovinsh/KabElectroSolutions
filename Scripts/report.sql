@@ -1,13 +1,33 @@
-CREATE TABLE Reports (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    DateRange NVARCHAR(200) NULL,
-    FileName NVARCHAR(300) NULL,
-    CreatedDate DATE NOT NULL,
-    StartDate DATE NOT NULL,
-    EndDate DATE NOT NULL,
-    TimeStamp NVARCHAR(100) NULL,
-    Status NVARCHAR(50) NOT NULL
-);
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Reports](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[DateRange] [nvarchar](200) NULL,
+	[FileName] [nvarchar](300) NULL,
+	[CreatedDate] [date] NOT NULL,
+	[StartDate] [date] NOT NULL,
+	[EndDate] [date] NOT NULL,
+	[TimeStamp] [nvarchar](100) NULL,
+	[Status] [nvarchar](50) NOT NULL,
+	[CreatedById] [int] NOT NULL,
+	[CreatedByName] [varchar](255) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Reports] ADD  DEFAULT ((0)) FOR [CreatedById]
+GO
+
+ALTER TABLE [dbo].[Reports] ADD  DEFAULT ('') FOR [CreatedByName]
+GO
+
 
 INSERT INTO Reports
 (

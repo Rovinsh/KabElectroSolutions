@@ -49,7 +49,7 @@ namespace KabElectroSolutions.Controllers
                 List<Models.Claim> claims;
                 var performerEmail = User?.Identity?.Name ?? "System";
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
-                if (user.BusinessroleName == "Super Admin")
+                if (user.BusinessroleName == "Super Admin" || user.BusinessroleName == "Customer Care Executive")
                 {
 
                     if (statusId != null && statusId > 0)
