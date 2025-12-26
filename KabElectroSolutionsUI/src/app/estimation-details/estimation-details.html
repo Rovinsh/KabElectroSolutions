@@ -1,0 +1,51 @@
+<div class="card">
+  <div class="card-header">Estimation Details</div>
+
+  <table class="estimation-table">
+    <thead>
+      <tr>
+        <th>Sl.No</th>
+        <th>Type</th>
+        <th>Material</th>
+        <th>Price</th>
+        <th>Tax</th>
+        <th>Tax Amount</th>
+        <th>Total Cost</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of estimationList; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.material }}</td>
+        <td>{{ item.price }}</td>
+        <td>{{ item.taxPercent }}%</td>
+        <td>{{ item.taxAmount }}</td>
+        <td>Rs.{{ item.totalCost }}</td>
+      </tr>
+
+      <!-- TOTAL ROW -->
+      <tr class="total-row">
+        <td colspan="6" class="text-right"><strong>Total:</strong></td>
+        <td><strong>Rs. {{ grandTotal }}</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card action-card">
+  <div class="card-header">Action</div>
+
+  <div class="action-grid">
+    <div>
+      <strong>Coverage Remaining :</strong> {{ coverageRemaining }}
+    </div>
+    <div>
+      <strong>Estimated Amount :</strong> {{ grandTotal | number:'1.2-2' }}
+    </div>
+    <div>
+      <strong>Warranty Amount :</strong> {{ warrantyAmount }}
+    </div>
+  </div>
+</div>

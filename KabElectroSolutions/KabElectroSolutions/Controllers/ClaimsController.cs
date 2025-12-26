@@ -74,7 +74,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.RegisteredBy == user.Id && claim.Status == statusId || validStatusNames.Contains(claim.StatusName)).ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.RegisteredBy == user.Id && (claim.Status == statusId || validStatusNames.Contains(claim.StatusName))).ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.RegisteredBy == user.Id).ToListAsync();
 
@@ -91,7 +91,7 @@ namespace KabElectroSolutions.Controllers
                     {
                         var substatus = _context.SubStatuses.Where(substatus => substatus.SubStatusId == statusId).FirstOrDefault();
                         if (substatus.Name == "Claim Verified")
-                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && claim.Status == statusId || validStatusNames.Contains(claim.StatusName)).ToListAsync();
+                            claims = await _context.Claims.Where(claim => claim.ServicePartner == user.PartnerId && (claim.Status == statusId || validStatusNames.Contains(claim.StatusName))).ToListAsync();
                         else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId && claim.ServicePartner == user.PartnerId).ToListAsync();
                     }
@@ -885,7 +885,36 @@ namespace KabElectroSolutions.Controllers
             return Ok(response);
         }
 
-      private string GetMimeTypeFromFileName(string fileName)
+
+        [HttpGet("GetClaimEstimationDetails/{claimId}")]
+        public async Task<IActionResult> GetEstimationDetails(int claimId)
+        {
+            var items = await _context.EstimationDetails
+                .Where(x => x.ClaimId == claimId)
+                .Select(x => new EstimationDetailResponseDto
+                {
+                    ClaimId = x.ClaimId,
+                    Type = x.Type,
+                    Material = x.Material,
+                    HSNCode = x.HSNCode,
+                    Price = x.Price,
+                    TaxPercent = x.TaxPercent,
+                    TaxAmount = Math.Round(x.Price * x.TaxPercent / 100, 2),
+                    TotalCost = Math.Round(
+                        x.Price + (x.Price * x.TaxPercent / 100), 2)
+                })
+                .ToListAsync();
+
+            var response = new EstimationSummaryResponseDto
+            {
+                Items = items,
+                GrandTotal = items.Sum(x => x.TotalCost)
+            };
+
+            return Ok(response);
+        }
+
+        private string GetMimeTypeFromFileName(string fileName)
         {
             var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
 

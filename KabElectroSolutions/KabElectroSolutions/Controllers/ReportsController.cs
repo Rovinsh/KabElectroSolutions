@@ -64,31 +64,31 @@ namespace KabElectroSolutions.Controllers
                 .Where(c => c.CreatedDate >= start && c.CreatedDate <= end)
                 .ToListAsync();
 
-            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
+            //string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+            //if (!Directory.Exists(folderPath))
+            //    Directory.CreateDirectory(folderPath);
 
-            string filePath = Path.Combine(folderPath, fileName);
+            //string filePath = Path.Combine(folderPath, fileName);
 
-            using (var workbook = new XLWorkbook())
-            {
-                var ws = workbook.Worksheets.Add("Report");
+            //using (var workbook = new XLWorkbook())
+            //{
+            //    var ws = workbook.Worksheets.Add("Report");
 
-                var props = typeof(Claim).GetProperties();
+            //    var props = typeof(Claim).GetProperties();
 
-                for (int i = 0; i < props.Length; i++)
-                    ws.Cell(1, i + 1).Value = props[i].Name;
+            //    for (int i = 0; i < props.Length; i++)
+            //        ws.Cell(1, i + 1).Value = props[i].Name;
 
-                for (int row = 0; row < claims.Count; row++)
-                {
-                    for (int col = 0; col < props.Length; col++)
-                    {
-                        var value = props[col].GetValue(claims[row]);
-                        ws.Cell(row + 2, col + 1).Value = value?.ToString() ?? "";
-                    }
-                }
-                workbook.SaveAs(filePath);
-            }
+            //    for (int row = 0; row < claims.Count; row++)
+            //    {
+            //        for (int col = 0; col < props.Length; col++)
+            //        {
+            //            var value = props[col].GetValue(claims[row]);
+            //            ws.Cell(row + 2, col + 1).Value = value?.ToString() ?? "";
+            //        }
+            //    }
+            //    workbook.SaveAs(filePath);
+            //}
             string fileUrl = $"/Reports/{fileName}";
             if (report.ReportName == "generateLink")
             {
@@ -102,7 +102,7 @@ namespace KabElectroSolutions.Controllers
                     Status = "Uploaded",
                     DateRange = $"{report.StartDate:yyyy-MM-dd} - {report.EndDate:yyyy-MM-dd}",
                     FileName = fileName,
-                    TimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+                    TimeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
 
                 _context.Reports.Add(reportData);
@@ -114,7 +114,7 @@ namespace KabElectroSolutions.Controllers
                     message = "Report link generated",
                     fileUrl,
                     report = reportData,
-                    claims = new { Count = claims.Count }
+                    claims = new { Count = claims.Count },
                 });
             }
             return Ok(new
@@ -122,8 +122,35 @@ namespace KabElectroSolutions.Controllers
                 status = 200,
                 message = "Report downloaded",
                 fileUrl,
-                claims = new { Count = claims.Count }
+                claims = new { Count = claims.Count, claimsData= claims }
             });
+        }
+
+        [HttpGet("GetReportOnLinkClick/{dateRange}")]
+        public async Task<IActionResult> GetReportOnLinkClick(string dateRange)
+        {
+            if (dateRange == null)
+                return BadRequest("Invalid report data");
+            var performerEmail = User?.Identity?.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+            var parts = dateRange.Split(" - ", StringSplitOptions.TrimEntries);
+            var claims = new List<Claim>();
+            if (parts.Length == 2 &&
+                DateOnly.TryParse(parts[0], out var fromDate) &&
+                DateOnly.TryParse(parts[1], out var toDate))
+            {
+
+              claims = await _context.Claims
+                    .Where(c => c.CreatedDate >= fromDate && c.CreatedDate <= toDate)
+                    .ToListAsync();
+            }
+                return Ok(new
+                {
+                    status = 200,
+                    message = "Report downloaded",
+                    claims = new { Count = claims.Count, claimsData = claims }
+
+                });            
         }
     }
 }

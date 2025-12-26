@@ -79,7 +79,11 @@ export class ApiService {
     return this.http.get<WarrantyDto[]>(`${this.baseUrl}Warranties/byparameter`, { params });
   }
 
-  getReports(): Observable<ReportsResponseDto> {
+  GetReportOnLinkClick(dateRange: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}Reports/GetReportOnLinkClick/${dateRange}`);
+  }
+
+   getReports(): Observable<ReportsResponseDto> {
     return this.http.get<ReportsResponseDto>(`${this.baseUrl + "Reports/reports"}`);
   }
 
@@ -204,6 +208,12 @@ export class ApiService {
       `${this.baseUrl}Claims/GetClaimInvoiceDetail/${claimId}`
     );
   }
+
+   GetClaimEstimationDetails(claimId: number): Observable<EstimationSummaryResponseDto > {
+    return this.http.get<EstimationSummaryResponseDto >(
+      `${this.baseUrl}Claims/GetClaimEstimationDetails/${claimId}`
+    );
+  }  
 }
 
 export interface InvoiceDetail {
@@ -413,6 +423,22 @@ export interface UserResponseDto {
   data: UserDto[];
 }
 
+export interface EstimationDetailResponseDto {
+  claimId: number;
+  type: string;
+  material: string;
+  hsnCode: string;
+  price: number;
+  taxPercent: number;
+  taxAmount: number;
+  totalCost: number;
+}
+
+export interface EstimationSummaryResponseDto {
+  items: EstimationDetailResponseDto[];
+  grandTotal: number;
+}
+
 export interface ReportFilterDto {
   reportType: string | null;
   startDate: string | null;
@@ -427,6 +453,12 @@ export interface ReportsDto {
   dateRange: string;
   timeStamp: string;
   status: string;
+}
+
+export interface ReportsResponseDto {
+  status: number;
+  message: string;
+  data: ReportsDto[];
 }
 
 export interface ReportsResponseDto {

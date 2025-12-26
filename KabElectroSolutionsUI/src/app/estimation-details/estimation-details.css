@@ -1,0 +1,64 @@
+.card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  background: #fff;
+}
+
+.card-header {
+  padding: 10px 14px;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  background: #f8f8f8;
+}
+
+.estimation-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+  }
+
+  th {
+    text-align: left;
+    background: #fafafa;
+    font-weight: 600;
+  }
+}
+
+.total-row td {
+  background: #fcfcfc;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* ACTION SECTION */
+.action-card {
+  padding-bottom: 10px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 14px;
+  gap: 20px;
+  font-size: 14px;
+}
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}

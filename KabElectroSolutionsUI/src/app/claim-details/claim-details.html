@@ -13,8 +13,9 @@
     <button class="accept" *ngIf="claim?.statusName === 'Service Centre Assigned' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Call Accepted By Service Center', 'Call accepted')">Accept Call</button>
     <button class="reject" *ngIf="claim?.statusName === 'Estimation Shared' && (role == 'Customer Care Executive' || role == 'Super Admin')" (click)="updateClaimStatus('Re Estimate', 'Estimate Rejected')">Reject Estimate</button>
     <button class="accept" *ngIf="claim?.statusName === 'Estimation Shared' && (role == 'Customer Care Executive' || role == 'Super Admin')" (click)="updateClaimStatus('Estimate Accepted', 'Estimate Accepted')">Accept Estimate</button>
-    <button class="images" *ngIf="role == 'Customer Care Executive' || role == 'Super Admin'" (click)="OpenClaimImagesPopup(claimId)">Images</button>
-          <button mat-icon-button (click)="close()" class="close-btn" style="background-color: black;">X</button>
+    <!-- <button class="images" *ngIf="role == 'Customer Care Executive' || role == 'Super Admin'" (click)="OpenClaimImagesPopup(claimId)">Images</button> -->
+         <button class="images" (click)="OpenClaimImagesPopup(claimId)">Images</button> 
+    <button mat-icon-button (click)="close()" class="close-btn" style="background-color: black;">X</button>
   </div>
 <div class="container">
 
@@ -44,7 +45,9 @@
   <!-- Existing claim details UI here -->
 </div>
 <div *ngIf="selectedTab === 'history'">History Content...</div>
-<div *ngIf="selectedTab === 'estimation'">Estimation Content...</div>
+<div *ngIf="selectedTab === 'estimation'">
+<app-estimation-details *ngIf="claimId"  [claimId]="claimId"></app-estimation-details>
+</div>
 
 <div class="status-bar" *ngIf="selectedTab === 'details'">
   @for (step of steps; let i = $index; track step) {

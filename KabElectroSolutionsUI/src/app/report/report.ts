@@ -59,10 +59,22 @@ export class ReportComponent implements OnInit {
     field: 'fileName',
     cellRenderer: (params: any) => {
       const file = params.value;
-      if (!file) return '-';
-      return `<a href="/Reports/${file}" target="_blank" download>
-                ${file}
-              </a>`;
+      // if (!file) return '-';
+      // return `<a href="/Reports/${file}" target="_blank" download>
+      //           ${file}
+      //         </a>`;
+      if (!params.value) return '-';
+
+      return `
+        <span class="download-link" style="color:#1976d2; cursor:pointer; text-decoration:underline;">
+          ${params.value}
+        </span>
+      `;
+    },
+    onCellClicked: params => {
+      if (params.value) {
+        this.downloadReportOnLinkClick(params.data!.dateRange);
+      }
     }
   },
     { headerName: 'File Name', field: 'fileName', cellClass: 'excelCell' },
@@ -109,6 +121,21 @@ export class ReportComponent implements OnInit {
     this.loadFilteredReports("downloadReport");
   }
 
+  downloadReportOnLinkClick(dateRange: any) {
+    this.isLoading = true;
+    this.apiService.GetReportOnLinkClick(dateRange).subscribe(res => {
+      this.isLoading = false;
+      this.claims = res.claims.claimsData;
+
+      const worksheet = XLSX.utils.json_to_sheet(this.claims);
+      const workbook = { Sheets: { 'crm_report_': worksheet }, SheetNames: ['crm_report_'] };
+      const fileName =
+        "crm_report_" + dateRange + ".xlsx";
+      XLSX.writeFile(workbook, fileName);
+      this.isLoading = false;
+    });
+  }
+
   generateLink() { this.isSubmitting = true;
     if (!this.canFilter()) return;
      this.isLoading = true;
@@ -150,12 +177,14 @@ export class ReportComponent implements OnInit {
 
       if (reportName === "downloadReport") {
         this.isLoading = false;this.isSubmitting = false;
+        this.claims = res.claims.claimsData;
         this.exportToExcel();
         return;
       }
 
       if (reportName === "generateLink") {
-        this.loadReports();this.isSubmitting = false;
+        this.loadReports();
+        this.isSubmitting = false;
         this.isLoading = false;
       }
     });
@@ -163,7 +192,7 @@ export class ReportComponent implements OnInit {
 
 
   exportToExcel() {
-    if (!this.reports || this.reports.length === 0) return;
+    //if (!this.reports || this.reports.length === 0) return;
 const worksheet = XLSX.utils.json_to_sheet(this.claims);
   const workbook = { Sheets: { 'crm_report_': worksheet }, SheetNames: ['crm_report_'] };
   const fileName =
