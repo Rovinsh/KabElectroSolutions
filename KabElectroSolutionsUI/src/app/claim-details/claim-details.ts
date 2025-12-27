@@ -15,12 +15,13 @@ import { forkJoin } from 'rxjs';
 import { ClaimImages } from '../claim-images/claim-images';
 import { MatDialog } from '@angular/material/dialog';
 import {EstimationDetails} from '../estimation-details/estimation-details'
+import {ClaimHistory} from '../claim-history/claim-history'
 
 @Component({
   selector: 'app-claim-details',
   templateUrl: './claim-details.html',
   styleUrls: ['./claim-details.css'],
-  imports: [CommonModule, MatDialogModule, MatButtonModule,MatIconModule,AuditLogComponent,FormsModule,EstimationDetails ],
+  imports: [CommonModule, MatDialogModule, MatButtonModule,MatIconModule,AuditLogComponent,FormsModule,EstimationDetails,ClaimHistory ],
   providers: [DatePipe]
 })
 export class ClaimDetailsComponent implements OnInit {

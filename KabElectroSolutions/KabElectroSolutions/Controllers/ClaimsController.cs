@@ -120,6 +120,33 @@ namespace KabElectroSolutions.Controllers
             }
         }
 
+
+        [HttpGet("GetClaimsByPhoneNumber/{phoneNumber}")]
+        public async Task<IActionResult> GetClaimsByPhoneNumber(string phoneNumber)
+        {
+            try
+            {
+                var claims = await _context.Claims.Where(claim => claim.CustomerPhone == phoneNumber).ToListAsync();
+
+                var response = new ClaimsResponseDto
+                {
+                    Status = 200,
+                    Message = "List of calls",
+                    Data = new ClaimsDataDto
+                    {
+                        Count = claims.Count,
+                        Results = claims
+                    }
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("claim")]
         public async Task<IActionResult> GetClaim([FromQuery] int? claimId)
         {
@@ -372,7 +399,7 @@ namespace KabElectroSolutions.Controllers
             _context.Entry(existingClaim).Property(x => x.Status).IsModified = true;
             _context.Entry(existingClaim).Property(x => x.StatusName).IsModified = true;
             _context.Entry(existingClaim).Property(x => x.PreviousStatus).IsModified = true;
-            if(status == "Invoice Rejected By Service")
+            if (status == "Invoice Rejected By Service")
             {
                 var invoice = await _context.InvoiceDetails.FirstOrDefaultAsync(x => x.ClaimId == id && !x.IsRejected);
                 invoice!.IsRejected = true;
@@ -836,8 +863,8 @@ namespace KabElectroSolutions.Controllers
                     : null,
 
                 CustomerSatisfactionFileName = record.CustomerSatisfactionFileName,
-                CustomerSatisfactionImageBase64 = record.CustomerSatisfactionImage !=null ?
-                    ToBase64(record.CustomerSatisfactionImage): null,
+                CustomerSatisfactionImageBase64 = record.CustomerSatisfactionImage != null ?
+                    ToBase64(record.CustomerSatisfactionImage) : null,
 
                 CreatedBy = record.CreatedBy,
                 CreatedOn = record.CreatedOn

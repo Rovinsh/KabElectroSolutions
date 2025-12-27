@@ -17,6 +17,10 @@ export class ApiService {
     return this.http.get(`${this.baseUrl+controllerName}`);
   }
 
+  getClaimsByPhoneNumber(phoneNumber:string): Observable<any> {
+    return this.http.get(`${this.baseUrl}Claims/GetClaimsByPhoneNumber/${phoneNumber}`);
+  }
+
   getAuditLogs(controllerName:string): Observable<any> {
     return this.http.get(`${this.baseUrl+controllerName}`);
   }

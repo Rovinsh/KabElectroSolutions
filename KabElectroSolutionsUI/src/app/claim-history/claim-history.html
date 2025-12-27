@@ -1,0 +1,40 @@
+ <div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+         </div>
+     
+<div class="timeline-wrapper" *ngFor="let item of claims">
+  <div class="timeline-header">
+    <div class="date">{{ item.createdDate | date:'MMM d, y'}}</div>
+    <div class="center" style="margin-right: 18%;">
+      Assigned Service Center :
+      <strong>{{ item.servicePartnerName }}</strong>
+    </div>
+  </div>
+
+  <div class="timeline-row">
+    <div class="timeline">
+      <div class="step" *ngFor="let step of steps; let i = index">
+        <div
+          class="circle"
+          [class.completed]="isCompleted(i, item.status)"
+        ></div>
+
+        <div
+          class="line"
+          *ngIf="i < steps.length - 1"
+          [class.completed]="isCompleted(i, item.status)"
+        ></div>
+
+        <div
+          class="label"
+          [class.completed]="isCompleted(i, item.status)"
+        >
+          {{ step }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

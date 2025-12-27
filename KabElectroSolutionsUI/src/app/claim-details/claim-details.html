@@ -45,7 +45,9 @@
 <div *ngIf="selectedTab === 'details'">
   <!-- Existing claim details UI here -->
 </div>
-<div *ngIf="selectedTab === 'history'">History Content...</div>
+<div *ngIf="selectedTab === 'history'">
+  <app-claim-history *ngIf="claimId" [phoneNumber]="claim!.customerPhone" [statusList]="status"  [claimId]="claimId"></app-claim-history>
+</div>
 <div *ngIf="selectedTab === 'estimation'">
 <app-estimation-details *ngIf="claimId"  [claimId]="claimId"></app-estimation-details>
 </div>

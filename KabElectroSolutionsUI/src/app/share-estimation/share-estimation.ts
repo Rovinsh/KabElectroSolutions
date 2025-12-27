@@ -12,6 +12,210 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { ApiService, ShareEstimationDto } from '../services/api.service';
 import { ToastService } from '../services/toastService.service';
 
+const materialsConfig = {
+  Services: {
+    'air conditioner':[
+  'Brand Visit Charges',
+  'Onsite Service Charge',
+  'Service / Inspection Charge',
+  'Facilitation Charges',
+  'Weekend Incentive',
+  'AC Dry Service',
+  'AC Wet Service',
+  'AC Deep Cleaning',
+  'Indoor Unit Cleaning',
+  'Outdoor Unit Cleaning',
+  'AC Installation (Split AC)',
+  'AC Uninstallation',
+  'AC Re-Installation',
+  'Window AC Installation',
+  'Window AC Uninstallation',
+  'AC Onsite Repair',
+  'AC Offsite Repair',
+  'Cooling Issue Repair',
+  'Noise Issue Repair',
+  'Water Leakage Repair'],
+    'water purifier': [],
+    'ice cube machine': [],
+    'refrigerator': [
+ 'Refrigerator below 400 ltrs onsite repair',
+'Brand visit charges',
+'Refrigerator below 400 ltrs servicing / visiting charge',
+'Facilitation Charges',
+'Refrigerator above 500 ltrs Installation',
+'Onsite service charge',
+'Service charge',
+'Refrigerator above 500 ltrs onsite repair',
+'Weekend Incentive',
+'Refrigerator 400 ltrs to 500 ltrs Installation',
+'Gasket',
+'Refrigerator above 500 ltrs offsite repair',
+'Refrigerator 400 ltrs to 500 ltrs onsite repair',
+'Brand Service Charge',
+'Labour Charge',
+'Transportation Charges',
+'Refrigerator below 400 ltrs offsite repair',
+'Compressor PCB replace charges',
+'Refrigerator Deep Cleaning',
+'Refrigerator 400 ltrs to 500 ltrs servicing / visiting charge'
+    ],
+    'washing machine': [
+      'Brand Visit Charges',
+'Onsite Service Charge',
+'Service / Inspection Charges',
+'Facilitation Charges',
+'Weekend Incentive',
+'Washing Machine Dry Service',
+'Washing Machine Wet Service',
+'Washing Machine Deep Cleaning',
+'Drum Cleaning',
+'Filter Cleaning',
+'Washing Machine Onsite Repair',
+'Washing Machine Offsite Repair',
+'Noise / Vibration Issue Repair',
+'Water Leakage Repair',
+'Spin / Dry Issue Repair',
+'Power Issue Repair',
+'Door Lock Issue Repair',
+'Washing Machine Installation',
+'Washing Machine Uninstallation',
+'Washing Machine Re-Installation',
+'Labour Charges',
+'Electrical Work Charges',
+'Wiring / Minor Electrical Repair',
+'Transportation Charges',
+'Stand / Base Adjustment Charges',
+'Extra Work Charges'
+    ]
+  },
+  'Spare Parts': {
+    'air conditioner':[
+  'Gas Checking Charges',
+  'Gas Top-Up Charges',
+  'Full Gas Charging Charges',
+  'Vacuuming Charges',
+  'PCB (Indoor PCB)',
+  'Outdoor PCB',
+  'Inverter PCB',
+  'Display PCB',
+  'Control Box',
+  'Capacitor (Indoor)',
+  'Capacitor (Outdoor)',
+  'Relay',
+  'Transformer',
+  'Room Temperature Sensor',
+  'Coil Sensor',
+  'Outdoor Sensor',
+  'Thermostat',
+  'Indoor Fan Motor',
+  'Outdoor Fan Motor',
+  'Blower / Cross Flow Fan',
+  'Fan Blade',
+  'Compressor',
+  'Condenser Coil',
+  'Evaporator Coil',
+  'Discharge Pipe',
+  'Suction Pipe',
+  'Capillary Tube',
+  'Filter Drier',
+  'Refrigerant Gas (R22 / R32 / R410)',
+  'Gas Charging',
+  'Gas Leakage Repair Kit',
+  'Valve / Service Valve',
+  'Drain Pipe',
+  'Drain Tray',
+  'Water Pump',
+  'Indoor Front Panel',
+  'Indoor Grill',
+  'Outdoor Cover',
+  'Swing Flap / Louver',
+  'Wiring Harness',
+  'Power Cord',
+  'Connector',
+  'Insulation Tape',
+  'Nut Bolt Set',
+  'Copper Pipe (Per Meter)',
+  'Insulation Pipe',
+  'Drain Pipe (Flexible)',
+  'Wall Sleeve',
+  'Clamp / Stand'],
+    'water purifier': [],
+    'ice cube machine': [],
+    'refrigerator': [
+      'Reserve Valve Convertable',
+'Panel',
+'Holder',
+'Thermostat',
+'Motor',
+'Fan Motor',
+'ASSY SHELF GLASS REF SHELF',
+'Discharge Coil',
+'Inverter Board',
+'Gas Charging',
+'Hot Lock Pipe',
+'Control Box',
+'Temperature Sensor',
+'Complete Fan Set',
+'Tray',
+'Wiring',
+'Water Valve',
+'Lock Bracket',
+'Gas Charging (duplicate option – system me do baar dikh raha hai)',
+'GAS KIT'
+    ],
+    'washing machine': [
+      'Main PCB',
+  'Display PCB',
+  'Inverter PCB',
+  'Control Panel',
+  'Power Cord',
+  'Noise Filter',
+  'Motor',
+  'Motor Capacitor',
+  'Clutch',
+  'Gear Box',
+  'Belt / Drive Belt',
+  'Pulley',
+  'Water Inlet Valve',
+  'Drain Pump',
+  'Drain Motor',
+  'Pressure Switch',
+  'Drain Hose',
+  'Inlet Hose',
+  'Door Lock',
+  'Door Switch',
+  'Lid Switch',
+  'Door Handle',
+  'Door Glass',
+  'Inner Drum',
+  'Outer Tub',
+  'Drum Shaft',
+  'Spider Arm',
+  'Bearing',
+  'Oil Seal',
+  'Temperature Sensor',
+  'Float Switch',
+  'Overflow Sensor',
+  'Front Panel',
+  'Top Cover',
+  'Knob / Selector Switch',
+  'Soap Dispenser',
+  'Lint Filter',
+  'Wiring Harness',
+  'Connector',
+  'Clamp',
+  'Spring',
+  'Nut Bolt Set',
+  'Machine Stand',
+  'Anti-Vibration Pad',
+  'Rubber Foot'
+    ]
+  }
+} as const;
+
+type MaterialType = keyof typeof materialsConfig; // "Services" | "Spare Parts"
+//type MaterialCategory<T extends MaterialType> = keyof typeof materialsConfig[T];
+
 @Component({
   selector: 'app-share-estimation',
   templateUrl: './share-estimation.html',
@@ -33,13 +237,17 @@ export class ShareEstimationComponent {
 
   @ViewChildren("fileInputs") fileInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
-  materialList = ['PCB Replace', 'Service Valv', 'Motor', 'Wiring', 'Compressor'];
+  //materialList = ['PCB Replace', 'Service Valv', 'Motor', 'Wiring', 'Compressor'];
+  materialList: string[] = [];
+  
+
   shareForm!: FormGroup;
   isSubmitting = false;
   private apiService = inject(ApiService);
    private toast = inject(ToastService);
-  private data = inject(MAT_DIALOG_DATA) as { claimId: number };
+  private data = inject(MAT_DIALOG_DATA) as { claimId: number, claimCategory: string };
   claimId = this.data.claimId;
+  claimCategory = this.data.claimCategory;
   isLoading = false;
 
   constructor(
@@ -58,7 +266,8 @@ export class ShareEstimationComponent {
     this.addRow();
   }
 
-  ngOnInit() {
+  ngOnInit() {   
+
     this.addImage("Upload image");
     this.addImage("Upload image", true);
     this.addImage("Upload image", true);
@@ -98,18 +307,45 @@ export class ShareEstimationComponent {
   }
 
   addRow() {
-    this.items.push(
-      this.fb.group({
-        type: ['Services', Validators.required],
-        material: ['PCB Replace', Validators.required],
+    const row =this.fb.group({
+        type: ['Select', Validators.required],
+        material: ['', Validators.required],
         hsn: ['', Validators.required],
         price: [0, [Validators.required, Validators.min(1)]],
         tax: [18, Validators.required],
         removable: [this.items.length > 0]
       })
-    );
+    this.items.push(row);
+
+    type ServiceType = keyof typeof materialsConfig;
+
+type ApplianceType<T extends ServiceType> =
+  keyof typeof materialsConfig[T];    
+    const index = this.items.length - 1;
+    row.get('type')?.valueChanges.subscribe((typ: string | null) => {
+      this.shareForm.get('material')?.setValue('');
+      const type = typ as MaterialType;
+      if (!type || !this.claimCategory) {
+  this.materialList = [];
+  return;
+}
+      const categoryKey = this.normalize(this.claimCategory);
+      //this.materialList = [...materialsConfig[type][this.categoryKey]];
+      if (categoryKey in materialsConfig[type]) {
+  this.materialList = [
+    ...materialsConfig[type][
+      categoryKey as keyof typeof materialsConfig[typeof type]
+    ]
+  ];
+} else {
+  this.materialList = [];
+}
+    });
   }
 
+  normalize(value: string): string {
+  return value.trim().toLowerCase();
+}
   removeRow(i: number) {
     if (this.items.at(i).get('removable')?.value) this.items.removeAt(i);
   }

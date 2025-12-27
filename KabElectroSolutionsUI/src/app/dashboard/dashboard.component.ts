@@ -166,7 +166,8 @@ openShareEstimationPopup(claimId: number, claim : Claim) {
         disableClose: true,
         autoFocus: false,
         data: {
-          claimId: claimId
+          claimId: claimId,
+          claimCategory: claim.itemCategory
         }
   });
 

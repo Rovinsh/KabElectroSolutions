@@ -190,7 +190,9 @@ export class DirectClaimFormComponent implements OnInit {
       sgst: [''],
       cgst: [''],
       igst: [''],
-      SLANo: ['']
+      SLANo: [''],
+      brandId: [null],
+      catId: [null]
     });
 
       forkJoin({
@@ -222,53 +224,80 @@ private setupAutocompleteFilters() {
       map(name => name ? this.warrantyTypes.filter(wt => wt.name.toLowerCase().includes(name.toLowerCase())) : this.warrantyTypes)
     );
 
-    this.filteredStates$ = this.directClaimForm.get('stateId')!.valueChanges.pipe(
-      startWith(''),
-      map(v => typeof v === 'string' ? v : v?.name || ''),
-      map(name => name ? this.states.filter(s => s.name.toLowerCase().includes(name.toLowerCase())) : this.states)
-    );
+    // this.filteredStates$ = this.directClaimForm.get('stateId')!.valueChanges.pipe(
+    //   startWith(''),
+    //   map(v => typeof v === 'string' ? v : v?.name || ''),
+    //   map(name => name ? this.states.filter(s => s.name.toLowerCase().includes(name.toLowerCase())) : this.states)
+    // );
 
-    this.filteredCities$ = this.directClaimForm.get('cityId')!.valueChanges.pipe(
+    this.filteredStates$ = this.directClaimForm.get('stateId')?.valueChanges.pipe(
+  startWith(''),
+  map(v => typeof v === 'string' ? v : v?.name || ''),
+  map(name =>
+    name
+      ? this.states.filter(s => s.name.toLowerCase().includes(name.toLowerCase()))
+      : this.states
+  )
+) ?? of([]);
+
+    this.filteredCities$ = this.directClaimForm.get('cityId')?.valueChanges.pipe(
       startWith(''),
       map(v => typeof v === 'string' ? v : v?.name || ''),
       map(name => name 
         ? this.cities.filter(c => c.stateId === this.selectedStateId && c.name.toLowerCase().includes(name.toLowerCase()))
         : this.cities.filter(c => c.stateId === this.selectedStateId))
-    );
+    )?? of([]);
  this.filteredcategories$ = this.directClaimForm.get('categoryName')!.valueChanges.pipe(
       startWith(''),
       map(v => typeof v === 'string' ? v : v?.catName || ''),
       map(catName => catName ? this.categories.filter(s => s.name.toLowerCase().includes(catName.toLowerCase())) : this.categories)
     );
 
-this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
+this.filteredBrands$ = this.directClaimForm.get('brandId')?.valueChanges.pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value?.brandName || ''),
         map(brandName => this.brands.filter(c => 
    c.categoryId === this.selectedCategory &&
    c.brandName.toLowerCase().includes(brandName.toLowerCase())
-))
-      );
-    this.filteredPincodes$ = this.directClaimForm.get('pinCodeId')!.valueChanges.pipe(
+)))?? of([]);
+    this.filteredPincodes$ = this.directClaimForm.get('pinCodeId')?.valueChanges.pipe(
       startWith(''),
       map(v => typeof v === 'string' ? v : v?.pincode?.toString() || ''),
       map(code => code 
         ? this.pincodes.filter(p => p.cityId === this.selectedCityId && p.pincode.toString().includes(code))
         : this.pincodes.filter(p => p.cityId === this.selectedCityId))
-    );
-     this.filteredProduct$ = this.directClaimForm.get('productId')!.valueChanges.pipe(
+    )?? of([]);
+     this.filteredProduct$ = this.directClaimForm.get('productId')?.valueChanges.pipe(
       startWith(''),
       map(v => typeof v === 'string' ? v : v?.planName?.toString() || ''),
       map(code => code 
         ? this.product.filter(p => p.brandId === this.selectedBrand && p.planName.toString().includes(code))
         : this.product.filter(p => p.brandId === this.selectedBrand))
-    );
+    )?? of([]);
 
   }
  
   onWarrantyTypeSelected(wt: WarrantyTypeDto) { this.directClaimForm.patchValue({ warrantyTypeId: wt }); }
-  onStateSelected(state: StateDto) { this.selectedStateId = state.id; this.selectedCityId = null; this.showCities(); this.showPincode(); }
-  onCitySelected(city: CitiesDto) { this.selectedCityId = city.id; this.showPincode(); }
+  onStateSelected(state: StateDto) 
+  { 
+    if (this.selectedStateId === state.id) {
+    return;
+  }
+    this.selectedStateId = state.id;
+    this.selectedCityId = null;
+    this.directClaimForm.get('customerCity')?.reset();
+    this.directClaimForm.get('customerPincode')?.reset();
+     this.showCities(); 
+    this.showPincode(); 
+  }
+  onCitySelected(city: CitiesDto) { 
+    if (this.selectedCityId === city.id) {
+    return;
+  }
+    this.selectedCityId = city.id;
+     this.directClaimForm.get('customerPincode')?.reset();
+    this.showPincode(); 
+  }
   onCategorySelected(s: CategoryDto) {
     this.selectedCategory = s.id;
     this.selectedBrand = null;
@@ -293,15 +322,17 @@ this.filteredBrands$ = this.directClaimForm.get('brandId')!.valueChanges.pipe(
   displayPincodes(pin: PincodeDto | null) { return pin ? pin.pincode.toString() : ''; }
   displayProduct(plan: PlanDto | null) { return plan ? plan.planName : ''; }
   showAllWarrantyTypes() { this.filteredWarrantyTypes$ = of(this.warrantyTypes); }
-  showState() { this.filteredStates$ = of(this.states); }
+  showState() { this.filteredStates$ = of(this.states.sort((a, b) =>
+  a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+)) }
    showCategory() {
     this.filteredcategories$ = of(this.categories);
   }
   showBrand() {  this.filteredBrands$ = of(
     this.brands.filter(b => b.categoryId === this.selectedCategory)
   );}
-  showCities() { this.filteredCities$ = of(this.cities.filter(c => c.stateId === this.selectedStateId)); }
-  showPincode() { this.filteredPincodes$ = of(this.pincodes.filter(p => p.cityId === this.selectedCityId)); }
+  showCities() { this.filteredCities$ = of(this.cities.filter(c => c.stateId === this.selectedStateId).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))); }
+  showPincode() { this.filteredPincodes$ = of(this.pincodes.filter(p => p.cityId === this.selectedCityId).sort((a, b) => a.pincode - b.pincode)); }
   showProduct() { this.filteredProduct$ = of(this.product.filter(p => p.brandId === this.selectedBrand)); }
 
   onSubmit(): void {
