@@ -94,7 +94,24 @@ role:string | null = null;
   }
 
   downloadAll() {
-    console.log('Download bulk images');
+    this.isLoading = true;
+    this.apiService.downloadBulkImages(this.claimId).subscribe( {
+      next: (blob) => {
+        this.isLoading = false;
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Claim_${this.claimId}_Images.zip`;
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+    },
+      error: (err) => {
+        this.toast.error(err?.error || 'Error occured while downloading the files!')
+        this.isLoading = false; // hide spinner even on error
+      }
+      });
   }
 
   detectMimeType(base64: string): string {

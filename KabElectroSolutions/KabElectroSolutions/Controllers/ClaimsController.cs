@@ -8,6 +8,7 @@ using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Compression;
 using System.Security.Claims;
 
 namespace KabElectroSolutions.Controllers
@@ -940,6 +941,162 @@ namespace KabElectroSolutions.Controllers
 
             return Ok(response);
         }
+
+
+        [HttpGet("DownloadBulkImages/{claimId}")]
+        public async Task<IActionResult> DownloadBulkImages(int claimId)
+        {
+            var images = await _context.ClaimImages
+                .Where(x => x.ClaimId == claimId)
+                .ToListAsync();
+
+            var repairImage = await _context.ClaimClosedWithOrWithoutRepairDetails
+.Where(x => x.ClaimId == claimId)
+.FirstOrDefaultAsync();
+
+            var invoice = await _context.InvoiceDetails
+                .Where(x => x.ClaimId == claimId && !x.IsRejected)
+                .FirstOrDefaultAsync();
+
+            if (!images.Any())
+                return BadRequest("No images found");
+
+
+            using var zipStream = new MemoryStream();
+
+            using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+            {
+                foreach (var img in images)
+                {
+                    // Folder structure inside ZIP
+                    var fileName = $"Image_{img.ImageType}{GetExtension(img.ImageData)}";
+                    var entryPath = $"{img.ImageType}/{fileName}";
+
+                    var entry = archive.CreateEntry(entryPath, CompressionLevel.Fastest);
+                    await using var entryStream = entry.Open();
+                    await entryStream.WriteAsync(img.ImageData);
+                }
+                if (repairImage != null)
+                {
+
+                    // Folder structure inside ZIP
+                    if (repairImage.JobSheetImage != null)
+                    {                        
+                        var fileName = $"Image_{repairImage.JobSheetFileName}";
+                        var entryPath = $"Repair/JobSheet/{fileName}";
+
+                        var entry = archive.CreateEntry(entryPath, CompressionLevel.Fastest);
+                        await using var entryStream = entry.Open();
+                        await entryStream.WriteAsync(repairImage.JobSheetImage);
+                    }
+                    if (repairImage.CustomerSatisfactionImage != null)
+                    {
+                        var fileName = $"Image_{repairImage.CustomerSatisfactionFileName}";
+                        var entryPath = $"Repair/CustomerSatisfaction/{fileName}";
+
+                        var entry = archive.CreateEntry(entryPath, CompressionLevel.Fastest);
+                        await using var entryStream = entry.Open();
+                        await entryStream.WriteAsync(repairImage.CustomerSatisfactionImage);
+                    }
+                    if (repairImage.AdditionalImage != null)
+                    {
+                        var fileName = $"Image_{repairImage.AdditionalFileName}";
+                        var entryPath = $"Repair/Additional/{fileName}";
+
+                        var entry = archive.CreateEntry(entryPath, CompressionLevel.Fastest);
+                        await using var entryStream = entry.Open();
+                        await entryStream.WriteAsync(repairImage.AdditionalImage);
+                    }
+                    if(invoice !=null && invoice.InvoiceImage != null)
+                    {
+                        var fileName = $"Image_{invoice.InvoiceFileName}";
+                        var entryPath = $"Invoice/{fileName}";
+
+                        var entry = archive.CreateEntry(entryPath, CompressionLevel.Fastest);
+                        await using var entryStream = entry.Open();
+                        await entryStream.WriteAsync(invoice.InvoiceImage);
+                    }
+                }
+
+            }
+
+            zipStream.Position = 0;
+
+            return File(
+                zipStream.ToArray(),
+                "application/zip",
+                $"Claim_{claimId}_Images.zip"
+            );
+        }
+
+        string GetExtension(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length < 4)
+                return ".bin";
+
+            // ========== IMAGES ==========
+            if (bytes.Take(3).SequenceEqual(new byte[] { 0xFF, 0xD8, 0xFF }))
+                return ".jpg";
+
+            if (bytes.Take(8).SequenceEqual(new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }))
+                return ".png";
+
+            if (bytes.Take(6).SequenceEqual(new byte[] { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 }) ||
+                bytes.Take(6).SequenceEqual(new byte[] { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 }))
+                return ".gif";
+
+            if (bytes.Take(4).SequenceEqual(new byte[] { 0x52, 0x49, 0x46, 0x46 }))
+                return ".webp"; // WEBP
+
+            // ========== DOCUMENTS ==========
+            if (bytes.Take(4).SequenceEqual(new byte[] { 0x25, 0x50, 0x44, 0x46 }))
+                return ".pdf";
+
+            // DOC / XLS / PPT (old MS Office)
+            if (bytes.Take(8).SequenceEqual(new byte[]
+            {
+        0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1
+            }))
+                return ".doc"; // could be xls/ppt too
+
+            // DOCX / XLSX / PPTX (ZIP based)
+            if (bytes.Take(4).SequenceEqual(new byte[] { 0x50, 0x4B, 0x03, 0x04 }))
+                return ".docx"; // or xlsx / pptx / zip
+
+            // ========== AUDIO ==========
+            if (bytes.Take(3).SequenceEqual(new byte[] { 0x49, 0x44, 0x33 }))
+                return ".mp3";
+
+            if (bytes.Take(4).SequenceEqual(new byte[] { 0x52, 0x49, 0x46, 0x46 }))
+                return ".wav";
+
+            // ========== VIDEO ==========
+            // MP4 / MOV
+            if (bytes.Skip(4).Take(4).SequenceEqual(new byte[] { 0x66, 0x74, 0x79, 0x70 }))
+                return ".mp4";
+
+            // AVI
+            if (bytes.Take(4).SequenceEqual(new byte[] { 0x52, 0x49, 0x46, 0x46 }))
+                return ".avi";
+
+            // MKV
+            if (bytes.Take(4).SequenceEqual(new byte[] { 0x1A, 0x45, 0xDF, 0xA3 }))
+                return ".mkv";
+
+            // ========== ARCHIVES ==========
+            if (bytes.Take(2).SequenceEqual(new byte[] { 0x1F, 0x8B }))
+                return ".gz";
+
+            if (bytes.Take(4).SequenceEqual(new byte[] { 0x52, 0x61, 0x72, 0x21 }))
+                return ".rar";
+
+            if (bytes.Take(4).SequenceEqual(new byte[] { 0x50, 0x4B, 0x03, 0x04 }))
+                return ".zip";
+
+            return ".bin";
+        }
+
+
 
         private string GetMimeTypeFromFileName(string fileName)
         {

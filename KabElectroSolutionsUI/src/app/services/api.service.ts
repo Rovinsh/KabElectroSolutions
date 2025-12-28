@@ -21,6 +21,13 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}Claims/GetClaimsByPhoneNumber/${phoneNumber}`);
   }
 
+downloadBulkImages(claimId: number) {
+  return this.http.get(
+    `${this.baseUrl}Claims/DownloadBulkImages/${claimId}`,
+    { responseType: 'blob' }
+  );
+}
+
   getAuditLogs(controllerName:string): Observable<any> {
     return this.http.get(`${this.baseUrl+controllerName}`);
   }

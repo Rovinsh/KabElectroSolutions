@@ -86,7 +86,12 @@ const materialsConfig = {
 'Transportation Charges',
 'Stand / Base Adjustment Charges',
 'Extra Work Charges'
-    ]
+    ],
+   'other': [
+    'Service Charges',
+    'Installation Charges',
+    'Transportantion'
+   ]
   },
   'Spare Parts': {
     'air conditioner':[
@@ -209,12 +214,14 @@ const materialsConfig = {
   'Machine Stand',
   'Anti-Vibration Pad',
   'Rubber Foot'
+    ],
+    'other': [
+      'Part Required'
     ]
   }
 } as const;
 
-type MaterialType = keyof typeof materialsConfig; // "Services" | "Spare Parts"
-//type MaterialCategory<T extends MaterialType> = keyof typeof materialsConfig[T];
+type MaterialType = keyof typeof materialsConfig; 
 
 @Component({
   selector: 'app-share-estimation',
@@ -237,7 +244,6 @@ export class ShareEstimationComponent {
 
   @ViewChildren("fileInputs") fileInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
-  //materialList = ['PCB Replace', 'Service Valv', 'Motor', 'Wiring', 'Compressor'];
   materialList: string[] = [];
   
 
@@ -319,8 +325,7 @@ export class ShareEstimationComponent {
 
     type ServiceType = keyof typeof materialsConfig;
 
-type ApplianceType<T extends ServiceType> =
-  keyof typeof materialsConfig[T];    
+type ApplianceType<T extends ServiceType> =  keyof typeof materialsConfig[T];    
     const index = this.items.length - 1;
     row.get('type')?.valueChanges.subscribe((typ: string | null) => {
       this.shareForm.get('material')?.setValue('');
@@ -329,14 +334,17 @@ type ApplianceType<T extends ServiceType> =
   this.materialList = [];
   return;
 }
-      const categoryKey = this.normalize(this.claimCategory);
-      //this.materialList = [...materialsConfig[type][this.categoryKey]];
+      let categoryKey = this.normalize(this.claimCategory);
+      if(!(categoryKey in materialsConfig[type]))
+      {
+        categoryKey = 'other';
+      }
       if (categoryKey in materialsConfig[type]) {
   this.materialList = [
     ...materialsConfig[type][
       categoryKey as keyof typeof materialsConfig[typeof type]
     ]
-  ];
+  ].sort();
 } else {
   this.materialList = [];
 }

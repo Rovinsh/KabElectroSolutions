@@ -11,4 +11,11 @@ body {
   color: #fff;
   font-weight: 500;
 }
+.material-wide-panel {
+  min-width: 320px !important;
+  max-width: 700px !important;
+}
 
+.material-wide-panel .mat-option-text {
+  white-space: nowrap;
+}

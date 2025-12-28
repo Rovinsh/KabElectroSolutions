@@ -42,8 +42,8 @@
 
       <!-- Material -->
       <mat-form-field appearance="outline">
-        <mat-select formControlName="material">
-          <mat-option *ngFor="let m of materialList" [value]="m">{{ m }}</mat-option>
+        <mat-select formControlName="material" panelClass="material-wide-panel">
+          <mat-option *ngFor="let m of materialList" [value]="m" [matTooltip]="m">{{ m }}</mat-option>
         </mat-select>
       </mat-form-field>
 
