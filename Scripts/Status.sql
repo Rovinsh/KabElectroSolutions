@@ -112,6 +112,9 @@
 -- Status 29: Call Aborted
 --GO
 --INSERT INTO Status (Name) VALUES ('Call Aborted');
+--DECLARE @NewStatusId INT;
+--SET @NewStatusId = SCOPE_IDENTITY();
+--INSERT INTO SubStatus (Name, StatusId) VALUES ('Call Aborted', @NewStatusId);
 -- No substatus
 
 

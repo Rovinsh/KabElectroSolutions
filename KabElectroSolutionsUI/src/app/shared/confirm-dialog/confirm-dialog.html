@@ -1,0 +1,27 @@
+<!-- <div class="dialog-header">
+  <h2>{{ data.title }}</h2>
+
+  <button class="close-btn" (click)="close()" aria-label="Close dialog">
+    ×
+  </button>
+</div> -->
+
+ <h2 class="dialog-header"><span>{{ data.title }}</span>  
+    <button mat-icon-button style="margin-left: 42%;" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cancel()">
+    {{ data.cancelText || 'Cancel' }}
+  </button>
+
+  <button mat-flat-button color="primary" (click)="confirm()">
+    {{ data.confirmText || 'Yes' }}
+  </button>
+</mat-dialog-actions>

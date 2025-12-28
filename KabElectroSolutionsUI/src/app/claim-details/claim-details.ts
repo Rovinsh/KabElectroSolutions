@@ -16,6 +16,7 @@ import { ClaimImages } from '../claim-images/claim-images';
 import { MatDialog } from '@angular/material/dialog';
 import {EstimationDetails} from '../estimation-details/estimation-details'
 import {ClaimHistory} from '../claim-history/claim-history'
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-claim-details',
@@ -135,6 +136,26 @@ downloadPdf() {
       }
     });
   }
+
+confirmAbort(status: string, remarks: string) {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '400px',
+    disableClose: true,
+    data: {
+      title: 'Abort Claim',
+      message: 'Are you sure you want to abort this claim?',
+      onfirmText: 'Yes',
+      cancelText: 'Cancel'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+    if (confirmed) {
+      this.updateClaimStatus(status, remarks);
+    }
+  });
+}
+
 
   updateClaimStatus(status: string, remarks: string) {
     this.isLoading = true;

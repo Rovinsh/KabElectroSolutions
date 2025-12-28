@@ -79,7 +79,8 @@
             <button style="margin-left: 15px;" class="claim-btn" *ngIf="claim?.statusName === 'Call Closed Without Repair' || claim?.statusName === 'Repair Completed' || claim?.statusName === 'Invoice Rejected By Service' && role != 'Brand'" (click)="openRaiseInvoicePopup(claim.id, claim)">RAISE INVOICE</button>
             <label *ngIf="claim.statusName ==='Estimation Shared' && role != 'Brand'">Awaiting Estimate Approval</label>
             <label *ngIf="claim.statusName ==='Invoice Claimed' && role != 'Brand'">Awaiting Invoice Approval</label>
-            <label *ngIf="claim.statusName ==='Invoice Accepted By Service' && role != 'Brand'">Awaiting Invoice Finance Approval</label>                  
+            <label *ngIf="claim.statusName ==='Invoice Accepted By Service' && role != 'Brand'">Awaiting Invoice Finance Approval</label>    
+            <label *ngIf="claim.statusName ==='Call Aborted'">Call Aborted</label>              
           </td>
 
           <td>{{ claim.warrantyActivationCode }}</td>

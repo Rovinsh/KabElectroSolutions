@@ -1,0 +1,25 @@
+.dialog-header {
+  position: relative;
+  padding-right: 40px; 
+
+  h2 {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 6px; 
+    right: 8px;   
+    background: none;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #444;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}
