@@ -4,7 +4,7 @@ import { ColDef } from 'ag-grid-community';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
 import { CategoryFormComponent } from '../../app/category-form/category-form';
-import { ShareEstimationComponent } from '../../app/share-estimation/share-estimation';
+import { ProductImagesComponent } from '../../app/product-images/product-images';
 import { BrandFormComponent } from '../../app/brand-form/brand-form';
 import { CouponFormComponent } from '../../app/coupon-form/coupon-form';
 import { GstFormComponent } from '../../app/gst-form/gst-form';
@@ -121,7 +121,7 @@ loadGst() {this.isLoading = true;
   openImagePopup(data?: any) {
   const isEdit = !!data; 
   let dialogRef;
- dialogRef = this.dialog.open(ShareEstimationComponent, {
+ dialogRef = this.dialog.open(ProductImagesComponent, {
         width: '800px',
         maxWidth: '95vw',  
         maxHeight: '90vh',  

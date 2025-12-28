@@ -15,4 +15,11 @@
         public byte[] Image { get; set; }
         public DateTime CreatedAt { get; set; }
     }
+    public class ProductImagesDto
+    {
+        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public string FileName { get; set; } = "";
+        public string ImageBase64 { get; set; } = "";
+    }
 }

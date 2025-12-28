@@ -26,13 +26,12 @@ export class SidebarComponent {
  menu: SidebarItem[] = [
     { title: 'Dashboard', icon: '🏠', roles: ['Super Admin','Sub Admin Executive'], route: '/dashboard' },
     { title: 'Master', icon: '📂', roles: ['Super Admin','Sub Admin Executive'], route: '/master' },
-    { title: 'Product', icon: '➕', roles: ['Super Admin'], route: '/product-form' },
     { title: 'Oders', icon: '📋', roles: ['Super Admin'], route: '/oders' },
-    { title: 'User', icon: '🧑', roles: ['Super Admin'], route: '/user' },
-    { title: 'Customer', icon: '🧑', roles: ['Super Admin'], route: '/user' },
-    { title: 'Invoice', icon: '📄', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/report' },
-    { title: 'Support', icon: '📞', roles: ['Super Admin','Service Centre','Brand'], route: '/support' },
-    { title: 'Help', icon: '❓', roles: ['Super Admin','Service Centre','Brand'], route: '/help' },
+    { title: 'Users', icon: '🧑', roles: ['Super Admin'], route: '/user' },
+    { title: 'Employees', icon: '🧑', roles: ['Super Admin'], route: '/employees' },
+    { title: 'Invoice', icon: '📄', roles: ['Super Admin'], route: '/report' },
+    { title: 'Support', icon: '📞', roles: ['Super Admin'], route: '/support' },
+    { title: 'Help', icon: '❓', roles: ['Super Admin'], route: '/help' },
     { title: 'Settings', icon: '⚙️', roles: ['Super Admin'], route: '/settings' }
   ];
 

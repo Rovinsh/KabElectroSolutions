@@ -28,50 +28,60 @@ namespace MSSolutions.Controllers
             _context = context;
         }
 
-        [HttpGet("Users")]
-        public async Task<IActionResult> GetUsers()
+        [HttpGet("Users/{userType}")]
+        public async Task<IActionResult> GetUsers(string? userType)
         {
+            userType = string.IsNullOrWhiteSpace(userType) ? "user" : userType.ToLower();
+
             try
             {
                 var performerEmail = User?.Identity?.Name;
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail && !u.IsPartner);
 
-                var data = await (
+                var query =
                     from u in _context.Users
-                    join a in _context.Addresses
-                        on u.Id equals a.UserId into addressGroup
+                    join a in _context.Addresses on u.Id equals a.UserId into addressGroup
                     from addr in addressGroup.DefaultIfEmpty()
-                    where !u.IsPartner && u.BusinessroleName != "Super Admin"
-                    select new UsersDTO
-                    {
-                        Id = u.Id,
-                        Phone = u.Phone,
-                        Email = u.Email,
-                        FirstName = u.Firstname,
-                        LastName = u.Lastname,
-                        Address = addr.AddressLine,
-                        CityName = addr.City,
-                        StateName = addr.State,
-                        PinCode = addr.Pincode,
-                        RoleId = u.Businessrole,
-                        RoleName = u.BusinessroleName,
-                        // Lookups
-                        CityId = _context.Cities
-                            .Where(c => c.Name == addr.City)
-                            .Select(c => c.Id)
-                            .FirstOrDefault(),
+                    where !u.IsPartner
+                    select new { u, addr };
 
-                        StateId = _context.Locations
-                            .Where(st => st.Name == addr.State)
-                            .Select(s => s.Id)
-                            .FirstOrDefault(),
+                if (userType == "customer")
+                {
+                    query = query.Where(x => x.u.BusinessroleName == "User" && x.u.BusinessroleName != "Super Admin");
+                }
+                else
+                {
+                    query = query.Where(x => x.u.BusinessroleName != "Super Admin");
+                }
 
-                        PinCodeId = _context.Pincodes
-                            .Where(p => p.PincodeValue == addr.Pincode)
-                            .Select(p => p.Id)
-                            .FirstOrDefault()
-                    }
-                ).ToListAsync();
+                var data = await query.Select(x => new UsersDTO
+                {
+                    Id = x.u.Id,
+                    Phone = x.u.Phone,
+                    Email = x.u.Email,
+                    FirstName = x.u.Firstname,
+                    LastName = x.u.Lastname,
+
+                    Address = x.addr != null ? x.addr.AddressLine : null,
+                    CityName = x.addr != null ? x.addr.City : null,
+                    StateName = x.addr != null ? x.addr.State : null,
+                    PinCode = x.addr != null ? x.addr.Pincode : null,
+
+                    RoleId = x.u.Businessrole,
+                    RoleName = x.u.BusinessroleName,
+
+                    CityId = x.addr != null
+                        ? _context.Cities.Where(c => c.Name == x.addr.City).Select(c => c.Id).FirstOrDefault()
+                        : 0,
+
+                    StateId = x.addr != null
+                        ? _context.Locations.Where(st => st.Name == x.addr.State).Select(st => st.Id).FirstOrDefault()
+                        : 0,
+
+                    PinCodeId = x.addr != null
+                        ? _context.Pincodes.Where(p => p.PincodeValue == x.addr.Pincode).Select(p => p.Id).FirstOrDefault()
+                        : 0
+                }).ToListAsync();
 
                 var result = new UsersResponseDTO
                 {
@@ -82,6 +92,7 @@ namespace MSSolutions.Controllers
 
                 return Ok(result);
             }
+        
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");

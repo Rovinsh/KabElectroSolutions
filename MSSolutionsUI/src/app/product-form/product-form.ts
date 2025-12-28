@@ -241,7 +241,7 @@ const formData = {
       });
     }
   }
-private recalculateGst() {
+ recalculateGst() {
   const base = Number(this.productForm.get('baseAmount')?.value || 0);
   const gst = Number(this.productForm.get('gstPercentage')?.value || 0);
 

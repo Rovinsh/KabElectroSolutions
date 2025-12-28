@@ -197,7 +197,7 @@ namespace KabElectroSolutions.Controllers
                 if (user.BusinessroleName == "Service Center Head")
                 {
                     claims = await _context.Claims
-                    .Where(c => c.ServicePartner == user.Id  && c.CreatedDate >= fromDate && c.CreatedDate <= toDate)
+                    .Where(c => c.ServicePartner == user.PartnerId  && c.CreatedDate >= fromDate && c.CreatedDate <= toDate)
                     .ToListAsync();
                 }
                 if (user.BusinessroleName == "Super Admin" || user.BusinessroleName == "Customer Care Executive")
