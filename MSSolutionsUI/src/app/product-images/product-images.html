@@ -14,11 +14,19 @@
   
 
   <!-- Table Headers -->
-  <div class="table-header">
-    <div>Image</div>
-    <div>Action</div>
-    <div></div>
+<div class="image-grid">
+  <div *ngFor="let img of productImage" class="image-box">
+    <img
+      [src]="'data:image/png;base64,' + img.imageBase64"
+      width="100"
+      height="100"
+    />
+
+    <button mat-stroked-button color="warn" (click)="deleteImage(img.id)">
+      Delete
+    </button>
   </div>
+</div>
 
 <!-- IMAGE UPLOAD SECTION -->
 <div class="image-grid" formArrayName="imagesArray">
@@ -65,10 +73,10 @@
   </button>
 
   <button class="add-btn"
-          (click)="shareEstimate()"
-          [disabled]="imagesArray.length === 0 && shareForm.invalid || isSubmitting">
-    SHARE ESTIMATE
+          (click)="productImages()"
+          [disabled]="imagesArray.length === 0 && productImagesForm.invalid || isSubmitting">
+  Submit
   </button>
 </div>
-
+</div>
 </form>

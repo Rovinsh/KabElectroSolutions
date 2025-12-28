@@ -34,7 +34,7 @@ namespace MSSolutions.Data
         public DbSet<Plans> Plans { get; set; }
         public DbSet<MsCoupons> MsCoupons { get; set; }
         public DbSet<MsGst> MsGst { get; set; }
-        public DbSet<MsProductImage> ProductImages { get; set; } = null!;
+        public DbSet<MsProductImage> MsProductImage { get; set; } = null!;
         public DbSet<MsProducts> MsProducts { get; set; }
         public DbSet<Warranties> Warranties { get; set; }
         public DbSet<Reports> Reports { get; set; }        

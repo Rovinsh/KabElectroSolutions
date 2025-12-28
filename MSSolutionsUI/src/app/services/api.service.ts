@@ -71,7 +71,24 @@ export class ApiService {
     return this.http.get<ServicePartnerResponseDto>(`${this.baseUrl + "ServicePartners/servicePartners"}`);
   }
 
-  getUsers(): Observable<UserResponseDto> {
+
+getProductImages(productId: number) {
+  return this.http.get<ProductImageResponseDto>(
+    `${this.baseUrl}product/GetImages/${productId}`
+  );
+}
+ deleteProductImage(imageId: number) {
+    return this.http.delete(`${this.baseUrl}product/DeleteImage/${imageId}`);
+  }
+
+ getUsers(userType: string = 'user'): Observable<UserResponseDto> {
+  return this.http.get<UserResponseDto>(`${this.baseUrl}Users/users/${userType}`);
+}
+ getCustomrs(userType: string = 'customer'): Observable<UserResponseDto> {
+  return this.http.get<UserResponseDto>(`${this.baseUrl}Users/users/${userType}`);
+}
+
+ getOrders(): Observable<UserResponseDto> {
     return this.http.get<UserResponseDto>(`${this.baseUrl + "Users/users"}`);
   }
 
@@ -682,7 +699,22 @@ export interface ShareEstimationDto {
   }[];
   files?: File[]; // for uploaded images
 }
-
+// export interface ProductImageDto {
+//   id: number;
+//   productId: number;
+//   files?: File[]; // for uploaded images
+// }
+export interface  ProductImageResponseDto {
+  status: number;
+  message: string;
+  data: ProductImageDto[];
+}
+export interface ProductImageDto {
+  id: number;
+  productId: number;
+  fileName: string;
+  imageBase64: string;
+}
 export interface CreateClaimRepairPayload {
   claimId: number;
   repairedAt: string;

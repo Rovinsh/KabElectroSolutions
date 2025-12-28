@@ -141,10 +141,6 @@ namespace MSSolutions.Controllers
         [HttpPost("AddImages")]
         public async Task<IActionResult> AddImages([FromForm] ProductImageDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 if (dto.Images != null && dto.Images.Count > 0)
@@ -162,7 +158,7 @@ namespace MSSolutions.Controllers
                             CreatedAt = DateTime.UtcNow
                         };
 
-                        _context.ProductImages.Add(imageRequest);
+                        _context.MsProductImage.Add(imageRequest);
                     }
 
                     await _context.SaveChangesAsync();
@@ -172,9 +168,42 @@ namespace MSSolutions.Controllers
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+
+        [HttpGet("GetImages/{productId}")]
+        public async Task<IActionResult> GetImages(int productId)
+        {
+            var imagesList = await _context.MsProductImage
+                .Where(n => n.ProductId == productId)
+                .Select(n => new ProductImagesDto
+                {
+                    Id = n.Id,
+                    ProductId = n.ProductId,
+                    FileName = n.FileName,
+                    ImageBase64 = Convert.ToBase64String(n.Image)
+                })
+                .ToListAsync();
+
+            return Ok(new
+            {
+                status = 200,
+                message = "Success",
+                data = imagesList
+            });
+        }
+
+        [HttpDelete("DeleteImage/{id}")]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            var image = await _context.MsProductImage.FindAsync(id);
+            if (image == null) return NotFound();
+
+            _context.MsProductImage.Remove(image);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { status = 200, message = "Deleted" });
         }
 
     }

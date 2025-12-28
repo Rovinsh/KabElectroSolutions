@@ -226,11 +226,31 @@ textarea {
 
 .required {
   color: red;
+}.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 per row */
+  gap: 16px;
 }
+
+.image-box {
+  border: 1px solid #ddd;
+  padding: 0px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-box img {
+  display: block;
+  margin: 0 auto 8px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
 
 /* Upload Box */
 .upload-box {
-  height: 150px;
+  height: 180px;
   border: 2px dashed #ccc;
   border-radius: 10px;
   cursor: pointer;

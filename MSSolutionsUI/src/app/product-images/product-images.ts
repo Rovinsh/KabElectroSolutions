@@ -8,20 +8,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiService, ShareEstimationDto } from '../services/api.service';
+import { ApiService, ProductImageDto } from '../services/api.service';
 import { ToastService } from '../services/toastService.service';
 
 @Component({
-  selector: 'app-product-imges',
-  templateUrl: './product-imges.html',
-  styleUrls: ['./product-imges.css'],
+  selector: 'app-product-images',
+  templateUrl: './product-images.html',
+  styleUrls: ['./product-images.css'],
+  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatIconModule,
     MatButtonModule,
-    MatRadioModule,
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule
@@ -34,16 +34,16 @@ export class ProductImagesComponent {
   productImagesForm!: FormGroup;
   isSubmitting = false;
   private apiService = inject(ApiService);
-   private toast = inject(ToastService);
-  private data = inject(MAT_DIALOG_DATA) as { claimId: number };
-  claimId = this.data.claimId;
+  private toast = inject(ToastService);
+  private data = inject(MAT_DIALOG_DATA) as { mode: string; record?: { id: number } };
+ productId = this.data.record?.id ?? 0;
   isLoading = false;
-
+  productImage: ProductImageDto[] = [];
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<ProductImagesComponent>
   ) {
-    this.shareForm = this.fb.group({
+    this.productImagesForm = this.fb.group({
       imagesArray: this.fb.array([])
     });
   }
@@ -52,6 +52,7 @@ export class ProductImagesComponent {
     this.addImage("Upload image", true);
     this.addImage("Upload image", true);
     this.addImage("Upload image", true);
+    this.loadProductImages();
   }
 get imagesArray(): FormArray { return this.productImagesForm.get('imagesArray') as FormArray; }
 
@@ -69,6 +70,13 @@ get imagesArray(): FormArray { return this.productImagesForm.get('imagesArray') 
     const inputList = this.fileInputs.toArray();
     inputList[index]?.nativeElement.click();
   }
+ loadProductImages() {
+  this.isLoading = true;
+  this.apiService.getProductImages(this.productId).subscribe(res => {
+    this.productImage = res.data;
+    this.isLoading = false;
+  });
+}
 
   onSelectImage(event: any, index: number) {
     const file = event.target.files[0];
@@ -97,7 +105,7 @@ this.imagesArray.controls.forEach(ctrl => {
     formData.append('Images', ctrl.value.file, ctrl.value.file.name);
   }
 });
-
+formData.append('ProductId',this.productId.toString());
   this.isSubmitting = true;
   this.isLoading = true;
   this.apiService.updateProductImages(formData).subscribe({
@@ -114,5 +122,9 @@ this.imagesArray.controls.forEach(ctrl => {
   });
 }
  onClose() { this.dialogRef.close(); }
-
+deleteImage(id: number) {
+  this.apiService.deleteProductImage(id).subscribe(() => {
+    this.productImage = this.productImage.filter(i => i.id !== id);
+  });
+}
 }
