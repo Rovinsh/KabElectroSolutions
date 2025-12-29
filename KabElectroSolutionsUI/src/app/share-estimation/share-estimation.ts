@@ -334,16 +334,17 @@ type ApplianceType<T extends ServiceType> =  keyof typeof materialsConfig[T];
   this.materialList = [];
   return;
 }
+
       let categoryKey = this.normalize(this.claimCategory);
       if(!(categoryKey in materialsConfig[type]))
       {
         categoryKey = 'other';
       }
       if (categoryKey in materialsConfig[type]) {
+        this.materialList = 
   this.materialList = [
-    ...materialsConfig[type][
-      categoryKey as keyof typeof materialsConfig[typeof type]
-    ]
+    ...materialsConfig[type][categoryKey as keyof typeof materialsConfig[typeof type]
+    ] ?? materialsConfig[type].other
   ].sort();
 } else {
   this.materialList = [];
