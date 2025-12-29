@@ -933,7 +933,7 @@ namespace KabElectroSolutions.Controllers
         public async Task<IActionResult> GetEstimationDetails(int claimId)
         {
             var items = await _context.EstimationDetails
-                .Where(x => x.ClaimId == claimId && !x.IsRejected)
+                .Where(x => x.ClaimId == claimId)
                 .Select(x => new EstimationDetailResponseDto
                 {
                     ClaimId = x.ClaimId,
