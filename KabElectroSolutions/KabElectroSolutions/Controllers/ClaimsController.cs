@@ -406,6 +406,7 @@ namespace KabElectroSolutions.Controllers
                 invoice!.IsRejected = true;
                 await _context.SaveChangesAsync();
             }
+
             await _context.SaveChangesAsync();
             await AddAuditLog("Claim", id, status, remarks);
         }
@@ -528,30 +529,44 @@ namespace KabElectroSolutions.Controllers
                 Remarks = dto.Remarks,
                 CreatedAt = DateTime.UtcNow
             };
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if (dto.Images is not null && dto.Images.Count > 0)
+            try
             {
-                foreach (var file in dto.Images)
+                if (dto.Images is not null && dto.Images.Count > 0)
                 {
-                    await using var ms = new MemoryStream();
-                    await file.CopyToAsync(ms);
-
-                    var image = new EstimationImage
+                    foreach (var file in dto.Images)
                     {
-                        ClaimId = dto.ClaimId,
-                        Image = ms.ToArray(),
-                        FileName = file.FileName,
-                        CreatedAt = DateTime.UtcNow
-                    };
+                        await using var ms = new MemoryStream();
+                        await file.CopyToAsync(ms);
 
-                    estimation.Images.Add(image);
+                        var image = new EstimationImage
+                        {
+                            ClaimId = dto.ClaimId,
+                            Image = ms.ToArray(),
+                            FileName = file.FileName,
+                            CreatedAt = DateTime.UtcNow
+                        };
+
+                        estimation.Images.Add(image);
+                    }
                 }
+
+                await _context.EstimationDetails.Where(x => x.ClaimId == dto.ClaimId).ExecuteDeleteAsync();
+                await _context.EstimationImages.Where(x => x.ClaimId == dto.ClaimId).ExecuteDeleteAsync();
+
+
+                _context.EstimationDetails.Add(estimation);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok(new { estimation.Id, Message = "Estimation created successfully." });
             }
-
-            _context.EstimationDetails.Add(estimation);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { estimation.Id, Message = "Estimation created successfully." });
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         [HttpPost("ShareEstimate")]
@@ -918,7 +933,7 @@ namespace KabElectroSolutions.Controllers
         public async Task<IActionResult> GetEstimationDetails(int claimId)
         {
             var items = await _context.EstimationDetails
-                .Where(x => x.ClaimId == claimId)
+                .Where(x => x.ClaimId == claimId && !x.IsRejected)
                 .Select(x => new EstimationDetailResponseDto
                 {
                     ClaimId = x.ClaimId,

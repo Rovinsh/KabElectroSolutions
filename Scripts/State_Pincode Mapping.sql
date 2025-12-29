@@ -5127,3 +5127,3279 @@ INSERT INTO Pincodes (Pincode, CityId) VALUES
 (673595, @CityId),
 (673593, @CityId),
 (670721, @CityId);
+
+Go
+/* ===============================
+   LOCATION : MADHYA PRADESH
+   =============================== */
+DECLARE @LocationId_MadhyaPradesh INT;
+INSERT INTO Locations (Name) VALUES ('Madhya Pradesh');
+SET @LocationId_MadhyaPradesh = SCOPE_IDENTITY();
+
+
+/* ===============================
+   CITY : AGAR MALWA
+   =============================== */
+DECLARE @CityId_AgarMalwa INT;
+INSERT INTO Cities (Name, LocationId) VALUES ('AGAR MALWA', @LocationId_MadhyaPradesh);
+SET @CityId_AgarMalwa = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(465441, @CityId_AgarMalwa);
+
+
+/* ===============================
+   CITY : ALIRAJPUR
+   =============================== */
+DECLARE @CityId_Alirajpur INT;
+INSERT INTO Cities (Name, LocationId) VALUES ('ALIRAJPUR', @LocationId_MadhyaPradesh);
+SET @CityId_Alirajpur = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(457887, @CityId_Alirajpur);
+
+
+/* ===============================
+   CITY : BALAGHAT
+   =============================== */
+DECLARE @CityId_Balaghat INT;
+INSERT INTO Cities (Name, LocationId) VALUES ('BALAGHAT', @LocationId_MadhyaPradesh);
+SET @CityId_Balaghat = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(481445, @CityId_Balaghat),
+(481335, @CityId_Balaghat),
+(481331, @CityId_Balaghat),
+(481226, @CityId_Balaghat),
+(481222, @CityId_Balaghat),
+(481116, @CityId_Balaghat),
+(481115, @CityId_Balaghat),
+(481111, @CityId_Balaghat),
+(481105, @CityId_Balaghat),
+(481001, @CityId_Balaghat);
+
+
+/* ===============================
+   CITY : BARWANI
+   =============================== */
+DECLARE @CityId_Barwani INT;
+INSERT INTO Cities (Name, LocationId) VALUES ('BARWANI', @LocationId_MadhyaPradesh);
+SET @CityId_Barwani = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(451551, @CityId_Barwani);
+
+
+/* ===============================
+   CITY : BETUL
+   =============================== */
+DECLARE @CityId_Betul INT;
+INSERT INTO Cities (Name, LocationId) VALUES ('BETUL', @LocationId_MadhyaPradesh);
+SET @CityId_Betul = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(460668, @CityId_Betul),
+(460666, @CityId_Betul),
+(460665, @CityId_Betul),
+(460663, @CityId_Betul),
+(460661, @CityId_Betul),
+(460557, @CityId_Betul),
+(460554, @CityId_Betul),
+(460553, @CityId_Betul),
+(460551, @CityId_Betul),
+(460449, @CityId_Betul),
+(460447, @CityId_Betul),
+(460443, @CityId_Betul),
+(460440, @CityId_Betul),
+(460330, @CityId_Betul),
+(460225, @CityId_Betul),
+(460220, @CityId_Betul),
+(460110, @CityId_Betul),
+(460004, @CityId_Betul),
+(460001, @CityId_Betul);
+
+
+/* ===============================
+   CITY : BHIND
+   =============================== */
+DECLARE @CityId_Bhind INT;
+INSERT INTO Cities (Name, LocationId) VALUES ('BHIND', @LocationId_MadhyaPradesh);
+SET @CityId_Bhind = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(477660, @CityId_Bhind),
+(477577, @CityId_Bhind),
+(477566, @CityId_Bhind),
+(477557, @CityId_Bhind),
+(477555, @CityId_Bhind),
+(477449, @CityId_Bhind),
+(477447, @CityId_Bhind),
+(477446, @CityId_Bhind),
+(477445, @CityId_Bhind),
+(477441, @CityId_Bhind),
+(477335, @CityId_Bhind),
+(477333, @CityId_Bhind),
+(477332, @CityId_Bhind),
+(477331, @CityId_Bhind),
+(477227, @CityId_Bhind),
+(477222, @CityId_Bhind),
+(477117, @CityId_Bhind),
+(477116, @CityId_Bhind),
+(477111, @CityId_Bhind),
+(477105, @CityId_Bhind),
+(477001, @CityId_Bhind);
+
+
+/* ===============================
+   CITY : BHOPAL
+   =============================== */
+DECLARE @CityId_Bhopal INT;
+INSERT INTO Cities (Name, LocationId) VALUES ('BHOPAL', @LocationId_MadhyaPradesh);
+SET @CityId_Bhopal = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(464993, @CityId_Bhopal),
+(462023, @CityId_Bhopal),
+(462016, @CityId_Bhopal),
+(462001, @CityId_Bhopal),
+(462002, @CityId_Bhopal),
+(462003, @CityId_Bhopal),
+(462004, @CityId_Bhopal),
+(462007, @CityId_Bhopal),
+(462008, @CityId_Bhopal),
+(462010, @CityId_Bhopal),
+(462011, @CityId_Bhopal),
+(462013, @CityId_Bhopal),
+(462018, @CityId_Bhopal),
+(462020, @CityId_Bhopal),
+(462021, @CityId_Bhopal),
+(462022, @CityId_Bhopal),
+(462024, @CityId_Bhopal),
+(462026, @CityId_Bhopal),
+(462027, @CityId_Bhopal),
+(462030, @CityId_Bhopal),
+(462031, @CityId_Bhopal),
+(462032, @CityId_Bhopal),
+(462033, @CityId_Bhopal),
+(462036, @CityId_Bhopal),
+(462037, @CityId_Bhopal),
+(462038, @CityId_Bhopal),
+(462039, @CityId_Bhopal),
+(462040, @CityId_Bhopal),
+(462041, @CityId_Bhopal),
+(462042, @CityId_Bhopal),
+(462043, @CityId_Bhopal),
+(462044, @CityId_Bhopal),
+(462045, @CityId_Bhopal),
+(462047, @CityId_Bhopal),
+(462066, @CityId_Bhopal),
+(462100, @CityId_Bhopal),
+(462101, @CityId_Bhopal),
+(462120, @CityId_Bhopal),
+(462420, @CityId_Bhopal),
+(463106, @CityId_Bhopal),
+(463111, @CityId_Bhopal);
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: BURHANPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BURHANPUR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(450445,@CityId),
+(450332,@CityId),
+(450331,@CityId),
+(450221,@CityId);
+
+/* ===============================
+   CITY: CHHATARPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CHHATARPUR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(488001,@CityId),
+(471001,@CityId),
+(471201,@CityId);
+
+/* ===============================
+   CITY: CHHINDWARA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CHHINDWARA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(480559,@CityId),
+(480557,@CityId),
+(480555,@CityId),
+(480554,@CityId),
+(480553,@CityId),
+(480551,@CityId),
+(480449,@CityId),
+(480447,@CityId),
+(480441,@CityId),
+(480338,@CityId),
+(480337,@CityId),
+(480334,@CityId),
+(480331,@CityId),
+(480224,@CityId),
+(480223,@CityId),
+(480221,@CityId),
+(480115,@CityId),
+(480111,@CityId),
+(480110,@CityId),
+(480109,@CityId),
+(480108,@CityId),
+(480107,@CityId),
+(480106,@CityId),
+(480105,@CityId),
+(480001,@CityId);
+
+/* ===============================
+   CITY: DAMOH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DAMOH', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(470661,@CityId);
+
+/* ===============================
+   CITY: DATIA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DATIA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(475686,@CityId),
+(475682,@CityId),
+(475675,@CityId),
+(475661,@CityId),
+(475335,@CityId);
+
+/* ===============================
+   CITY: DEWAS
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DEWAS', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(455459,@CityId),
+(455440,@CityId),
+(455339,@CityId),
+(455336,@CityId),
+(455332,@CityId),
+(455227,@CityId),
+(455223,@CityId),
+(455221,@CityId),
+(455118,@CityId),
+(455116,@CityId),
+(455115,@CityId),
+(455111,@CityId),
+(455001,@CityId);
+
+/* ===============================
+   CITY: DHAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DHAR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(454774,@CityId),
+(454552,@CityId),
+(454446,@CityId);
+
+/* ===============================
+   CITY: GUNA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('GUNA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(473001,@CityId),
+(473112,@CityId),
+(473115,@CityId),
+(473226,@CityId);
+
+/* ===============================
+   CITY: GUWAHATI (AS PROVIDED)
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('GUWAHATI', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(781033,@CityId);
+
+/* ===============================
+   CITY: GWALIOR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('GWALIOR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(475685,@CityId),
+(475673,@CityId),
+(475671,@CityId),
+(475336,@CityId),
+(475330,@CityId),
+(475220,@CityId),
+(475115,@CityId),
+(475110,@CityId),
+(475005,@CityId),
+(475002,@CityId),
+(475001,@CityId),
+(474020,@CityId),
+(474015,@CityId),
+(474012,@CityId),
+(474011,@CityId),
+(474010,@CityId),
+(474009,@CityId),
+(474008,@CityId),
+(474007,@CityId),
+(474006,@CityId),
+(474005,@CityId),
+(474004,@CityId),
+(474003,@CityId),
+(474002,@CityId),
+(474001,@CityId);
+
+--DECLARE @CityId INT;
+
+/* ===============================
+   CITY: HOSHANGABAD
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('HOSHANGABAD', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(461775,@CityId);
+
+/* ===============================
+   CITY: INDORE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('INDORE', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(453661,@CityId),(453446,@CityId),(453441,@CityId),(453331,@CityId),
+(452001,@CityId),(452002,@CityId),(452003,@CityId),(452005,@CityId),
+(452006,@CityId),(452007,@CityId),(452008,@CityId),(452009,@CityId),
+(452010,@CityId),(452011,@CityId),(452012,@CityId),(452013,@CityId),
+(452014,@CityId),(452015,@CityId),(452017,@CityId),(452018,@CityId),
+(452020,@CityId),(453001,@CityId),(453111,@CityId),(453112,@CityId),
+(453115,@CityId),(453220,@CityId),(453332,@CityId),(453551,@CityId),
+(453552,@CityId),(453555,@CityId),(453556,@CityId),(453771,@CityId);
+
+/* ===============================
+   CITY: KHANDWA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KHANDWA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(450991,@CityId),(450881,@CityId),(450119,@CityId),
+(450114,@CityId),(450110,@CityId),(450051,@CityId);
+
+/* ===============================
+   CITY: KHARGONE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KHARGONE', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(451113,@CityId);
+
+/* ===============================
+   CITY: MANDSAUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MANDSAUR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(458001,@CityId);
+
+/* ===============================
+   CITY: MORENA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MORENA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(476554,@CityId),(476444,@CityId),(476339,@CityId),(476337,@CityId),
+(476229,@CityId),(476228,@CityId),(476224,@CityId),(476221,@CityId),
+(476219,@CityId),(476134,@CityId),(476115,@CityId),(476111,@CityId),
+(476001,@CityId);
+
+/* ===============================
+   CITY: NARSINGHPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NARSINGHPUR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(487881,@CityId),(487770,@CityId),(487661,@CityId),(487555,@CityId),
+(487551,@CityId),(487441,@CityId),(487337,@CityId),(487334,@CityId),
+(487330,@CityId),(487225,@CityId),(487221,@CityId),(487118,@CityId),
+(487114,@CityId),(487110,@CityId),(487001,@CityId);
+
+/* ===============================
+   CITY: NEEMUCH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NEEMUCH', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(458110,@CityId);
+
+/* ===============================
+   CITY: RAISEN
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('RAISEN', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(464986,@CityId),(464884,@CityId),(464881,@CityId),
+(464551,@CityId),(462046,@CityId);
+
+/* ===============================
+   CITY: RAJGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('RAJGARH', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(465669,@CityId),(465683,@CityId);
+
+/* ===============================
+   CITY: REWA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('REWA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(486556,@CityId),(486553,@CityId),(486550,@CityId),(486451,@CityId),
+(486450,@CityId),(486448,@CityId),(486447,@CityId),(486446,@CityId),
+(486445,@CityId),(486441,@CityId),(486440,@CityId),(486341,@CityId),
+(486340,@CityId),(486338,@CityId),(486335,@CityId),(486333,@CityId),
+(486331,@CityId),(486226,@CityId),(486223,@CityId),(486220,@CityId),
+(486123,@CityId),(486117,@CityId),(486115,@CityId),(486114,@CityId),
+(486111,@CityId),(486006,@CityId),(486005,@CityId),(486003,@CityId),
+(486002,@CityId),(486001,@CityId);
+
+/* ===============================
+   CITY: SAGAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SAGAR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(470669,@CityId),(470442,@CityId),(470441,@CityId),(470339,@CityId),
+(470337,@CityId),(470335,@CityId),(470235,@CityId),(470232,@CityId),
+(470229,@CityId),(470228,@CityId),(470227,@CityId),(470226,@CityId),
+(470223,@CityId),(470221,@CityId),(470125,@CityId),(470124,@CityId),
+(470120,@CityId),(470119,@CityId),(470118,@CityId),(470117,@CityId),
+(470115,@CityId),(470113,@CityId),(470051,@CityId),(470021,@CityId),
+(470004,@CityId),(470003,@CityId),(470001,@CityId);
+
+/* ===============================
+   CITY: SATNA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SATNA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(485771,@CityId);
+
+/* ===============================
+   CITY: SEHORE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SEHORE', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(466001,@CityId),(466331,@CityId),(466116,@CityId);
+
+/* ===============================
+   CITY: SEONI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SEONI', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(481449,@CityId),(480996,@CityId),(480888,@CityId);
+
+/* ===============================
+   CITY: SHAJAPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SHAJAPUR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(465333,@CityId),(465001,@CityId);
+
+/* ===============================
+   CITY: SHEOPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SHEOPUR', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(476355,@CityId),(476335,@CityId),(476332,@CityId);
+
+/* ===============================
+   CITY: SHIVPURI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SHIVPURI', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(473995,@CityId),(473990,@CityId),(473880,@CityId),(473865,@CityId),
+(473793,@CityId),(473781,@CityId),(473775,@CityId),(473774,@CityId),
+(473770,@CityId),(473670,@CityId),(473665,@CityId),(473662,@CityId),
+(473660,@CityId),(473638,@CityId),(473585,@CityId),(473551,@CityId);
+
+/* ===============================
+   CITY: UJJAIN
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('UJJAIN', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(456006,@CityId);
+
+/* ===============================
+   CITY: UMARIA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('UMARIA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(484661,@CityId);
+
+/* ===============================
+   CITY: VIDISHA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('VIDISHA', @LocationId_MadhyaPradesh);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(464337,@CityId),(464331,@CityId),(464258,@CityId),(464228,@CityId),
+(464226,@CityId),(464224,@CityId),(464221,@CityId),(464220,@CityId),
+(464114,@CityId),(464113,@CityId),(464111,@CityId),(464001,@CityId);
+
+go
+/* ===============================
+   LOCATION: MAHARASHTRA
+   =============================== */
+DECLARE @LocationId_Maharashtra INT;
+INSERT INTO Locations (Name) VALUES ('Maharashtra');
+SET @LocationId_Maharashtra = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: AHMED NAGAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('AHMED NAGAR', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(414306,@CityId),(414001,@CityId),(422605,@CityId);
+
+/* ===============================
+   CITY: AKOLA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('AKOLA', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(444511,@CityId),(444502,@CityId),(444501,@CityId),(444407,@CityId),
+(444405,@CityId),(444401,@CityId),(444311,@CityId),(444302,@CityId),
+(444126,@CityId),(444117,@CityId),(444111,@CityId),(444109,@CityId),
+(444108,@CityId),(444107,@CityId),(444104,@CityId),(444103,@CityId),
+(444102,@CityId),(444101,@CityId),(444006,@CityId),(444005,@CityId),
+(444003,@CityId),(444002,@CityId),(444001,@CityId);
+
+/* ===============================
+   CITY: AMRAVATI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('AMRAVATI', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(444601,@CityId);
+
+/* ===============================
+   CITY: AURANGABAD
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('AURANGABAD', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(431003,@CityId);
+
+/* ===============================
+   CITY: BEED
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BEED', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(431122,@CityId);
+
+/* ===============================
+   CITY: BULDHANA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BULDHANA', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(444312,@CityId),(444306,@CityId),(444304,@CityId),(444303,@CityId),
+(444301,@CityId),(444204,@CityId),(444203,@CityId),(444202,@CityId),
+(444201,@CityId),(443404,@CityId),(443403,@CityId),(443402,@CityId),
+(443401,@CityId),(443308,@CityId),(443304,@CityId),(443303,@CityId),
+(443302,@CityId),(443301,@CityId),(443206,@CityId),(443204,@CityId),
+(443203,@CityId),(443202,@CityId),(443201,@CityId),(443112,@CityId),
+(443106,@CityId),(443104,@CityId),(443103,@CityId),(443102,@CityId),
+(443101,@CityId),(443002,@CityId),(443001,@CityId);
+
+/* ===============================
+   CITY: CHANDRAPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CHANDRAPUR', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(442905,@CityId),(442505,@CityId),(442402,@CityId);
+
+/* ===============================
+   CITY: DHULE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DHULE', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(425406,@CityId),(424005,@CityId);
+
+/* ===============================
+   CITY: GONDIA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('GONDIA', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(441614,@CityId);
+
+/* ===============================
+   CITY: HINGOLI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('HINGOLI', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(431702,@CityId),(431513,@CityId);
+
+/* ===============================
+   CITY: JALGAON
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JALGAON', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(424119,@CityId),(425401,@CityId),(425001,@CityId);
+
+/* ===============================
+   CITY: KOLHAPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KOLHAPUR', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(416012,@CityId),(416115,@CityId),(416109,@CityId);
+
+/* ===============================
+   CITY: MUMBAI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MUMBAI', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(400002,@CityId),(400003,@CityId),(400004,@CityId),(400005,@CityId),
+(400006,@CityId),(400007,@CityId),(400008,@CityId),(400009,@CityId),
+(400010,@CityId),(400011,@CityId),(400012,@CityId),(400013,@CityId),
+(400014,@CityId),(400015,@CityId),(400016,@CityId),(400017,@CityId),
+(400018,@CityId),(400019,@CityId),(400020,@CityId),(400021,@CityId),
+(400022,@CityId),(400023,@CityId),(400025,@CityId),(400026,@CityId),
+(400027,@CityId),(400028,@CityId),(400030,@CityId),(400031,@CityId),
+(400032,@CityId),(400033,@CityId),(400034,@CityId),(400035,@CityId),
+(400036,@CityId),(400037,@CityId),(400038,@CityId),(400039,@CityId),
+(400040,@CityId),(400041,@CityId),(400042,@CityId),(400044,@CityId),
+(400045,@CityId),(400046,@CityId),(400048,@CityId),(400062,@CityId),
+(400073,@CityId),(400074,@CityId),(400090,@CityId),(400100,@CityId);
+
+/* ===============================
+   CITY: MUMBAI SUBURBAN
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MUMBAI SUBURBAN', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(400049,@CityId),(400050,@CityId),(400054,@CityId),(400061,@CityId),
+(400063,@CityId),(400068,@CityId),(400096,@CityId),(400098,@CityId),
+(400099,@CityId),(400101,@CityId);
+
+/* ===============================
+   CITY: NAGPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NAGPUR', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(440001,@CityId),(440002,@CityId),(440003,@CityId),(440005,@CityId),
+(440006,@CityId),(440007,@CityId),(440008,@CityId),(440009,@CityId),
+(440010,@CityId),(440012,@CityId),(440013,@CityId),(440014,@CityId),
+(440015,@CityId),(440016,@CityId),(440017,@CityId),(440018,@CityId),
+(440019,@CityId),(440020,@CityId),(440021,@CityId),(440022,@CityId),
+(440023,@CityId),(440024,@CityId),(440025,@CityId),(440026,@CityId),
+(440027,@CityId),(440030,@CityId),(440032,@CityId),(440033,@CityId),
+(440034,@CityId),(440035,@CityId),(440036,@CityId),(440037,@CityId),
+(441001,@CityId),(441002,@CityId),(441101,@CityId),(441102,@CityId),
+(441103,@CityId),(441104,@CityId),(441105,@CityId),(441106,@CityId),
+(441107,@CityId),(441108,@CityId),(441109,@CityId),(441110,@CityId),
+(441111,@CityId),(441112,@CityId),(441113,@CityId),(441122,@CityId),
+(441123,@CityId),(441201,@CityId),(441202,@CityId),(441203,@CityId),
+(441204,@CityId),(441210,@CityId),(441214,@CityId),(441301,@CityId),
+(441302,@CityId),(441303,@CityId),(441304,@CityId),(441305,@CityId),
+(441306,@CityId),(441401,@CityId),(441404,@CityId),(441501,@CityId),
+(441502,@CityId);
+/* ===============================
+   CITY: NANDED
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NANDED', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(431717,@CityId);
+
+/* ===============================
+   CITY: NANDURBAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NANDURBAR', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(425412,@CityId);
+
+/* ===============================
+   CITY: NASHIK
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NASHIK', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(422003,@CityId),(422013,@CityId);
+
+/* ===============================
+   CITY: OSMANABAD
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('OSMANABAD', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(413509,@CityId);
+
+/* ===============================
+   CITY: PALGHAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PALGHAR', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(401304,@CityId),(401207,@CityId),(401206,@CityId),
+(401105,@CityId),(401101,@CityId),(401501,@CityId),(401404,@CityId);
+
+/* ===============================
+   CITY: PARBHANI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PARBHANI', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(431401,@CityId);
+
+/* ===============================
+   CITY: PUNE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PUNE', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(412409,@CityId),(412403,@CityId),(412308,@CityId),(412307,@CityId),
+(412301,@CityId),(412216,@CityId),(412208,@CityId),(412207,@CityId),
+(412202,@CityId),(412201,@CityId),(412114,@CityId),(412110,@CityId),
+(412109,@CityId),(412108,@CityId),(412106,@CityId),(412105,@CityId),
+(412104,@CityId),(412101,@CityId),
+(411068,@CityId),(411067,@CityId),(411062,@CityId),(411061,@CityId),
+(411060,@CityId),(411058,@CityId),(411057,@CityId),(411055,@CityId),
+(411053,@CityId),(411052,@CityId),(411051,@CityId),(411048,@CityId),
+(411047,@CityId),(411046,@CityId),(411045,@CityId),(411044,@CityId),
+(411043,@CityId),(411042,@CityId),(411041,@CityId),(411040,@CityId),
+(411039,@CityId),(411038,@CityId),(411037,@CityId),(411036,@CityId),
+(411035,@CityId),(411034,@CityId),(411033,@CityId),(411032,@CityId),
+(411031,@CityId),(411030,@CityId),(411028,@CityId),(411027,@CityId),
+(411026,@CityId),(411025,@CityId),(411024,@CityId),(411023,@CityId),
+(411022,@CityId),(411021,@CityId),(411020,@CityId),(411019,@CityId),
+(411018,@CityId),(411017,@CityId),(411016,@CityId),(411015,@CityId),
+(411014,@CityId),(411013,@CityId),(411012,@CityId),(411011,@CityId),
+(411009,@CityId),(411008,@CityId),(411007,@CityId),(411006,@CityId),
+(411005,@CityId),(411004,@CityId),(411003,@CityId),(411002,@CityId),
+(411001,@CityId),
+(410513,@CityId),(410512,@CityId),(410510,@CityId),(410507,@CityId),
+(410506,@CityId),(410504,@CityId),(410501,@CityId),(410406,@CityId),
+(410402,@CityId),(412115,@CityId);
+
+/* ===============================
+   CITY: RAIGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('RAIGARH', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(410205,@CityId),(402401,@CityId),(402209,@CityId),(402208,@CityId),
+(402207,@CityId),(402204,@CityId),(402203,@CityId),(402202,@CityId),
+(402126,@CityId),(402125,@CityId),(402108,@CityId),(402107,@CityId),
+(402106,@CityId),(402301,@CityId),(402302,@CityId);
+
+/* ===============================
+   CITY: RAIGARH (MH)
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('RAIGARH (MH)', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(410222,@CityId),(410220,@CityId),(410216,@CityId),(410209,@CityId),
+(410207,@CityId),(410204,@CityId),(410203,@CityId),(410202,@CityId),
+(410201,@CityId),(410102,@CityId),(410101,@CityId),(400704,@CityId);
+
+/* ===============================
+   CITY: SANGLI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SANGLI', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(415304,@CityId),(416410,@CityId);
+
+/* ===============================
+   CITY: SATARA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SATARA', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(415109,@CityId),(415206,@CityId);
+
+/* ===============================
+   CITY: SOLAPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SOLAPUR', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(413001,@CityId),(413003,@CityId);
+
+/* ===============================
+   CITY: THANE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('THANE', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(421605,@CityId),(421603,@CityId),(421506,@CityId),(421505,@CityId),
+(421502,@CityId),(421501,@CityId),(421403,@CityId),(421401,@CityId),
+(421312,@CityId),(421311,@CityId),(421308,@CityId),(421306,@CityId),
+(421305,@CityId),(421301,@CityId),(421204,@CityId),(421203,@CityId),
+(421202,@CityId),(421201,@CityId),(421103,@CityId),(421102,@CityId),
+(421101,@CityId),(421005,@CityId),(421004,@CityId),(421003,@CityId),
+(421002,@CityId),(421001,@CityId),(401204,@CityId),(401106,@CityId),
+(401104,@CityId),(400710,@CityId),(400706,@CityId),(400705,@CityId),
+(400703,@CityId),(400701,@CityId),(400615,@CityId),(400612,@CityId),
+(400610,@CityId),(400608,@CityId),(400607,@CityId),(400606,@CityId),
+(400605,@CityId),(400604,@CityId),(400603,@CityId),(400602,@CityId),
+(400601,@CityId);
+
+/* ===============================
+   CITY: VASAI VIRAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('VASAI VIRAR', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(401210,@CityId);
+
+/* ===============================
+   CITY: WARDHA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('WARDHA', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(442001,@CityId);
+
+/* ===============================
+   CITY: WASHIM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('WASHIM', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(444510,@CityId),(444507,@CityId),(444505,@CityId),(444504,@CityId),
+(444503,@CityId),(444409,@CityId),(444404,@CityId),(444402,@CityId),
+(444110,@CityId),(444105,@CityId);
+
+/* ===============================
+   CITY: YAVATMAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('YAVATMAL', @LocationId_Maharashtra);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(445001,@CityId);
+go
+/* ===============================
+   LOCATION: MANIPUR
+   =============================== */
+DECLARE @LocationId_Manipur INT;
+INSERT INTO Locations (Name) VALUES ('Manipur');
+SET @LocationId_Manipur = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: IMPHAL WEST
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('IMPHAL WEST', @LocationId_Manipur);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(795004, @CityId),
+(795001, @CityId);
+go
+DECLARE @LocationId_Megalaya INT;
+INSERT INTO Locations (Name) VALUES ('Meghalaya');
+SET @LocationId_Megalaya = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: EAST KHASI HILLS
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('EAST KHASI HILLS', @LocationId_Megalaya);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(793003, @CityId);
+go
+
+DECLARE @LocationId_Mizoram INT;
+INSERT INTO Locations (Name) VALUES ('Mizoram');
+SET @LocationId_Mizoram = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: AIZAWL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('AIZAWL', @LocationId_Mizoram);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(796005, @CityId);
+
+/* ===============================
+   CITY: WEST TRIPURA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('WEST TRIPURA', @LocationId_Mizoram);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(799004, @CityId);
+go
+DECLARE @LocationId_Nagaland INT;
+INSERT INTO Locations (Name) VALUES ('Nagaland');
+SET @LocationId_Nagaland = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: DIMAPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DIMAPUR', @LocationId_Nagaland);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(797112, @CityId);
+go
+DECLARE @LocationId_Odisha INT;
+INSERT INTO Locations (Name) VALUES ('Odisha');
+SET @LocationId_Odisha = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: ANGUL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('ANGUL', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(759037, @CityId),
+(759100, @CityId),
+(759101, @CityId),
+(759102, @CityId),
+(759103, @CityId),
+(759104, @CityId),
+(759105, @CityId),
+(759106, @CityId),
+(759107, @CityId),
+(759111, @CityId),
+(759116, @CityId),
+(759117, @CityId),
+(759118, @CityId),
+(759119, @CityId),
+(759122, @CityId),
+(759123, @CityId),
+(759124, @CityId),
+(759125, @CityId),
+(759126, @CityId),
+(759127, @CityId),
+(759128, @CityId),
+(759129, @CityId),
+(759130, @CityId),
+(759132, @CityId),
+(759141, @CityId),
+(759143, @CityId),
+(759145, @CityId),
+(759146, @CityId),
+(759147, @CityId),
+(759148, @CityId);
+
+/* ===============================
+   CITY: BALANGIR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BALANGIR', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(767001, @CityId),
+(767002, @CityId),
+(767033, @CityId),
+(767039, @CityId),
+(767025, @CityId),
+(767016, @CityId),
+(767020, @CityId),
+(767021, @CityId),
+(767022, @CityId),
+(767024, @CityId),
+(767026, @CityId),
+(767027, @CityId),
+(767028, @CityId),
+(767029, @CityId),
+(767030, @CityId),
+(767032, @CityId),
+(767035, @CityId),
+(767037, @CityId),
+(767038, @CityId),
+(767040, @CityId),
+(767041, @CityId),
+(767042, @CityId),
+(767046, @CityId),
+(767048, @CityId),
+(767060, @CityId),
+(767061, @CityId),
+(767065, @CityId),
+(767066, @CityId),
+(767067, @CityId),
+(767068, @CityId),
+(767070, @CityId);
+
+/* ===============================
+   CITY: BALESWAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BALESWAR', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(756001, @CityId),
+(756003, @CityId),
+(756045, @CityId),
+(756032, @CityId),
+(756040, @CityId),
+(756126, @CityId),
+(754223, @CityId),
+(756002, @CityId),
+(756019, @CityId),
+(756020, @CityId),
+(756021, @CityId),
+(756022, @CityId),
+(756023, @CityId),
+(756024, @CityId),
+(756025, @CityId),
+(756026, @CityId),
+(756027, @CityId),
+(756028, @CityId),
+(756029, @CityId),
+(756030, @CityId),
+(756033, @CityId),
+(756034, @CityId),
+(756035, @CityId),
+(756036, @CityId),
+(756037, @CityId),
+(756038, @CityId),
+(756039, @CityId),
+(756041, @CityId),
+(756042, @CityId),
+(756043, @CityId),
+(756044, @CityId),
+(756046, @CityId),
+(756047, @CityId),
+(756048, @CityId),
+(756049, @CityId),
+(756051, @CityId),
+(756055, @CityId),
+(756056, @CityId),
+(756058, @CityId),
+(756059, @CityId),
+(756060, @CityId),
+(756079, @CityId),
+(756080, @CityId),
+(756081, @CityId),
+(756083, @CityId),
+(756084, @CityId),
+(756085, @CityId),
+(756086, @CityId),
+(756134, @CityId),
+(756182, @CityId);
+
+/* ===============================
+   CITY: BARGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BARGARH', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(768028, @CityId),
+(768027, @CityId),
+(768029, @CityId),
+(768030, @CityId),
+(768031, @CityId),
+(768032, @CityId),
+(768033, @CityId),
+(768034, @CityId),
+(768035, @CityId),
+(768036, @CityId),
+(768037, @CityId),
+(768038, @CityId),
+(768039, @CityId),
+(768040, @CityId),
+(768042, @CityId),
+(768045, @CityId),
+(768048, @CityId),
+(768049, @CityId),
+(768050, @CityId),
+(768052, @CityId),
+(768102, @CityId),
+(768103, @CityId),
+(768104, @CityId),
+(768111, @CityId),
+(768115, @CityId);
+
+/* ===============================
+   CITY: BHADRAK
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BHADRAK', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(756125, @CityId),
+(756100, @CityId),
+(756101, @CityId),
+(756133, @CityId),
+(756111, @CityId),
+(756112, @CityId),
+(756113, @CityId),
+(756114, @CityId),
+(756115, @CityId),
+(756116, @CityId),
+(756117, @CityId),
+(756118, @CityId),
+(756119, @CityId),
+(756120, @CityId),
+(756121, @CityId),
+(756122, @CityId),
+(756123, @CityId),
+(756124, @CityId),
+(756127, @CityId),
+(756128, @CityId),
+(756129, @CityId),
+(756130, @CityId),
+(756131, @CityId),
+(756132, @CityId),
+(756135, @CityId),
+(756137, @CityId),
+(756138, @CityId),
+(756139, @CityId),
+(756144, @CityId),
+(756162, @CityId),
+(756163, @CityId),
+(756164, @CityId),
+(756165, @CityId),
+(756166, @CityId),
+(756167, @CityId),
+(756168, @CityId),
+(756171, @CityId),
+(756181, @CityId);
+
+/* ===============================
+   CITY: BOUDH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BOUDH', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(762014, @CityId),
+(762013, @CityId),
+(762015, @CityId),
+(762016, @CityId),
+(762017, @CityId),
+(762018, @CityId),
+(762020, @CityId),
+(762023, @CityId),
+(762024, @CityId),
+(762026, @CityId),
+(762030, @CityId);
+
+/* ===============================
+   CITY: CUTTACK
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CUTTACK', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(753001, @CityId),
+(754008, @CityId),
+(753002, @CityId),
+(753004, @CityId),
+(753003, @CityId),
+(753010, @CityId),
+(753008, @CityId),
+(753012, @CityId),
+(753007, @CityId),
+(753009, @CityId),
+(753013, @CityId),
+(754202, @CityId),
+(754029, @CityId),
+(754025, @CityId),
+(754021, @CityId),
+(754103, @CityId),
+(752120, @CityId),
+(753006, @CityId),
+(753011, @CityId),
+(753014, @CityId),
+(753015, @CityId),
+(754001, @CityId),
+(754002, @CityId),
+(754003, @CityId),
+(754004, @CityId),
+(754005, @CityId),
+(754006, @CityId),
+(754007, @CityId),
+(754009, @CityId),
+(754010, @CityId),
+(754011, @CityId),
+(754013, @CityId),
+(754018, @CityId),
+(754022, @CityId),
+(754026, @CityId),
+(754027, @CityId),
+(754028, @CityId),
+(754030, @CityId),
+(754031, @CityId),
+(754032, @CityId),
+(754035, @CityId),
+(754037, @CityId),
+(754071, @CityId),
+(754100, @CityId),
+(754105, @CityId),
+(754112, @CityId),
+(754130, @CityId),
+(754131, @CityId),
+(754200, @CityId),
+(754201, @CityId),
+(754203, @CityId),
+(754204, @CityId),
+(754206, @CityId),
+(754207, @CityId),
+(754209, @CityId),
+(754221, @CityId),
+(754290, @CityId),
+(754293, @CityId),
+(754295, @CityId);
+
+/* ===============================
+   CITY: DEBAGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DEBAGARH', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(768108, @CityId),
+(768109, @CityId),
+(768110, @CityId),
+(768119, @CityId),
+(768121, @CityId);
+
+/* ===============================
+   CITY: DHENKANAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DHENKANAL', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(759013, @CityId),
+(759001, @CityId),
+(759014, @CityId),
+(759015, @CityId),
+(759016, @CityId),
+(759017, @CityId),
+(759018, @CityId),
+(759019, @CityId),
+(759020, @CityId),
+(759021, @CityId),
+(759022, @CityId),
+(759023, @CityId),
+(759024, @CityId),
+(759025, @CityId),
+(759026, @CityId),
+(759027, @CityId),
+(759028, @CityId),
+(759039, @CityId),
+(759040, @CityId),
+(759120, @CityId),
+(759121, @CityId);
+/* ===============================
+   CITY: GAJAPATI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('GAJAPATI', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(761200, @CityId),
+(761015, @CityId),
+(761016, @CityId),
+(761017, @CityId),
+(761201, @CityId),
+(761206, @CityId),
+(761207, @CityId),
+(761208, @CityId),
+(761210, @CityId),
+(761211, @CityId),
+(761212, @CityId),
+(761213, @CityId),
+(761214, @CityId),
+(761215, @CityId),
+(761217, @CityId);
+
+/* ===============================
+   CITY: GANJAM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('GANJAM', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(761110, @CityId),
+(761119, @CityId),
+(761104, @CityId),
+(761126, @CityId),
+(761118, @CityId),
+(761102, @CityId),
+(761108, @CityId),
+(760001, @CityId),
+(760004, @CityId),
+(761020, @CityId),
+(761012, @CityId),
+(760008, @CityId),
+(761032, @CityId),
+(761028, @CityId),
+(760002, @CityId),
+(761018, @CityId),
+(760006, @CityId),
+(760003, @CityId),
+(760005, @CityId),
+(760007, @CityId),
+(760009, @CityId),
+(760010, @CityId),
+(761001, @CityId),
+(761002, @CityId),
+(761003, @CityId),
+(761004, @CityId),
+(761005, @CityId),
+(761006, @CityId),
+(761007, @CityId),
+(761008, @CityId),
+(761009, @CityId),
+(761010, @CityId),
+(761011, @CityId),
+(761013, @CityId),
+(761014, @CityId),
+(761019, @CityId),
+(761025, @CityId),
+(761026, @CityId),
+(761027, @CityId),
+(761029, @CityId),
+(761030, @CityId),
+(761031, @CityId),
+(761035, @CityId),
+(761037, @CityId),
+(761041, @CityId),
+(761042, @CityId),
+(761043, @CityId),
+(761045, @CityId),
+(761052, @CityId),
+(761054, @CityId),
+(761055, @CityId),
+(761100, @CityId),
+(761101, @CityId),
+(761103, @CityId),
+(761105, @CityId),
+(761106, @CityId),
+(761107, @CityId),
+(761109, @CityId),
+(761111, @CityId),
+(761114, @CityId),
+(761115, @CityId),
+(761116, @CityId),
+(761117, @CityId),
+(761120, @CityId),
+(761121, @CityId),
+(761122, @CityId),
+(761123, @CityId),
+(761124, @CityId),
+(761125, @CityId),
+(761131, @CityId),
+(761132, @CityId),
+(761133, @CityId),
+(761140, @CityId),
+(761141, @CityId),
+(761143, @CityId),
+(761144, @CityId),
+(761146, @CityId),
+(761151, @CityId),
+(761209, @CityId);
+/* ===============================
+   CITY: JHARSUGUDA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JHARSUGUDA', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(768201, @CityId),
+(768216, @CityId),
+(768202, @CityId),
+(768203, @CityId),
+(768204, @CityId),
+(768211, @CityId),
+(768213, @CityId),
+(768215, @CityId),
+(768217, @CityId),
+(768218, @CityId),
+(768219, @CityId),
+(768220, @CityId),
+(768225, @CityId),
+(768226, @CityId),
+(768233, @CityId),
+(768234, @CityId);
+
+/* ===============================
+   CITY: KALAHANDI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KALAHANDI', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(766001, @CityId),
+(766012, @CityId),
+(766002, @CityId),
+(766011, @CityId),
+(766013, @CityId),
+(766014, @CityId),
+(766015, @CityId),
+(766016, @CityId),
+(766017, @CityId),
+(766018, @CityId),
+(766019, @CityId),
+(766020, @CityId),
+(766023, @CityId),
+(766026, @CityId),
+(766027, @CityId),
+(766028, @CityId),
+(766029, @CityId),
+(766031, @CityId),
+(766032, @CityId),
+(766036, @CityId),
+(766037, @CityId),
+(766100, @CityId),
+(766101, @CityId),
+(766102, @CityId),
+(766103, @CityId),
+(766110, @CityId);
+
+/* ===============================
+   CITY: KANDHAMAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KANDHAMAL', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(762100, @CityId),
+(762001, @CityId),
+(762103, @CityId),
+(762002, @CityId),
+(762010, @CityId),
+(762011, @CityId),
+(762012, @CityId),
+(762019, @CityId),
+(762021, @CityId),
+(762022, @CityId),
+(762027, @CityId),
+(762028, @CityId),
+(762029, @CityId),
+(762101, @CityId),
+(762102, @CityId),
+(762104, @CityId),
+(762105, @CityId),
+(762106, @CityId),
+(762107, @CityId),
+(762109, @CityId),
+(762110, @CityId),
+(762112, @CityId);
+
+/* ===============================
+   CITY: KENDRAPARA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KENDRAPARA', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(754211, @CityId),
+(754215, @CityId),
+(754134, @CityId),
+(754153, @CityId),
+(754205, @CityId),
+(754208, @CityId),
+(754210, @CityId),
+(754212, @CityId),
+(754213, @CityId),
+(754214, @CityId),
+(754216, @CityId),
+(754217, @CityId),
+(754218, @CityId),
+(754219, @CityId),
+(754220, @CityId),
+(754222, @CityId),
+(754224, @CityId),
+(754225, @CityId),
+(754227, @CityId),
+(754228, @CityId),
+(754231, @CityId),
+(754239, @CityId),
+(754240, @CityId),
+(754244, @CityId),
+(754245, @CityId),
+(754246, @CityId),
+(754248, @CityId),
+(754250, @CityId),
+(754253, @CityId),
+(754289, @CityId),
+(754292, @CityId),
+(755006, @CityId);
+
+/* ===============================
+   CITY: KENDUJHAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KENDUJHAR', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(758021, @CityId),
+(758034, @CityId),
+(758002, @CityId),
+(758001, @CityId),
+(758035, @CityId),
+(758013, @CityId),
+(758014, @CityId),
+(758015, @CityId),
+(758016, @CityId),
+(758017, @CityId),
+(758018, @CityId),
+(758019, @CityId),
+(758020, @CityId),
+(758022, @CityId),
+(758023, @CityId),
+(758025, @CityId),
+(758026, @CityId),
+(758027, @CityId),
+(758028, @CityId),
+(758029, @CityId),
+(758030, @CityId),
+(758031, @CityId),
+(758032, @CityId),
+(758036, @CityId),
+(758037, @CityId),
+(758038, @CityId),
+(758040, @CityId),
+(758041, @CityId),
+(758043, @CityId),
+(758044, @CityId),
+(758045, @CityId),
+(758046, @CityId),
+(758047, @CityId),
+(758076, @CityId),
+(758078, @CityId),
+(758079, @CityId),
+(758080, @CityId),
+(758081, @CityId),
+(758082, @CityId),
+(758083, @CityId),
+(758084, @CityId),
+(758085, @CityId);
+/* ===============================
+   CITY: KHORDA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KHORDA', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(751001,@CityId),(751022,@CityId),(751020,@CityId),(751009,@CityId),
+(751002,@CityId),(751014,@CityId),(751006,@CityId),(751017,@CityId),
+(751007,@CityId),(751003,@CityId),(752031,@CityId),(752030,@CityId),
+(752050,@CityId),(752057,@CityId),(751004,@CityId),(751005,@CityId),
+(751008,@CityId),(751010,@CityId),(751011,@CityId),(751012,@CityId),
+(751013,@CityId),(751015,@CityId),(751016,@CityId),(751018,@CityId),
+(751019,@CityId),(751021,@CityId),(751023,@CityId),(751024,@CityId),
+(751025,@CityId),(751030,@CityId),(752018,@CityId),(752019,@CityId),
+(752020,@CityId),(752021,@CityId),(752022,@CityId),(752023,@CityId),
+(752027,@CityId),(752034,@CityId),(752035,@CityId),(752037,@CityId),
+(752038,@CityId),(752054,@CityId),(752055,@CityId),(752056,@CityId),
+(752060,@CityId),(752061,@CityId),(752062,@CityId),(752064,@CityId),
+(752066,@CityId),(752100,@CityId),(752101,@CityId),(752102,@CityId),
+(752103,@CityId),(752115,@CityId),(754012,@CityId);
+
+/* ===============================
+   CITY: KORAPUT
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KORAPUT', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(764001,@CityId),(764020,@CityId),(764021,@CityId),(763002,@CityId),
+(763001,@CityId),(763003,@CityId),(763004,@CityId),(763008,@CityId),
+(764002,@CityId),(764003,@CityId),(764004,@CityId),(764005,@CityId),
+(764006,@CityId),(764011,@CityId),(764014,@CityId),(764027,@CityId),
+(764028,@CityId),(764036,@CityId),(764037,@CityId),(764038,@CityId),
+(764039,@CityId),(764041,@CityId),(764043,@CityId),(764055,@CityId),
+(764056,@CityId),(764057,@CityId),(764058,@CityId),(764081,@CityId),
+(765013,@CityId);
+
+/* ===============================
+   CITY: MALKANGIRI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MALKANGIRI', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(764040,@CityId),(764042,@CityId),(764044,@CityId),(764045,@CityId),
+(764046,@CityId),(764047,@CityId),(764048,@CityId),(764051,@CityId),
+(764052,@CityId),(764086,@CityId),(764087,@CityId);
+
+/* ===============================
+   CITY: MAYURBHANJ
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MAYURBHANJ', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(757001,@CityId),(757043,@CityId),(757003,@CityId),(757002,@CityId),
+(757037,@CityId),(757041,@CityId),(757014,@CityId),(757016,@CityId),
+(757017,@CityId),(757018,@CityId),(757019,@CityId),(757020,@CityId),
+(757021,@CityId),(757022,@CityId),(757023,@CityId),(757024,@CityId),
+(757025,@CityId),(757026,@CityId),(757027,@CityId),(757028,@CityId),
+(757029,@CityId),(757030,@CityId),(757031,@CityId),(757032,@CityId),
+(757033,@CityId),(757034,@CityId),(757035,@CityId),(757036,@CityId),
+(757038,@CityId),(757039,@CityId),(757040,@CityId),(757042,@CityId),
+(757045,@CityId),(757046,@CityId),(757047,@CityId),(757048,@CityId),
+(757049,@CityId),(757050,@CityId),(757051,@CityId),(757052,@CityId),
+(757053,@CityId),(757054,@CityId),(757055,@CityId),(757073,@CityId),
+(757074,@CityId),(757075,@CityId),(757077,@CityId),(757079,@CityId),
+(757081,@CityId),(757082,@CityId),(757083,@CityId),(757084,@CityId),
+(757085,@CityId),(757086,@CityId),(757087,@CityId),(757091,@CityId),
+(757092,@CityId),(757093,@CityId),(757100,@CityId),(757101,@CityId),
+(757102,@CityId),(757103,@CityId),(757104,@CityId),(757105,@CityId),
+(757106,@CityId),(757107,@CityId);
+
+/* ===============================
+   CITY: NABARANGAPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NABARANGAPUR', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(764059,@CityId),(764073,@CityId),(764049,@CityId),(764061,@CityId),
+(764063,@CityId),(764070,@CityId),(764071,@CityId),(764072,@CityId),
+(764074,@CityId),(764075,@CityId),(764076,@CityId),(764077,@CityId),
+(764078,@CityId),(764085,@CityId),(764088,@CityId);
+
+/* ===============================
+   CITY: NAYAGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NAYAGARH', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(752024,@CityId),(752025,@CityId),(752026,@CityId),(752063,@CityId),
+(752065,@CityId),(752068,@CityId),(752070,@CityId),(752077,@CityId),
+(752078,@CityId),(752079,@CityId),(752080,@CityId),(752081,@CityId),
+(752082,@CityId),(752083,@CityId),(752084,@CityId),(752085,@CityId),
+(752089,@CityId),(752090,@CityId),(752091,@CityId),(752092,@CityId),
+(752093,@CityId),(752094,@CityId);
+
+/* ===============================
+   CITY: NUAPADA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NUAPADA', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(766107,@CityId),(766104,@CityId),(766105,@CityId),(766106,@CityId),
+(766108,@CityId),(766111,@CityId),(766118,@CityId);
+/* ===============================
+   CITY: PURI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PURI', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(752106,@CityId),(752002,@CityId),(752001,@CityId),(752069,@CityId),
+(752003,@CityId),(752011,@CityId),(752012,@CityId),(752013,@CityId),
+(752014,@CityId),(752015,@CityId),(752016,@CityId),(752017,@CityId),
+(752045,@CityId),(752046,@CityId),(752104,@CityId),(752105,@CityId),
+(752107,@CityId),(752108,@CityId),(752109,@CityId),(752110,@CityId),
+(752111,@CityId),(752113,@CityId),(752114,@CityId),(752116,@CityId),
+(752118,@CityId),(752119,@CityId),(752121,@CityId);
+
+/* ===============================
+   CITY: RAYAGADA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('RAYAGADA', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(765017,@CityId),(765022,@CityId),(765001,@CityId),(764062,@CityId),
+(765002,@CityId),(765015,@CityId),(765016,@CityId),(765018,@CityId),
+(765019,@CityId),(765020,@CityId),(765021,@CityId),(765023,@CityId),
+(765024,@CityId),(765025,@CityId),(765026,@CityId),(765029,@CityId),
+(765033,@CityId),(765034,@CityId);
+
+/* ===============================
+   CITY: SAMBALPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SAMBALPUR', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(768004,@CityId),(768001,@CityId),(768025,@CityId),(768017,@CityId),
+(768002,@CityId),(768003,@CityId),(768005,@CityId),(768006,@CityId),
+(768016,@CityId),(768018,@CityId),(768019,@CityId),(768020,@CityId),
+(768026,@CityId),(768105,@CityId),(768106,@CityId),(768107,@CityId),
+(768112,@CityId),(768113,@CityId),(768118,@CityId),(768200,@CityId),
+(768212,@CityId),(768214,@CityId),(768221,@CityId),(768222,@CityId),
+(768224,@CityId),(768227,@CityId),(768228,@CityId);
+
+/* ===============================
+   CITY: SONAPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SONAPUR', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(767017,@CityId),(767018,@CityId),(767019,@CityId),(767023,@CityId),
+(767045,@CityId),(767062,@CityId);
+
+/* ===============================
+   CITY: SUNDERGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SUNDERGARH', @LocationId_Odisha);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(769012,@CityId),(769001,@CityId),(769004,@CityId),(770033,@CityId),
+(770001,@CityId),(769007,@CityId),(769042,@CityId),(769015,@CityId),
+(770032,@CityId),(770034,@CityId),(770017,@CityId),(769003,@CityId),
+(769006,@CityId),(769002,@CityId),(769005,@CityId),(769008,@CityId),
+(769009,@CityId),(769010,@CityId),(769011,@CityId),(769013,@CityId),
+(769014,@CityId),(769016,@CityId),(769043,@CityId),(770002,@CityId),
+(770011,@CityId),(770012,@CityId),(770013,@CityId),(770014,@CityId),
+(770015,@CityId),(770016,@CityId),(770018,@CityId),(770019,@CityId),
+(770020,@CityId),(770021,@CityId),(770022,@CityId),(770023,@CityId),
+(770024,@CityId),(770031,@CityId),(770035,@CityId),(770036,@CityId),
+(770037,@CityId),(770038,@CityId),(770039,@CityId),(770040,@CityId),
+(770041,@CityId),(770042,@CityId),(770043,@CityId),(770044,@CityId),
+(770046,@CityId),(770048,@CityId),(770051,@CityId),(770052,@CityId),
+(770070,@CityId),(770072,@CityId),(770073,@CityId),(770074,@CityId),
+(770075,@CityId),(770076,@CityId);
+go
+DECLARE @LocationId_Pondicherry INT;
+INSERT INTO Locations (Name) VALUES ('Pondicherry');
+SET @LocationId_Pondicherry = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: CUDDALORE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CUDDALORE', @LocationId_Pondicherry);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(605106,@CityId);
+
+/* ===============================
+   CITY: PONDICHERRY
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PONDICHERRY', @LocationId_Pondicherry);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(607402,@CityId),(605008,@CityId),(605004,@CityId),(605003,@CityId),
+(605009,@CityId),(605007,@CityId);
+go
+DECLARE @LocationId_Punjab INT;
+INSERT INTO Locations (Name) VALUES ('Punjab');
+SET @LocationId_Punjab = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: CHANDIGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CHANDIGARH', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(134111,@CityId),(134115,@CityId),(134119,@CityId),(160016,@CityId);
+
+/* ===============================
+   CITY: MOHALI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MOHALI', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(140101,@CityId),(140109,@CityId),(140110,@CityId),(140201,@CityId),
+(140306,@CityId),(140307,@CityId),(140308,@CityId),(140501,@CityId),
+(140506,@CityId),(140507,@CityId),(140603,@CityId),(140604,@CityId),
+(140901,@CityId),(160043,@CityId),(160059,@CityId),(160062,@CityId),
+(160071,@CityId),(160103,@CityId),(160104,@CityId);
+
+/* ===============================
+   CITY: ROPAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('ROPAR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(140103,@CityId),(140108,@CityId),(140112,@CityId),(140301,@CityId),
+(140413,@CityId),(140001,@CityId),(140126,@CityId);
+
+/* ===============================
+   CITY: PATIALA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PATIALA', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(140602,@CityId),(147001,@CityId),(147004,@CityId);
+
+/* ===============================
+   CITY: AMRITSAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('AMRITSAR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(143006,@CityId),(143101,@CityId),(143001,@CityId),(143115,@CityId),(143010,@CityId);
+
+/* ===============================
+   CITY: TARN TARAN
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TARN TARAN', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(143402,@CityId);
+
+/* ===============================
+   CITY: JALANDHAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JALANDHAR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(144001,@CityId),(144002,@CityId),(144003,@CityId),(144004,@CityId),(144005,@CityId),
+(144006,@CityId),(144007,@CityId),(144008,@CityId),(144009,@CityId),(144010,@CityId),
+(144011,@CityId),(144012,@CityId),(144013,@CityId),(144014,@CityId),(144020,@CityId),
+(144021,@CityId),(144022,@CityId),(144023,@CityId),(144024,@CityId),(144025,@CityId),
+(144026,@CityId),(144027,@CityId),(144028,@CityId),(144029,@CityId),(144030,@CityId),
+(144031,@CityId),(144032,@CityId),(144033,@CityId),(144034,@CityId),(144035,@CityId),
+(144036,@CityId),(144037,@CityId),(144039,@CityId),(144040,@CityId),(144041,@CityId),
+(144042,@CityId),(144043,@CityId),(144044,@CityId),(144101,@CityId),(144102,@CityId),
+(144103,@CityId),(144104,@CityId),(144106,@CityId),(144201,@CityId),(144301,@CityId),
+(144302,@CityId),(144303,@CityId),(144311,@CityId),(144403,@CityId),(144405,@CityId),
+(144407,@CityId),(144409,@CityId),(144410,@CityId),(144416,@CityId),(144419,@CityId),
+(144511,@CityId),(144629,@CityId),(144630,@CityId),(144633,@CityId),(144702,@CityId),
+(144703,@CityId),(144801,@CityId),(144805,@CityId);
+
+/* ===============================
+   CITY: NAWANSHAHR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NAWANSHAHR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(144418,@CityId),(144514,@CityId);
+
+/* ===============================
+   CITY: KAPURTHALA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KAPURTHALA', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(144603,@CityId),(144623,@CityId),(144401,@CityId),(144601,@CityId),(144701,@CityId);
+
+/* ===============================
+   CITY: PATHANKOT
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PATHANKOT', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(145001,@CityId);
+
+/* ===============================
+   CITY: FARIDKOT
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('FARIDKOT', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(151203,@CityId);
+
+/* ===============================
+   CITY: BATHINDA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BATHINDA', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(151001,@CityId);
+
+/* ===============================
+   CITY: MOGA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MOGA', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(142001,@CityId);
+
+/* ===============================
+   CITY: FAZILKA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('FAZILKA', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(152116,@CityId);
+
+/* ===============================
+   CITY: SANGRUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SANGRUR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(148001,@CityId),(148101,@CityId);
+
+/* ===============================
+   CITY: GURDASPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('GURDASPUR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(143505,@CityId);
+
+/* ===============================
+   CITY: MUKTSAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MUKTSAR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(152026,@CityId);
+
+/* ===============================
+   CITY: MANSA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MANSA', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(151505,@CityId);
+
+/* ===============================
+   CITY: HOSHIARPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('HOSHIARPUR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(144216,@CityId),(146001,@CityId),(146021,@CityId),(146022,@CityId),
+(146023,@CityId),(146111,@CityId);
+
+/* ===============================
+   CITY: FIROZPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('FIROZPUR', @LocationId_Punjab);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(152002,@CityId);
+
+go
+DECLARE @LocationId_Rajasthan INT;
+INSERT INTO Locations (Name) VALUES ('Rajasthan');
+SET @LocationId_Rajasthan = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: AJMER
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('AJMER', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(305812,@CityId),(305802,@CityId),(305631,@CityId),(305004,@CityId),(305001,@CityId),(305901,@CityId);
+
+/* ===============================
+   CITY: ALWAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('ALWAR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(301019,@CityId),(301701,@CityId),(301001,@CityId);
+
+/* ===============================
+   CITY: BANSWARA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BANSWARA', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(327001,@CityId);
+
+/* ===============================
+   CITY: BARMER
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BARMER', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(344001,@CityId),(344022,@CityId);
+
+/* ===============================
+   CITY: BHARATPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BHARATPUR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(321022,@CityId),(321001,@CityId);
+
+/* ===============================
+   CITY: BHILWARA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BHILWARA', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(311001,@CityId),(311021,@CityId),(311602,@CityId);
+
+/* ===============================
+   CITY: BIKANER
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BIKANER', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(334803,@CityId),(334001,@CityId),(334003,@CityId);
+
+/* ===============================
+   CITY: BUNDI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('BUNDI', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(323001,@CityId);
+
+/* ===============================
+   CITY: CHITTORGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CHITTORGARH', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(312001,@CityId),(323307,@CityId);
+
+/* ===============================
+   CITY: CHURU
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CHURU', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(331001,@CityId);
+
+/* ===============================
+   CITY: DAUSA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DAUSA', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(303305,@CityId),(303302,@CityId);
+
+/* ===============================
+   CITY: DHOLPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DHOLPUR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(328001,@CityId);
+
+/* ===============================
+   CITY: DUNGARPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DUNGARPUR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(314001,@CityId);
+
+/* ===============================
+   CITY: HANUMANGARH
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('HANUMANGARH', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(335512,@CityId);
+
+/* ===============================
+   CITY: JAIPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JAIPUR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(303908,@CityId),(303905,@CityId),(303904,@CityId),(303903,@CityId),(303901,@CityId),
+(303807,@CityId),(303806,@CityId),(303805,@CityId),(303804,@CityId),(303803,@CityId),
+(303801,@CityId),(303712,@CityId),(303706,@CityId),(303704,@CityId),(303702,@CityId),
+(303701,@CityId),(303604,@CityId),(303603,@CityId),(303602,@CityId),(303601,@CityId),
+(303348,@CityId),(303338,@CityId),(303329,@CityId),(303328,@CityId),(303301,@CityId),
+(303124,@CityId),(303123,@CityId),(303122,@CityId),(303121,@CityId),(303120,@CityId),
+(303119,@CityId),(303110,@CityId),(303109,@CityId),(303108,@CityId),(303107,@CityId),
+(303106,@CityId),(303105,@CityId),(303104,@CityId),(303103,@CityId),(303102,@CityId),
+(303012,@CityId),(303009,@CityId),(303008,@CityId),(303007,@CityId),(303006,@CityId),
+(303005,@CityId),(303003,@CityId),(303002,@CityId),(303001,@CityId),(302043,@CityId),
+(302042,@CityId),(302041,@CityId),(302040,@CityId),(302039,@CityId),(302038,@CityId),
+(302037,@CityId),(302036,@CityId),(302034,@CityId),(302033,@CityId),(302031,@CityId),
+(302029,@CityId),(302028,@CityId),(302027,@CityId),(302026,@CityId),(302022,@CityId),
+(302021,@CityId),(302020,@CityId),(302019,@CityId),(302018,@CityId),(302017,@CityId),
+(302016,@CityId),(302015,@CityId),(302013,@CityId),(302012,@CityId),(302006,@CityId),
+(302005,@CityId),(302004,@CityId),(302003,@CityId),(302002,@CityId),(302001,@CityId);
+
+/* ===============================
+   CITY: JAISALMER
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JAISALMER', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(345001,@CityId);
+
+/* ===============================
+   CITY: JALOR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JALOR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(343001,@CityId);
+
+/* ===============================
+   CITY: JHUJHUNU
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JHUJHUNU', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(333026,@CityId),(333001,@CityId);
+
+/* ===============================
+   CITY: JODHPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JODHPUR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(342037,@CityId),(342029,@CityId),(342005,@CityId),(342001,@CityId),(342008,@CityId),
+(342002,@CityId),(342015,@CityId);
+
+/* ===============================
+   CITY: KOTA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KOTA', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(324005,@CityId),(324010,@CityId),(324001,@CityId),(324009,@CityId);
+
+/* ===============================
+   CITY: NAGAUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NAGAUR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(341508,@CityId);
+
+/* ===============================
+   CITY: PALI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PALI', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(306901,@CityId),(306706,@CityId),(306704,@CityId),(306602,@CityId),(306601,@CityId),
+(306504,@CityId),(306501,@CityId),(306422,@CityId),(306307,@CityId),(306304,@CityId),
+(306303,@CityId),(306301,@CityId),(306021,@CityId),(306302,@CityId),(306401,@CityId);
+
+/* ===============================
+   CITY: SAWAI MADHOPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SAWAI MADHOPUR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(322201,@CityId);
+
+/* ===============================
+   CITY: SIKAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SIKAR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(332404,@CityId),(332024,@CityId);
+
+/* ===============================
+   CITY: SRI GANGANAGAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SRI GANGANAGAR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(335001,@CityId);
+
+/* ===============================
+   CITY: TONK
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TONK', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(304504,@CityId);
+
+/* ===============================
+   CITY: UDAIPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('UDAIPUR', @LocationId_Rajasthan);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(313001,@CityId),(313002,@CityId),(313324,@CityId);
+go
+DECLARE @LocationId_Sikkim INT;
+INSERT INTO Locations (Name) VALUES ('Sikkim');
+SET @LocationId_Sikkim = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: EAST SIKKIM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('EAST SIKKIM', @LocationId_Sikkim);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(737101,@CityId),(737102,@CityId),(737103,@CityId),(737106,@CityId),
+(737107,@CityId),(737120,@CityId),(737131,@CityId),(737132,@CityId),
+(737133,@CityId),(737134,@CityId),(737135,@CityId),(737136,@CityId);
+
+/* ===============================
+   CITY: WEST SIKKIM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('WEST SIKKIM', @LocationId_Sikkim);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(737111,@CityId),(737113,@CityId),(737121,@CityId);
+
+/* ===============================
+   CITY: NORTH SIKKIM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NORTH SIKKIM', @LocationId_Sikkim);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(737116,@CityId);
+
+/* ===============================
+   CITY: SOUTH SIKKIM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SOUTH SIKKIM', @LocationId_Sikkim);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(737126,@CityId),(737128,@CityId),(737139,@CityId);
+go
+DECLARE @LocationId_TamilNadu INT;
+INSERT INTO Locations (Name) VALUES ('Tamil Nadu');
+SET @LocationId_TamilNadu = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: CHENNAI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CHENNAI', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(600113,@CityId),(600112,@CityId),(600108,@CityId),(600107,@CityId),
+(600106,@CityId),(600104,@CityId),(600102,@CityId),(600101,@CityId),
+(600099,@CityId),(600098,@CityId),(600094,@CityId),(600093,@CityId),
+(600092,@CityId),(600090,@CityId),(600086,@CityId),(600085,@CityId),
+(600084,@CityId),(600083,@CityId),(600082,@CityId),(600081,@CityId),
+(600079,@CityId),(600078,@CityId),(600042,@CityId),(600040,@CityId),
+(600039,@CityId),(600038,@CityId),(600036,@CityId),(600035,@CityId),
+(600034,@CityId),(600033,@CityId),(600032,@CityId),(600031,@CityId),
+(600030,@CityId),(600029,@CityId),(600028,@CityId),(600026,@CityId),
+(600025,@CityId),(600024,@CityId),(600023,@CityId),(600022,@CityId),
+(600021,@CityId),(600020,@CityId),(600018,@CityId),(600017,@CityId),
+(600015,@CityId),(600014,@CityId),(600013,@CityId),(600012,@CityId),
+(600011,@CityId),(600010,@CityId),(600009,@CityId),(600008,@CityId),
+(600007,@CityId),(600006,@CityId),(600005,@CityId),(600004,@CityId),
+(600003,@CityId),(600002,@CityId),(600001,@CityId);
+
+/* ===============================
+   CITY: COIMBATORE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('COIMBATORE', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(641668,@CityId),(641659,@CityId),(641653,@CityId),(641407,@CityId),
+(641402,@CityId),(641401,@CityId),(641305,@CityId),(641302,@CityId),
+(641301,@CityId),(641202,@CityId),(641201,@CityId),(641114,@CityId),
+(641113,@CityId),(641112,@CityId),(641111,@CityId),(641110,@CityId),
+(641109,@CityId),(641108,@CityId),(641107,@CityId),(641105,@CityId),
+(641104,@CityId),(641103,@CityId),(641101,@CityId),(641062,@CityId),
+(641050,@CityId),(641049,@CityId),(641048,@CityId),(641047,@CityId),
+(641046,@CityId),(641045,@CityId),(641044,@CityId),(641043,@CityId),
+(641042,@CityId),(641041,@CityId),(641039,@CityId),(641038,@CityId),
+(641037,@CityId),(641036,@CityId),(641035,@CityId),(641034,@CityId),
+(641033,@CityId),(641032,@CityId),(641031,@CityId),(641030,@CityId),
+(641029,@CityId),(641028,@CityId),(641027,@CityId),(641026,@CityId),
+(641025,@CityId),(641024,@CityId),(641023,@CityId),(641022,@CityId),
+(641021,@CityId),(641020,@CityId),(641019,@CityId),(641018,@CityId),
+(641017,@CityId),(641016,@CityId),(641015,@CityId),(641014,@CityId),
+(641013,@CityId),(641012,@CityId),(641011,@CityId),(641010,@CityId),
+(641009,@CityId),(641008,@CityId),(641007,@CityId),(641006,@CityId),
+(641005,@CityId),(641004,@CityId),(641003,@CityId),(641002,@CityId),
+(641001,@CityId),(642002,@CityId);
+
+/* ===============================
+   CITY: CUDDALORE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('CUDDALORE', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(607803,@CityId),(608001,@CityId),(608502,@CityId),(606003,@CityId),(607403,@CityId),(605001,@CityId);
+
+/* ===============================
+   CITY: DINDIGUL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DINDIGUL', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(624619,@CityId),(624002,@CityId);
+
+/* ===============================
+   CITY: ERODE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('ERODE', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(638002,@CityId),(638001,@CityId);
+
+/* ===============================
+   CITY: KANCHIPURAM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KANCHIPURAM', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(603210,@CityId),(603209,@CityId),(603204,@CityId),(603203,@CityId),(603202,@CityId),
+(603112,@CityId),(603104,@CityId),(603103,@CityId),(602117,@CityId),(602106,@CityId),
+(602105,@CityId),(601301,@CityId),(600132,@CityId),(600131,@CityId),(600130,@CityId),
+(600129,@CityId),(600128,@CityId),(600127,@CityId),(600126,@CityId),(600125,@CityId),
+(600122,@CityId),(600119,@CityId),(600117,@CityId),(600115,@CityId),(600100,@CityId),
+(603102,@CityId),(603211,@CityId),(603002,@CityId),(631501,@CityId),(631502,@CityId),(603001,@CityId),(603306,@CityId);
+
+/* ===============================
+   CITY: KANYAKUMARI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KANYAKUMARI', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(629852,@CityId),(629001,@CityId),(629002,@CityId),(629801,@CityId);
+
+/* ===============================
+   CITY: KARAIKAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KARAIKAL', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(609609,@CityId),(609606,@CityId),(609605,@CityId),(609602,@CityId);
+
+/* ===============================
+   CITY: KARUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KARUR', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(639005,@CityId),(639004,@CityId),(639002,@CityId);
+
+/* ===============================
+   CITY: KRISHNAGIRI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KRISHNAGIRI', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(635130,@CityId),(635110,@CityId),(635207,@CityId),(635001,@CityId),(635109,@CityId);
+
+/* ===============================
+   CITY: MADURAI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MADURAI', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(625107,@CityId),(625007,@CityId),(625001,@CityId),(625003,@CityId),(625017,@CityId),
+(625016,@CityId),(625014,@CityId),(625501,@CityId),(625301,@CityId);
+
+/* ===============================
+   CITY: NAGAPATTINAM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NAGAPATTINAM', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(614810,@CityId),(614808,@CityId),(614807,@CityId),(614714,@CityId),(614712,@CityId),
+(611108,@CityId),(611002,@CityId),(611001,@CityId);
+
+/* ===============================
+   CITY: NILGIRIS
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NILGIRIS', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(643209,@CityId);
+
+/* ===============================
+   CITY: PONDICHERRY
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PONDICHERRY', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(607403,@CityId),(605001,@CityId);
+
+/* ===============================
+   CITY: RAMANATHAPURAM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('RAMANATHAPURAM', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(623503,@CityId);
+
+/* ===============================
+   CITY: SALEM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SALEM', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(636008,@CityId),(636002,@CityId),(636201,@CityId),(636010,@CityId),(636016,@CityId),
+(636005,@CityId),(636001,@CityId);
+
+/* ===============================
+   CITY: SIVAGANGA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SIVAGANGA', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(630202,@CityId),(630002,@CityId),(630001,@CityId);
+
+/* ===============================
+   CITY: THANJAVUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('THANJAVUR', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(614707,@CityId),(613501,@CityId),(613007,@CityId),(612001,@CityId);
+
+/* ===============================
+   CITY: THENI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('THENI', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(625512,@CityId);
+
+/* ===============================
+   CITY: TIRUCHIRAPPALLI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TIRUCHIRAPPALLI', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(621216,@CityId),(620004,@CityId),(621712,@CityId),(620005,@CityId),
+(620003,@CityId),(620015,@CityId),(620017,@CityId);
+
+/* ===============================
+   CITY: TIRUNELVELI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TIRUNELVELI', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(627604,@CityId),(627811,@CityId),(627006,@CityId);
+
+/* ===============================
+   CITY: TIRUPPUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TIRUPPUR', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(641697,@CityId),(641671,@CityId),(641669,@CityId),(641666,@CityId),(641664,@CityId),
+(641662,@CityId),(641658,@CityId),(641655,@CityId),(641654,@CityId),(641603,@CityId),
+(641605,@CityId);
+
+/* ===============================
+   CITY: TIRUVALLUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TIRUVALLUR', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(602001,@CityId),(601102,@CityId),(600123,@CityId),(600120,@CityId),(600118,@CityId),
+(600116,@CityId),(600095,@CityId),(600087,@CityId),(600077,@CityId),(600076,@CityId),
+(600071,@CityId),(600068,@CityId),(600067,@CityId),(600066,@CityId),(600062,@CityId),
+(600060,@CityId),(600058,@CityId),(600057,@CityId),(600056,@CityId),(600054,@CityId),
+(600051,@CityId),(600050,@CityId),(600049,@CityId),(600037,@CityId),(600019,@CityId),
+(600052,@CityId),(602021,@CityId),(601201,@CityId),(602002,@CityId),(600055,@CityId);
+
+/* ===============================
+   CITY: TIRUVANNAMALAI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TIRUVANNAMALAI', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(635703,@CityId),(606707,@CityId),(606803,@CityId),(606601,@CityId);
+
+/* ===============================
+   CITY: TIRUVARUR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TIRUVARUR', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(610001,@CityId);
+
+/* ===============================
+   CITY: TUTICORIN
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TUTICORIN', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(628103,@CityId),(628007,@CityId),(628003,@CityId);
+
+/* ===============================
+   CITY: VELLORE
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('VELLORE', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(632513,@CityId),(632014,@CityId),(632011,@CityId),(631002,@CityId),
+(632001,@CityId),(632006,@CityId),(632105,@CityId),(631001,@CityId),
+(632009,@CityId);
+
+/* ===============================
+   CITY: VILLUPURAM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('VILLUPURAM', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(604303,@CityId);
+
+/* ===============================
+   CITY: VIRUDHUNAGAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('VIRUDHUNAGAR', @LocationId_TamilNadu);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(626123,@CityId),(626102,@CityId),(626111,@CityId);
+go
+DECLARE @LocationId_Telangana INT;
+INSERT INTO Locations (Name) VALUES ('Telangana');
+SET @LocationId_Telangana = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: ADILABAD
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('ADILABAD', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(504001,@CityId);
+
+/* ===============================
+   CITY: HANAMKONDA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('HANAMKONDA', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(506142,@CityId);
+
+/* ===============================
+   CITY: HYDERABAD
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('HYDERABAD', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(501101,@CityId),(500101,@CityId),(500096,@CityId),(500095,@CityId),(500093,@CityId),
+(500091,@CityId),(500085,@CityId),(500082,@CityId),(500081,@CityId),(500078,@CityId),
+(500073,@CityId),(500072,@CityId),(500066,@CityId),(500065,@CityId),(500064,@CityId),
+(500063,@CityId),(500059,@CityId),(500057,@CityId),(500055,@CityId),(500054,@CityId),
+(500053,@CityId),(500050,@CityId),(500045,@CityId),(500043,@CityId),(500042,@CityId),
+(500041,@CityId),(500038,@CityId),(500034,@CityId),(500033,@CityId),(500031,@CityId),
+(500028,@CityId),(500024,@CityId),(500023,@CityId),(500022,@CityId),(500016,@CityId),
+(500015,@CityId),(500014,@CityId),(500012,@CityId),(500011,@CityId),(500010,@CityId),
+(500009,@CityId),(500008,@CityId),(500006,@CityId),(500004,@CityId),(500003,@CityId),
+(500002,@CityId),(500001,@CityId),(500007,@CityId),(500013,@CityId),(500017,@CityId),
+(500020,@CityId),(500025,@CityId),(500026,@CityId),(500027,@CityId),(500029,@CityId),
+(500040,@CityId),(500044,@CityId),(500047,@CityId),(500056,@CityId),(500061,@CityId),
+(500062,@CityId),(500080,@CityId),(500087,@CityId),(500088,@CityId),(500094,@CityId);
+
+/* ===============================
+   CITY: JAGTIAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('JAGTIAL', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(505327,@CityId);
+
+/* ===============================
+   CITY: KAMAREDDY
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KAMAREDDY', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(503111,@CityId);
+
+/* ===============================
+   CITY: KARIM NAGAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KARIM NAGAR', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(505001,@CityId),(505468,@CityId);
+
+/* ===============================
+   CITY: KHAMMAM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KHAMMAM', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(507003,@CityId),(507301,@CityId),(507208,@CityId),(507001,@CityId),(507122,@CityId),
+(507002,@CityId);
+
+/* ===============================
+   CITY: KOTHAGUDEM
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KOTHAGUDEM', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(507306,@CityId),(507115,@CityId);
+
+/* ===============================
+   CITY: KOTHAGUDEM COLLS
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('KOTHAGUDEM COLLS', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(507101,@CityId),(507111,@CityId);
+
+/* ===============================
+   CITY: MAHABUB NAGAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MAHABUB NAGAR', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(509001,@CityId);
+
+/* ===============================
+   CITY: MANCHERIAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('MANCHERIAL', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(504208,@CityId),(504303,@CityId);
+
+/* ===============================
+   CITY: NALGONDA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NALGONDA', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(508210,@CityId),(508001,@CityId),(508250,@CityId);
+
+/* ===============================
+   CITY: NIRMAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NIRMAL', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(504106,@CityId);
+
+/* ===============================
+   CITY: NIZAMABAD
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NIZAMABAD', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(503224,@CityId),(503124,@CityId),(503001,@CityId);
+
+/* ===============================
+   CITY: PARKAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PARKAL', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(506343,@CityId),(506319,@CityId);
+
+/* ===============================
+   CITY: PEDDAPALLI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PEDDAPALLI', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(505209,@CityId),(505210,@CityId),(505211,@CityId),(505214,@CityId);
+
+/* ===============================
+   CITY: RANGAREDDY
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('RANGAREDDY', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(501512,@CityId),(501511,@CityId),(501510,@CityId),(501509,@CityId),(501508,@CityId),
+(501506,@CityId),(501505,@CityId),(501504,@CityId),(501503,@CityId),(501502,@CityId),
+(501501,@CityId),(501401,@CityId),(501218,@CityId),(501203,@CityId),(501158,@CityId),
+(501144,@CityId),(501143,@CityId),(501142,@CityId),(501141,@CityId),(501121,@CityId),
+(501111,@CityId),(501106,@CityId),(500100,@CityId),(500097,@CityId),(500090,@CityId),
+(500089,@CityId),(500086,@CityId),(500084,@CityId),(500079,@CityId),(500077,@CityId),
+(500075,@CityId),(500069,@CityId),(500067,@CityId),(500058,@CityId),(500052,@CityId),
+(500048,@CityId),(500046,@CityId),(500037,@CityId),(500035,@CityId),(500032,@CityId),
+(500030,@CityId),(500019,@CityId),(500018,@CityId),(500005,@CityId),(500036,@CityId),
+(500039,@CityId),(500074,@CityId),(500076,@CityId),(500068,@CityId),(509216,@CityId),
+(500070,@CityId);
+
+/* ===============================
+   CITY: SANGAREDDY
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SANGAREDDY', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(502220,@CityId),(502001,@CityId),(502313,@CityId),(502291,@CityId),(502032,@CityId);
+
+/* ===============================
+   CITY: SIDDIPET
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SIDDIPET', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(502103,@CityId);
+
+/* ===============================
+   CITY: SIRCILLA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SIRCILLA', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(505302,@CityId),(505301,@CityId);
+
+/* ===============================
+   CITY: SURYAPET
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SURYAPET', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(508213,@CityId);
+
+/* ===============================
+   CITY: TRIMULGHERRY
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('TRIMULGHERRY', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(500049,@CityId);
+
+/* ===============================
+   CITY: WARANGAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('WARANGAL', @LocationId_Telangana);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(506122,@CityId),(506002,@CityId),(506004,@CityId),(506310,@CityId),(506163,@CityId),(506001,@CityId);
+go
+DECLARE @LocationId_Tripura INT;
+INSERT INTO Locations (Name) VALUES ('Tripura');
+SET @LocationId_Tripura = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: DHALAI
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DHALAI', @LocationId_Tripura);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(799278,@CityId),(799286,@CityId),(799289,@CityId);
+
+/* ===============================
+   CITY: SOUTH TRIPURA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('SOUTH TRIPURA', @LocationId_Tripura);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(799120,@CityId),(799144,@CityId),(799145,@CityId),(799142,@CityId),(799114,@CityId);
+
+/* ===============================
+   CITY: WEST TRIPURA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('WEST TRIPURA', @LocationId_Tripura);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(799035,@CityId),(799012,@CityId),(799001,@CityId),(799008,@CityId),(799003,@CityId),
+(799102,@CityId),(799002,@CityId),(799007,@CityId),(799006,@CityId),(799014,@CityId),
+(799005,@CityId),(799009,@CityId),(799201,@CityId),(799103,@CityId),(799203,@CityId);
+go
+DECLARE @LocationId_Uttarakhand INT;
+INSERT INTO Locations (Name) VALUES ('Uttarakhand');
+SET @LocationId_Uttarakhand = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: ALMORA
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('ALMORA', @LocationId_Uttarakhand);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(263601,@CityId),(263645,@CityId);
+
+/* ===============================
+   CITY: DEHRADUN
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('DEHRADUN', @LocationId_Uttarakhand);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(248145,@CityId),(248013,@CityId),(248140,@CityId),(248001,@CityId),(248146,@CityId),
+(249205,@CityId),(248006,@CityId),(248005,@CityId),(248195,@CityId),(249408,@CityId),
+(248009,@CityId),(248007,@CityId),(249201,@CityId);
+
+/* ===============================
+   CITY: HARIDWAR
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('HARIDWAR', @LocationId_Uttarakhand);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(247667,@CityId),(249407,@CityId),(249401,@CityId),(249403,@CityId),(249402,@CityId);
+
+/* ===============================
+   CITY: NAINITAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('NAINITAL', @LocationId_Uttarakhand);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(263148,@CityId),(263139,@CityId),(263153,@CityId),(263135,@CityId),(244713,@CityId);
+
+/* ===============================
+   CITY: PAURI GARHWAL
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('PAURI GARHWAL', @LocationId_Uttarakhand);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(249302,@CityId),(246149,@CityId);
+go
+DECLARE @LocationId_WestBengal INT;
+INSERT INTO Locations (Name) VALUES ('West Bengal');
+SET @LocationId_WestBengal = SCOPE_IDENTITY();
+
+DECLARE @CityId INT;
+
+/* ===============================
+   CITY: Asansol
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('Asansol', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(713383,@CityId);
+
+/* ===============================
+   CITY: Bankura
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('Bankura', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(722138,@CityId),(722139,@CityId),(722140,@CityId),(722141,@CityId),(722142,@CityId),
+(722143,@CityId),(722144,@CityId),(722146,@CityId),(722147,@CityId),(722148,@CityId),
+(722149,@CityId),(722150,@CityId),(722151,@CityId),(722152,@CityId),(722153,@CityId),
+(722154,@CityId),(722155,@CityId),(722156,@CityId),(722157,@CityId),(722158,@CityId),
+(722160,@CityId),(722161,@CityId),(722162,@CityId),(722164,@CityId),(722173,@CityId),
+(722183,@CityId),(722201,@CityId),(722202,@CityId),(722203,@CityId),(722204,@CityId),
+(722205,@CityId),(722206,@CityId),(722207,@CityId),(722208,@CityId),(722101,@CityId);
+
+/* ===============================
+   CITY: Bardhaman
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('Bardhaman', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(713101,@CityId),(713102,@CityId),(713103,@CityId),(713104,@CityId),(713124,@CityId),
+(713125,@CityId),(713141,@CityId),(713142,@CityId),(713143,@CityId),(713144,@CityId),
+(713145,@CityId),(713146,@CityId),(713147,@CityId),(713148,@CityId),(713149,@CityId),
+(713150,@CityId),(713151,@CityId),(713152,@CityId),(713153,@CityId),(713154,@CityId),
+(713156,@CityId),(713166,@CityId),(713201,@CityId),(713202,@CityId),(713203,@CityId),
+(713204,@CityId),(713205,@CityId),(713206,@CityId),(713207,@CityId),(713208,@CityId),
+(713209,@CityId),(713210,@CityId),(713211,@CityId),(713212,@CityId),(713213,@CityId),
+(713214,@CityId),(713215,@CityId),(713216,@CityId),(713217,@CityId),(713301,@CityId),
+(713302,@CityId),(713303,@CityId),(713304,@CityId),(713305,@CityId),(713315,@CityId),
+(713321,@CityId),(713322,@CityId),(713323,@CityId),(713324,@CityId),(713325,@CityId),
+(713326,@CityId),(713330,@CityId),(713331,@CityId),(713332,@CityId),(713333,@CityId),
+(713334,@CityId),(713335,@CityId),(713336,@CityId),(713337,@CityId),(713338,@CityId),
+(713339,@CityId),(713340,@CityId),(713341,@CityId),(713342,@CityId),(713343,@CityId),
+(713344,@CityId),(713346,@CityId),(713347,@CityId),(713357,@CityId),(713358,@CityId),
+(713365,@CityId),(713369,@CityId),(713370,@CityId),(713371,@CityId),(713372,@CityId),
+(713373,@CityId),(713376,@CityId),(713378,@CityId),(713381,@CityId),(713384,@CityId),
+(713385,@CityId),(713386,@CityId),(713401,@CityId),(713403,@CityId),(713404,@CityId),
+(713405,@CityId),(713406,@CityId),(713407,@CityId),(713408,@CityId),(713409,@CityId),
+(713420,@CityId),(713421,@CityId),(713422,@CityId),(713423,@CityId),(713424,@CityId),
+(713426,@CityId),(713427,@CityId),(713428,@CityId),(713434,@CityId),(713502,@CityId),
+(713512,@CityId),(713513,@CityId),(713514,@CityId),(713515,@CityId),(713519,@CityId),
+(713520,@CityId),(713380,@CityId);
+
+/* ===============================
+   CITY: Birbhum
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('Birbhum', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(731101,@CityId),(731102,@CityId),(731103,@CityId),(731104,@CityId),(731121,@CityId),
+(731123,@CityId),(731124,@CityId),(731125,@CityId),(731126,@CityId),(731127,@CityId),
+(731129,@CityId),(731130,@CityId),(731132,@CityId),(731133,@CityId),(731201,@CityId),
+(731202,@CityId),(731204,@CityId),(731213,@CityId),(731214,@CityId),(731216,@CityId),
+(731219,@CityId),(731220,@CityId),(731221,@CityId),(731222,@CityId),(731223,@CityId),
+(731233,@CityId),(731234,@CityId),(731235,@CityId),(731236,@CityId),(731237,@CityId),
+(731238,@CityId),(731240,@CityId),(731241,@CityId),(731242,@CityId),(731243,@CityId),
+(731244,@CityId),(731245,@CityId);
+
+/* ===============================
+   CITY: Cooch Behar
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('Cooch Behar', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(736101,@CityId),(736133,@CityId),(736145,@CityId),(736156,@CityId),(736165,@CityId),
+(736170,@CityId),(736179,@CityId);
+
+/* ===============================
+   CITY: Darjeeling
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('Darjeeling', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(734434,@CityId),(734001,@CityId),(734002,@CityId),(734003,@CityId),(734004,@CityId),
+(734005,@CityId),(734006,@CityId),(734007,@CityId),(734008,@CityId),(734009,@CityId),
+(734011,@CityId),(734012,@CityId),(734013,@CityId),(734014,@CityId),(734015,@CityId),
+(734101,@CityId),(734102,@CityId),(734103,@CityId),(734104,@CityId),(734105,@CityId),
+(734201,@CityId),(734203,@CityId),(734204,@CityId),(734213,@CityId),(734214,@CityId),
+(734215,@CityId),(734216,@CityId),(734217,@CityId),(734218,@CityId),(734220,@CityId),
+(734221,@CityId),(734222,@CityId),(734223,@CityId),(734224,@CityId),(734226,@CityId),
+(734301,@CityId),(734311,@CityId),(734312,@CityId),(734313,@CityId),(734314,@CityId),
+(734315,@CityId),(734316,@CityId),(734421,@CityId),(734423,@CityId),(734424,@CityId),
+(734426,@CityId),(734427,@CityId),(734429,@CityId),(734503,@CityId),(735231,@CityId);
+
+/* ===============================
+   CITY: Durgapur
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('Durgapur', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(713155,@CityId),(713158,@CityId),(713160,@CityId),(713162,@CityId),(713165,@CityId),
+(713167,@CityId),(713172,@CityId),(713173,@CityId),(713218,@CityId),(713219,@CityId),
+(713368,@CityId),(713375,@CityId),(713377,@CityId),(713402,@CityId),(713419,@CityId),
+(713432,@CityId),(713433,@CityId);
+
+/* ===============================
+   CITY: East Midnapore
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('East Midnapore', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(721134,@CityId),(721137,@CityId),(721139,@CityId),(721151,@CityId),(721152,@CityId),
+(721153,@CityId),(721154,@CityId),(721158,@CityId),(721171,@CityId),(721172,@CityId),
+(721401,@CityId),(721422,@CityId),(721425,@CityId),(721441,@CityId),(721442,@CityId),
+(721443,@CityId),(721444,@CityId),(721446,@CityId),(721447,@CityId),(721448,@CityId),
+(721449,@CityId),(721450,@CityId),(721452,@CityId),(721453,@CityId),(721454,@CityId),
+(721455,@CityId),(721456,@CityId),(721458,@CityId),(721463,@CityId),(721601,@CityId),
+(721602,@CityId),(721603,@CityId),(721604,@CityId),(721606,@CityId),(721607,@CityId),
+(721625,@CityId),(721626,@CityId),(721627,@CityId),(721628,@CityId),(721629,@CityId),
+(721631,@CityId),(721632,@CityId),(721633,@CityId),(721634,@CityId),(721635,@CityId),
+(721636,@CityId),(721642,@CityId),(721643,@CityId),(721644,@CityId),(721645,@CityId),
+(721646,@CityId),(721647,@CityId),(721648,@CityId),(721649,@CityId),(721650,@CityId),
+(721651,@CityId),(721652,@CityId),(721653,@CityId),(721654,@CityId),(721655,@CityId),
+(721656,@CityId);
+/* ===============================
+   CITY: HOOGHLY
+   =============================== */
+INSERT INTO Cities (Name, LocationId) VALUES ('Hooghly', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(712708, @CityId), (712707, @CityId), (712706, @CityId), (712705, @CityId),
+(712704, @CityId), (712702, @CityId), (712701, @CityId), (712617, @CityId),
+(712616, @CityId), (712615, @CityId), (712614, @CityId), (712613, @CityId),
+(712612, @CityId), (712611, @CityId), (712602, @CityId), (712601, @CityId),
+(712515, @CityId), (712514, @CityId), (712513, @CityId), (712512, @CityId),
+(712504, @CityId), (712503, @CityId), (712502, @CityId), (712501, @CityId),
+(712426, @CityId), (712424, @CityId), (712419, @CityId), (712418, @CityId),
+(712417, @CityId), (712416, @CityId), (712415, @CityId), (712414, @CityId),
+(712413, @CityId), (712412, @CityId), (712411, @CityId), (712410, @CityId),
+(712409, @CityId), (712408, @CityId), (712407, @CityId), (712406, @CityId),
+(712405, @CityId), (712404, @CityId), (712403, @CityId), (712402, @CityId),
+(712401, @CityId), (712311, @CityId), (712310, @CityId), (712308, @CityId),
+(712306, @CityId), (712305, @CityId), (712304, @CityId), (712303, @CityId),
+(712302, @CityId), (712301, @CityId), (712258, @CityId), (712250, @CityId),
+(712249, @CityId), (712248, @CityId), (712247, @CityId), (712246, @CityId),
+(712245, @CityId), (712235, @CityId), (712234, @CityId), (712233, @CityId),
+(712232, @CityId), (712223, @CityId), (712222, @CityId), (712221, @CityId),
+(712204, @CityId), (712203, @CityId), (712202, @CityId), (712201, @CityId),
+(712152, @CityId), (712149, @CityId), (712148, @CityId), (712147, @CityId),
+(712146, @CityId), (712139, @CityId), (712138, @CityId), (712137, @CityId),
+(712136, @CityId), (712135, @CityId), (712134, @CityId), (712125, @CityId),
+(712124, @CityId), (712123, @CityId), (712122, @CityId), (712121, @CityId),
+(712105, @CityId), (712104, @CityId), (712103, @CityId), (712102, @CityId),
+(712101, @CityId), (713157, @CityId), (713170, @CityId), (712150, @CityId),
+(712205, @CityId), (712206, @CityId), (712208, @CityId), (712224, @CityId),
+(712331, @CityId), (712344, @CityId), (712420, @CityId), (713168, @CityId),
+(721163, @CityId), (721315, @CityId), (732001, @CityId), (743195, @CityId),
+(743443, @CityId);
+INSERT INTO Cities (Name, LocationId) VALUES ('Puruliya', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(723101, @CityId), (723102, @CityId), (723103, @CityId), (723104, @CityId),
+(723121, @CityId), (723127, @CityId), (723128, @CityId), (723129, @CityId),
+(723130, @CityId), (723131, @CityId), (723132, @CityId), (723143, @CityId),
+(723146, @CityId), (723147, @CityId), (723148, @CityId), (723149, @CityId),
+(723151, @CityId), (723152, @CityId), (723153, @CityId), (723154, @CityId),
+(723155, @CityId), (723156, @CityId), (723161, @CityId), (723168, @CityId),
+(723212, @CityId),(723213, @CityId);
+-- ===============================
+-- CITY: Puruliya
+-- ===============================
+INSERT INTO Cities (Name, LocationId) VALUES ('Puruliya', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(723101, @CityId),(723102, @CityId),(723103, @CityId),(723104, @CityId),
+(723121, @CityId),(723127, @CityId),(723128, @CityId),(723129, @CityId),
+(723130, @CityId),(723131, @CityId),(723132, @CityId),(723143, @CityId),
+(723146, @CityId),(723147, @CityId),(723148, @CityId),(723149, @CityId),
+(723151, @CityId),(723152, @CityId),(723153, @CityId),(723154, @CityId),
+(723155, @CityId),(723156, @CityId),(723161, @CityId),(723168, @CityId),
+(723212, @CityId);
+
+-- ===============================
+-- CITY: Siliguri-Darjiling
+-- ===============================
+INSERT INTO Cities (Name, LocationId) VALUES ('Siliguri-Darjiling', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(734121, @CityId),(734123, @CityId),(734227, @CityId),(734317, @CityId),
+(734319, @CityId),(734320, @CityId),(734321, @CityId),(734431, @CityId);
+
+-- ===============================
+-- CITY: South 24 Parganas
+-- ===============================
+INSERT INTO Cities (Name, LocationId) VALUES ('South 24 Parganas', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(743613,@CityId),(743611,@CityId),(743610,@CityId),(743609,@CityId),
+(743513,@CityId),(743504,@CityId),(743503,@CityId),(743502,@CityId),
+(743399,@CityId),(743398,@CityId),(743395,@CityId),(743387,@CityId),
+(743383,@CityId),(743378,@CityId),(743377,@CityId),(743376,@CityId),
+(743375,@CityId),(743374,@CityId),(743373,@CityId),(743372,@CityId),
+(743371,@CityId),(743370,@CityId),(743368,@CityId),(743363,@CityId),
+(743357,@CityId),(743356,@CityId),(743355,@CityId),(743354,@CityId),
+(743351,@CityId),(743349,@CityId),(743348,@CityId),(743347,@CityId),
+(743345,@CityId),(743338,@CityId),(743337,@CityId),(743336,@CityId),
+(743332,@CityId),(743331,@CityId),(743330,@CityId),(743329,@CityId),
+(743318,@CityId),(743312,@CityId),(700154,@CityId),(700153,@CityId),
+(700152,@CityId),(700151,@CityId),(700150,@CityId),(700149,@CityId),
+(700148,@CityId),(700147,@CityId),(700146,@CityId),(700145,@CityId),
+(700144,@CityId),(700143,@CityId),(700142,@CityId),(700141,@CityId),
+(700140,@CityId),(700139,@CityId),(700138,@CityId),(700137,@CityId),
+(700105,@CityId),(700104,@CityId),(700103,@CityId),(700096,@CityId),
+(700093,@CityId),(700084,@CityId),(700070,@CityId);
+
+-- ===============================
+-- CITY: South Dinajpur
+-- ===============================
+INSERT INTO Cities (Name, LocationId) VALUES ('South Dinajpur', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(733101,@CityId);
+
+-- ===============================
+-- CITY: West Midnapore
+-- ===============================
+INSERT INTO Cities (Name, LocationId) VALUES ('West Midnapore', @LocationId_WestBengal);
+SET @CityId = SCOPE_IDENTITY();
+INSERT INTO Pincodes (Pincode, CityId) VALUES
+(721124,@CityId),(721125,@CityId),(721126,@CityId),(721127,@CityId),
+(721128,@CityId),(721129,@CityId),(721130,@CityId),(721131,@CityId),
+(721132,@CityId),(721136,@CityId),(721140,@CityId),(721143,@CityId),
+(721144,@CityId),(721145,@CityId),(721147,@CityId),(721148,@CityId),
+(721149,@CityId),(721150,@CityId),(721155,@CityId),(721156,@CityId),
+(721157,@CityId),(721160,@CityId),(721166,@CityId),(721201,@CityId),
+(721211,@CityId),(721212,@CityId),(721222,@CityId),(721232,@CityId),
+(721242,@CityId),(721253,@CityId),(721260,@CityId),(721301,@CityId),
+(721302,@CityId),(721303,@CityId),(721304,@CityId),(721305,@CityId),
+(721306,@CityId),(721420,@CityId),(721424,@CityId),(721426,@CityId),
+(721436,@CityId),(721437,@CityId),(721445,@CityId),(721451,@CityId),
+(721457,@CityId),(721467,@CityId),(721501,@CityId),(721503,@CityId),
+(721504,@CityId),(721515,@CityId),(721516,@CityId),(721641,@CityId),
+(734010,@CityId),(721507,@CityId),(721101,@CityId);
+
+
+
+
