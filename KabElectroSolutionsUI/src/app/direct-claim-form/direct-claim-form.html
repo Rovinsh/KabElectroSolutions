@@ -75,9 +75,7 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>State</mat-label>
             <input matInput formControlName="customerState"
-                   [matAutocomplete]="stateAuto"
-                   (focus)="showState()"
-                   (input)="showState()" />
+                   [matAutocomplete]="stateAuto"/>
             <mat-autocomplete #stateAuto="matAutocomplete" [displayWith]="displayState" autoActiveFirstOption (optionSelected)="onStateSelected($event.option.value)">
               <mat-option *ngFor="let state of filteredStates$ | async" [value]="state">{{ state.name }}</mat-option>
             </mat-autocomplete>
@@ -89,13 +87,23 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>City</mat-label>
             <input matInput formControlName="customerCity"
-                   [matAutocomplete]="cityAuto"
-                   (focus)="showCities()"
-                   (input)="showCities()" />
+                   [matAutocomplete]="cityAuto"/>
             <mat-autocomplete #cityAuto="matAutocomplete" [displayWith]="displayCities" autoActiveFirstOption (optionSelected)="onCitySelected($event.option.value)">
               <mat-option *ngFor="let city of filteredCities$ | async" [value]="city">{{ city.name }}</mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="directClaimForm.get('customerCity')?.hasError('required')">City is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Pincode</mat-label>
+            <input matInput formControlName="customerPincode"
+                   [matAutocomplete]="pincodeAuto"/>
+            <mat-autocomplete #pincodeAuto="matAutocomplete" [displayWith]="displayPincodes">
+              <mat-option *ngFor="let pin of filteredPincodes$ | async" [value]="pin">{{ pin.pincode }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="directClaimForm.get('customerPincode')?.hasError('required')">Pincode is required</mat-error>
           </mat-form-field>
         </div>
 
@@ -106,19 +114,7 @@
           </mat-form-field>
         </div>
 
-           <div class="col-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Pincode</mat-label>
-            <input matInput formControlName="customerPincode"
-                   [matAutocomplete]="pincodeAuto"
-                   (focus)="showPincode()"
-                   (input)="showPincode()" />
-            <mat-autocomplete #pincodeAuto="matAutocomplete" [displayWith]="displayPincodes">
-              <mat-option *ngFor="let pin of filteredPincodes$ | async" [value]="pin">{{ pin.pincode }}</mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="directClaimForm.get('customerPincode')?.hasError('required')">Pincode is required</mat-error>
-          </mat-form-field>
-        </div>
+           
         <div class="col-12 mt-4">
           <h3 class="bg-blue-100 text-blue-800 p-2 rounded-md">Product Details</h3>
         </div>
