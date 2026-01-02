@@ -1,0 +1,21 @@
+.store-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: #1d3557;
+  color: white;
+  justify-content: space-between;
+}
+
+.logo { font-size: 20px; font-weight: bold; cursor: pointer; }
+.search {
+  width: 40%;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+}
+nav a {
+  color: white;
+  margin-left: 15px;
+  text-decoration: none;
+}

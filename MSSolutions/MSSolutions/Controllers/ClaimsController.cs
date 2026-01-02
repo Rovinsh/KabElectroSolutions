@@ -45,7 +45,7 @@ namespace MSSolutions.Controllers
             {
                 List<Models.Claim> claims;
                 var performerEmail = User?.Identity?.Name ?? "System";
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
                 if (user.BusinessroleName == "Super Admin")
                 {
 
@@ -182,7 +182,7 @@ namespace MSSolutions.Controllers
             try
             {
                 var performerEmail = User?.Identity?.Name;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
                 //var servicePartner = _context.ServicePartner.Where(s => s.Id == user.PartnerId).FirstOrDefault().ServicePartner;
                 var subStatus = _context.SubStatuses.Where(x => x.Name == "Call Initiated").First();
                 claim.ChannelId = user.Id;
@@ -231,7 +231,7 @@ namespace MSSolutions.Controllers
             try
             {
                 var performerEmail = User?.Identity?.Name;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
                 request.CreatedBy = user.Firstname + " " + user.Lastname;
 
                 var entries = new List<ClaimImage>();
@@ -298,7 +298,7 @@ namespace MSSolutions.Controllers
         {
             var performerEmail = User?.Identity?.Name ?? "System";
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+            var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
 
             var log = new AuditLog
             {
@@ -602,7 +602,7 @@ namespace MSSolutions.Controllers
             try
             {
                 var performerEmail = User?.Identity?.Name;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
 
                 var entity = new ClaimRepairDetail
                 {
@@ -615,7 +615,7 @@ namespace MSSolutions.Controllers
                     CreatedAt = DateTime.UtcNow
                 };
 
-                _context.ClaimRepairDetails.Add(entity);
+                //_context.ClaimRepairDetails.Add(entity);
                 await _context.SaveChangesAsync();
 
                 var status = "Repair at Home";
@@ -652,7 +652,7 @@ namespace MSSolutions.Controllers
             try
             {
                 var performerEmail = User?.Identity?.Name;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
                 var entity = new ClaimClosedWithOrWithoutRepairDetail
                 {
                     ClaimId = request.ClaimId,

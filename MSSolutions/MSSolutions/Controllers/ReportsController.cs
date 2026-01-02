@@ -28,7 +28,7 @@ namespace MSSolutions.Controllers
         [HttpGet("Reports")]
         public async Task<IActionResult> GetReports()
         { var performerEmail = User?.Identity?.Name;
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+            var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
             var data = await _context.Reports.Where(r=>r.CreatedById == user.Id)
                 .Select(r => new ReportsDTO
                 {
@@ -54,7 +54,7 @@ namespace MSSolutions.Controllers
             if (report == null)
                 return BadRequest("Invalid report data");
             var performerEmail = User?.Identity?.Name;
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
+            var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
             var start = DateOnly.FromDateTime(report.StartDate);
             var end = DateOnly.FromDateTime(report.EndDate);
 

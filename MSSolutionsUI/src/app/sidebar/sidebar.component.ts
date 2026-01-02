@@ -26,7 +26,7 @@ export class SidebarComponent {
  menu: SidebarItem[] = [
     { title: 'Dashboard', icon: '🏠', roles: ['Super Admin','Sub Admin Executive'], route: '/dashboard' },
     { title: 'Master', icon: '📂', roles: ['Super Admin','Sub Admin Executive'], route: '/master' },
-    { title: 'Oders', icon: '📋', roles: ['Super Admin'], route: '/oders' },
+    { title: 'Oders', icon: '📦', roles: ['Super Admin'], route: '/oders' },
     { title: 'Users', icon: '🧑', roles: ['Super Admin'], route: '/user' },
     { title: 'Employees', icon: '🧑', roles: ['Super Admin'], route: '/employees' },
     { title: 'Invoice', icon: '📄', roles: ['Super Admin'], route: '/report' },

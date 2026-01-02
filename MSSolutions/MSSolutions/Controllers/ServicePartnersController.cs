@@ -1,12 +1,13 @@
 ﻿using Azure.Core;
-using MSSolutions.Data;
-using MSSolutions.DTOs;
-using MSSolutions.Helper;
-using MSSolutions.Models;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MSSolutions.Data;
+using MSSolutions.DTOs;
+using MSSolutions.Helper;
+using MSSolutions.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -129,7 +130,7 @@ namespace MSSolutions.Controllers
                 _context.ServicePartner.Add(servicePartners);
                 await _context.SaveChangesAsync();
 
-                var user = new User
+                var user = new MsUser
                 {
                     Firstname = servicePartners.Firstname,
                     Lastname = servicePartners.Lastname,
@@ -149,29 +150,29 @@ namespace MSSolutions.Controllers
                     PartnerId = servicePartners.Id
                 };
 
-                _context.Users.Add(user);
+                _context.MsUsers.Add(user);
                 await _context.SaveChangesAsync();
 
-                var address = new Address
+                var address = new MsAddress
                 {
                     UserId = user.Id,
                     IsBusinessAddress = true,
                     AddressLine = servicePartners.Address!,
-                    Location = servicePartners.StateId,
+                    StateId = servicePartners.StateId,
                     Pincode = _context.Pincodes.Where(pincode => pincode.Id == servicePartners.PinCodeId).First().PincodeValue,
                     City = _context.Cities.Where(city => city.Id == servicePartners.CityId).First().Name,
                     State = _context.Locations.Where(location => location.Id == servicePartners.StateId).First().Name
                 };
 
-                _context.Addresses.Add(address);
+                _context.MsAddresses.Add(address);
                 await _context.SaveChangesAsync();
 
-                var userRole = new UserRole
+                var userRole = new MsUserRole
                 {
                     UserId = user.Id,
-                    RoleId = _context.Roles.Where(role => role.RoleName == "Service Centre").First().RoleId
+                    RoleId = _context.MsRoles.Where(role => role.RoleName == "Service Centre").First().RoleId
                 };
-                _context.UserRoles.Add(userRole);
+                _context.MsUserRoles.Add(userRole);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
@@ -223,7 +224,7 @@ namespace MSSolutions.Controllers
                 await _context.SaveChangesAsync();
 
             
-                var existingUser = await _context.Users.Where(User=>User.IsPartner && User.PartnerId==id).FirstOrDefaultAsync();
+                var existingUser = await _context.MsUsers.Where(User=>User.IsPartner && User.PartnerId==id).FirstOrDefaultAsync();
                 if (existingUser == null)
                     return NotFound("user not found");
                 existingUser.Phone = updatedServicePartners.Phone;
@@ -236,20 +237,20 @@ namespace MSSolutions.Controllers
                 existingUser.Businessname = updatedServicePartners.ServicePartner;
                 existingUser.BusinessGst = updatedServicePartners.Gst!;
                 existingUser.BusinessPan = updatedServicePartners.Pan!;
-                _context.Users.Update(existingUser);
+                _context.MsUsers.Update(existingUser);
                 await _context.SaveChangesAsync();
 
-                var existingAddress = _context.Addresses.Where(x => x.UserId == existingUser.Id).FirstOrDefault();
+                var existingAddress = _context.MsAddresses.Where(x => x.UserId == existingUser.Id).FirstOrDefault();
 
                 //var address = new Address
                 //{
                 existingAddress.AddressLine = updatedServicePartners.Address;
-                existingAddress.Location = updatedServicePartners.StateId;
+                existingAddress.StateId = updatedServicePartners.StateId;
                 existingAddress.Pincode = _context.Pincodes.Where(pincode => pincode.Id == updatedServicePartners.PinCodeId).First().PincodeValue;
                 existingAddress.City = _context.Cities.Where(city => city.Id == updatedServicePartners.CityId).First().Name;
                 existingAddress.State = _context.Locations.Where(location => location.Id == updatedServicePartners.StateId).First().Name;
                 //};
-                _context.Addresses.Update(existingAddress);
+                _context.MsAddresses.Update(existingAddress);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();

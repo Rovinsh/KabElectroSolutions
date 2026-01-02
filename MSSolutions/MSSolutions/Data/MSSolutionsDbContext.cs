@@ -1,5 +1,6 @@
-﻿using MSSolutions.Models;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
+using MSSolutions.Models;
 
 namespace MSSolutions.Data
 {
@@ -9,17 +10,21 @@ namespace MSSolutions.Data
 
         public DbSet<Status> Statuses => Set<Status>();
         public DbSet<SubStatus> SubStatuses => Set<SubStatus>();
-        public DbSet<User> Users => Set<User>();
-        public DbSet<MsUser> Msusers => Set<MsUser>();
-        public DbSet<Address> Addresses => Set<Address>();
+        //public DbSet<User> Users => Set<User>();
+        public DbSet<MsUser> MsUsers => Set<MsUser>();
+        public DbSet<MsOrders> MsOrders => Set<MsOrders>();
+        public DbSet<MsOrderDetails> MsOrderDetails => Set<MsOrderDetails>();
+        public DbSet<MsOrderBillingAddress> MsOrderBillingAddress => Set<MsOrderBillingAddress>(); 
+        public DbSet<MsOrderShippingAddress> MsOrderShippingAddress => Set<MsOrderShippingAddress>();
+        //public DbSet<MsAddress> Addresses => Set<Address>();
         public DbSet<MsAddress> MsAddresses => Set<MsAddress>();
         
-        public DbSet<UserRole> UserRoles => Set<UserRole>();
-        //public DbSet<MsUserRole> MsUserRoles => Set<MsUserRole>();
-        public DbSet<Role> Roles => Set<Role>();
-        //public DbSet<MsRole> MsRoles => Set<MsRole>();
-        public DbSet<UserPrivilege> UserPrivileges => Set<UserPrivilege>();
-        //public DbSet<MsUserPrivilege> MsUserPrivileges => Set<MsUserPrivilege>();
+       // public DbSet<UserRole> UserRoles => Set<UserRole>();
+        public DbSet<MsUserRole> MsUserRoles => Set<MsUserRole>();
+        //public DbSet<Role> Roles => Set<Role>();
+        public DbSet<MsRole> MsRoles => Set<MsRole>();
+        //public DbSet<UserPrivilege> UserPrivileges => Set<UserPrivilege>();
+        public DbSet<MsUserPrivilege> MsUserPrivileges => Set<MsUserPrivilege>();
         //public DbSet<Location> Locations => Set<Location>();
 
         public DbSet<State> Locations { get; set; }
@@ -45,37 +50,37 @@ namespace MSSolutions.Data
         // DbSet for EstimationImages table
         public DbSet<EstimationImage> EstimationImages { get; set; } = null!;
         public DbSet<EstimationImages> ShareEstimationImages { get; set; } = null!;
-        public DbSet<ClaimRepairDetail> ClaimRepairDetails => Set<ClaimRepairDetail>();
+        //public DbSet<ClaimRepairDetail> ClaimRepairDetails => Set<ClaimRepairDetail>();
         public DbSet<ClaimClosedWithOrWithoutRepairDetail> ClaimClosedWithOrWithoutRepairDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<MsUser>()
                 .HasOne(u => u.Address)
                 .WithMany()
                 .HasForeignKey(u => u.AddressId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<MsUser>()
                 .HasOne(u => u.BusinessAddress)
                 .WithMany()
                 .HasForeignKey(u => u.BusinessAddressId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<UserPrivilege>()
+            modelBuilder.Entity<MsUserPrivilege>()
     .HasKey(up => new { up.UserId, up.PrivilegeId });
 
-            modelBuilder.Entity<UserRole>()
+            modelBuilder.Entity<MsUserRole>()
     .HasKey(ur => new { ur.UserId, ur.RoleId });
 
-            modelBuilder.Entity<UserRole>()
-                .HasOne(ur => ur.User)
+            modelBuilder.Entity<MsUserRole>()
+                .HasOne(ur => ur.MsUser)
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(ur => ur.UserId)
                 .HasPrincipalKey(u => u.Id); ;
 
-            modelBuilder.Entity<UserRole>()
-                .HasOne(ur => ur.Role)
+            modelBuilder.Entity<MsUserRole>()
+                .HasOne(ur => ur.MsRole)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
 
@@ -85,34 +90,20 @@ namespace MSSolutions.Data
 
             modelBuilder.Entity<State>().ToTable("Locations");
 
-            modelBuilder.Entity<Claim>().ToTable("Claims");
+            modelBuilder.Entity<MsOrderDetails>()
+      .HasOne<MsOrders>()
+      .WithMany(o => o.OrderDetails)
+      .HasForeignKey(d => d.OrderId);
 
-            modelBuilder.Entity<ClaimImage>(entity =>
-            {
-                entity.ToTable("ClaimImages");
+            modelBuilder.Entity<MsOrderBillingAddress>()
+                .HasOne<MsOrders>()
+                .WithOne(o => o.BillingAddress)
+                .HasForeignKey<MsOrderBillingAddress>(b => b.OrderId);
 
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.ClaimId).IsRequired();
-                entity.Property(e => e.ImageType).HasMaxLength(50).IsRequired();
-                entity.Property(e => e.ImageData).IsRequired();
-                entity.Property(e => e.Remarks).HasMaxLength(500);
-                entity.Property(e => e.CreatedAt).IsRequired();
-                entity.Property(e => e.CreatedBy).HasMaxLength(100).IsRequired();
-            });
-
-            modelBuilder.Entity<ClaimRepairDetail>(entity =>
-            {
-                entity.ToTable("ClaimRepairDetails");
-                entity.HasKey(e => e.RepairId);
-
-                entity.Property(e => e.RepairedAt).HasMaxLength(100).IsRequired();
-                entity.Property(e => e.Reason).HasMaxLength(100);
-                entity.Property(e => e.Remarks).HasMaxLength(500);
-                entity.Property(e => e.ClosureDate).HasColumnType("date");
-                entity.Property(e => e.CreatedAt)
-                      .HasDefaultValueSql("GETDATE()");
-            });
+            modelBuilder.Entity<MsOrderShippingAddress>()
+                .HasOne<MsOrders>()
+                .WithOne(o => o.ShippingAddress)
+                .HasForeignKey<MsOrderShippingAddress>(s => s.OrderId);
         }
     }
     } 

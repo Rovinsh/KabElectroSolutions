@@ -88,8 +88,8 @@ getProductImages(productId: number) {
   return this.http.get<UserResponseDto>(`${this.baseUrl}Users/users/${userType}`);
 }
 
- getOrders(): Observable<UserResponseDto> {
-    return this.http.get<UserResponseDto>(`${this.baseUrl + "Users/users"}`);
+ getOrders(): Observable<OrderResponseDto> {
+    return this.http.get<OrderResponseDto>(`${this.baseUrl + "Orders/orders"}`);
   }
 
    getRoles(): Observable<Role[]> {
@@ -655,7 +655,98 @@ export interface ClaimDto {
   igsTList?: string[];
 }
 
+export interface OrderDTO {
+  id: number;
+  orderCode: string;
+  userId: number;
+  userName: string;
 
+  subTotal: number;
+  taxAmount: number;
+  shippingAmount: number;
+  discountAmount: number;
+  grandTotal: number;
+  receiveAmount: number;
+
+  paymentStatus: string;
+  orderStatus: string;
+
+  couponCode?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
+
+  orderDate: string;      // ISO Date string
+  paymentDate: string;    // ISO Date string
+  createdAt: string;      // ISO Date string
+
+  orderDetails: OrderDetailDTO[];
+  billingAddress: BillingAddressDTO;
+  shippingAddress: ShippingAddressDTO;
+}
+export interface OrderDTO {
+  id: number;
+  orderCode: string;
+  userId: number;
+  userName: string;
+
+  subTotal: number;
+  taxAmount: number;
+  shippingAmount: number;
+  discountAmount: number;
+  grandTotal: number;
+  couponAmount:number;
+  receiveAmount: number;
+
+  paymentStatus: string;
+  orderStatus: string;
+
+  couponCode?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
+
+  orderDate: string;      // ISO Date string
+  paymentDate: string;    // ISO Date string
+  createdAt: string;      // ISO Date string
+
+  orderDetails: OrderDetailDTO[];
+  billingAddress: BillingAddressDTO;
+  shippingAddress: ShippingAddressDTO;
+}
+export interface OrderDetailDTO {
+  id: number;
+  productId: number;
+  categoryName: string; 
+  productName: string; 
+  brandName: string; 
+  unitPrice: number;
+  quantity: number;
+  discount: number;
+  totalAmount: number;
+}
+export interface BillingAddressDTO {
+  fullName?: string;
+  phone?: string;
+  addressLine?: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
+}
+export interface ShippingAddressDTO {
+  fullName?: string;
+  phone?: string;
+  addressLine?: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
+  country?: string;
+}
+export interface OrderResponseDto {
+  status: number;
+  message: string;
+  data: OrderDTO[];
+}
 
 export interface ClaimResponseDto {
   status: number;

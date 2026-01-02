@@ -36,11 +36,11 @@ namespace MSSolutions.Controllers
             try
             {
                 var performerEmail = User?.Identity?.Name;
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail && !u.IsPartner);
+                var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail && !u.IsPartner);
 
                 var query =
-                    from u in _context.Users
-                    join a in _context.Addresses on u.Id equals a.UserId into addressGroup
+                    from u in _context.MsUsers
+                    join a in _context.MsAddresses on u.Id equals a.UserId into addressGroup
                     from addr in addressGroup.DefaultIfEmpty()
                     where !u.IsPartner
                     select new { u, addr };
@@ -109,10 +109,10 @@ namespace MSSolutions.Controllers
             try
             {
                 var performerEmail = User?.Identity?.Name;
-                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
-                var roleName = _context.Roles.Where(role => role.RoleId == users.RoleId).First().RoleName;
+                var currentUser = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var roleName = _context.MsRoles.Where(role => role.RoleId == users.RoleId).First().RoleName;
 
-                var user = new User
+                var user = new MsUser
                 {
                     Firstname = users.FirstName,
                     Lastname = users.LastName,
@@ -132,30 +132,30 @@ namespace MSSolutions.Controllers
                     PartnerId = roleName == "Brand" ? 0 : currentUser.Id
                 };
 
-                _context.Users.Add(user);
+                _context.MsUsers.Add(user);
                 await _context.SaveChangesAsync();
 
-                var address = new Address
+                var address = new MsAddress
                 {
                     UserId = user.Id,
                     IsBusinessAddress = true,
                     AddressLine = users.Address!,
-                    Location = users.StateId,
+                    StateId = users.StateId,
                     Pincode = _context.Pincodes.Where(pincode => pincode.Id == users.PinCodeId).First().PincodeValue,
                     City = _context.Cities.Where(city => city.Id == users.CityId).First().Name,
                     State = _context.Locations.Where(location => location.Id == users.StateId).First().Name
                 };
 
-                _context.Addresses.Add(address);
+                _context.MsAddresses.Add(address);
                 await _context.SaveChangesAsync();
 
-                var userRole = new UserRole
+                var userRole = new MsUserRole
                 {
                     UserId = user.Id,
                     //RoleId = _context.Roles.Where(role => role.RoleName == "Customer Care Executive").First().RoleId
                     RoleId = users.RoleId
                 };
-                _context.UserRoles.Add(userRole);
+                _context.MsUserRoles.Add(userRole);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
@@ -188,10 +188,10 @@ namespace MSSolutions.Controllers
             try
             {
                 var performerEmail = User?.Identity?.Name;
-                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == performerEmail);
-                var roleName = _context.Roles.Where(role => role.RoleId == updateUserdata.RoleId).First().RoleName;
+                var currentUser = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var roleName = _context.MsRoles.Where(role => role.RoleId == updateUserdata.RoleId).First().RoleName;
 
-                var existingUser = await _context.Users.FindAsync(id);
+                var existingUser = await _context.MsUsers.FindAsync(id);
                 if (existingUser == null)
                     return NotFound("user not found");
 
@@ -211,21 +211,21 @@ namespace MSSolutions.Controllers
                 existingUser.IsActiveBusiness = true;
                 existingUser.IsPartner = false;
                 existingUser.PartnerId = roleName == "Brand" ? 0 : currentUser.Id;
-                _context.Users.Update(existingUser);
+                _context.MsUsers.Update(existingUser);
                 await _context.SaveChangesAsync();
 
-                var existingAddress = _context.Addresses.Where(x => x.UserId == id).FirstOrDefault();
+                var existingAddress = _context.MsAddresses.Where(x => x.UserId == id).FirstOrDefault();
 
                 //var address = new Address
                 //{
                 existingAddress.UserId = id;
                 existingAddress.AddressLine = updateUserdata.Address;
-                existingAddress.Location = updateUserdata.StateId;
+                existingAddress.StateId = updateUserdata.StateId;
                 existingAddress.Pincode = _context.Pincodes.Where(pincode => pincode.Id == updateUserdata.PinCodeId).First().PincodeValue;
                 existingAddress.City = _context.Cities.Where(city => city.Id == updateUserdata.CityId).First().Name;
                 existingAddress.State = _context.Locations.Where(location => location.Id == updateUserdata.StateId).First().Name;
                 //};
-                _context.Addresses.Update(existingAddress);
+                _context.MsAddresses.Update(existingAddress);
                 await _context.SaveChangesAsync();
 
                 //var existingUserRole = _context.UserRoles.Where(role => role.UserId == id).First();
@@ -234,11 +234,11 @@ namespace MSSolutions.Controllers
                 //existingUserRole.RoleId = updateUserdata.RoleId;
                 ////};
 
-                var oldRoles = _context.UserRoles.Where(ur => ur.UserId == id).ToList();
-                _context.UserRoles.RemoveRange(oldRoles);
+                var oldRoles = _context.MsUserRoles.Where(ur => ur.UserId == id).ToList();
+                _context.MsUserRoles.RemoveRange(oldRoles);
                 await _context.SaveChangesAsync();
 
-                _context.UserRoles.Add(new UserRole
+                _context.MsUserRoles.Add(new MsUserRole
                 {
                     UserId = id,
                     RoleId = updateUserdata.RoleId

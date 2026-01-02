@@ -13,10 +13,11 @@
         <ag-grid-angular
         class="ag-theme-alpine"
         style="width: 100%;"
-        [rowData]="users"
-        [columnDefs]="userCols"
+        [rowData]="orders"
+        [columnDefs]="OrderCols"
         [animateRows]="true"
-        domLayout="autoHeight">
+        domLayout="autoHeight"
+        (cellClicked)="onCellClicked($event)">
         </ag-grid-angular>
 
       </div>

@@ -1,0 +1,13 @@
+<div class="auth-container">
+  <h2>📝 Register</h2>
+
+  <input placeholder="First Name" [(ngModel)]="model.firstName" />
+  <input placeholder="Last Name" [(ngModel)]="model.lastName" />
+  <input placeholder="Email" [(ngModel)]="model.email" />
+  <input placeholder="Phone" [(ngModel)]="model.phone" />
+  <input type="password" placeholder="Password" [(ngModel)]="model.password" />
+
+  <button (click)="register()">Create Account</button>
+
+  <p>Already have account? <a routerLink="/store/login">Login</a></p>
+</div>

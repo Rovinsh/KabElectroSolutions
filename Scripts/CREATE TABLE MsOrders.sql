@@ -20,3 +20,16 @@ CREATE TABLE MsOrders (
 
     CONSTRAINT FK_MsOrders_MsUser FOREIGN KEY (UserId) REFERENCES MsUsers(Id)
 );
+
+ALTER TABLE MsOrders
+ADD 
+    CouponId INT NULL,
+    CouponAmount DECIMAL(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE MsOrders
+ADD CONSTRAINT FK_MsOrders_MsCoupons
+FOREIGN KEY (CouponId) REFERENCES MsCoupons(Id);
+UPDATE MsOrders
+SET 
+    CouponId = 1,
+    CouponAmount = 100
+WHERE Id = 5;

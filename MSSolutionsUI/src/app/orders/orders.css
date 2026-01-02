@@ -10,4 +10,12 @@
   align-items: center;
   flex-direction: column;
   z-index: 9999;
+}.status-pending {
+  color: red;
+  font-weight: bold;
+}
+
+.status-complete {
+  color: green;
+  font-weight: bold;
 }
