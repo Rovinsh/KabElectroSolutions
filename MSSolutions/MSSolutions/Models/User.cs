@@ -29,7 +29,7 @@ namespace MSSolutions.Models
         public List<int?> Roles { get; set; }
         //public Dictionary<string, string> RolesNameMap { get; set; }
         [NotMapped]
-        public List<Role>? RolesNameMap { get; set; }
+        public List<MsRole>? RolesNameMap { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public string? Manager { get; set; }
@@ -41,7 +41,7 @@ namespace MSSolutions.Models
         public string BusinessroleName { get; set; }
         public bool IsActiveBusiness { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
-        public ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<MsUserRole> UserRoles { get; set; }
         public int? PartnerId { get; set; }
         public bool IsPartner { get; set; }
     }

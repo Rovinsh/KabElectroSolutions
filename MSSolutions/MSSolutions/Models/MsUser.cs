@@ -13,7 +13,7 @@ namespace MSSolutions.Models
         public string? Image { get; set; }
         [NotMapped]
         public int? AddressId { get; set; }
-        public Address Address { get; set; }
+        public MsAddress Address { get; set; }
         public int Business { get; set; }
         public string BusinessPhone { get; set; }
         public string BusinessEmail { get; set; }
@@ -23,13 +23,13 @@ namespace MSSolutions.Models
         public string BusinessPan { get; set; }
         [NotMapped]
         public int? BusinessAddressId { get; set; }
-        public Address BusinessAddress { get; set; }
+        public MsAddress BusinessAddress { get; set; }
         public string? Empid { get; set; }
         [NotMapped]
         public List<int?> Roles { get; set; }
         //public Dictionary<string, string> RolesNameMap { get; set; }
         [NotMapped]
-        public List<Role>? RolesNameMap { get; set; }
+        public List<MsRole>? RolesNameMap { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public string? Manager { get; set; }
@@ -41,7 +41,7 @@ namespace MSSolutions.Models
         public string BusinessroleName { get; set; }
         public bool IsActiveBusiness { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
-        public ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<MsUserRole> UserRoles { get; set; }
         public int? PartnerId { get; set; }
         public bool IsPartner { get; set; }
     }
@@ -50,6 +50,6 @@ namespace MSSolutions.Models
     {
         public int Status { get; set; }
         public string Message { get; set; }
-        public User Data { get; set; }
+        public MsUser Data { get; set; }
     }
 }

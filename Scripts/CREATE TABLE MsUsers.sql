@@ -1,19 +1,32 @@
 CREATE TABLE MsUsers ( 
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    FirstName NVARCHAR(100),
-    LastName NVARCHAR(100),
+    Firstname NVARCHAR(100),
+    Lastname NVARCHAR(100),
+    Image NVARCHAR(MAX) NULL,
     Phone NVARCHAR(20),
     Email NVARCHAR(100),
+    Empid NVARCHAR(50) NULL,
+    Manager NVARCHAR(100) NULL,
+    Authtoken NVARCHAR(100),
+    ExecutiveId NVARCHAR(50),
+    ChannelName NVARCHAR(100),
+    Business INT,
     BusinessPhone NVARCHAR(20),
     BusinessEmail NVARCHAR(100),
-    BusinessName NVARCHAR(150),
-    BusinessRole INT,
+    Businessname NVARCHAR(150),
+    Businessrole INT,
     BusinessGst NVARCHAR(50),
     BusinessPan NVARCHAR(50),
-    BusinessRoleName NVARCHAR(100),
+    BusinessroleName NVARCHAR(100),
     IsActiveBusiness BIT,
 	PasswordHash NVARCHAR(256)
 );
+
+ALTER TABLE MsUsers
+ADD BusinessAddressId INT NULL;
+ALTER TABLE MsUsers
+ADD AddressId INT NULL;
+
 ALTER TABLE MsUsers
 ADD IsPartner BIT DEFAULT 0;
 ALTER TABLE MsUsers

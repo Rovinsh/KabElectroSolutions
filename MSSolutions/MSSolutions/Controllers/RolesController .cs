@@ -23,7 +23,7 @@ namespace MSSolutions.Controllers
         [HttpGet("Roles")]
         public async Task<ActionResult<IEnumerable<RoleDto>>> GetRoles()
         {
-            var roles = await _context.Roles
+            var roles = await _context.MsRoles
                 .Select(r => new RoleDto
                 {
                     RoleId = r.RoleId,

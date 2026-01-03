@@ -64,5 +64,3 @@ INSERT INTO [dbo].[MsUserRoles]
            (1
            ,9)
 GO
-
-

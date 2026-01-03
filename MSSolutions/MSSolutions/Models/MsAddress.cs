@@ -8,6 +8,7 @@ namespace MSSolutions.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public string AddressLine { get; set; }
+        //public int Location { get; set; }
         public int StateId { get; set; }
         public int CityId { get; set; }
         public int PincodeId { get; set; }
