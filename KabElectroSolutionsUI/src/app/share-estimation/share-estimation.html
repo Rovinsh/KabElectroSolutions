@@ -43,7 +43,7 @@
       <!-- Material -->
       <mat-form-field appearance="outline">
         <mat-select formControlName="material" panelClass="material-wide-panel">
-          <mat-option *ngFor="let m of materialList" [value]="m" [matTooltip]="m">{{ m }}</mat-option>
+          <mat-option *ngFor="let m of item.get('materials')?.value" [value]="m" [matTooltip]="m">{{ m }}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -60,11 +60,11 @@
       <!-- Tax -->
       <mat-form-field appearance="outline">
         <mat-select formControlName="tax">
-          <mat-option value="0">0%</mat-option>
-          <mat-option value="5">5%</mat-option>          
-          <mat-option value="12">12%</mat-option>
-          <mat-option value="18">18%</mat-option>
-          <mat-option value="28">28%</mat-option>
+          <mat-option [value]="0">0%</mat-option>
+          <mat-option [value]="5">5%</mat-option>          
+          <mat-option [value]="12">12%</mat-option>
+          <mat-option [value]="18">18%</mat-option>
+          <mat-option [value]="28">28%</mat-option>
         </mat-select>
       </mat-form-field>
 

@@ -319,8 +319,10 @@ export class ShareEstimationComponent {
         hsn: ['', Validators.required],
         price: [0, [Validators.required, Validators.min(1)]],
         tax: [18, Validators.required],
-        removable: [this.items.length > 0]
+        removable: [this.items.length > 0],
+        materials:this.fb.control<string[]>([])
       })
+      row.get('tax')?.setValue(18);
     this.items.push(row);
 
     type ServiceType = keyof typeof materialsConfig;
@@ -328,7 +330,7 @@ export class ShareEstimationComponent {
 type ApplianceType<T extends ServiceType> =  keyof typeof materialsConfig[T];    
     const index = this.items.length - 1;
     row.get('type')?.valueChanges.subscribe((typ: string | null) => {
-      this.shareForm.get('material')?.setValue('');
+      row.get('material')?.setValue('');
       const type = typ as MaterialType;
       if (!type || !this.claimCategory) {
   this.materialList = [];
@@ -346,9 +348,11 @@ type ApplianceType<T extends ServiceType> =  keyof typeof materialsConfig[T];
     ...materialsConfig[type][categoryKey as keyof typeof materialsConfig[typeof type]
     ] ?? materialsConfig[type].other
   ].sort();
+  row.patchValue({ materials: this.materialList });
   if(!this.materialList || this.materialList.length == 0)
   {
     this.materialList = materialsConfig[type].other;
+    row.patchValue({ materials: this.materialList.sort() });
   }
 } else {
   this.materialList = [];
