@@ -7,51 +7,26 @@ namespace MSSolutions.Data
     public class MSSolutionsDbContext : DbContext
     {
         public MSSolutionsDbContext(DbContextOptions<MSSolutionsDbContext> options) : base(options) { }
-
-        public DbSet<Status> Statuses => Set<Status>();
-        public DbSet<SubStatus> SubStatuses => Set<SubStatus>();
-        //public DbSet<User> Users => Set<User>();
         public DbSet<MsUser> MsUsers => Set<MsUser>();
         public DbSet<MsOrders> MsOrders => Set<MsOrders>();
         public DbSet<MsOrderDetails> MsOrderDetails => Set<MsOrderDetails>();
         public DbSet<MsOrderBillingAddress> MsOrderBillingAddress => Set<MsOrderBillingAddress>(); 
         public DbSet<MsOrderShippingAddress> MsOrderShippingAddress => Set<MsOrderShippingAddress>();
-        //public DbSet<MsAddress> Addresses => Set<Address>();
         public DbSet<MsAddress> MsAddresses => Set<MsAddress>();
-        
-       // public DbSet<UserRole> UserRoles => Set<UserRole>();
         public DbSet<MsUserRole> MsUserRoles => Set<MsUserRole>();
-        //public DbSet<Role> Roles => Set<Role>();
         public DbSet<MsRole> MsRoles => Set<MsRole>();
-        //public DbSet<UserPrivilege> UserPrivileges => Set<UserPrivilege>();
         public DbSet<MsUserPrivilege> MsUserPrivileges => Set<MsUserPrivilege>();
-        //public DbSet<Location> Locations => Set<Location>();
-
         public DbSet<State> Locations { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Pincode> Pincodes { get; set; }
-        public DbSet<WarrantyStatus> WarrantyStatuses { get; set; }
-        public DbSet<WarrantyType> WarrantyTypes { get; set; }
-        public DbSet<Claim> Claims { get; set; }
-        public DbSet<MsBrands> MsBrands { get; set; }
-        public DbSet<ServicePartners> ServicePartner { get; set; }       
+        public DbSet<MsBrands> MsBrands { get; set; }     
         public DbSet<MsCategories> MsCategories { get; set; }
         public DbSet<Plans> Plans { get; set; }
         public DbSet<MsCoupons> MsCoupons { get; set; }
         public DbSet<MsGst> MsGst { get; set; }
         public DbSet<MsProductImage> MsProductImage { get; set; } = null!;
-        public DbSet<MsProducts> MsProducts { get; set; }
-        public DbSet<Warranties> Warranties { get; set; }
-        public DbSet<Reports> Reports { get; set; }        
+        public DbSet<MsProducts> MsProducts { get; set; }    
         public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<Note> Notes { get; set; }
-        public DbSet<ClaimImage> ClaimImages { get; set; }
-        public DbSet<EstimationDetail> EstimationDetails { get; set; } = null!;
-        // DbSet for EstimationImages table
-        public DbSet<EstimationImage> EstimationImages { get; set; } = null!;
-        public DbSet<EstimationImages> ShareEstimationImages { get; set; } = null!;
-        //public DbSet<ClaimRepairDetail> ClaimRepairDetails => Set<ClaimRepairDetail>();
-        public DbSet<ClaimClosedWithOrWithoutRepairDetail> ClaimClosedWithOrWithoutRepairDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here
