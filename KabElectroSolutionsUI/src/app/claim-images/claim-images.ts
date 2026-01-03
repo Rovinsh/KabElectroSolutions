@@ -88,10 +88,21 @@ role:string | null = null;
 });
   }
 
-
   close() {
     this.dialogRef.close();
   }
+
+isImage(value?: string): boolean {
+  return !!value?.startsWith('data:image/');
+}
+
+isVideo(value?: string): boolean {
+  return !!value?.startsWith('data:video/');
+}
+
+isPdf(value?: string): boolean {
+  return !!value?.startsWith('data:application/pdf');
+}
 
   downloadAll() {
     this.isLoading = true;
@@ -138,7 +149,7 @@ role:string | null = null;
 }
 
 
-  openInNewTab(base64: string) {
+  openInNewTab(base64?: string) {
   if (!base64) return;
 
   const mimeType = this.detectMimeType(base64);

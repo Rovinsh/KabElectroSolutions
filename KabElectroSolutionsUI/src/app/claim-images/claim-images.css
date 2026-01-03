@@ -95,6 +95,10 @@ loader-overlay {
   text-decoration: underline;
 }
 
+video.thumb {
+  background: #000;
+}
+
 .others-grid {
   display: flex;
   gap: 12px;

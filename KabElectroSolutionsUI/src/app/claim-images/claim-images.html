@@ -22,13 +22,8 @@
     </div>
 
     <div class="grid">
-      <!-- SERIAL VIDEO -->
-      <div class="card">
+      <!-- <div class="card">
         <div class="card-title">Product serial number</div>
-        <!-- <a class="link">View Video</a> -->
-         <!-- <a *ngIf="data.productSerialNumber" class="link" [href]="data.productSerialNumber" target="_blank">
-        View Video
-      </a> -->
       <img
   *ngIf="data.productSerialNumber && !data.productSerialNumber.startsWith('data:application/pdf')"
   [src]="data.productSerialNumber"
@@ -40,64 +35,139 @@
   (click)="openInNewTab(data.productSerialNumber)">
   picture_as_pdf
 </mat-icon>
-      </div>
+      </div> -->
+      <div class="card">
+  <div class="card-title">Product serial number</div>
+
+  <!-- 🖼 IMAGE -->
+  <img
+    *ngIf="isImage(data.productSerialNumber)"
+    [src]="data.productSerialNumber"
+    class="thumb"
+    (click)="openInNewTab(data.productSerialNumber)"
+  />
+
+  <!-- 🎥 VIDEO -->
+  <video
+    *ngIf="isVideo(data.productSerialNumber)"
+    [src]="data.productSerialNumber"
+    class="thumb"
+    muted
+    playsinline
+    preload="metadata"
+    (click)="openInNewTab(data.productSerialNumber)">
+  </video>
+
+  <!-- 📄 PDF -->
+  <mat-icon
+    *ngIf="isPdf(data.productSerialNumber)"
+    class="pdf-icon"
+    (click)="openInNewTab(data.productSerialNumber)">
+    picture_as_pdf
+  </mat-icon>
+</div>
+
 
       <!-- PRODUCT IMAGE -->
-      <div class="card">
-        <div class="card-title">Product image</div>
-       <!-- <img *ngIf="data.productImage" [src]="data.productImage" /> -->
-        <a *ngIf="data.productImage"
-   [href]="data.productImage"
-   target="_blank"
-   rel="noopener noreferrer">
+<div class="card">
+  <div class="card-title">Product image</div>
 
-  <!-- <img [src]="data.productImage" class="thumb" /> -->
-   <img
-  *ngIf="data.productImage && !data.productImage.startsWith('data:application/pdf')"
-  [src]="data.productImage"
-  class="thumb"
-  (click)="openInNewTab(data.productImage)"
-/>
-<mat-icon *ngIf="data.productDefectImage && data.productDefectImage.startsWith('data:application/pdf')"
-  class="pdf-icon"
-  (click)="openInNewTab(data.productDefectImage)">
-  picture_as_pdf
-</mat-icon>
-</a>
-      </div>
+  <!-- 🖼 IMAGE -->
+  <img
+    *ngIf="isImage(data.productImage)"
+    [src]="data.productImage"
+    class="thumb"
+    (click)="openInNewTab(data.productImage)"
+  />
+
+  <!-- 🎥 VIDEO -->
+  <video
+    *ngIf="isVideo(data.productImage)"
+    [src]="data.productImage"
+    class="thumb"
+    muted
+    playsinline
+    preload="metadata"
+    (click)="openInNewTab(data.productImage)">
+  </video>
+
+  <!-- 📄 PDF -->
+  <mat-icon
+    *ngIf="isPdf(data.productImage)"
+    class="pdf-icon"
+    (click)="openInNewTab(data.productImage)">
+    picture_as_pdf
+  </mat-icon>
+
+</div>
+
 
       <!-- DEFECT IMAGE -->
-      <div class="card">
-        <div class="card-title">Product defect image</div>
-         <!-- <img *ngIf="data.productDefectImage" [src]="data.productDefectImage" /> -->
-          <img
-  *ngIf="data.productDefectImage && !data.productDefectImage.startsWith('data:application/pdf')"
-  [src]="data.productDefectImage"
-  class="thumb"
-  (click)="openInNewTab(data.productDefectImage)"
-/>
-<mat-icon *ngIf="data.productDefectImage && data.productDefectImage.startsWith('data:application/pdf')"
-  class="pdf-icon"
-  (click)="openInNewTab(data.productDefectImage)">
-  picture_as_pdf
-</mat-icon>
-      </div>
+<div class="card">
+  <div class="card-title">Product defect image</div>
 
-      <div class="card" *ngFor="let img of data.others; let i = index">
-        <div class="card-title">Other</div>
-         <!-- <img *ngIf="data.productDefectImage" [src]="data.productDefectImage" /> -->
-          <img
-  *ngIf="img && !img.startsWith('data:application/pdf')"
-  [src]="img"
-  class="thumb"
-  (click)="openInNewTab(img)"
-/>
-<mat-icon *ngIf="img && img.startsWith('data:application/pdf')"
-  class="pdf-icon"
-  (click)="openInNewTab(img)">
-  picture_as_pdf
-</mat-icon>
-      </div>
+  <!-- 🖼 IMAGE -->
+  <img
+    *ngIf="isImage(data.productDefectImage)"
+    [src]="data.productDefectImage"
+    class="thumb"
+    (click)="openInNewTab(data.productDefectImage)"
+  />
+
+  <!-- 🎥 VIDEO -->
+  <video
+    *ngIf="isVideo(data.productDefectImage)"
+    [src]="data.productDefectImage"
+    class="thumb"
+    muted
+    playsinline
+    preload="metadata"
+    (click)="openInNewTab(data.productDefectImage)">
+  </video>
+
+  <!-- 📄 PDF -->
+  <mat-icon
+    *ngIf="isPdf(data.productDefectImage)"
+    class="pdf-icon"
+    (click)="openInNewTab(data.productDefectImage)">
+    picture_as_pdf
+  </mat-icon>
+
+</div>
+
+
+<div class="card" *ngFor="let img of data.others; let i = index">
+  <div class="card-title">Other</div>
+
+  <!-- 🖼 IMAGE -->
+  <img
+    *ngIf="isImage(img)"
+    [src]="img"
+    class="thumb"
+    (click)="openInNewTab(img)"
+  />
+
+  <!-- 🎥 VIDEO -->
+  <video
+    *ngIf="isVideo(img)"
+    [src]="img"
+    class="thumb"
+    muted
+    playsinline
+    preload="metadata"
+    (click)="openInNewTab(img)">
+  </video>
+
+  <!-- 📄 PDF -->
+  <mat-icon
+    *ngIf="isPdf(img)"
+    class="pdf-icon"
+    (click)="openInNewTab(img)">
+    picture_as_pdf
+  </mat-icon>
+
+</div>
+
     </div>
   </div>
 
@@ -144,8 +214,8 @@
    <div class="section" *ngIf="!isLoading && invoice">
     <div class="section-header">
       <span>Invoice Details</span>
-      <button class="reject" *ngIf="claim?.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Rejected By Service', 'Invoice Rejected By Service')">Reject Invoice</button>
-    <button class="accept" *ngIf="claim?.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Accepted By Service', 'Invoice Accepted By Service')">Accept Invoice</button>
+      <button class="reject" *ngIf="claim.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Rejected By Service', 'Invoice Rejected By Service')">Reject Invoice</button>
+    <button class="accept" *ngIf="claim.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Accepted By Service', 'Invoice Accepted By Service')">Accept Invoice</button>
     </div>
 
     <div class="grid">

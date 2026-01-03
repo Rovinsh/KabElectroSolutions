@@ -359,7 +359,7 @@ private filterCities(value: string | CitiesDto): CitiesDto[] {
 
   onBrandSelected(c: BrandDto) {
     this.selectedBrand = c.id;
-    this.directClaimForm.patchValue({ brandId: null,itemName :null});
+    this.directClaimForm.patchValue({ itemName :null});
     this.showProduct();
   }
 

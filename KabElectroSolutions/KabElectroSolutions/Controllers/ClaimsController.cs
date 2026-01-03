@@ -814,8 +814,14 @@ namespace KabElectroSolutions.Controllers
             if (!images.Any())
                 return NotFound("No images found for this claim");
 
-            string ToBase64(byte[] data) =>
-                $"data:image/jpeg;base64,{Convert.ToBase64String(data)}";
+            //string ToBase64(byte[] data) =>
+            //    $"data:image/jpeg;base64,{Convert.ToBase64String(data)}";
+
+            string ToBase64(byte[] data, string fileName)
+            {
+                var mimeType = GetMimeTypeFromFileName(fileName);
+                return $"data:{mimeType};base64,{Convert.ToBase64String(data)}";
+            }
 
             var response = new ClaimCustomerVisitImagesResponse
             {
@@ -823,23 +829,23 @@ namespace KabElectroSolutions.Controllers
 
                 EstimationImage = images
                     .FirstOrDefault(x => x.ImageType == "Estimation")?
-                    .ImageData is byte[] est ? ToBase64(est) : null,
+                    .ImageData is byte[] est ? ToBase64(est, $"Estimation{GetExtension(est)}") : null,
 
                 ProductSerialNumber = images
                     .FirstOrDefault(x => x.ImageType == "ProductSerialNumber")?
-                    .ImageData is byte[] ps ? ToBase64(ps) : null,
+                    .ImageData is byte[] ps ? ToBase64(ps, $"ProductSerialNumber{GetExtension(ps)}") : null,
 
                 ProductImage = images
                     .FirstOrDefault(x => x.ImageType == "ProductImage")?
-                    .ImageData is byte[] pi ? ToBase64(pi) : null,
+                    .ImageData is byte[] pi ? ToBase64(pi, $"ProductImage{GetExtension(pi)}") : null,
 
                 ProductDefectImage = images
                     .FirstOrDefault(x => x.ImageType == "ProductDefectImage")?
-                    .ImageData is byte[] pd ? ToBase64(pd) : null,
+                    .ImageData is byte[] pd ? ToBase64(pd, $"ProductDefectImage{GetExtension(pd)}") : null,
 
                 Others = images
                     .Where(x => x.ImageType == "Others")
-                    .Select(x => ToBase64(x.ImageData))
+                    .Select(x => ToBase64(x.ImageData, $"Others{GetExtension(x.ImageData)}"))
                     .ToList(),
 
                 Remarks = images.First().Remarks,
@@ -860,8 +866,14 @@ namespace KabElectroSolutions.Controllers
 
             if (record == null)
                 return NotFound("No record found for this claim");
-            string ToBase64(byte[] data) =>
-                $"data:image/jpeg;base64,{Convert.ToBase64String(data)}";
+            //string ToBase64(byte[] data) =>
+            //    $"data:image/jpeg;base64,{Convert.ToBase64String(data)}";
+
+            string ToBase64(byte[] data, string fileName)
+            {
+                var mimeType = GetMimeTypeFromFileName(fileName);
+                return $"data:{mimeType};base64,{Convert.ToBase64String(data)}";
+            }
 
             var response = new ClaimClosedWithOrWithoutRepairDTO
             {
@@ -871,16 +883,16 @@ namespace KabElectroSolutions.Controllers
                 Remarks = record.Remarks,
 
                 JobSheetFileName = record.JobSheetFileName,
-                JobSheetImageBase64 = record.JobSheetImage != null ? ToBase64(record.JobSheetImage) : null,
+                JobSheetImageBase64 = record.JobSheetImage != null ? ToBase64(record.JobSheetImage, record.JobSheetFileName) : null,
 
                 AdditionalFileName = record.AdditionalFileName,
                 AdditionalImageBase64 = record.AdditionalImage != null
-                    ? ToBase64(record.AdditionalImage)
+                    ? ToBase64(record.AdditionalImage, record.AdditionalFileName)
                     : null,
 
                 CustomerSatisfactionFileName = record.CustomerSatisfactionFileName,
                 CustomerSatisfactionImageBase64 = record.CustomerSatisfactionImage != null ?
-                    ToBase64(record.CustomerSatisfactionImage) : null,
+                    ToBase64(record.CustomerSatisfactionImage, record.CustomerSatisfactionFileName) : null,
 
                 CreatedBy = record.CreatedBy,
                 CreatedOn = record.CreatedOn
@@ -1119,10 +1131,46 @@ namespace KabElectroSolutions.Controllers
 
             return ext switch
             {
+                // 🖼 Images
                 ".jpg" or ".jpeg" => "image/jpeg",
                 ".png" => "image/png",
                 ".gif" => "image/gif",
+                ".bmp" => "image/bmp",
+                ".webp" => "image/webp",
+                ".svg" => "image/svg+xml",
+
+                // 🎥 Videos
+                ".mp4" => "video/mp4",
+                ".mov" => "video/quicktime",
+                ".avi" => "video/x-msvideo",
+                ".wmv" => "video/x-ms-wmv",
+                ".mkv" => "video/x-matroska",
+                ".webm" => "video/webm",
+
+                // 🎵 Audio
+                ".mp3" => "audio/mpeg",
+                ".wav" => "audio/wav",
+                ".ogg" => "audio/ogg",
+                ".aac" => "audio/aac",
+                ".flac" => "audio/flac",
+
+                // 📄 Documents
                 ".pdf" => "application/pdf",
+                ".doc" => "application/msword",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                ".xls" => "application/vnd.ms-excel",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                ".ppt" => "application/vnd.ms-powerpoint",
+                ".pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                ".txt" => "text/plain",
+                ".csv" => "text/csv",
+
+                // 📦 Archives
+                ".zip" => "application/zip",
+                ".rar" => "application/vnd.rar",
+                ".7z" => "application/x-7z-compressed",
+
+                // Fallback
                 _ => "application/octet-stream"
             };
         }
