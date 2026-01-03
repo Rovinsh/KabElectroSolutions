@@ -12,7 +12,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { ApiService, ShareEstimationDto } from '../services/api.service';
 import { ToastService } from '../services/toastService.service';
 
-const materialsConfig = {
+let materialsConfig = {
   Services: {
     'air conditioner':[
   'Brand Visit Charges',
@@ -219,7 +219,7 @@ const materialsConfig = {
       'Part Required'
     ]
   }
-} as const;
+};
 
 type MaterialType = keyof typeof materialsConfig; 
 
@@ -346,6 +346,10 @@ type ApplianceType<T extends ServiceType> =  keyof typeof materialsConfig[T];
     ...materialsConfig[type][categoryKey as keyof typeof materialsConfig[typeof type]
     ] ?? materialsConfig[type].other
   ].sort();
+  if(!this.materialList || this.materialList.length == 0)
+  {
+    this.materialList = materialsConfig[type].other;
+  }
 } else {
   this.materialList = [];
 }
