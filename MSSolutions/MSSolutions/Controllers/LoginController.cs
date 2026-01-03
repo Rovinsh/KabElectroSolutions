@@ -65,11 +65,10 @@ namespace MSSolutions.Controllers
                     .Where(p => p.UserId == user.Id)
                     .Select(p => (int?)p.PrivilegeId)
                     .ToListAsync();
+            var claims = new List<System.Security.Claims.Claim> { new System.Security.Claims.Claim(ClaimTypes.Name, request.Username) };
+            claims.AddRange(roleNameMap.Select(role => new System.Security.Claims.Claim(ClaimTypes.Role, role.Value)));
 
-                var claims = new List<System.Security.Claims.Claim> { new System.Security.Claims.Claim(ClaimTypes.Name, request.Username) };
-                claims.AddRange(roleNameMap.Select(role => new System.Security.Claims.Claim(ClaimTypes.Role, role.Value)));
-
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(

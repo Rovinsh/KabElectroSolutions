@@ -13,17 +13,11 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  getClaims(controllerName:string): Observable<any> {
-    return this.http.get(`${this.baseUrl+controllerName}`);
-  }
 
   getAuditLogs(controllerName:string): Observable<any> {
     return this.http.get(`${this.baseUrl+controllerName}`);
   }
 
-   getStatus(controllerName:string): Observable<any> {
-    return this.http.get(`${this.baseUrl+controllerName}`);
-  }
 
   getLocations(): Observable<LocationResponseDto> {
     return this.http.get<LocationResponseDto>(`${this.baseUrl+"Locations/locations"}`);
@@ -39,19 +33,13 @@ export class ApiService {
     return this.http.get<PincodeResponseDto>(`${this.baseUrl+"Locations/pincodes"}`);
   }
 
-  getWarrantyTypes(): Observable<WarrantyTypeResponseDto> {
-    return this.http.get<WarrantyTypeResponseDto>(`${this.baseUrl+"WarrantyTypes/warrantyTypes"}`);
-  }
-
   getCategories(): Observable<CategoryResponseDto> {
     return this.http.get<CategoryResponseDto>(`${this.baseUrl + "Categories/categories"}`);
   }
  getGst(): Observable<GstResponseDto> {
     return this.http.get<GstResponseDto>(`${this.baseUrl + "Gst/gst"}`);
   }
-  getPlans(): Observable<PlanResponseDto> {
-    return this.http.get<PlanResponseDto>(`${this.baseUrl + "Plans/plans"}`);
-  }
+
    getProduct(): Observable<ProductResponseDto> {
     return this.http.get<ProductResponseDto>(`${this.baseUrl + "Product/products"}`);
   }
@@ -63,16 +51,7 @@ export class ApiService {
     return this.http.get<BrandResponseDto>(`${this.baseUrl + "Brands/brands"}`);
   }
 
-  getWarranty(): Observable<WarrantyResponseDto> {
-    return this.http.get<WarrantyResponseDto>(`${this.baseUrl + "Warranties/warranties"}`);
-  }
-
-  getServicePartners(): Observable<ServicePartnerResponseDto> {
-    return this.http.get<ServicePartnerResponseDto>(`${this.baseUrl + "ServicePartners/servicePartners"}`);
-  }
-
-
-getProductImages(productId: number) {
+  getProductImages(productId: number) {
   return this.http.get<ProductImageResponseDto>(
     `${this.baseUrl}product/GetImages/${productId}`
   );
@@ -96,26 +75,6 @@ getProductImages(productId: number) {
     return this.http.get<Role[]>(`${this.baseUrl + "Roles/roles"}`);
   }
 
-  getWarranties(phone?: string, email?: string): Observable<WarrantyDto[]> {
-    const params: any = {};
-    if (phone) params.phone = phone;
-    if (email) params.email = email;
-
-    return this.http.get<WarrantyDto[]>(`${this.baseUrl}Warranties/byparameter`, { params });
-  }
-
-  getReports(): Observable<ReportsResponseDto> {
-    return this.http.get<ReportsResponseDto>(`${this.baseUrl + "Reports/reports"}`);
-  }
-
-  getNotesByClaimId(claimId: number) {
-    return this.http.get<Note[]>(`${this.baseUrl}Claims/GetNotes/${claimId}`);
-  }
-
-  postReport(reportData:ReportFilterDto): Observable<any> {
-  return this.http.post(`${this.baseUrl}Reports`,reportData);
-  }
-
   postCategory(categoryData: CategoryDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Categories`, categoryData);
   }
@@ -128,36 +87,16 @@ getProductImages(productId: number) {
     return this.http.post(`${this.baseUrl}Brands`, brandData);
   }
 
-  postPlans(planData: PlanDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}Plans`, planData);
-  }
-
-postProduct(productData: ProductDto): Observable<any> {
+  postProduct(productData: ProductDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Product`, productData);
   }
   postCoupon(couponData: CouponDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Coupon`, couponData);
   }
 
-  postWarranties(warrantyData: WarrantyDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}Warranties`, warrantyData);
-  }
-
-  postServicePartners(servicePartnerData: ServicePartnerDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}ServicePartners`, servicePartnerData);
-  }
-
  postUser(userData: UserDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Users`, userData);
   }
-
-  postNote(note: Note):Observable<any>{
-    return this.http.post(`${this.baseUrl}Claims/AddNote`, note);
-  }
-
-  uploadClaimImages(formData: FormData) {
-    return this.http.post(`${this.baseUrl}Claims/upload-images`, formData);
-}
 
  updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Categories/${id}`, categoryData);
@@ -171,67 +110,19 @@ postProduct(productData: ProductDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Brands/${id}`, brandData);
   }
 
-  updatePlan(id: number, planData: PlanDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}Plans/${id}`, planData);
-  }
  updateProduct(id: number, productData: ProductDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Product/${id}`, productData);
   }
    updateCoupon(id: number, couponData: CouponDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Coupon/${id}`, couponData);
   }
-
-  updateWarranties(id: number, warranties: WarrantyDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}Warranties/${id}`, warranties);
-  }
   
-  updateServicePartners(id: number, servicePartnerData: ServicePartnerDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}ServicePartners/${id}`, servicePartnerData);
-  }
-
   updateUser(id: number, userData: UserDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Users/${id}`, userData);
-  }
-  
-  postClaim(claimData: ClaimDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims`, claimData);
-  }
-
-  updateClaimStatus(id: number, claimData: ClaimDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims/UpdateClaimStatus/${id}`, claimData);
-  }
-
-  ScheduleAppointment(id: number, status: string,appointment : AppointmentRequest, remarks?: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims/ScheduleAppointment/${id}/${status}/${remarks}`,appointment);
-  }
-
-   ShareEstimation(id: number, status: string,appointment : AppointmentRequest, remarks?: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims/ScheduleAppointment/${id}/${status}/${remarks}`,appointment);
-  }
-
-   AcceptOrRejectClaim(id: number, status: string, remarks?: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims/AcceptOrRejectClaim/${id}/${status}/${remarks}`,{});
-  }
-
-   AssignPartner(id: number, status: string,partnerId : number, remarks?: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims/AssignPartner/${id}/${status}/${partnerId}/${remarks}`,{});
-  } 
-  
-    updateShareEstimation(formData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims/ShareEstimate`,formData);
   }
 
  updateProductImages(formData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}product/AddImages`,formData);
-  }
-
-    CloseWithOrWithoutRepair(formData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims/CloseWithOrWithoutRepair`,formData);
-  }
-
-
-  repairClaim(payload: CreateClaimRepairPayload): Observable<any> {
-    return this.http.post(`${this.baseUrl}Claims/ClaimRepair`, payload);
   }
   
 }
@@ -250,17 +141,6 @@ export interface LocationDto {
 export interface StateDto {
   name: string;
   id: number;
-}
-
-export interface WarrantyTypeDto {
-  name: string;
-  id: number;
-}
-
-export interface WarrantyTypeResponseDto {
-  status: number;
-  message: string;
-  data: WarrantyTypeDto[];
 }
 
 export interface StateResponseDto {
@@ -333,23 +213,6 @@ export interface GstResponseDto {
   message: string;
   data: GstDto[];
 }
-export interface PlanDto {
-  planName: string;
-  categoryName:string,
-  barandName:string,
-  id: number;
-  catId: number;
-  brandId: number;
-  description: string;
-  remark: string;
-  isDisable: boolean;
-}
-
-export interface PlanResponseDto {
-  status: number;
-  message: string;
-  data: PlanDto[];
-}
 
 export interface CouponDto {
   id: number;
@@ -387,32 +250,6 @@ export interface BrandResponseDto {
   data: BrandDto[];
 }
 
-export interface ServicePartnerDto {
-  servicePartner: string;
-  id: number;
-  firstName: string;
-  lastName: string;
-  cityId: number;
-  cityName: string;
-  stateId: number;
-  pinCodeId: number;
-  pinCode: string;
-  stateName: string;
-  address: string;
-  phone: string;
-  email:string;
-  pan: string;
-  gst: string;
-  extraInfo:string;
-  isDisable: boolean;
-  roleId: number
-}
-
-export interface ServicePartnerResponseDto {
-  status: number;
-  message: string;
-  data: ServicePartnerDto[];
-}
 export interface ProductDto {
   id: number;
   productName: string;
@@ -457,202 +294,6 @@ export interface UserResponseDto {
   status: number;
   message: string;
   data: UserDto[];
-}
-
-export interface ReportFilterDto {
-  reportType: string | null;
-  startDate: Date | null;
-  endDate: Date | null;
-  reportName:string;
-}
-
-export interface ReportsDto {
-  fileName: string;
-  link?: string;
-  id: number;
-  dateRange: string;
-  timeStamp: string;
-  status: string;
-}
-
-export interface ReportsResponseDto {
-  status: number;
-  message: string;
-  data: ReportsDto[];
-}
-
-export interface WarrantyDto {
-  id: number;
-  serialNumber: number;
-  warrantyType: string;
-  catgoryName: string;
-  brandName: string;
-  warrantyTypeId: number;
-  warrantyDisplayName: string;
-  warrantyCode: string;
-  warrantyPrice: number;
-  warrantyDuration: number;
-  warrantyStartDate: string;
-  warrantyEndDate: string;
-  warrantyInvoiceNo: string;
-  warrantyPurchaseDate: string;
-  warrantySeller?: string;
-  warrantyCouponCode?: string;
-  warrantyScratchCode?: string;
-  warrantyExtraInfo?: string;
-  warrantyDescription?: string;
-  warrantyCreatedBy?: string;
-  productId: number;
-  itemSerialNumber?: string;
-  productName: string;
-  customerName: string;
-  customerMobileNo: string;
-  customerEmail: string;
-  customerAddress: string;
-  cityId: number;
-  customerCityName: string;
-  stateId: number;
-  customerStateName: string;
-  pinCodeId: number;
-  customerPinCode: number;
-  isDisable:boolean;
-}
-
-export interface WarrantyResponseDto {
-  status: number;
-  message: string;
-  data: WarrantyDto[];
-}
-
-export interface ClaimDto {
-  id?: number;
-  technicianName?: string;
-  lmStatus?: string;
-  itemName?: string;
-  rating?: number | null;
-  l3ApprovalDate?: string | null;
-  servicePartner?: number;
-  otpRequired?: boolean;
-  displayName?: string;
-  reasons?: string;
-  callCloseRemarks?: string;
-  concern?: string;
-  claimRegisteredPhoneNumber?: string;
-  reasonOfLoss?: string;
-  estimationFirst?: number | null;
-  solvyPan?: string;
-  l2ServiceRejectionRemarks?: string;
-  servicePartnerName?: string;
-  voiceUrl?: string;
-  estimationParts?: string;
-  customerAddress?: string;
-  brandComplaintNumber?: string;
-  address?: number;
-  otpVerificationTimestamp?: string | null;
-  warrantyStartDate?: string | null;
-  channelId?: number;
-  phone?: string;
-  itemPrice?: number;
-  warrantyDuration?: number;
-  invoiceDate?: string | null;
-  assignedExecutiveName?: string;
-  alternateContact?: string;
-  planSoldDate?: string;
-  raiseAdditional?: boolean;
-  warrantyTypeId?: number;
-  customerState?: string;
-  itemSerialNumber?: string;
-  solvyAddress?: string;
-  endDate?: string | null;
-  itemBrand?: string;
-  l2ServiceApprovalDate?: string | null;
-  claimVerificationDocumentUploadTimestamp?: string | null;
-  customerEmail?: string;
-  channelName?: string;
-  claimRedeemStatus?: string;
-  createdTime?: string; 
-  endStatus?: string;
-  l2InsuranceRejectionRemarks?: string;
-  callAbortDateTime?: string | null;
-  servicePartnerCity?: string;
-  estimationDateTime?: string | null;
-  estimationActionDate?: string | null;
-  repairCompletionDate?: string | null;
-  warrantyActivationCode?: string;
-  invoiceActionDate?: string | null;
-  status?: number;
-  itemImei?: string;
-  hsnRequired?: boolean;
-  pincode?: number;
-  estimationLast?: number | null;
-  servicePartnerPhone?: string;
-  itemCategory?: string;
-  technician?: string;
-  startDate?: string | null;
-  customerAlternateEmail?: string;
-  servicePartnerState?: string;
-  claimRedeemedDate?: string | null;
-  l2InsuranceApprovalDate?: string | null;
-  utrNumber?: string;
-  extraInfo?: string;
-  appointmentConfirmationTime?: string | null;
-  created?: string;
-  claimRedeemed?: boolean;
-  previousVisitProductSerialNumber?: string;
-  servicePartnerGST?: string;
-  callAbortReason?: string;
-  insuredCompany?: string;
-  solvyGST?: string;
-  paymentDone?: string;
-  servicePartnerPincode?: number;
-  claimApproved?: number;
-  appointmentPendingReason?: string;
-  insured?: string;
-  statusName?: string;
-  selfInvoice?: string;
-  servicePartnerPAN?: string;
-  servicePartnerAddress?: string;
-  storeName?: string;
-  l1ApprovalDate?: string | null;
-  previousStatus?: number;
-  firstVisitTAT?: number | null;
-  paymentStatus?: string;
-  estimationPaymentAmount?: number | null;
-  customerPhone?: string;
-  warranty?: number;
-  claimPaymentStatus?: string;
-  registeredBy?: number;
-  l1RejectionRemarks?: string;
-  dropDate?: string | null;
-  cta?: string;
-  customerCity?: string;
-  item?: number;
-  isAddressEditable?: boolean;
-  registeredByName?: string;
-  l3RejectionRemarks?: string;
-  createdDate?: string;
-  claimType?: number;
-  repairDoneTAT?: number | null;
-  warrantyType?: string;
-  pickupDate?: string | null;
-  itemCategoryId?: number;
-  paymentId?: string;
-  remarks?: string;
-  type?: string;
-  claimAmount?: number | null;
-  appointment?: number;
-  solvyStateCode?: string;
-  paymentTxnId?: string;
-  paymentAmount?: number | null;
-  amount?: number | null;
-  invoiceNumber?: string;
-  customerName?: string;
-  sgst?: string;
-  cgst?: string;
-  igst?: string;
-  sgsTList?: string[];
-  cgsTList?: string[];
-  igsTList?: string[];
 }
 
 export interface OrderDTO {
@@ -748,53 +389,11 @@ export interface OrderResponseDto {
   data: OrderDTO[];
 }
 
-export interface ClaimResponseDto {
-  status: number;
-  message: string;
-  data: ClaimDto[];
-}
-
-export interface Note {
-  claimId: number;
-  message: string;
-  userName: string;
-  role: string;
-  timeStamp?: string;   // server will set this
-}
-
 export interface Role{
   roleId: number;
   roleName: string;
 }
 
-export interface AppointmentRequest {
-  appointmentDate: string | null;   // DateOnly → string (formatted as yyyy-MM-dd)
-  appointmentTime: string | null;   // TimeOnly → string (formatted as HH:mm:ss or HH:mm)
-  remarks: string;
-  pendingReason: string;
-  visitPendingReason: string;
-}
-
-export interface ShareEstimationDto {
-  claimId: number;
-  observation: string;
-  claimType: string;
-  symptom: string;
-  remarks?: string;
-  items: {
-    type: string;
-    material: string;
-    hsn: number;
-    price: number;
-    tax: number;
-  }[];
-  files?: File[]; // for uploaded images
-}
-// export interface ProductImageDto {
-//   id: number;
-//   productId: number;
-//   files?: File[]; // for uploaded images
-// }
 export interface  ProductImageResponseDto {
   status: number;
   message: string;
@@ -805,11 +404,4 @@ export interface ProductImageDto {
   productId: number;
   fileName: string;
   imageBase64: string;
-}
-export interface CreateClaimRepairPayload {
-  claimId: number;
-  repairedAt: string;
-  reason?: string | null;
-  remarks?: string | null;
-  closureDate: string; // yyyy-MM-dd
 }

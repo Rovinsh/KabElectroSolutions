@@ -1,0 +1,54 @@
+<header class="store-header">
+  <div class="left">
+    <div class="logo" routerLink="/store">🛒 MSSolutions</div>
+  </div>
+
+  <div class="center">
+    <input class="search" placeholder="Search products..." />
+  </div>
+
+  <div class="right">
+    <div class="icon-btn user" (mouseenter)="showUserMenu=true" (mouseleave)="showUserMenu=false">
+      🧑🏻
+
+      <div class="user-dropdown" *ngIf="showUserMenu">
+        <div class="menu-item">
+          <span class="icon">🧑🏻</span>
+          <div>
+            <b>My Profile</b>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <span class="icon">📍</span>
+          <div>
+            <b>My Address</b>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <span class="icon">📦</span>
+          <div>
+            <b>My Orders</b>
+          </div>
+        </div>
+        <div class="menu-item">
+          <span class="icon">❤️</span>
+          <div>
+            <b>My Wishlist</b>
+          </div>
+        </div>
+        <div class="menu-item">
+          <span class="icon">🛠</span>
+          <div>
+            <b>My Service Requests</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="icon-btn cart">
+      🛒 {{cartCount}}
+    </div>
+  </div>
+</header>

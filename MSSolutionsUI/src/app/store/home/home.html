@@ -1,0 +1,63 @@
+<!-- Hero Slider -->
+<section class="hero-slider" (mouseenter)="stopAutoSlide()" (mouseleave)="startAutoSlide()">
+  <div
+    class="slide"
+    *ngFor="let slide of heroSlides; let i = index"
+    [class.active]="i === activeSlide"
+    [style.backgroundImage]="'url(' + slide.image + ')'"
+  >
+    <div class="overlay">
+      <h1>{{ slide.title }}</h1>
+      <p>{{ slide.subtitle }}</p>
+      <a routerLink="/store/products" class="btn-primary">Shop Now</a>
+    </div>
+  </div>
+
+  <button class="nav prev" (click)="prev()">‹</button>
+  <button class="nav next" (click)="next()">›</button>
+</section>
+
+<!-- Service Slider -->
+<section class="services">
+  <div class="service-track">
+    <div class="service-card" *ngFor="let s of services">
+      <div class="icon">{{ s.icon }}</div>
+      <p>{{ s.title }}</p>
+    </div>
+  </div>
+</section>
+<div class="home-container">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Best Deals on AMC Plans </h1>
+      <p>MsSolution Maintain offers extensive plans to help you install or maintain your product to keep it running as good as new..</p>
+      <a routerLink="/products" class="btn-primary">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories">
+  <div class="container">
+    <h2>Shop by Category</h2>
+    <div class="category-grid">
+      <div class="category-card" *ngFor="let c of categories">
+        <span class="icon">{{c.icon}}</span>
+        <p>{{c.name}}</p>
+      </div>
+    </div>
+    </div>
+  </section>
+<section class="featured py-5">
+  <div class="container">
+    <h2 class="mb-4">Featured Products</h2>
+
+    <div class="row">
+      <div class="col-md-3 col-sm-6 mb-4" *ngFor="let p of products">
+        <app-product-card [product]="p"></app-product-card>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
