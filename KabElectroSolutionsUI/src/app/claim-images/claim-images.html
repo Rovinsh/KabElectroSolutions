@@ -214,8 +214,8 @@
    <div class="section" *ngIf="!isLoading && invoice">
     <div class="section-header">
       <span>Invoice Details</span>
-      <button class="reject" *ngIf="claim?.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Rejected By Service', 'Invoice Rejected By Service')">Reject Invoice</button>
-    <button class="accept" *ngIf="claim?.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Accepted By Service', 'Invoice Accepted By Service')">Accept Invoice</button>
+      <button class="reject" *ngIf="claim.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Rejected By Service', 'Invoice Rejected By Service')">Reject Invoice</button>
+    <button class="accept" *ngIf="claim.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Accepted By Service', 'Invoice Accepted By Service')">Accept Invoice</button>
     </div>
 
     <div class="grid">
