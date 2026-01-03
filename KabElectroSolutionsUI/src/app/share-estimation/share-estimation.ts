@@ -374,7 +374,12 @@ type ApplianceType<T extends ServiceType> =  keyof typeof materialsConfig[T];
   }
 
   getGrandTotal(): number {
-    return this.items.controls.map((_, i) => this.getTotal(i)).reduce((a, b) => a + b, 0);
+    //return this.items.controls.map((_, i) => this.getTotal(i)).reduce((a, b) => a + b, 0);
+    return +(
+      this.items.controls
+        .map((_, i) => this.getTotal(i))
+        .reduce((a, b) => a + b, 0)
+    ).toFixed(2);
   }
 
 shareEstimate() {
