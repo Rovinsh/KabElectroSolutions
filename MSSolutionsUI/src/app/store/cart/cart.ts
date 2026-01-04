@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { CartItem, CartService } from '../services/cart.service';
-
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule],   // ✅ REQUIRED
+  imports: [CommonModule,RouterModule],   // ✅ REQUIRED
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']
 })

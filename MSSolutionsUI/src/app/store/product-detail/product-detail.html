@@ -1,0 +1,117 @@
+<div class="product-detail" *ngIf="product">
+
+  <div class="image-section">
+
+    <div class="thumb-slider">
+      <button class="arrow" (click)="prevThumb()">▲</button>
+
+      <div class="thumb-list">
+        <img
+          *ngFor="let img of visibleImages; let i = index"
+          [src]="img"
+          (click)="selectImage(img, i)"
+          [class.active]="activeIndex === (i + currentIndex)"
+        />
+      </div>
+
+      <button class="arrow" (click)="nextThumb()">▼</button>
+    </div>
+
+    <div class="main-image zoom-container">
+      <img [src]="selectedImage" class="zoom-img" />
+    </div>
+
+  </div>
+
+  <div class="info">
+    <h2 class="title">{{ product.productName }}</h2>
+ <div class="price price-row mb-2">
+      <span class="font-weight-bold text-dark">
+        ₹{{ getFinalPrice(product) }}
+      </span>
+
+      <span class="text-muted ml-2" *ngIf="product.discountPrice > 0">
+        <s> ₹{{ product.baseAmount }}</s>
+      </span>
+
+      <span class="text-success ml-2"
+            *ngIf="getDiscountPercent(product) as discount">
+        {{ discount }}% Off
+      </span>
+    </div>
+
+    <div class="rating mb-2">⭐ 4.5 (120)</div>
+
+    <div class="delivery text-muted small mb-3">
+      🚚 {{ product.shortDescription }}
+    </div>
+
+    <label class="compare mb-0">
+      <span class="icon fonticon">♡</span>
+      <input type="checkbox" class="spaceicon"> Compare
+    </label>
+
+    <button class="add" (click)="addToCart(product)">Add to Cart</button>
+
+    <div class="feature-card">
+      <h3>Key Features</h3>
+      {{ product.description }}
+    </div>
+  </div>
+</div>
+
+<div class="spec-card" *ngIf="product">
+
+  <div class="spec-header">
+    <h3>Specifications</h3>
+    <span class="toggle">⌃</span>
+  </div>
+
+  <div class="spec-section">
+    <h4>PRODUCT DETAILS</h4>
+
+    <div class="spec-grid">
+      <div class="spec-item">
+        <label>Category</label>
+        <span>{{ product.categoryName }}</span>
+      </div>
+      <div class="spec-item">
+        <label>Brand</label>
+        <span>{{ product.brandName }}</span>
+      </div>
+      <div class="spec-item">
+        <label>SKU</label>
+        <span>{{ product.sku }}</span>
+      </div>
+      <div class="spec-item">
+        <label>GST</label>
+        <span>{{ product.gstPercentage }}%</span>
+      </div>
+       <div class="spec-item">
+        <label>Model Number</label>
+        <span>Not Applicable</span>
+      </div>
+      <div class="spec-item">
+        <label>When to Purchase</label>
+        <span>Within 3 Years of Product Purchase</span>
+      </div>
+       <div class="spec-item">
+        <label>No. of Devices Covered</label>
+        <span>1 Devices</span>
+      </div>
+      <div class="spec-item">
+        <label>Product Price Range</label>
+        <span>NA</span>
+      </div>
+      <div class="spec-item">
+        <label>Service Available From</label>
+        <span>From the Date of Purchase</span>
+      </div>
+       <div class="spec-item">
+        <label>Service Period</label>
+        <span>12 Months</span>
+      </div>
+      
+    </div>
+  </div>
+</div>

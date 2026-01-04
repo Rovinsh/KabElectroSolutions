@@ -16,6 +16,11 @@ export const STORE_ROUTES: Routes = [
         loadComponent: () =>
           import('./cart/cart').then(m => m.CartComponent),
       },
+      {
+        path: 'product/:id',
+        loadComponent: () =>
+          import('./product-detail/product-detail').then(m => m.ProductDetailComponent),
+      },
       // {
       //   path: 'products',
       //   loadComponent: () =>

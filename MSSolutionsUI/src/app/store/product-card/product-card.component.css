@@ -10,7 +10,7 @@
   transform: translateY(-6px);
   box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
-
+.alinkcolor{color:#3a3a3a;text-decoration:none;}
 .image-wrapper {
   position: relative;
   background: #3a3a3a;

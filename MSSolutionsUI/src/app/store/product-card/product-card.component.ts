@@ -4,10 +4,11 @@ import { CartService } from '../services/cart.service';
 import { ProductWithImagesDto } from '../../services/api.service';
 import { CartPopupComponent } from '../shared/cart-popup/cart-popup.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule,MatDialogModule],
+  imports: [CommonModule,MatDialogModule,RouterModule],
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.css']
 })
