@@ -1,5 +1,10 @@
 
 <div class="dashboard-container">
+   <div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
 <table class="claims-table">
       <thead>
         <tr>

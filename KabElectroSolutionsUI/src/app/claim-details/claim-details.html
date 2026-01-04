@@ -35,7 +35,7 @@
     [class.active]="selectedTab === 'history'" 
     (click)="tabClicked('history')">Claim History</button>
 
-  <button 
+  <button *ngIf="role != 'Brand'"
     [class.active]="selectedTab === 'estimation'" 
     (click)="tabClicked('estimation')">Claim Estimation</button>
     
