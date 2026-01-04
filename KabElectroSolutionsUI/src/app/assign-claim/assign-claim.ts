@@ -22,6 +22,7 @@ export class AssignClaim {
   claims: Claim[]=[];
   status : any[]= [];
   private toast = inject(ToastService);
+  isLoading = false;
 
 filter = {
     warrantyType: '',
@@ -159,12 +160,15 @@ getSubStatusId(subStatusName: string): number{
 }
 
 loadClaimsByStatus(subStatusId: number): void {
+  this.isLoading = true;
   this.apiService.getClaims(`Claims/claims?statusId=${subStatusId}`).subscribe({
     next: (res) => {
+      this.isLoading = false;
       this.claims = res.data.results as Claim[];
       console.log('API response:', res);
     },
     error: (err) => {
+      this.isLoading = false;
       console.error('API error:', err);
     }
   });
