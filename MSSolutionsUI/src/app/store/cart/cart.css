@@ -28,3 +28,171 @@ button {
   border-radius: 6px;
   cursor: pointer;
 }
+.cart-empty-container {
+  min-height: 70vh;
+  padding-top: 40px;
+}
+
+.cart-title {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+
+.empty-cart-img {
+  width: 160px;
+  opacity: 0.9;
+}
+
+.continue-shopping {
+  display: inline-block;
+  margin-top: 12px;
+  color: #0a7f6f;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.continue-shopping:hover {
+  color: #055f53;
+}
+/* ===== CART PAGE ===== */
+
+.cart-item {
+  margin-bottom: 20px;
+}
+
+.cart-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* LEFT */
+.cart-left img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+/* MIDDLE */
+.cart-middle {
+  flex: 1;
+}
+
+.product-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.rating {
+  color: #2ecc71;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.rating-count {
+  color: #777;
+}
+
+.delivery-text {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+.price-box{margin:15px;}
+.imagecrdpage{width: 128px;margin-right:20px;}
+.btn-outline {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  margin:5px;
+}
+
+.btn-outline:hover {
+  background: #f5f5f5;
+}
+
+.btn-outline.danger {
+  color: #e53935;
+  border-color: #e53935;
+}
+
+/* RIGHT */
+.cart-right {
+  text-align: right;
+  min-width: 120px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* ===== COUPON BOX ===== */
+
+.coupon-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ===== ORDER SUMMARY ===== */
+
+.order-summary {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.order-summary h6 {
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.order-summary button {
+  background: #20c997;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* ===== EMPTY CART ===== */
+
+.cart-empty-container {
+  min-height: 70vh;
+  padding-top: 40px;
+}
+
+.empty-cart-img {
+  width: 160px;
+}
+
+.continue-shopping {
+  color: #20c997;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.maincardbox{background: #fff;
+    padding: 20px;
+}

@@ -29,10 +29,12 @@
 <div class="home-container">
   <!-- Hero -->
   <section class="hero">
+     <div class="container">
     <div class="hero-text">
       <h1>Best Deals on AMC Plans </h1>
       <p>MsSolution Maintain offers extensive plans to help you install or maintain your product to keep it running as good as new..</p>
       <a routerLink="/products" class="btn-primary">Shop Now</a>
+    </div>
     </div>
   </section>
 
@@ -41,10 +43,11 @@
   <div class="container">
     <h2>Shop by Category</h2>
     <div class="category-grid">
-      <div class="category-card" *ngFor="let c of categories">
-        <span class="icon">{{c.icon}}</span>
-        <p>{{c.name}}</p>
-      </div>
+      <div class="filter-bar">
+  <button class="filter-btn"  *ngFor="let c of categories">
+    {{c.catName}} 
+  </button>
+   </div>
     </div>
     </div>
   </section>
@@ -53,7 +56,7 @@
     <h2 class="mb-4">Featured Products</h2>
 
     <div class="row">
-      <div class="col-md-3 col-sm-6 mb-4" *ngFor="let p of products">
+      <div class="col-md-3 col-sm-6 mb-4" *ngFor="let p of productList">
         <app-product-card [product]="p"></app-product-card>
       </div>
     </div>

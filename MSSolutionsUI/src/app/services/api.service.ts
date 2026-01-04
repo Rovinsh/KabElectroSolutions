@@ -40,8 +40,8 @@ export class ApiService {
     return this.http.get<GstResponseDto>(`${this.baseUrl + "Gst/gst"}`);
   }
 
-   getProduct(): Observable<ProductResponseDto> {
-    return this.http.get<ProductResponseDto>(`${this.baseUrl + "Product/products"}`);
+   getProduct(): Observable<ProductWithImageResponseDto> {
+    return this.http.get<ProductWithImageResponseDto>(`${this.baseUrl + "Product/products"}`);
   }
   getCoupon(): Observable<CouponResponseDto> {
     return this.http.get<CouponResponseDto>(`${this.baseUrl + "Coupon/coupons"}`);
@@ -404,4 +404,13 @@ export interface ProductImageDto {
   productId: number;
   fileName: string;
   imageBase64: string;
+}
+export interface ProductWithImagesDto extends ProductDto {
+  images: ProductImageDto[];
+}
+
+export interface  ProductWithImageResponseDto {
+  status: number;
+  message: string;
+  data: ProductWithImagesDto[];
 }
