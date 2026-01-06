@@ -24,4 +24,12 @@
 
     public int StockQty { get; set; }
     public bool IsActive { get; set; }
+    public List<ProductImagesDto> Images { get; set; } = new();
+}
+public class ProductImagesDto
+{
+    public int Id { get; set; }
+    public int ProductId { get; set; }
+    public string FileName { get; set; } = "";
+    public string ImageBase64 { get; set; } = "";
 }

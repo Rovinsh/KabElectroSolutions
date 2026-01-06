@@ -1,55 +1,53 @@
-<div class="col-md-3 col-sm-6 mb-4">
-  <div class="card h-100 product-card">
+<div class="card h-100 product-card">
 
-    <div class="position-relative">
-      <!-- Top actions -->
-      <div class="position-absolute d-flex justify-content-between w-100 p-2"
-           style="top:0; left:0; z-index:2;">
-        <span class="icon">♡</span>
-        <label class="compare mb-0">
-          <input type="checkbox"> Compare
-        </label>
-      </div>
-
-      <img
-        class="card-img-top productImage"
-        [src]="product.image"
-        [alt]="product.name"
-      />
+  <div class="position-relative">
+    <div class="position-absolute d-flex justify-content-between w-100 p-2"
+         style="top:0; left:0; z-index:2;">
+      <span class="icon">♡</span>
+      <label class="compare mb-0">
+        <input type="checkbox"> Compare
+      </label>
     </div>
 
-    <div class="card-body d-flex flex-column">
-      <h6 class="card-title text-dark">
-        {{ product.name }}
-      </h6>
+    <a [routerLink]="['/store/product', product.id]"><img
+      class="card-img-top productImage"
+      [src]="getPrimaryImage(product)"
+      [alt]="product.productName"
+    /></a>
+  </div>
 
-      <div class="rating mb-2">
-        ⭐ {{ product.rating }} ({{ product.reviewCount }})
-      </div>
+  <div class="card-body d-flex flex-column">
+    <h6 class="card-title text-dark">
+     <a class="alinkcolor"[routerLink]="['/store/product', product.id]">{{ product.productName }}</a>  
+    </h6>
 
-      <div class="price-row mb-2">
-        <span class="font-weight-bold text-dark">
-          ₹{{ product.price }}
-        </span>
-
-        <span class="text-muted ml-2" *ngIf="product.oldPrice">
-          <s>₹{{ product.oldPrice }}</s>
-        </span>
-
-        <span class="text-success ml-2" *ngIf="product.discount">
-          {{ product.discount }}% Off
-        </span>
-      </div>
-
-      <div class="delivery text-muted small mb-3">
-        🚚 Standard Delivery by {{ product.deliveryDate }}
-      </div>
-
-      <!-- Add to Cart Button -->
-      <button class="btn btn-primary btn-block mt-auto" (click)="addToCart()">
-        Add to Cart
-      </button>
+    <div class="rating mb-2">
+      ⭐ 4.5 (120)
     </div>
 
+    <div class="price-row mb-2">
+      <span class="font-weight-bold text-dark">
+        ₹{{ getFinalPrice(product) }}
+      </span>
+
+      <span class="text-muted ml-2" *ngIf="product.discountPrice > 0">
+        <s> ₹{{ product.baseAmount }}</s>
+      </span>
+
+      <span class="text-success ml-2"
+            *ngIf="getDiscountPercent(product) as discount">
+        {{ discount }}% Off
+      </span>
+    </div>
+
+    <div class="delivery text-muted small mb-3">
+      🚚 {{ product.shortDescription}}
+    </div>
+
+    <button class="btn btn-primary btn-block mt-auto"
+            (click)="addToCart(product)">
+      Add to Cart
+    </button>
+    
   </div>
 </div>

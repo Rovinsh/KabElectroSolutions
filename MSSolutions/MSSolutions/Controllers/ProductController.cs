@@ -52,7 +52,17 @@ namespace MSSolutions.Controllers
                     GstAmount = p.GstAmount,
                     WithGstAmount = p.WithGstAmount,
                     StockQty = p.StockQty,
-                    IsActive = p.IsActive
+                    IsActive = p.IsActive,
+                    Images = _context.MsProductImage
+                .Where(i => i.ProductId == p.Id)
+                .Select(i => new ProductImagesDto
+                {
+                    Id = i.Id,
+                    ProductId = i.ProductId,
+                    FileName = i.FileName,
+                    ImageBase64 = Convert.ToBase64String(i.Image)
+                })
+                .ToList()
                 })
                 .ToListAsync();
 

@@ -11,6 +11,16 @@ export const STORE_ROUTES: Routes = [
         loadComponent: () =>
           import('./home/home').then(m => m.HomeComponent),
       },
+        {
+        path: 'cart',
+        loadComponent: () =>
+          import('./cart/cart').then(m => m.CartComponent),
+      },
+      {
+        path: 'product/:id',
+        loadComponent: () =>
+          import('./product-detail/product-detail').then(m => m.ProductDetailComponent),
+      },
       // {
       //   path: 'products',
       //   loadComponent: () =>
@@ -20,11 +30,6 @@ export const STORE_ROUTES: Routes = [
       //   path: 'product/:id',
       //   loadComponent: () =>
       //     import('./product-detail/product-detail').then(m => m.ProductDetailComponent),
-      // },
-      // {
-      //   path: 'cart',
-      //   loadComponent: () =>
-      //     import('./cart/cart').then(m => m.CartComponent),
       // },
       // {
       //   path: 'checkout',

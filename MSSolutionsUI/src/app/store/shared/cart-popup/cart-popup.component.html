@@ -1,0 +1,36 @@
+<div class="cart-popup">
+  <!-- Header -->
+  <div class="popup-header">
+    <div class="header-left">
+      <span class="success-icon">✔</span>
+      <span class="title">1 Item added to the cart!</span>
+    </div>
+    <button class="close-btn" (click)="close()">✕</button>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Body -->
+  <div class="popup-body">
+    <img [src]="getProductImage()" style="width:64px;" class="product-img" />
+
+    <div class="product-info">
+      <div class="product-name">
+        {{ product.productName }}
+      </div>
+
+      <div class="product-price">
+        ₹{{ getFinalPrice() | number:'1.2-2' }}
+      </div>
+
+      <div class="discount" *ngIf="getDiscountPercent() as discount">
+        {{ discount }}% Off
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <button class="proceed-btn" (click)="goToCart()">
+    Proceed to Cart
+  </button>
+</div>

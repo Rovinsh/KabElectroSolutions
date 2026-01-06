@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ProductCardComponent } from '../product-card/product-card.component';
+import { ApiService, CategoryDto, ProductWithImagesDto } from '../../services/api.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-store-home',
@@ -11,14 +13,9 @@ import { ProductCardComponent } from '../product-card/product-card.component';
   styleUrls: ['./home.css']
 })
 export class HomeComponent {
-  categories = [
-    { name: 'Mobiles', icon: '📱' },
-    { name: 'Laptops', icon: '💻' },
-    { name: 'TVs', icon: '📺' },
-    { name: 'Appliances', icon: '🧊' },
-    { name: 'Accessories', icon: '🎧' }
-  ];
-
+    private apiService = inject(ApiService);
+    categories: CategoryDto[] = [];
+    productList: ProductWithImagesDto[] = [];
   heroSlides = [
     { title: 'Ink Tank & Laser Printers', subtitle: 'Starting at ₹10,699', image: '/assets/banners/heroBanner.webp' },
     { title: 'Big Screen TVs', subtitle: 'Up to 40% Off', image: '/assets/banners/2.jpg' },
@@ -27,9 +24,18 @@ export class HomeComponent {
 
   activeSlide = 0;
   private intervalId: any;
-
+ 
   ngOnInit() {
     this.startAutoSlide();
+     forkJoin({
+              category: this.apiService.getCategories(),
+              product: this.apiService.getProduct(),
+            }).subscribe({
+              next: (result) => {
+                this.categories = result.category.data.filter(x => x.isDisable) ?? result.category;
+                this.productList = result.product.data.filter(x => x.isActive) ?? result.product; 
+                }
+            });  
   }
 
   ngOnDestroy() {
