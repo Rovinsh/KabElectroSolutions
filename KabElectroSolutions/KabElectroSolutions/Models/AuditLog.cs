@@ -9,7 +9,7 @@
         public string Status { get; set; } = string.Empty;
         public string PerformerName { get; set; } = string.Empty;
         public string Designation { get; set; } = string.Empty;
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        public DateTime Timestamp { get; set; } = DateTime.Now;
         public string? Remarks { get; set; }
     }
 }

@@ -319,7 +319,7 @@ namespace KabElectroSolutions.Controllers
                 ImageType = type,
                 ImageData = ms.ToArray(),
                 Remarks = req.Remarks,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
                 CreatedBy = req.CreatedBy
             };
         }
@@ -338,7 +338,7 @@ namespace KabElectroSolutions.Controllers
                 Status = status,
                 PerformerName = user?.Firstname + " " + user?.Lastname,
                 Designation = user?.BusinessroleName!,
-                Timestamp = DateTime.UtcNow,
+                Timestamp = DateTime.Now,
                 Remarks = remarks
             };
 
@@ -527,7 +527,7 @@ namespace KabElectroSolutions.Controllers
                 Price = dto.Price,
                 TaxPercent = dto.TaxPercent,
                 Remarks = dto.Remarks,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.Now
             };
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -545,7 +545,7 @@ namespace KabElectroSolutions.Controllers
                             ClaimId = dto.ClaimId,
                             Image = ms.ToArray(),
                             FileName = file.FileName,
-                            CreatedAt = DateTime.UtcNow
+                            CreatedAt = DateTime.Now
                         };
 
                         estimation.Images.Add(image);
@@ -597,7 +597,7 @@ namespace KabElectroSolutions.Controllers
                             Price = item.Price,
                             TaxPercent = item.TaxPercent,
                             Remarks = dto.Remarks,
-                            CreatedAt = DateTime.UtcNow
+                            CreatedAt = DateTime.Now
                         };
 
                         estimations.Add(estimation);
@@ -620,7 +620,7 @@ namespace KabElectroSolutions.Controllers
                             EstimationId = 1,
                             FileName = file.FileName,
                             Image = ms.ToArray(),
-                            CreatedAt = DateTime.UtcNow
+                            CreatedAt = DateTime.Now
                         };
 
                         _context.EstimationImages.Add(imageRequest);
@@ -664,7 +664,7 @@ namespace KabElectroSolutions.Controllers
                     Remarks = dto.Remarks,
                     ClosureDate = dto.ClosureDate,
                     RepairedByUserId = user.Id,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now
                 };
 
                 _context.ClaimRepairDetails.Add(entity);
@@ -782,7 +782,7 @@ namespace KabElectroSolutions.Controllers
                     InvoiceImage = ms.ToArray(),
                     IsRejected = dto.IsRejected,
                     CreatedBy = user.Id,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.Now
                 };
 
                 _context.InvoiceDetails.Add(invoice);
