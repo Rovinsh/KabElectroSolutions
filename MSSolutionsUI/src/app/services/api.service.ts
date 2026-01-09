@@ -33,6 +33,9 @@ export class ApiService {
     return this.http.get<PincodeResponseDto>(`${this.baseUrl+"Locations/pincodes"}`);
   }
 
+  getWishlist(): Observable<WishlistResponseDto> {
+    return this.http.get<WishlistResponseDto>(`${this.baseUrl + "Wishlist/wishlist"}`);
+  }
   getCategories(): Observable<CategoryResponseDto> {
     return this.http.get<CategoryResponseDto>(`${this.baseUrl + "Categories/categories"}`);
   }
@@ -71,8 +74,12 @@ export class ApiService {
     return this.http.get<OrderResponseDto>(`${this.baseUrl + "Orders/orders"}`);
   }
 
-   getRoles(): Observable<Role[]> {
+  getRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(`${this.baseUrl + "Roles/roles"}`);
+  }
+
+ addWishlist(productId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}Wishlist/AddWishlist`, { productId });
   }
 
   postCategory(categoryData: CategoryDto): Observable<any> {
@@ -87,6 +94,9 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Brands`, brandData);
   }
 
+ postUserCreate(userData: SignupRequestDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Users/CreateCustomer`, userData);
+  }
   postProduct(productData: ProductDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Product`, productData);
   }
@@ -201,6 +211,14 @@ export interface CategoryResponseDto {
   message: string;
   data: CategoryDto[];
 }
+export interface WishlistDto {
+  productId: number;
+}
+export interface WishlistResponseDto {
+  status: number;
+  message: string;
+  data: WishlistDto[];
+}
 export interface GstDto {
   gstValue: string;
   description: string;
@@ -213,7 +231,18 @@ export interface GstResponseDto {
   message: string;
   data: GstDto[];
 }
-
+export interface SignupRequestDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+export interface SignupRequestResponseDto {
+  status: number;
+  message: string;
+  data: SignupRequestDto[];
+}
 export interface CouponDto {
   id: number;
   couponTitle: string;

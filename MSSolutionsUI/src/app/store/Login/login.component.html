@@ -1,0 +1,42 @@
+<div class="login-modal">
+  <button class="close-btn" (click)="close()">×</button>
+
+  <div class="mode-toggle">
+    <span [class.active]="mode==='login'" (click)="switchMode('login')">Login</span>
+    <span class="or">OR</span>
+    <span [class.active]="mode==='signup'" (click)="switchMode('signup')">Create Account</span>
+  </div>
+
+  <!-- LOGIN -->
+  <form *ngIf="mode==='login'" [formGroup]="loginForm">
+    <p class="hint">Login</p>
+    <div class="error" *ngIf="lf['username'].touched && lf['username'].invalid">Valid email required</div>
+     <div class="error" *ngIf="lf['password'].touched && lf['password'].invalid">Password required</div>
+  
+    <input type="email" formControlName="username" class="inputboxmargin" placeholder="Email" />
+    <input type="password" formControlName="password" class="inputboxmargin" placeholder="Password" />
+  </form>
+
+  <!-- SIGNUP -->
+  <form *ngIf="mode==='signup'" [formGroup]="signupForm">
+    <p class="hint">Create Account</p>
+ <div class="error" *ngIf="sf['phone'].touched && sf['phone'].invalid">Enter 10 digit phone number</div>
+ <div class="error" *ngIf="sf['email'].touched && sf['email'].invalid">Valid email required</div>
+ <div class="error" *ngIf="signupForm.errors?.['passwordMismatch'] && sf['confirmPassword'].touched">
+      Passwords do not match
+    </div>
+    <input type="text" formControlName="firstName" class="inputboxmargin" placeholder="First Name" />
+    <input type="text" formControlName="lastName" class="inputboxmargin" placeholder="Last Name" />
+
+    <input type="email" formControlName="email" class="inputboxmargin" placeholder="Email" />
+   
+    <input type="text" formControlName="phone" class="inputboxmargin"  maxlength="10" placeholder="Phone (10 digits)" />
+   
+    <input type="password" formControlName="password" class="inputboxmargin" placeholder="Password" />
+    <input type="password" formControlName="confirmPassword" class="inputboxmargin" placeholder="Confirm Password" />
+
+   
+  </form>
+
+  <button class="continue" (click)="submit()">Continue</button>
+</div>

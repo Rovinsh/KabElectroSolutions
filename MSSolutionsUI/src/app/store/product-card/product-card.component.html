@@ -3,7 +3,12 @@
   <div class="position-relative">
     <div class="position-absolute d-flex justify-content-between w-100 p-2"
          style="top:0; left:0; z-index:2;">
-      <span class="icon">♡</span>
+      <!-- <span class="icon" (click)="onWishlistClick(product.id)">♡</span> -->
+      <span class="icon"
+  [class.filled]="isInWishlist(product.id)"
+  (click)="onWishlistClick(product.id)">
+  {{ isInWishlist(product.id) ? '💚' : '♡' }}
+</span>
       <label class="compare mb-0">
         <input type="checkbox"> Compare
       </label>

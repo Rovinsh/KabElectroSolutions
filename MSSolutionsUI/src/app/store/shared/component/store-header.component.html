@@ -9,15 +9,22 @@
 
   <div class="right">
     <div class="icon-btn user" (mouseenter)="showUserMenu=true" (mouseleave)="showUserMenu=false">
-      🧑🏻
+      🧑🏻  <span style="color: #fff;"><strong>{{firstName | titlecase}} {{lastName | titlecase}}</strong><br/></span>
 
       <div class="user-dropdown" *ngIf="showUserMenu">
-        <div class="menu-item">
-          <span class="icon">🧑🏻</span>
-          <div>
-            <b>My Profile</b>
-          </div>
-        </div>
+        <div class="menu-item" *ngIf="!firstName">
+  <span class="icon">🧑🏻</span>
+  <div (click)="custumerLogin()">
+    Login / Create Account
+  </div>
+</div>
+
+<div class="menu-item" *ngIf="firstName">
+  <span class="icon">🧑🏻</span>
+  <div>
+    <b>My Profile</b>
+  </div>
+</div>
 
         <div class="menu-item">
           <span class="icon">📍</span>
@@ -38,10 +45,10 @@
             <b>My Wishlist</b>
           </div>
         </div>
-        <div class="menu-item">
-          <span class="icon">🛠</span>
+        <div class="menu-item" *ngIf="firstName">
+          <span class="icon">🔓</span>
           <div>
-            <b>My Service Requests</b>
+            <button class="logout-button" (click)="logout()">Logout</button>
           </div>
         </div>
       </div>

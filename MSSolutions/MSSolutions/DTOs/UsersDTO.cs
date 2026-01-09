@@ -11,10 +11,12 @@
         public string? StateName { get; set; }
         public int PinCodeId { get; set; }
         public int? PinCode { get; set; }
-        public string Address { get; set; }
+        public string? Address { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public int RoleId { get; set; }
+        public string? Password { get; set; }
         public string? RoleName { get; set; }
     }
+
 }

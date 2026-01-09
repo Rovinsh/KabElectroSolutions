@@ -5,6 +5,9 @@ import { CartService } from '../services/cart.service';
 import { ApiService, ProductWithImagesDto, ProductImageDto } from '../../services/api.service';
 import { CartPopupComponent } from '../shared/cart-popup/cart-popup.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AuthService } from '../../services/auth';
+import { ToastService } from '../../services/toastService.service';
+import { LoginComponent } from '../Login/login.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,7 +19,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 export class ProductDetailComponent implements OnInit {
 
   private apiService = inject(ApiService);
-
+  private toast = inject(ToastService);
+  private auth = inject(AuthService);
   productList: ProductWithImagesDto[] = [];
   product!: ProductWithImagesDto;
 
@@ -26,7 +30,8 @@ export class ProductDetailComponent implements OnInit {
   visibleThumbs = 4;
   activeIndex = 0;
   selectedImage: string = '';
-
+  wishlistIds = new Set<number>();
+  isLoggedIn = false;
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog,
@@ -53,8 +58,22 @@ export class ProductDetailComponent implements OnInit {
         this.activeIndex = 0;
       }
     });
+    this.isLoggedIn = !!localStorage.getItem('token');
+      if (this.isLoggedIn) {
+        this.apiService.getWishlist().subscribe(res => {
+          if (res.data) {
+            const ids = res.data.map((x: any) => x.productId ?? x.ProductId);
+            this.wishlistIds = new Set(ids);
+          }
+        });
+      }
   }
 
+
+
+isInWishlist(productId: number): boolean {
+  return this.wishlistIds.has(productId);
+}
   /** Convert API image object into usable image src */
   resolveImage(img: ProductImageDto): string {
     if (img.imageBase64) {
@@ -117,4 +136,36 @@ export class ProductDetailComponent implements OnInit {
       console.log('Cart popup closed');
     });
   }
+  openLoginPopup() {
+    const dialogRef = this.dialog.open(LoginComponent, {
+      width: '700px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      disableClose: true,
+      panelClass: 'login-dialog',
+    });
+  
+   dialogRef.afterClosed().subscribe(success => {
+      if (success) {
+        this.toast.success('Login successful');
+      }
+    });
+  }
+  
+  onWishlistClick(productId: number) {
+    if (!this.auth.isLoggedIn()) {
+      this.openLoginPopup();
+      return;
+    }
+  
+    this.saveWishlist(productId);
+  }
+  
+  saveWishlist(productId: number) {
+    this.apiService.addWishlist(productId).subscribe({
+      next: () => this.toast.success('Added to wishlist ❤️'),
+      error: () => this.toast.error('Failed to add wishlist')
+    });
+  }
+  
 }

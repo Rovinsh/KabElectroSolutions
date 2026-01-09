@@ -1,0 +1,91 @@
+.login-modal {
+  background: #121212;
+  color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0,0,0,.6);
+}
+.inputboxmargin{margin:20px;width: 270px !important;color: #333 !important;padding: 12px !important; border: 1px solid #333#fff !important;background: #fff !important;}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.mode-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid #333;
+  padding: 8px 14px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+}
+
+.mode-toggle span {
+  cursor: pointer;
+  color: #aaa;
+}
+
+.mode-toggle .active {
+  color: #fff;
+  font-weight: 600;
+}
+
+.mode-toggle .or {
+  color: #666;
+}
+
+.hint {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #1c1c1c;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.keep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+.terms {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.terms a {
+  color: #00e5a8;
+  text-decoration: none;
+}
+
+.continue {
+  width: 100%;
+  padding: 12px;
+  background: #00e5a8;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}

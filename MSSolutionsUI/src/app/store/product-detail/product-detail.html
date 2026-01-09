@@ -47,7 +47,10 @@
     </div>
 
     <label class="compare mb-0">
-      <span class="icon fonticon">♡</span>
+     <span class="icon"
+  [class.filled]="isInWishlist(product.id)"
+  (click)="onWishlistClick(product.id)">
+  {{ isInWishlist(product.id) ? '💚' : '♡' }}</span>
       <input type="checkbox" class="spaceicon"> Compare
     </label>
 

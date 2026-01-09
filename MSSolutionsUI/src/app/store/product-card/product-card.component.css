@@ -23,7 +23,16 @@
   max-height: 180px;
   object-fit: contain;
 }
+.icon {
+  cursor: pointer;
+  font-size: 22px;
+  color: #aaa;
+  transition: 0.3s;
+}
 
+.icon.filled {
+  color: #2ee6a6;
+}
 .top-actions {
   position: absolute;
   top: 8px;

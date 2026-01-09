@@ -15,6 +15,7 @@ namespace MSSolutions.Data
         public DbSet<MsAddress> MsAddresses => Set<MsAddress>();
         public DbSet<MsUserRole> MsUserRoles => Set<MsUserRole>();
         public DbSet<MsRole> MsRoles => Set<MsRole>();
+        public DbSet<MsWishlist> MsWishlists { get; set; }
         public DbSet<MsUserPrivilege> MsUserPrivileges => Set<MsUserPrivilege>();
         public DbSet<State> Locations { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -79,6 +80,21 @@ namespace MSSolutions.Data
                 .HasOne<MsOrders>()
                 .WithOne(o => o.ShippingAddress)
                 .HasForeignKey<MsOrderShippingAddress>(s => s.OrderId);
+            modelBuilder.Entity<MsWishlist>()
+      .HasIndex(w => new { w.UserId, w.ProductId })
+      .IsUnique();
+
+            modelBuilder.Entity<MsWishlist>()
+                .HasOne(w => w.User)
+                .WithMany()
+                .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MsWishlist>()
+                .HasOne(w => w.Product)
+                .WithMany()
+                .HasForeignKey(w => w.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
     } 

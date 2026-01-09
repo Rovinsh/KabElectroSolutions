@@ -16,7 +16,6 @@ namespace MSSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly MSSolutionsDbContext _context;
@@ -173,6 +172,71 @@ namespace MSSolutions.Controllers
             catch (Exception ex)
             {
                 // Rollback if anything fails
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("CreateCustomer")]
+        public async Task<IActionResult> CreateCustomer([FromBody] UsersDTO customer)
+        {
+            if (customer == null)
+                return BadRequest("Invalid User data");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var roleData = await _context.MsRoles.FirstOrDefaultAsync(r => r.RoleName == "User");
+                if (roleData == null)
+                    return BadRequest("Role 'User' not found.");
+
+                var user = new MsUser
+                {
+                    Firstname = customer.FirstName,
+                    Lastname = customer.LastName,
+                    Phone = customer.Phone,
+                    Email = customer.Email,
+                    Business = 2,
+                    BusinessPhone = customer.Phone,
+                    BusinessEmail = customer.Email,
+                    Businessname = "Website Customer",
+                    Businessrole = roleData.RoleId,
+                    BusinessGst = "notgstno",
+                    BusinessPan = "customerpan",
+                    BusinessroleName = roleData.RoleName,
+                    IsActiveBusiness = true,
+                    PasswordHash = PasswordHelper.HashPassword(customer.Password),
+                    IsPartner = false,
+                    PartnerId = 0
+                };
+
+                _context.MsUsers.Add(user);
+                await _context.SaveChangesAsync();
+                var userRole = new MsUserRole
+                {
+                    UserId = user.Id,
+                    RoleId = roleData.RoleId
+                };
+
+                _context.MsUserRoles.Add(userRole);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok();
+            }
+            catch (DbUpdateException ex)
+            {
+                await transaction.RollbackAsync();
+
+                if (ex.InnerException?.Message.Contains("UQ_Users_Email") == true)
+                    return Conflict("User email id already exists.");
+
+                return StatusCode(500, "An error occurred while saving the user.");
+            }
+            catch (Exception ex)
+            {
                 await transaction.RollbackAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
