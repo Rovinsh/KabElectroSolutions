@@ -8,6 +8,7 @@ import { ToastService } from '../../services/toastService.service';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth';
 import { Router } from '@angular/router';
+import { WishlistService } from '../services/wishlist.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -23,6 +24,7 @@ export class LoginComponent {
   signupForm: FormGroup;
   private apiService = inject(ApiService);
   private toast = inject(ToastService);
+  private wishlistService = inject(WishlistService);
   
   constructor(
     private dialogRef: MatDialogRef<LoginComponent>,
@@ -80,7 +82,7 @@ private handleLoginSuccess(res: any, loginData: { username: string; password: st
     localStorage.setItem('userRole', this.auth.userRole ?? '');
 
     this.auth.isLoggedin$.next(1);
-
+    this.wishlistService.loadWishlist();
     // Notify parent that login/signup succeeded
     this.dialogRef.close(true);
   }

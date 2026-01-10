@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth';
 import { ToastService } from '../../../services/toastService.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { LoginComponent } from '../../Login/login.component';
+import { WishlistService } from '../../services/wishlist.service';
 @Component({
   selector: 'app-store-header',
   standalone: true,
@@ -15,7 +16,9 @@ import { LoginComponent } from '../../Login/login.component';
 })
 export class StoreHeaderComponent {
   private toast = inject(ToastService);
+  private wishlistService = inject(WishlistService);
   cartCount = 0;
+   wishlistCount = 0;
   firstName:string = "";
   lastName: string | null = null;
    constructor(private cartService: CartService,private auth: AuthService,private dialog: MatDialog) {}
@@ -31,6 +34,10 @@ export class StoreHeaderComponent {
   });
   this.firstName = localStorage.getItem("firstName")!;
   this.lastName = localStorage.getItem("lastName");
+
+   this.wishlistService.wishlistIds$.subscribe(ids => {
+    this.wishlistCount = ids.size;
+  });
   }
 
 custumerLogin() {

@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {jwtDecode} from 'jwt-decode';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject, tap } from 'rxjs';
+import { WishlistService } from '../store/services/wishlist.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
    isLoggedin$ = new Subject<number>();
   //for serve 
   //private apiUrl = 'https://kabelectro.in/API/api';
-
+  private wishlistService = inject(WishlistService);
   username:string="";
   password:string="";
   firstName:string="";
@@ -23,6 +24,7 @@ export class AuthService {
   login(loginData: any) {
     return this.http.post(
       `${this.apiUrl}/Login/login`, loginData );
+       tap(res => this.wishlistService.loadWishlist())
   }
 
   saveToken(token: string) {
