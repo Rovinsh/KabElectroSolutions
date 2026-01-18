@@ -62,7 +62,7 @@ export class ProductFormComponent implements OnInit {
       categoryId: [null, Validators.required],
       brandId: [null, Validators.required],
       baseAmount: [0, Validators.required],
-      gstId: [null],
+      gstId: [0, Validators.required],
       gstPercentage: [0],
       gstAmount: [{ value: 0, disabled: true }],
       withGstAmount: [{ value: 0, disabled: true }],
@@ -70,7 +70,7 @@ export class ProductFormComponent implements OnInit {
       discountPrice: [0],
       shortDescription: [''],
       description: [''],
-      isActive: [true]
+      isActive: [false]
     });
 
      forkJoin({
@@ -127,7 +127,7 @@ export class ProductFormComponent implements OnInit {
     discountPrice: record.discountPrice,
     description: record.description,
     shortDescription: record.shortDescription,
-    isActive: !record.isActive
+    isActive: record.isActive
   });
 }
    private setupAutocompleteFilters() {
@@ -205,7 +205,7 @@ const formData = {
   categoryId: raw.categoryId?.id ?? raw.categoryId,
   brandId: raw.brandId?.id ?? raw.brandId,
   gstId: raw.gstId?.id ?? raw.gstId,
-  isActive: !raw.isActive
+  isActive: raw.isActive
 };
 
     this.isSubmitting = true;
@@ -243,10 +243,11 @@ const formData = {
   }
  recalculateGst() {
   const base = Number(this.productForm.get('baseAmount')?.value || 0);
-  const gst = Number(this.productForm.get('gstPercentage')?.value || 0);
-
-  const gstAmount = base * gst / 100;
-  const withGst = base + gstAmount;
+  const discount = Number(this.productForm.get('discountPrice')?.value || 0);
+  const gstPercent = Number(this.productForm.get('gstPercentage')?.value || 0);
+  const taxableAmount = Math.max(base - discount, 0);
+  const gstAmount = +(taxableAmount * gstPercent / 100).toFixed(2);
+  const withGst = +(taxableAmount + gstAmount).toFixed(2);
 
   this.productForm.patchValue({
     gstAmount,

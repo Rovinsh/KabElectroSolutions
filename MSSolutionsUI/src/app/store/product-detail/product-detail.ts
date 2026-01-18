@@ -8,6 +8,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../services/auth';
 import { ToastService } from '../../services/toastService.service';
 import { LoginComponent } from '../Login/login.component';
+import { WishlistService } from '../services/wishlist.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -17,7 +18,9 @@ import { LoginComponent } from '../Login/login.component';
   styleUrls: ['./product-detail.css']
 })
 export class ProductDetailComponent implements OnInit {
-
+  wishlistIds: Set<number> = new Set();
+  pendingWishlistProductId: number | null = null;
+  private wishlistService = inject(WishlistService);
   private apiService = inject(ApiService);
   private toast = inject(ToastService);
   private auth = inject(AuthService);
@@ -30,7 +33,6 @@ export class ProductDetailComponent implements OnInit {
   visibleThumbs = 4;
   activeIndex = 0;
   selectedImage: string = '';
-  wishlistIds = new Set<number>();
   isLoggedIn = false;
   constructor(
     private route: ActivatedRoute,
@@ -67,13 +69,16 @@ export class ProductDetailComponent implements OnInit {
           }
         });
       }
+    this.wishlistService.wishlistIds$.subscribe(ids => {
+    this.wishlistIds = ids;
+    });
   }
 
 
 
-isInWishlist(productId: number): boolean {
-  return this.wishlistIds.has(productId);
-}
+ isInWishlist(productId: number): boolean {
+    return this.wishlistService.isInWishlist(productId);
+  }
   /** Convert API image object into usable image src */
   resolveImage(img: ProductImageDto): string {
     if (img.imageBase64) {
@@ -136,36 +141,30 @@ isInWishlist(productId: number): boolean {
       console.log('Cart popup closed');
     });
   }
-  openLoginPopup() {
+   private openLoginPopup() {
     const dialogRef = this.dialog.open(LoginComponent, {
       width: '700px',
       maxWidth: '95vw',
       maxHeight: '90vh',
       disableClose: true,
-      panelClass: 'login-dialog',
+      panelClass: 'login-dialog'
     });
-  
-   dialogRef.afterClosed().subscribe(success => {
-      if (success) {
-        this.toast.success('Login successful');
+
+    dialogRef.afterClosed().subscribe(loggedIn => {
+      if (loggedIn && this.pendingWishlistProductId !== null) {
+        this.wishlistService.addWishlist(this.pendingWishlistProductId);
+        this.pendingWishlistProductId = null;
       }
     });
   }
-  
+
+
   onWishlistClick(productId: number) {
     if (!this.auth.isLoggedIn()) {
+      this.pendingWishlistProductId = productId;
       this.openLoginPopup();
       return;
     }
-  
-    this.saveWishlist(productId);
+    this.wishlistService.addWishlist(productId);
   }
-  
-  saveWishlist(productId: number) {
-    this.apiService.addWishlist(productId).subscribe({
-      next: () => this.toast.success('Added to wishlist ❤️'),
-      error: () => this.toast.error('Failed to add wishlist')
-    });
-  }
-  
 }

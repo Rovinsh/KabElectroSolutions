@@ -356,36 +356,36 @@ loadGst() {this.isLoading = true;
         return params.value;
       }
     },
+    // {
+    //   headerName: 'All Products',
+    //   field: 'isAllProducts',
+    //   filter: true,
+    //   width: 100,
+    //   cellRenderer: (params: any) =>
+    //     params.value == 1
+    //       ? '<span class="badge bg-success">Active</span>'
+    //       : '<span class="badge bg-danger">Inactive</span>'
+    // },
     {
-      headerName: 'All Products',
-      field: 'isAllProducts',
-      filter: true,
-      width: 100,
-      cellRenderer: (params: any) =>
-        params.value == 1
-          ? '<span class="badge bg-success">Active</span>'
-          : '<span class="badge bg-danger">Inactive</span>'
-    },
-    {
-      headerName: 'First Order',
+      headerName: 'Order',
       field: 'isFirstOrder',
       filter: true,
       width: 100,
       cellRenderer: (params: any) =>
         params.value == 1
-          ? '<span class="badge bg-success">Active</span>'
-          : '<span class="badge bg-danger">Inactive</span>'
+          ? '<span class="badge bg-success">For First Order</span>'
+          : '<span class="badge bg-danger">For All Order</span>'
     },
-    {
-      headerName: 'Expired',
-      field: 'isExpired',
-      filter: true,
-      width: 100,
-      cellRenderer: (params: any) =>
-        params.value == 1
-          ? '<span class="badge bg-success">Active</span>'
-          : '<span class="badge bg-danger">Inactive</span>'
-    },
+    // {
+    //   headerName: 'Expired',
+    //   field: 'isExpired',
+    //   filter: true,
+    //   width: 100,
+    //   cellRenderer: (params: any) =>
+    //     params.value == 1
+    //       ? '<span class="badge bg-success">Active</span>'
+    //       : '<span class="badge bg-danger">Expired</span>'
+    // },
     {
       headerName: 'Active',
       field: 'isDisable',
@@ -394,7 +394,7 @@ loadGst() {this.isLoading = true;
       cellRenderer: (params: any) =>
         params.value == 1
           ? '<span class="badge bg-success">Active</span>'
-          : '<span class="badge bg-danger">Inactive</span>'
+          : '<span class="badge bg-danger">Expired</span>'
     },
     {
       headerName: 'Action',
@@ -446,8 +446,8 @@ productCols: ColDef[] = [
     width: 100,
     cellRenderer: (params: any) =>
       params.value == false || params.value == 0
-        ? '<span class="badge bg-success">Active</span>'
-        : '<span class="badge bg-danger">Inactive</span>'
+        ? '<span class="badge bg-danger">Inactive</span>'
+        : '<span class="badge bg-success">Active</span>'
   },
 
   {

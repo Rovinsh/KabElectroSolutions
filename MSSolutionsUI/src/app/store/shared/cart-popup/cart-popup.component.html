@@ -21,6 +21,9 @@
 
       <div class="product-price">
         ₹{{ getFinalPrice() | number:'1.2-2' }}
+           <span class="text-muted ml-2" *ngIf="product.discountPrice > 0">
+        <s style="color:#fff;"> ₹{{ product.baseAmount }}</s>
+      </span>
       </div>
 
       <div class="discount" *ngIf="getDiscountPercent() as discount">

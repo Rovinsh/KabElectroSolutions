@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { ApiService, CategoryDto, ProductWithImagesDto } from '../../services/api.service';
 import { forkJoin } from 'rxjs';
-
 @Component({
   selector: 'app-store-home',
   standalone: true,
@@ -13,9 +12,10 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./home.css']
 })
 export class HomeComponent {
-    private apiService = inject(ApiService);
-    categories: CategoryDto[] = [];
-    productList: ProductWithImagesDto[] = [];
+  private apiService = inject(ApiService);
+  categories: CategoryDto[] = [];
+  productList: ProductWithImagesDto[] = [];
+
   heroSlides = [
     { title: 'Ink Tank & Laser Printers', subtitle: 'Starting at ₹10,699', image: '/assets/banners/heroBanner.webp' },
     { title: 'Big Screen TVs', subtitle: 'Up to 40% Off', image: '/assets/banners/2.jpg' },
@@ -70,69 +70,5 @@ export class HomeComponent {
     { title: 'Doorstep Service', icon: '🛠️' },
     { title: 'Genuine Spare Parts', icon: '⚙️' }
   ];
-   products = [
-    {
-      name: 'ZipCare Maintain Laptop Support - 1 Year',
-      price: 2499,
-      oldPrice: 2999,
-      discount: 17,
-      rating: 4.8,
-      reviewCount: 2,
-      deliveryDate: 'Thu, 8th Jan',
-      image: 'assets/product/258056_yn4siy.webp'
-    },
-    {
-      name: 'ZipCare Maintain Plan for Washing Machine - 1 Time',
-      price: 499,
-      oldPrice: 699,
-      discount: 29,
-      rating: 4.6,
-      reviewCount: 12,
-      deliveryDate: 'Thu, 8th Jan',
-      image: 'assets/product/258056_yn4siy.webp'
-    },
-    {
-      name: 'ZipCare Maintain Plan for Washing Machine - 1 Time',
-      price: 499,
-      oldPrice: 699,
-      discount: 29,
-      rating: 4.6,
-      reviewCount: 12,
-      deliveryDate: 'Thu, 8th Jan',
-      image: 'assets/product/258056_yn4siy.webp'
-    },
-    {
-      name: 'ZipCare Maintain Plan for Washing Machine - 1 Time',
-      price: 499,
-      oldPrice: 699,
-      discount: 29,
-      rating: 4.6,
-      reviewCount: 12,
-      deliveryDate: 'Thu, 8th Jan',
-      image: 'assets/product/258056_yn4siy.webp'
-    },
-    {
-      name: 'ZipCare Maintain Plan for Washing Machine - 1 Time',
-      price: 499,
-      oldPrice: 699,
-      discount: 29,
-      rating: 4.6,
-      reviewCount: 12,
-      deliveryDate: 'Thu, 8th Jan',
-      image: 'assets/product/258056_yn4siy.webp'
-    },
-    {
-      name: 'ZipCare Maintain Plan for Washing Machine - 1 Time',
-      price: 499,
-      oldPrice: 699,
-      discount: 29,
-      rating: 4.6,
-      reviewCount: 12,
-      deliveryDate: 'Thu, 8th Jan',
-      image: 'assets/product/258056_yn4siy.webp'
-    }
-  ];
+
 }
-
-
-

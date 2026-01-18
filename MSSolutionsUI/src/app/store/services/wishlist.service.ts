@@ -49,9 +49,17 @@ export class WishlistService {
   clearWishlist() {
     this._wishlistIds.next(new Set());
   }
-  removeWishlist(productId: number) {
-    const updated = new Set(this._wishlistIds.value);
-    updated.delete(productId);
-    this._wishlistIds.next(updated);
-  }
+removeWishlist(productId: number) {
+  this.apiService.removeWishlist(productId).subscribe({
+    next: () => {
+      const updated = new Set(this._wishlistIds.value);
+      updated.delete(productId);
+      this._wishlistIds.next(updated);
+      this.toast.success('Removed from wishlist');
+    },
+    error: () => {
+      this.toast.error('Failed to remove from wishlist');
+    }
+  });
+}
 }

@@ -42,7 +42,7 @@ namespace MSSolutions.Controllers
                 })
                 .ToListAsync();
 
-            return Ok(new CouponResponseDto
+            return Ok(new CouponResponse
             {
                 Status = 200,
                 Message = "Success",
@@ -99,5 +99,6 @@ namespace MSSolutions.Controllers
 
             return Ok(existing);
         }
+   
     }
 }

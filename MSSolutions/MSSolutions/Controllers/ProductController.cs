@@ -85,9 +85,12 @@ namespace MSSolutions.Controllers
 
             if (exists)
                 return Conflict("Product with same SKU already exists.");
+            var discount = dto.DiscountPrice ?? 0m;
+            var taxableAmount = Math.Max(dto.BaseAmount - discount, 0);
 
-            var gstAmount = dto.BaseAmount * dto.GstPercentage / 100;
-            var withGstAmount = dto.BaseAmount + gstAmount;
+            var gstAmount = Math.Round(taxableAmount * dto.GstPercentage / 100, 2);
+
+            var withGstAmount = Math.Round(taxableAmount + gstAmount, 2);
 
             var product = new MsProducts
             {
@@ -127,8 +130,12 @@ namespace MSSolutions.Controllers
             if (duplicateSku)
                 return Conflict("Another product with same SKU exists.");
 
-            var gstAmount = dto.BaseAmount * dto.GstPercentage / 100;
-            var withGstAmount = dto.BaseAmount + gstAmount;
+            var discount = dto.DiscountPrice ?? 0m;
+            var taxableAmount = Math.Max(dto.BaseAmount - discount, 0);
+
+            var gstAmount = Math.Round(taxableAmount * dto.GstPercentage / 100, 2);
+
+            var withGstAmount = Math.Round(taxableAmount + gstAmount, 2);
 
             product.ProductName = dto.ProductName;
             product.SKU = dto.SKU;

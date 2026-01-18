@@ -136,14 +136,14 @@ button {
   text-align: right;
   min-width: 120px;
 }
-.spaceright{margin-right:10px;}
+
 .price {
   font-size: 18px;
   font-weight: 700;
 }
 
 /* ===== COUPON BOX ===== */
-.itemtax{width: 275px;}
+
 .coupon-box {
   background: #fff;
   border-radius: 10px;
@@ -195,4 +195,21 @@ button {
 }
 .maincardbox{background: #fff;
     padding: 20px;
+}
+.address-section {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.address-card {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.address-card h4 {
+  margin-bottom: 8px;
 }

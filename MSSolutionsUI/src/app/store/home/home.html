@@ -9,7 +9,6 @@
     <div class="overlay">
       <h1>{{ slide.title }}</h1>
       <p>{{ slide.subtitle }}</p>
-      <a routerLink="/store/products" class="btn-primary">Shop Now</a>
     </div>
   </div>
 
@@ -33,7 +32,6 @@
     <div class="hero-text">
       <h1>Best Deals on AMC Plans </h1>
       <p>MsSolution Maintain offers extensive plans to help you install or maintain your product to keep it running as good as new..</p>
-      <a routerLink="/products" class="btn-primary">Shop Now</a>
     </div>
     </div>
   </section>
@@ -45,10 +43,14 @@
     <div class="category-grid">
       <div class="filter-bar">
   <button class="filter-btn"  *ngFor="let c of categories">
-    {{c.catName}} 
+   <a [routerLink]="['/store/productList', c.id]"> {{c.catName}} </a>
+  </button>
+   <button class="filter-btn">
+   <a [routerLink]="['/store/productList']">All Product </a>
   </button>
    </div>
     </div>
+   
     </div>
   </section>
 <section class="featured py-5">

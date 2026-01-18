@@ -21,6 +21,29 @@ export const STORE_ROUTES: Routes = [
         loadComponent: () =>
           import('./product-detail/product-detail').then(m => m.ProductDetailComponent),
       },
+     {
+        path: 'productList/:id',
+        loadComponent: () =>
+          import('./product-list/product-list')
+            .then(pl => pl.ProductList),
+      },
+     {
+        path: 'productList',
+        loadComponent: () =>
+          import('./product-list/product-list')
+            .then(pl => pl.ProductList),
+      },
+      {
+        path: 'wishlist',
+        loadComponent: () =>
+          import('./wishlist-list/wishlist-list')
+            .then(pl => pl.WishlistList),
+      },
+      {
+        path: 'checkout',
+        loadComponent: () =>
+          import('./checkout/checkout').then(m => m.CheckoutComponent),
+      },
       // {
       //   path: 'products',
       //   loadComponent: () =>

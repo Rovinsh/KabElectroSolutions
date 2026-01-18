@@ -82,6 +82,9 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Wishlist/AddWishlist`, { productId });
   }
 
+removeWishlist(productId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}Wishlist/removeWishlist`, { productId });
+  }
   postCategory(categoryData: CategoryDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Categories`, categoryData);
   }
@@ -108,6 +111,12 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}Users`, userData);
   }
 
+applyCoupon(payload: ApplyCouponRequestDto): Observable<ApplyCouponResponseDto> {
+  return this.http.post<ApplyCouponResponseDto>(
+    `${this.baseUrl}ApplyCoupons/apply`,
+    payload
+  );
+}
  updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Categories/${id}`, categoryData);
   }
@@ -257,6 +266,24 @@ export interface CouponDto {
   isFirstOrder: boolean;
   isAllProducts: boolean;
   isDisable: boolean;
+}
+export interface ApplyCouponRequestDto {
+  couponCode: string;
+  cartTotal: number;
+  productIds: number[];
+}
+export interface ApplyCouponDto {
+  couponId: number;
+  couponCode: string;
+  discountAmount: number;
+  finalAmount: number;
+  discountType: 'percentage' | 'fixed';
+}
+
+export interface ApplyCouponResponseDto {
+  status: number;
+  message: string;
+  data: ApplyCouponDto;
 }
 
 export interface CouponResponseDto {

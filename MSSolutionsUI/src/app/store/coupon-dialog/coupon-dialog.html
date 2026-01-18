@@ -1,0 +1,26 @@
+<div class="coupon-dialog">
+  <div class="header">
+    <h3>Coupons</h3>
+    <button class="close-btn" (click)="close()">✕</button>
+  </div>
+
+  <div class="body">
+    <label>Enter Coupon Code</label>
+
+    <div class="input-row">
+      <input
+        type="text"
+        placeholder="Enter coupon"
+        [(ngModel)]="couponCode"
+      />
+
+      <button
+        class="apply-btn"
+        (click)="applyCoupon()"
+        [disabled]="loading"
+      >
+        {{ loading ? 'Applying...' : 'Apply' }}
+      </button>
+    </div>
+  </div>
+</div>

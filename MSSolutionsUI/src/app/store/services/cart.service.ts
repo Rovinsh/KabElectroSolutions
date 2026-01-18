@@ -5,11 +5,18 @@ import { ProductWithImagesDto } from '../../services/api.service';
 export interface CartItem {
   productId: number;
   name: string;
-  price: number;
+  basePrice: number;
+  discountPrice: number;
+  price: number;        // base - discount
+  gstPercent: number;
   quantity: number;
   image: string;
-}
 
+  // calculated later (optional)
+  couponDiscount?: number;
+  gstAmount?: number;
+  finalAmount?: number;
+}
 const CART_KEY = 'APP_CART_ITEMS_V1';
 
 @Injectable({ providedIn: 'root' })
@@ -22,24 +29,37 @@ export class CartService {
 
   constructor() {}
 
-  addToCart(product: ProductWithImagesDto) {
-    const items = [...this.cartItemsSubject.value];
+ addToCart(product: ProductWithImagesDto) {
+  const items = [...this.cartItemsSubject.value];
 
-    const productId = product.id;         // ✅ DTO field
-    const name = product.productName;            // ✅ DTO field
-    const price = this.getFinalPrice(product);   // ✅ final price
-    const image = this.getPrimaryImage(product); // ✅ base64 or fallback
+  const productId = product.id;
+  const existing = items.find(x => x.productId === productId);
 
-    const existing = items.find(x => x.productId === productId);
+  // if (existing) {
+  //   existing.quantity += 1;
+  //   this.setState(items);
+  //   return;
+  // }
 
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      items.push({ productId, name, price, quantity: 1, image });
-    }
+  const basePrice = Number(product.baseAmount || 0);
+  const discountPrice = Number(product.discountPrice || 0);
+  const price = Math.max(basePrice - discountPrice, 0);
 
-    this.setState(items);
-  }
+  const newItem: CartItem = {
+    productId,
+    name: product.productName,
+    basePrice,
+    discountPrice,
+    price,
+    gstPercent: Number(product.gstPercentage || 0),
+    quantity: 1,
+    image: this.getPrimaryImage(product)
+  };
+
+  items.push(newItem);
+  this.setState(items);
+}
+
 
   removeFromCart(productId: number) {
     const items = this.cartItemsSubject.value.filter(x => x.productId !== productId);
@@ -59,7 +79,9 @@ export class CartService {
     item.quantity = quantity;
     this.setState(items);
   }
-
+getCartItems(): CartItem[] {
+  return this.cartItemsSubject.value;
+}
   clearCart() {
     this.setState([]);
   }
@@ -102,6 +124,23 @@ export class CartService {
       ? product.baseAmount - product.discountPrice
       : product.baseAmount;
   }
+  
+ private getFinalWithPrice(product: ProductWithImagesDto): number {
+  const base = Number(product.baseAmount || 0);
+  const discount = Number(product.discountPrice || 0);
+  const gstPercent = Number(product.gstPercentage || 0);
+
+  // 1️⃣ Taxable amount (after discount)
+  const taxableAmount = Math.max(base - discount, 0);
+
+  // 2️⃣ GST calculation
+  const gstAmount = +(taxableAmount * gstPercent / 100).toFixed(2);
+
+  // 3️⃣ Final price (with GST)
+  const finalPrice = +(taxableAmount + gstAmount).toFixed(2);
+
+  return finalPrice;
+}
 
   private getPrimaryImage(product: ProductWithImagesDto): string {
     return product.images?.length

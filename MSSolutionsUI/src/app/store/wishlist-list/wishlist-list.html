@@ -1,0 +1,66 @@
+<div class="wishlist-page">
+  <div class="breadcrumb">
+    My Account <span>›</span> My Wishlist
+  </div>
+
+  <h1 class="page-title">My Wishlist</h1>
+
+  <div
+    class="wishlist-card"
+    *ngFor="let product of wishlistProducts"
+  >
+    <!-- IMAGE -->
+    <div class="product-image">
+      <a [routerLink]="['/store/product', product.id]">
+        <img
+          class="card-img-top productImage"
+          [src]="getPrimaryImage(product)"
+          [alt]="product.productName"
+        />
+      </a>
+    </div>
+
+    <!-- DETAILS -->
+    <div class="product-details">
+      <h2 class="product-title">
+        {{ product.productName }}
+      </h2>
+
+      <div class="product-id">⭐ 4.5 (120)</div>
+
+      <div class="price-row">
+        <span class="price">
+          ₹{{ getFinalPrice(product) | number:'1.2-2' }}
+        </span>
+
+        <span class="old-price">
+          ₹{{ product.baseAmount }}
+        </span>
+
+        <span
+          class="discount"
+          *ngIf="getDiscountPercent(product) as discount"
+        >
+          {{ discount }}% OFF
+        </span>
+      </div>
+
+      <div class="added-date">
+        🚚 {{ product.shortDescription }}
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn-cart" (click)="addToCart(product)">
+        Add to Cart
+      </button>
+      <button
+        class="btn-delete"
+        (click)="removeWhishList(product.id)"
+      >
+        DELETE
+      </button>
+    </div>
+  </div>
+</div>

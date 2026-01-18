@@ -26,23 +26,23 @@
   </div>
 </div>
 
-        <div class="menu-item">
+        <div class="menu-item" *ngIf="firstName">
           <span class="icon">📍</span>
           <div>
             <b>My Address</b>
           </div>
         </div>
 
-        <div class="menu-item">
+        <div class="menu-item" *ngIf="firstName">
           <span class="icon">📦</span>
           <div>
             <b>My Orders</b>
           </div>
         </div>
-        <div class="menu-item">
+        <div class="menu-item" *ngIf="firstName">
           <span class="icon">❤️</span>
-          <div>
-            <b>My Wishlist</b>
+          <div class="wishlist">
+            <a [routerLink]="['/store/wishlist']"><b>My Wishlist </b></a>
           </div>
         </div>
         <div class="menu-item" *ngIf="firstName">
