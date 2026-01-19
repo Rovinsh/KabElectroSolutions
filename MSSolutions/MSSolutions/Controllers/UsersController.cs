@@ -98,6 +98,66 @@ namespace MSSolutions.Controllers
             }
         }
 
+        [HttpGet("Address")]
+        public async Task<IActionResult> GetAddress()
+        {
+            try
+            {
+                var performerEmail = User?.Identity?.Name;
+                var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail && !u.IsPartner);
+
+                var query =
+                    from u in _context.MsUsers
+                    join a in _context.MsAddresses on u.Id equals a.UserId into addressGroup
+                    from addr in addressGroup.DefaultIfEmpty()
+                    where !u.IsPartner
+                    select new { u, addr };
+
+                var data = await query.Select(x => new UsersDTO
+                {
+                    Id = x.u.Id,
+                    Phone = x.u.Phone,
+                    Email = x.u.Email,
+                    FirstName = x.u.Firstname,
+                    LastName = x.u.Lastname,
+
+                    Address = x.addr != null ? x.addr.AddressLine : null,
+                    CityName = x.addr != null ? x.addr.City : null,
+                    StateName = x.addr != null ? x.addr.State : null,
+                    PinCode = x.addr != null ? x.addr.Pincode : null,
+
+                    RoleId = x.u.Businessrole,
+                    RoleName = x.u.BusinessroleName,
+
+                    CityId = x.addr != null
+                        ? _context.Cities.Where(c => c.Name == x.addr.City).Select(c => c.Id).FirstOrDefault()
+                        : 0,
+
+                    StateId = x.addr != null
+                        ? _context.Locations.Where(st => st.Name == x.addr.State).Select(st => st.Id).FirstOrDefault()
+                        : 0,
+
+                    PinCodeId = x.addr != null
+                        ? _context.Pincodes.Where(p => p.PincodeValue == x.addr.Pincode).Select(p => p.Id).FirstOrDefault()
+                        : 0
+                }).ToListAsync();
+
+                var result = new UsersResponseDTO
+                {
+                    Status = 200,
+                    Message = "success, is_redis = True",
+                    Data = data
+                };
+
+                return Ok(result);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateUsers([FromBody] UsersDTO users)
         {

@@ -8,7 +8,7 @@ import { WishlistService } from '../services/wishlist.service';
 import { ToastService } from '../../services/toastService.service';
 import { AuthService } from '../../services/auth';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ApiService } from '../../services/api.service';
+import { AddressDto, ApiService } from '../../services/api.service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -21,35 +21,56 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   pendingWishlistProductId: number | null = null;
   cartItems: CartItem[] = [];
   total = 0;
+  subtotal = 0;
+  gstTotal = 0;
+  couponDiscount = 0;
+  grandTotal = 0;
   private sub?: Subscription;
   private wishlistService = inject(WishlistService);
   private toast = inject(ToastService);
   private auth = inject(AuthService);
   private apiService = inject(ApiService);
   isLoggedIn = false;
+  addresses: AddressDto[] = [];
+  // Selected addresses
+  selectedShippingAddress?: AddressDto;
+  selectedBillingAddress?: AddressDto;
+
+// Flag to use shipping address as billing
+useShippingAsBilling = true;
   constructor(private cartService: CartService,private dialog: MatDialog) {}
 
-  ngOnInit(): void {
-    this.sub = this.cartService.cartItems$.subscribe(items => {
-      this.cartItems = items;
-      this.total = items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
-    });
-        this.isLoggedIn = !!localStorage.getItem('token');
-      if (this.isLoggedIn) {
-        this.apiService.getWishlist().subscribe(res => {
-          if (res.data) {
-            const ids = res.data.map((x: any) => x.productId ?? x.ProductId);
-            this.wishlistIds = new Set(ids);
-          }
-        });
-      }
-    this.wishlistService.wishlistIds$.subscribe(ids => {
-    this.wishlistIds = ids;
-    });
-  }
+ngOnInit(): void {
+  this.sub = this.cartService.cartItems$.subscribe(items => {
+    this.cartItems = items;
+
+    // Subtotal BEFORE coupon & GST
+    this.subtotal = +items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    ).toFixed(2);
+
+    // GST total (already calculated in cart page)
+    this.gstTotal = +items.reduce(
+      (sum, item) => sum + (item.gstAmount ?? 0) * item.quantity,
+      0
+    ).toFixed(2);
+
+    // Coupon discount (already distributed in cart page)
+    this.couponDiscount = +items.reduce(
+      (sum, item) => sum + (item.couponDiscount ?? 0),
+      0
+    ).toFixed(2);
+
+    // FINAL PAYABLE — SAME AS CART PAGE
+    this.grandTotal = +items.reduce(
+      (sum, item) => sum + (item.finalAmount ?? 0) * item.quantity,
+      0
+    ).toFixed(2);
+  });
+  this.loadAddress();
+}
+
  isInWishlist(productId: number): boolean {
     return this.wishlistService.isInWishlist(productId);
   }
@@ -60,6 +81,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   remove(id: number) {
     this.cartService.removeFromCart(id);
   }
+
+loadAddress(){
+  this.apiService.getUserAddresses().subscribe(res => {
+  this.addresses = res.data; 
+
+  // Optional: set default shipping/billing
+  this.selectedShippingAddress = this.addresses.find(a => a.isDefault);
+  if (this.useShippingAsBilling) {
+    this.selectedBillingAddress = this.selectedShippingAddress;
+  }
+});
+}
 
   onWishlistClick(productId: number) {
     if (!this.auth.isLoggedIn()) {

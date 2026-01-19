@@ -83,8 +83,14 @@ namespace MSSolutions.Controllers
 				FinalAmount = request.CartTotal - discount,
 				DiscountType = coupon.DiscountType
 			};
+            var result = new CouponResponsesDataDTO
+            {
+                Status = 200,
+                Message = "success, is_redis = True",
+                Data = response
+            };
 
-			return Ok(response);
+            return Ok(result);
 		}
 
 		}

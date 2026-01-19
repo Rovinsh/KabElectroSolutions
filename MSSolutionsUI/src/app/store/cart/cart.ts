@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { CartItem, CartService } from '../services/cart.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule,Router } from '@angular/router';
 import { LoginComponent } from '../Login/login.component';
 import { WishlistService } from '../services/wishlist.service';
 import { ToastService } from '../../services/toastService.service';
@@ -32,30 +32,48 @@ export class CartComponent implements OnInit, OnDestroy {
   appliedCouponCode = '';
   couponDiscount = 0;
   subtotal = 0;
-  constructor(private cartService: CartService,private dialog: MatDialog) {}
+  constructor(private cartService: CartService,private dialog: MatDialog,private router: Router) {}
 
- ngOnInit(): void {
+ngOnInit(): void {
+  // Subscribe to cart items
   this.sub = this.cartService.cartItems$.subscribe(items => {
 
+    // Map items to include GST and finalAmount
     this.cartItems = items.map(item => {
       const gstAmount = (item.price * item.gstPercent) / 100;
 
       return {
         ...item,
         gstAmount,
-        finalAmount: item.price + gstAmount,
-        couponDiscount: 0
+        // finalAmount includes coupon if already applied
+        finalAmount: (item.price - (item.couponDiscount ?? 0)) + gstAmount
       };
     });
 
+    // Subtotal before GST and coupon
     this.subtotal = this.cartItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     );
+
+    // Total coupon discount from all items
+    this.couponDiscount = this.cartItems.reduce(
+      (sum, item) => sum + (item.couponDiscount ?? 0),
+      0
+    );
+
+    // Mark coupon as applied if any item has a discount
+    const anyCoupon = this.cartItems.some(item => item.couponDiscount && item.couponDiscount > 0);
+    this.couponApplied = anyCoupon;
+
+    // Get applied coupon code from service
+    this.appliedCouponCode = anyCoupon ? this.cartService.couponCode : '';
   });
 
+  // Check if user is logged in
   this.isLoggedIn = !!localStorage.getItem('token');
 
+  // Load wishlist if logged in
   if (this.isLoggedIn) {
     this.apiService.getWishlist().subscribe(res => {
       if (res.data) {
@@ -65,10 +83,12 @@ export class CartComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Subscribe to wishlist changes
   this.wishlistService.wishlistIds$.subscribe(ids => {
     this.wishlistIds = ids;
   });
 }
+
 
  isInWishlist(productId: number): boolean {
     return this.wishlistService.isInWishlist(productId);
@@ -127,35 +147,30 @@ getDiscountPercentage(basePrice: number, finalPrice: number): number {
       this.couponApplied = true;
       this.appliedCouponCode = result.couponCode;
        this.couponDiscount = result.discountAmount;
-        this.applyCouponDistribution();
-      console.log('Applied coupon:', result);
-      
-    }
+        this.cartService.applyCoupon(
+      result.couponCode,
+      result.discountAmount
+    );
+  }
   });
 }
 
-applyCouponDistribution() {
-  if (!this.subtotal || this.subtotal <= 0) return;
+onCheckout() {
+    if (this.auth.isLoggedIn()) {
+    this.router.navigate(['/store/checkout']);
+  } else {
+    const dialogRef = this.dialog.open(LoginComponent, {
+      width: '400px',
+      disableClose: true,
+      data: { redirectUrl: '/store/checkout' }
+    });
 
-  this.cartItems = this.cartItems.map(item => {
-    const itemTotal = item.price * item.quantity;
-
-    const itemCouponShare =
-      (itemTotal / this.subtotal) * this.couponDiscount;
-
-    const discountedPrice =
-      item.price - (itemCouponShare / item.quantity);
-
-    const gstAmount =
-      (discountedPrice * item.gstPercent) / 100;
-
-    return {
-      ...item,
-      couponDiscount: itemCouponShare,
-      gstAmount,
-      finalAmount: discountedPrice + gstAmount
-    };
-  });
+    dialogRef.afterClosed().subscribe(success => {
+      if (success === true) {
+        this.router.navigate(['/store/checkout']);
+      }
+    });
+  }
 }
 
 get grandTotal(): number {

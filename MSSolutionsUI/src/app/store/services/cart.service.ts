@@ -24,48 +24,45 @@ export class CartService {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.loadFromStorage());
   cartItems$ = this.cartItemsSubject.asObservable();
 
-  private cartCountSubject = new BehaviorSubject<number>(this.calcCount(this.cartItemsSubject.value));
+  private cartCountSubject = new BehaviorSubject<number>(
+    this.calcCount(this.cartItemsSubject.value)
+  );
   cartCount$ = this.cartCountSubject.asObservable();
+ private couponDiscount = 0;
+  public couponCode = '';
+  constructor() {
+     this.recalculatePrices();
+  }
 
-  constructor() {}
+addToCart(product: ProductWithImagesDto) {
+    const items = [...this.cartItemsSubject.value];
 
- addToCart(product: ProductWithImagesDto) {
-  const items = [...this.cartItemsSubject.value];
+    const basePrice = Number(product.baseAmount || 0);
+    const discountPrice = Number(product.discountPrice || 0);
+    const price = Math.max(basePrice - discountPrice, 0);
 
-  const productId = product.id;
-  const existing = items.find(x => x.productId === productId);
+    const newItem: CartItem = {
+      productId: product.id,
+      name: product.productName,
+      basePrice,
+      discountPrice,
+      price,
+      gstPercent: Number(product.gstPercentage || 0),
+      quantity: 1,
+      image: this.getPrimaryImage(product)
+    };
 
-  // if (existing) {
-  //   existing.quantity += 1;
-  //   this.setState(items);
-  //   return;
-  // }
+    items.push(newItem);
+    this.setState(items);
+  }
 
-  const basePrice = Number(product.baseAmount || 0);
-  const discountPrice = Number(product.discountPrice || 0);
-  const price = Math.max(basePrice - discountPrice, 0);
-
-  const newItem: CartItem = {
-    productId,
-    name: product.productName,
-    basePrice,
-    discountPrice,
-    price,
-    gstPercent: Number(product.gstPercentage || 0),
-    quantity: 1,
-    image: this.getPrimaryImage(product)
-  };
-
-  items.push(newItem);
-  this.setState(items);
-}
-
-
+  // ================= REMOVE =================
   removeFromCart(productId: number) {
     const items = this.cartItemsSubject.value.filter(x => x.productId !== productId);
     this.setState(items);
   }
 
+  // ================= UPDATE QTY =================
   updateQuantity(productId: number, quantity: number) {
     const items = [...this.cartItemsSubject.value];
     const item = items.find(x => x.productId === productId);
@@ -79,18 +76,61 @@ export class CartService {
     item.quantity = quantity;
     this.setState(items);
   }
-getCartItems(): CartItem[] {
-  return this.cartItemsSubject.value;
-}
-  clearCart() {
-    this.setState([]);
+
+  // ================= APPLY COUPON =================
+  applyCoupon(code: string, discountAmount: number) {
+    this.couponCode = code;
+    this.couponDiscount = discountAmount;
+    this.recalculatePrices();
   }
 
-  // ---------- helpers ----------
+  clearCoupon() {
+    this.couponCode = '';
+    this.couponDiscount = 0;
+    this.recalculatePrices();
+  }
+
+  // ================= PRICE LOGIC (🔥 CORE) =================
+  private recalculatePrices() {
+    const items = [...this.cartItemsSubject.value];
+
+    const subtotal = items.reduce(
+      (sum, i) => sum + i.price * i.quantity,
+      0
+    );
+
+    const updated = items.map(item => {
+      const itemTotal = item.price * item.quantity;
+
+      // coupon distribution
+      const couponShare =
+        subtotal > 0 ? (itemTotal / subtotal) * this.couponDiscount : 0;
+
+      const discountedUnitPrice =
+        item.price - couponShare / item.quantity;
+
+      const gstAmount =
+        +(discountedUnitPrice * item.gstPercent / 100).toFixed(2);
+
+      return {
+        ...item,
+        couponDiscount: +couponShare.toFixed(2),
+        gstAmount,
+        finalAmount: +(discountedUnitPrice + gstAmount).toFixed(2)
+      };
+    });
+
+    this.cartItemsSubject.next(updated);
+    this.cartCountSubject.next(this.calcCount(updated));
+    this.saveToStorage(updated);
+  }
+
+  // ================= HELPERS =================
   private setState(items: CartItem[]) {
     this.cartItemsSubject.next(items);
     this.cartCountSubject.next(this.calcCount(items));
     this.saveToStorage(items);
+    this.recalculatePrices();
   }
 
   private calcCount(items: CartItem[]) {
@@ -98,24 +138,23 @@ getCartItems(): CartItem[] {
   }
 
   private saveToStorage(items: CartItem[]) {
-    try {
-      localStorage.setItem(CART_KEY, JSON.stringify(items));
-    } catch (e) {
-      console.error('Failed to save cart to localStorage', e);
-    }
+    localStorage.setItem(CART_KEY, JSON.stringify(items));
   }
 
   private loadFromStorage(): CartItem[] {
     try {
       const raw = localStorage.getItem(CART_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      console.warn('Cart localStorage corrupted. Resetting.', e);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
       localStorage.removeItem(CART_KEY);
       return [];
     }
+  }
+
+  private getPrimaryImage(product: ProductWithImagesDto): string {
+    return product.images?.length
+      ? 'data:image/jpeg;base64,' + product.images[0].imageBase64
+      : 'assets/no-image.png';
   }
 
   private getFinalPrice(product: ProductWithImagesDto): number {
@@ -124,7 +163,7 @@ getCartItems(): CartItem[] {
       ? product.baseAmount - product.discountPrice
       : product.baseAmount;
   }
-  
+
  private getFinalWithPrice(product: ProductWithImagesDto): number {
   const base = Number(product.baseAmount || 0);
   const discount = Number(product.discountPrice || 0);
@@ -141,10 +180,7 @@ getCartItems(): CartItem[] {
 
   return finalPrice;
 }
-
-  private getPrimaryImage(product: ProductWithImagesDto): string {
-    return product.images?.length
-      ? 'data:image/jpeg;base64,' + product.images[0].imageBase64
-      : 'assets/no-image.png';
-  }
+getCartItems(): CartItem[] {
+  return this.cartItemsSubject.value;
+}
 }

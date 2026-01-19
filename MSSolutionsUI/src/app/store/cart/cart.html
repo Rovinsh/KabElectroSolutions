@@ -92,9 +92,11 @@
   <span>Total Payable</span>
   <span>₹{{ grandTotal }}</span>
 </div>
-        <button class="btn btn-success btn-block mt-4" [routerLink]="['/store/checkout']">
-          Checkout
-        </button>
+        <button
+  class="btn btn-success btn-block mt-4"
+  (click)="onCheckout()">
+  Checkout
+</button>
       </div>
     </div>
  </div>

@@ -78,6 +78,10 @@ export class ApiService {
     return this.http.get<Role[]>(`${this.baseUrl + "Roles/roles"}`);
   }
 
+  getUserAddresses(): Observable<AddressResponseDto> {
+    return this.http.get<AddressResponseDto>(`${this.baseUrl + "Users/Address"}`);
+  }
+
  addWishlist(productId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}Wishlist/AddWishlist`, { productId });
   }
@@ -351,7 +355,23 @@ export interface UserResponseDto {
   message: string;
   data: UserDto[];
 }
-
+export interface AddressDto {
+  id: number;            // unique id
+  fullName: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  isDefault?: boolean;   // optional default flag
+}
+export interface AddressResponseDto {
+  status: number;
+  message: string;
+  data: AddressDto[];
+}
 export interface OrderDTO {
   id: number;
   orderCode: string;
