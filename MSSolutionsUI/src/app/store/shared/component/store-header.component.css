@@ -3,7 +3,6 @@
   align-items: center;
   padding: 12px 24px;
   background: #1d3557;
-  color: white;
   justify-content: space-between;
 }
 
@@ -22,12 +21,11 @@ nav a {
 
 
 .store-header {
-  height: 64px;
-  background: #1f3556;
+  height: 107px;
+  background:#dae2f6;
   display: flex;
   align-items: center;
   padding: 0 20px;
-  color: #fff;
 }
 
 .left .logo {
@@ -68,11 +66,12 @@ nav a {
 .user-dropdown {
   position: absolute;
   top: 20px;
-  right: 0;
+  right: -15px;
   width: 220px;
-  background: #111;
+  background: #003A8F;
+  color:#fff;
   border-radius: 8px;
-  padding: 10px 0;
+  padding: 2px 0;
   box-shadow: 0 12px 30px rgba(0,0,0,0.4);
   z-index: 1000;
 }

@@ -12,15 +12,14 @@ import { filter } from 'rxjs';
 })
 export class AdminLayout {
     isLoginPage = false;
-     protected title = 'KabElectroSolutions';
+     protected title = 'MSSolutions';
     
-      constructor(private router: Router) {
-        this.router.events
-          .pipe(filter(event => event instanceof NavigationEnd))
-          .subscribe((event: any) => {
-            const url = event.urlAfterRedirects;
-            // hide header & sidebar only if route is login
-            this.isLoginPage = url.includes('/login') || url == "/";
-          });
-      }
+     constructor(private router: Router) {
+  this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe((event: NavigationEnd) => {
+      this.isLoginPage = event.urlAfterRedirects === '/crm/login';
+    });
+}
+
 }

@@ -1,6 +1,6 @@
 <header class="store-header">
   <div class="left">
-    <div class="logo" routerLink="/store">🛒 MSSolutions</div>
+    <div class="logo" routerLink=""><img src="assets/logo.png"/></div>
   </div>
 
   <div class="center">
@@ -9,7 +9,7 @@
 
   <div class="right">
     <div class="icon-btn user" (mouseenter)="showUserMenu=true" (mouseleave)="showUserMenu=false">
-      🧑🏻  <span style="color: #fff;"><strong>{{firstName | titlecase}} {{lastName | titlecase}}</strong><br/></span>
+      🧑🏻  <span style="color: #000"><strong>{{firstName | titlecase}} {{lastName | titlecase}}</strong><br/></span>
 
       <div class="user-dropdown" *ngIf="showUserMenu">
         <div class="menu-item" *ngIf="!firstName">

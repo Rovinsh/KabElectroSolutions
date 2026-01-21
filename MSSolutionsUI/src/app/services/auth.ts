@@ -12,7 +12,7 @@ export class AuthService {
    private apiUrl = 'https://localhost:7181/api';
    isLoggedin$ = new Subject<number>();
   //for serve 
-  //private apiUrl = 'https://kabelectro.in/API/api';
+  //private apiUrl = 'https://mscareprime.in/API/api';
   private wishlistService = inject(WishlistService);
   username:string="";
   password:string="";

@@ -1,26 +1,72 @@
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { AdminLayout } from './layouts/admin-layout';
+import { StoreLayout } from './layouts/store-layout';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { RoleGuard } from './guards/role-guard';
 import { OrderComponent } from './orders/orders';
 import { CustomerComponent } from './customer/customer';
-import { RoleGuard } from './guards/role-guard';
 import { MasterComponent } from '../app/master/master';
 import { UserComponent } from './user/user';
-import { AdminLayout } from './layouts/admin-layout';
 export const routes: Routes = [
-  {path: 'store',loadChildren: () => import('./store/store.routes').then(m => m.STORE_ROUTES)},
-   {
+  {
     path: '',
+    component: StoreLayout,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./store/home/home').then(m => m.HomeComponent),
+      },
+      {
+        path: 'store',
+        loadChildren: () =>
+          import('./store/store.routes').then(m => m.STORE_ROUTES),
+      }
+    ]
+  },
+
+ {
+    path: 'crm',
     component: AdminLayout,
     children: [
-  { path: '', component: LoginComponent },
-  { path: 'crm/login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Sub Admin Executive'] }},
-  { path: 'login', component: LoginComponent },
-  { path: 'oders', component: OrderComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
-  { path: 'employees', component: UserComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
-  { path: 'user', component:CustomerComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
-  { path: 'master', component: MasterComponent,canActivate: [RoleGuard], data: { roles: ['Super Admin'] }} ,
-]}];
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
 
- 
+      { path: 'login', component: LoginComponent },
+
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['Super Admin', 'Sub Admin Executive'] }
+      },
+      {
+        path: 'orders',
+        component: OrderComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['Super Admin'] }
+      },
+      {
+        path: 'employees',
+        component: UserComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['Super Admin'] }
+      },
+      {
+        path: 'user',
+        component: CustomerComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['Super Admin'] }
+      },
+      {
+        path: 'master',
+        component: MasterComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['Super Admin'] }
+      }
+    ]
+  },
+
+  /* ================= FALLBACK ================= */
+  { path: '**', redirectTo: '' }
+];

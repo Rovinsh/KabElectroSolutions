@@ -9,7 +9,7 @@ export class ApiService {
   //For local
   private baseUrl = 'https://localhost:7181/api/';
   //for serve 
-  //private baseUrl = 'https://kabelectro.in/API/api/';
+  //private baseUrl = 'https://mscareprime.in/API/api/';
 
   constructor(private http: HttpClient) {}
 

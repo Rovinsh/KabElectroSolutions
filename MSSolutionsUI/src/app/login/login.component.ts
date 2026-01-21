@@ -56,7 +56,7 @@ export class LoginComponent {
           localStorage.removeItem('redirectUrl');
           this.router.navigateByUrl(redirectUrl);
         } else {
-          this.router.navigate(['/dashboard']); // fallback route
+          this.router.navigate(['crm/dashboard']); // fallback route
         }
         this.auth.isLoggedin$.next(loginData);
           },
