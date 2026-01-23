@@ -1,13 +1,14 @@
 ﻿using Azure.Core;
-using MSSolutions.Data;
-using MSSolutions.DTOs;
-using MSSolutions.Helper;
-using MSSolutions.Models;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MSSolutions.Data;
+using MSSolutions.Data;
+using MSSolutions.DTOs;
+using MSSolutions.Helper;
+using MSSolutions.Models;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -105,53 +106,31 @@ namespace MSSolutions.Controllers
             {
                 var performerEmail = User?.Identity?.Name;
                 var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail && !u.IsPartner);
+                if (user.Id == 0)
+                    return Unauthorized("User not found");
 
-                var query =
-                    from u in _context.MsUsers
-                    join a in _context.MsAddresses on u.Id equals a.UserId into addressGroup
-                    from addr in addressGroup.DefaultIfEmpty()
-                    where !u.IsPartner
-                    select new { u, addr };
+                var addresses = await _context.MsAddresses
+            .Where(a => a.UserId == user.Id)
+            .Select(a => new AddressDto
+            {
+                Id = a.Id,
+                FullName = a.FullName,
+                Phone = a.Phone,
+                AddressLine = a.AddressLine,
+                City = a.City,
+                State = a.State,
+                Pincode = a.Pincode,
+                IsDefault = a.IsDefault
+            })
+            .ToListAsync();
 
-                var data = await query.Select(x => new UsersDTO
-                {
-                    Id = x.u.Id,
-                    Phone = x.u.Phone,
-                    Email = x.u.Email,
-                    FirstName = x.u.Firstname,
-                    LastName = x.u.Lastname,
-
-                    Address = x.addr != null ? x.addr.AddressLine : null,
-                    CityName = x.addr != null ? x.addr.City : null,
-                    StateName = x.addr != null ? x.addr.State : null,
-                    PinCode = x.addr != null ? x.addr.Pincode : null,
-
-                    RoleId = x.u.Businessrole,
-                    RoleName = x.u.BusinessroleName,
-
-                    CityId = x.addr != null
-                        ? _context.Cities.Where(c => c.Name == x.addr.City).Select(c => c.Id).FirstOrDefault()
-                        : 0,
-
-                    StateId = x.addr != null
-                        ? _context.Locations.Where(st => st.Name == x.addr.State).Select(st => st.Id).FirstOrDefault()
-                        : 0,
-
-                    PinCodeId = x.addr != null
-                        ? _context.Pincodes.Where(p => p.PincodeValue == x.addr.Pincode).Select(p => p.Id).FirstOrDefault()
-                        : 0
-                }).ToListAsync();
-
-                var result = new UsersResponseDTO
+                return Ok(new
                 {
                     Status = 200,
-                    Message = "success, is_redis = True",
-                    Data = data
-                };
-
-                return Ok(result);
+                    Message = "Addresses fetched successfully",
+                    Data = addresses
+                });
             }
-
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");

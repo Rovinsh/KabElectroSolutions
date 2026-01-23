@@ -17,7 +17,7 @@ export class HomeComponent {
   productList: ProductWithImagesDto[] = [];
 
   heroSlides = [
-    { title: 'Ink Tank & Laser Printers', subtitle: 'Starting at ₹10,699', image: '/assets/banners/heroBanner.webp' },
+    { title: 'Ink Tank & Laser Printers', subtitle: 'Starting at ₹10,699', image: '/assets/banners/vblue-home-services.jpg' },
     { title: 'Big Screen TVs', subtitle: 'Up to 40% Off', image: '/assets/banners/2.jpg' },
     { title: 'Latest Smartphones', subtitle: 'Starting at ₹12,999', image: '/assets/banners/3.jpg' }
   ];

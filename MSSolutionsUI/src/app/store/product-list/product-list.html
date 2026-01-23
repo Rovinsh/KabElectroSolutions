@@ -20,7 +20,7 @@
 
       <!-- CATEGORY DROPDOWN -->
       <div class="dropdown-wrapper">
-        <button class="dropdown-btn" (click)="toggleCategory($event)">
+        <button type="button" class="dropdown-btn" (click)="toggleCategory($event)">
           Categories ▼
         </button>
 
@@ -31,7 +31,7 @@
           >
             <input
               type="checkbox"
-              [checked]="selectedCategoryId === c.id"
+              [checked]="selectedCategoryIds.has(c.id)"
               (change)="onCategorySelect(c.id, $event)"
             />
             {{ c.catName }}
@@ -41,7 +41,7 @@
 
       <!-- BRAND DROPDOWN -->
       <div class="dropdown-wrapper">
-        <button class="dropdown-btn" (click)="toggleBrand($event)">
+        <button type="button" class="dropdown-btn" (click)="toggleBrand($event)">
           Brand ▼
         </button>
 
@@ -52,6 +52,7 @@
           >
             <input
               type="checkbox"
+              (click)="$event.stopPropagation()"
               [checked]="selectedBrands.has(b.id)"
               (change)="onBrandSelect(b.id, $event)"
             />
@@ -60,6 +61,14 @@
         </div>
       </div>
 
+  <button
+    type="button"
+    class="btn btn-outline-secondary btn-sm"
+    (click)="clearFilters()"
+    [disabled]="!hasActiveFilters()"
+  >
+    Clear Filters
+  </button>
     </div>
   </section>
 

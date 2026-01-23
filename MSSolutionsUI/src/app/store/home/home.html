@@ -42,10 +42,10 @@
     <h2>Shop by Category</h2>
     <div class="category-grid">
       <div class="filter-bar">
-  <button class="filter-btn"  *ngFor="let c of categories">
+  <button class="btn-outline"  *ngFor="let c of categories">
    <a [routerLink]="['/store/productList', c.id]"> {{c.catName}} </a>
   </button>
-   <button class="filter-btn">
+   <button class="btn-outline">
    <a [routerLink]="['/store/productList']">All Product </a>
   </button>
    </div>

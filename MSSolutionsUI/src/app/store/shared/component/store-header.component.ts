@@ -66,6 +66,6 @@ custumerLogin() {
     localStorage.removeItem('token');
     localStorage.clear();
     sessionStorage.clear();
-    location.href = '/store';
+    location.href = '';
   }
 }

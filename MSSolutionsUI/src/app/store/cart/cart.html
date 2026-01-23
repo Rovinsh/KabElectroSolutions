@@ -49,7 +49,7 @@
       </p>
       <div class="actions">
         <button class="btn-outline" (click)="onWishlistClick(item.productId)">  {{ isInWishlist(item.productId) ? '💚' : '♡ Move to Wishlist' }}</button>
-        <button class="btn-outline danger"
+        <button class="btn-outline"
                 (click)="remove(item.productId)">
           Remove
         </button>
@@ -92,8 +92,8 @@
   <span>Total Payable</span>
   <span>₹{{ grandTotal }}</span>
 </div>
-        <button
-  class="btn btn-success btn-block mt-4"
+        <button 
+  class="btn-outline mt-4"
   (click)="onCheckout()">
   Checkout
 </button>

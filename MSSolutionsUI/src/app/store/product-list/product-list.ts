@@ -34,7 +34,7 @@ export class ProductList implements OnInit {
   filteredProducts: ProductWithImagesDto[] = [];
 
   // FILTER STATE
-  selectedCategoryId: number | null = null;
+ selectedCategoryIds = new Set<number>();
   selectedBrands = new Set<number>();
 
   // DROPDOWN STATE
@@ -51,44 +51,66 @@ export class ProductList implements OnInit {
   private auth = inject(AuthService);
   private toast = inject(ToastService);
 
-  ngOnInit(): void {
-    // Load all master data first
-    forkJoin({
-      categories: this.api.getCategories(),
-      products: this.api.getProduct(),
-      brands: this.api.getBrands()
-    }).subscribe(res => {
-      this.categories = res.categories.data.filter(x => x.isDisable);
-      this.productList = res.products.data.filter(x => x.isActive);
-      this.brands = res.brands.data.filter(x => x.isDisable);
+ngOnInit(): void {
 
-      // Listen to route param changes
-      this.route.paramMap.subscribe(params => {
-        const id = Number(params.get('id'));
-        this.selectedCategoryId = id || null;
-        this.applyFilter();
-      });
-    });
-  }
+  const initialCategoryId = Number(
+    this.route.snapshot.paramMap.get('id')
+  );
+
+  forkJoin({
+    categories: this.api.getCategories(),
+    products: this.api.getProduct(),
+    brands: this.api.getBrands()
+  }).subscribe(res => {
+
+    this.categories = res.categories.data.filter(x => x.isDisable);
+    this.productList = res.products.data.filter(x => x.isActive);
+    this.brands = res.brands.data.filter(x => x.isDisable);
+
+    // 🔥 seed from route (single category)
+    if (initialCategoryId) {
+      this.selectedCategoryIds.add(initialCategoryId);
+    }
+
+    this.applyFilter();
+  });
+}
+
+
 
   /* ---------------- FILTER LOGIC ---------------- */
 
-  applyFilter() {
-    this.filteredProducts = this.productList.filter(p => {
-      const categoryMatch =
-        !this.selectedCategoryId || p.categoryId === this.selectedCategoryId;
+applyFilter() {
+  this.filteredProducts = this.productList.filter(p => {
 
-      const brandMatch =
-        this.selectedBrands.size === 0 ||
-        this.selectedBrands.has(p.brandId);
+    const categoryMatch =
+      this.selectedCategoryIds.size === 0 ||
+      this.selectedCategoryIds.has(p.categoryId);
 
-      return categoryMatch && brandMatch;
-    });
-  }
+    const brandMatch =
+      this.selectedBrands.size === 0 ||
+      this.selectedBrands.has(p.brandId);
 
+    return categoryMatch && brandMatch;
+  });
+}
+hasActiveFilters(): boolean {
+  return (
+    this.selectedCategoryIds.size > 0 ||
+    this.selectedBrands.size > 0
+  );
+}
+
+clearFilters() {
+  this.selectedCategoryIds.clear();
+  this.selectedBrands.clear();
+
+  this.applyFilter();
+}
   /* ---------------- CATEGORY ---------------- */
 
   toggleCategory(event: Event) {
+    event.preventDefault();
     event.stopPropagation();
     this.categoryOpen = !this.categoryOpen;
     this.brandOpen = false;
@@ -106,27 +128,12 @@ export class ProductList implements OnInit {
 onCategorySelect(id: number, event: Event) {
   const checked = (event.target as HTMLInputElement).checked;
 
-  if (checked) {
-    // ✅ update state immediately
-    this.selectedCategoryId = id;
+  checked
+    ? this.selectedCategoryIds.add(id)
+    : this.selectedCategoryIds.delete(id);
 
-    // ✅ clear brands when category changes (optional but recommended)
-    this.selectedBrands.clear();
-
-    // ✅ apply filter instantly
-    this.applyFilter();
-
-    // ✅ sync URL
-    this.router.navigate(['/store/productslist', id], {
-      replaceUrl: true
-    });
-  } else {
-    this.selectedCategoryId = null;
-    this.applyFilter();
-    this.router.navigate(['/store/productslist']);
-  }
+  this.applyFilter();
 }
-
   /* ---------------- BRAND ---------------- */
 
   toggleBrand(event: Event) {
@@ -136,14 +143,14 @@ onCategorySelect(id: number, event: Event) {
   }
 
   onBrandSelect(id: number, event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
-    checked
-      ? this.selectedBrands.add(id)
-      : this.selectedBrands.delete(id);
+  const checked = (event.target as HTMLInputElement).checked;
 
-    this.applyFilter();
-  }
+  checked
+    ? this.selectedBrands.add(id)
+    : this.selectedBrands.delete(id);
 
+  this.applyFilter();
+}
   /* ---------------- CART ---------------- */
 
   addToCart(product: ProductWithImagesDto) {

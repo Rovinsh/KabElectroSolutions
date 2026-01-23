@@ -359,12 +359,10 @@ export interface AddressDto {
   id: number;            // unique id
   fullName: string;
   phone: string;
-  addressLine1: string;
-  addressLine2?: string;
+  addressLine: string;
   city: string;
   state: string;
-  postalCode: string;
-  country: string;
+  pincode: number;
   isDefault?: boolean;   // optional default flag
 }
 export interface AddressResponseDto {

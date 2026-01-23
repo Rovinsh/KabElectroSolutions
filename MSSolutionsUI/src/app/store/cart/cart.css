@@ -115,16 +115,15 @@ button {
 .imagecrdpage{width: 128px;margin-right:20px;}
 .btn-outline {
   border: 1px solid #ddd;
-  background: #fff;
+  background: #0d6efd;
   padding: 6px 14px;
   border-radius: 6px;
-  font-size: 13px;
   cursor: pointer;
   margin:5px;
 }
 
 .btn-outline:hover {
-  background: #f5f5f5;
+  background: #28d497;
 }
 
 .btn-outline.danger {

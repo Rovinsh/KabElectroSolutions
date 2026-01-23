@@ -108,3 +108,16 @@
   padding-top: 6px;
   margin-top: 6px;
 }
+.btn-outline {
+  border: 1px solid #ddd;
+  background: #0d6efd;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin:5px;
+  color:#fff;
+}
+
+.btn-outline:hover {
+  background: #28d497;
+}

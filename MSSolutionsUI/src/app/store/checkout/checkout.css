@@ -213,3 +213,75 @@ button {
 .address-card h4 {
   margin-bottom: 8px;
 }
+.btn-outline {
+  border: 1px solid #ddd;
+  background: #0d6efd;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin:5px;
+  color:#fff;
+}
+
+.btn-outline:hover {
+  background: #28d497;
+}
+.address-card {
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+}
+
+.address-card p {
+  margin: 0;
+  line-height: 1.6;
+  color: #333;
+}
+
+.address-card .name {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.address-card .phone {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.address-card .address-line,
+.address-card .city {
+  font-size: 14px;
+  color: #666;
+}
+p {
+  margin: 0 0 6px 0;
+}/* FIX address layout */
+.address-card {
+  display: block;   /* override flex */
+}
+
+.address-card p {
+  display: block;
+  width: 100%;
+  margin: 0 0 6px 0;
+}
+.spaebox{ margin-bottom: 20px;margin-top: 34px;}
+.address-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-btn {
+  cursor: pointer;
+  font-size: 16px;
+  background: #f1f1f1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: #e0e0e0;
+}

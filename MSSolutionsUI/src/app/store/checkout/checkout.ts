@@ -9,10 +9,12 @@ import { ToastService } from '../../services/toastService.service';
 import { AuthService } from '../../services/auth';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddressDto, ApiService } from '../../services/api.service';
+import { FormsModule } from '@angular/forms';
+import{UserDeliveryAddress} from '../user-delivery-Address/user-delivery-address'
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule,RouterModule,MatDialogModule],   // ✅ REQUIRED
+  imports: [CommonModule,RouterModule,MatDialogModule,FormsModule],   // ✅ REQUIRED
   templateUrl: './checkout.html',
   styleUrls: ['./checkout.css']
 })
@@ -85,7 +87,6 @@ ngOnInit(): void {
 loadAddress(){
   this.apiService.getUserAddresses().subscribe(res => {
   this.addresses = res.data; 
-
   // Optional: set default shipping/billing
   this.selectedShippingAddress = this.addresses.find(a => a.isDefault);
   if (this.useShippingAsBilling) {
@@ -119,5 +120,35 @@ loadAddress(){
         }
       });
     }
-  
+
+onChangeAddress() {
+  const dialogRef = this.dialog.open(UserDeliveryAddress, {
+    width: '700px',
+    maxWidth: '95vw',
+    maxHeight: '90vh',
+    disableClose: true,
+    panelClass: 'address-dialog',
+    data: {
+      addresses: this.addresses,
+      selectedShipping: this.selectedShippingAddress,
+      selectedBilling: this.selectedBillingAddress,
+      useShippingAsBilling: this.useShippingAsBilling
+    }
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (!result) return;
+
+    // Update selected addresses from popup result
+    this.selectedShippingAddress = result.selectedShipping;
+    this.selectedBillingAddress = result.selectedBilling;
+    this.useShippingAsBilling = result.useShippingAsBilling;
+  });
+}
+
+
+onChangeBillingAddress() {
+  console.log('Change billing address');
+}
+
 }

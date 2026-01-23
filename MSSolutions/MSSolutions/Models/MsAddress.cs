@@ -7,6 +7,8 @@ namespace MSSolutions.Models
         [Key]
         public int Id { get; set; }
         public int UserId { get; set; }
+        public string? FullName { get; set; }
+        public string? Phone { get; set; }
         public string AddressLine { get; set; }
         //public int Location { get; set; }
         public int StateId { get; set; }
@@ -17,6 +19,7 @@ namespace MSSolutions.Models
         public double? Longitude { get; set; }
         public string City { get; set; }
         public string State { get; set; }
+        public bool IsDefault { get; set; }
         public bool IsBusinessAddress { get; set; }
     }
 }
