@@ -24,7 +24,7 @@
   background: linear-gradient(to right, #f7fbff 50%, #ffffff 50%);
   background-size: cover;
   background-position: center;
-  padding: 60px 0;
+  padding: 25px 0;
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -100,9 +100,8 @@
   box-shadow: 0 4px 12px rgba(242, 183, 5, 0.35);
 }
 .categories {
-  background: linear-gradient(180deg, #0f0f0f, #1a1a1a);
-  padding: 11px 0 11px;
-  color: #fff;
+  background: linear-gradient(180deg, #ffffff, #ffffff);
+  padding: 20px 0 20px;
 }
 
 .title {
@@ -444,7 +443,7 @@
 .faq-title {
   font-size: 38px;
   font-weight: 700;
-  color: #f2b705; /* Gold */
+  color: #fff; /* Gold */
   margin-bottom: 10px;
 }
 
@@ -644,5 +643,191 @@
 
   .plan-card p {
     font-size: 13px;
+  }
+}
+.services-section {
+  background: #0e0e0e;
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 26px;
+}
+
+/* Service Card */
+.service-card {
+  border-radius: 18px;
+  padding: 18px 20px;
+  transition: 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Left Icon Circle */
+.icon-circle {
+  width: 56px;
+  height: 56px;
+  background: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-circle i {
+  color: #fff;
+  font-size: 22px;
+}
+
+/* Text */
+.service-text {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  max-width: 180px;
+}
+
+/* View Link */
+.view-link {
+  color: #00e0b8;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.view-link:hover {
+  text-decoration: underline;
+}
+
+/* 📱 Mobile Fine Tuning */
+@media (max-width: 576px) {
+  .service-card {
+    padding: 0px;
+  }
+
+  .service-text {
+    font-size: 15px;
+    max-width: 150px;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+}
+/* Section Background */
+.help-services {
+  padding: 40px 16px 60px;
+  background: radial-gradient(circle at top left, #1b1b2f, #0f0f17 60%);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+
+.help-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  letter-spacing: 0.5px;
+}
+
+/* Card Layout */
+.help-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Unique Card Style */
+.help-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Glow border animation */
+.help-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 1px;
+  background: linear-gradient(120deg, #6a5cff, #00f0ff, #6a5cff);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.help-card:hover::before {
+  opacity: 1;
+}
+
+/* Floating hover effect */
+.help-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0, 240, 255, 0.15);
+}
+
+/* Icon Bubble */
+.help-icon {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6a5cff, #00c6ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 6px 15px rgba(0, 198, 255, 0.3);
+}
+
+/* Text */
+.help-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Action Link */
+.help-action {
+  font-size: 14px;
+  font-weight: 600;
+  color: #00f0ff;
+  white-space: nowrap;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.help-card:hover .help-action {
+  transform: translateX(4px);
+  color: #6a5cff;
+}
+@media (min-width: 768px) {
+  .help-title {
+    font-size: 30px;
+  }
+
+  .help-cards {
+    flex-direction: row;
+  }
+
+  .help-card {
+    flex: 1;
+  }
+
+  .help-text {
+    font-size: 16px;
   }
 }

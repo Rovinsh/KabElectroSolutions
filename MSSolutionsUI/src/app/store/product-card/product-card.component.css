@@ -2,37 +2,40 @@
   border-radius: 16px;
   padding: 14px;
   width: 280px;
-  color: #fff;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #10273f;
+  border: 1px solid #1e3a5f;
+  color: #e6eef7;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .product-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+  border-color: #f2b705;
 }
-.alinkcolor{color:#3a3a3a;text-decoration:none;}
+
+/* Links */
+.alinkcolor {
+  color: #e6eef7;
+  text-decoration: none;
+}
+
+/* IMAGE BOX */
 .image-wrapper {
   position: relative;
-  background: #3a3a3a;
+  background: #0b1c2d;
   border-radius: 12px;
   padding: 12px;
   text-align: center;
+  border: 1px solid #1e3a5f;
 }
 
 .image-wrapper img {
-  max-height: 180px;
+  max-height: 234px;
   object-fit: contain;
 }
-.icon {
-  cursor: pointer;
-  font-size: 22px;
-  color: #aaa;
-  transition: 0.3s;
-}
 
-.icon.filled {
-  color: #2ee6a6;
-}
+/* TOP ACTIONS */
 .top-actions {
   position: absolute;
   top: 8px;
@@ -42,22 +45,43 @@
   align-items: center;
 }
 
+/* ICON BUTTONS */
 .icon {
-  background: rgba(0,0,0,0.6);
+  background: rgba(11, 28, 45, 0.85);
   border-radius: 50%;
   padding: 6px;
   cursor: pointer;
   font-size: 14px;
+  color: #9fb3c8;
+  transition: 0.3s ease;
 }
 
+.icon:hover {
+  color: #f2b705;
+  transform: scale(1.1);
+}
+
+.icon.filled {
+  color: #f2b705;
+}
+
+/* COMPARE PILL */
 .compare {
   font-size: 12px;
-  background: rgba(0,0,0,0.6);
+  background: rgba(11, 28, 45, 0.85);
   padding: 4px 8px;
   border-radius: 12px;
   cursor: pointer;
+  color: #9fb3c8;
+  transition: 0.3s;
 }
 
+.compare:hover {
+  background: #f2b705;
+  color: #0b1c2d;
+}
+
+/* DETAILS */
 .details {
   margin-top: 10px;
 }
@@ -67,14 +91,17 @@
   font-weight: 500;
   line-height: 1.4;
   margin-bottom: 6px;
+  color: #ffffff;
 }
 
+/* RATING */
 .rating {
   font-size: 12px;
-  color: #00ffb0;
+  color: #f2b705;
   margin-bottom: 6px;
 }
 
+/* PRICE ROW */
 .price-row {
   display: flex;
   align-items: center;
@@ -85,39 +112,46 @@
 .price {
   font-size: 18px;
   font-weight: 600;
+  color: #ffffff;
 }
 
 .old-price {
   text-decoration: line-through;
-  color: #aaa;
+  color: #8fa6bf;
   font-size: 13px;
 }
 
 .off {
-  background: #1b5e20;
+  background: rgba(242, 183, 5, 0.15);
   padding: 2px 6px;
   border-radius: 6px;
   font-size: 11px;
-  color: #a5ffb0;
+  color: #f2b705;
 }
 
+/* DELIVERY TEXT */
 .delivery {
   font-size: 12px;
-  color: #ccc;
-  border-top: 1px solid #444;
+  color: #9fb3c8;
+  border-top: 1px solid #1e3a5f;
   padding-top: 6px;
   margin-top: 6px;
 }
+
+/* BUTTON */
 .btn-outline {
-  border: 1px solid #ddd;
-  background: #0d6efd;
+  border: 1px solid #f2b705;
+  background: transparent;
   padding: 6px 14px;
   border-radius: 6px;
   cursor: pointer;
-  margin:5px;
-  color:#fff;
+  margin: 5px 5px 0 0;
+  color: #f2b705;
+  transition: 0.3s;
 }
 
 .btn-outline:hover {
-  background: #28d497;
+  background: #f2b705;
+  color: #0b1c2d;
+  box-shadow: 0 4px 12px rgba(242,183,5,0.4);
 }
