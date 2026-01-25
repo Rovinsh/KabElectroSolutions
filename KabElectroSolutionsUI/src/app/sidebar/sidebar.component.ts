@@ -33,6 +33,7 @@ export class SidebarComponent {
     { title: 'User', icon: '🧑', roles: ['Super Admin'], route: '/user' },
     { title: 'Report', icon: '📄', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/report' },
     { title: 'Warranties', icon: '🛡️', roles: ['Super Admin'], route: '/warranties' },
+    { title: 'Waiting For Finance', icon: '📨', roles: ['Super Admin'], route: '/waiting-for-finance' },
     { title: 'Support', icon: '📞', roles: ['Super Admin','Service Centre','Brand'], route: '/support' },
     { title: 'Help', icon: '❓', roles: ['Super Admin','Service Centre','Brand'], route: '/help' },
     { title: 'Settings', icon: '⚙️', roles: ['Super Admin'], route: '/settings' }

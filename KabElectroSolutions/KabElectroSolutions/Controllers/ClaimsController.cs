@@ -386,8 +386,8 @@ namespace KabElectroSolutions.Controllers
             return Ok(existingClaim);
         }
 
-        [HttpPost("AcceptOrRejectClaim/{id}/{status}/{remarks}")]
-        public async Task<IActionResult> AcceptOrRejectClaim(int id, string status, string? remarks = "")
+        [HttpPost("AcceptOrRejectClaim/{id}/{status}/{remarks}/{utr}")]
+        public async Task<IActionResult> AcceptOrRejectClaim(int id, string status, string? remarks = "", string? utr = "")
         {
             if (id == 0)
                 return BadRequest("Invalid claim id");
@@ -396,7 +396,7 @@ namespace KabElectroSolutions.Controllers
             if (existingClaim == null)
                 return NotFound("Claim not found");
 
-            await UpdateStatus(id, status, remarks, existingClaim);
+            await UpdateStatus(id, status, remarks, existingClaim,utr);
 
             var claims = await _context.Claims.Where(c => c.Id == id).ToListAsync();
 
@@ -414,7 +414,7 @@ namespace KabElectroSolutions.Controllers
             return Ok(response);
         }
 
-        private async Task UpdateStatus(int id, string status, string? remarks, Models.Claim existingClaim)
+        private async Task UpdateStatus(int id, string status, string? remarks, Models.Claim existingClaim, string? utr="")
         {
             existingClaim.PreviousStatus = existingClaim.Status;
             existingClaim.StatusName = status;
@@ -438,7 +438,13 @@ namespace KabElectroSolutions.Controllers
             {
                 await _context.EstimationImages.Where(x => x.ClaimId == id).ExecuteDeleteAsync();
                 await _context.SaveChangesAsync();
-            }            
+            }
+            if (status == "Call Closed")
+            {
+                existingClaim.UtrNumber = utr;
+                _context.Entry(existingClaim).Property(x => x.UtrNumber).IsModified = true;
+                await _context.SaveChangesAsync();
+            }
 
             await _context.SaveChangesAsync();
             await AddAuditLog("Claim", id, status, remarks);

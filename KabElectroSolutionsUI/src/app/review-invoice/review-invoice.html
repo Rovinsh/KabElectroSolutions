@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Review Invoice</h2>
+
+<mat-dialog-content>
+     <div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p class="text-white mt-2">Please wait...</p>
+      </div>
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Remark</mat-label>
+    <textarea
+      matInput
+      rows="3"
+      [(ngModel)]="remark"
+      required>
+    </textarea>
+    <mat-error *ngIf="error">
+      Remark is required
+    </mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="accept()">Accept</button>
+  <button mat-flat-button color="warn" (click)="reject()">Reject</button>
+</mat-dialog-actions>

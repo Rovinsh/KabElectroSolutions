@@ -10,6 +10,7 @@ import { MasterComponent } from '../app/master/master';
 import { ReportComponent } from '../app/report/report';
 import { Warranties } from './warranties/warranties';
 import { UserComponent } from './user/user';
+import {WaitingForFinance} from './waiting-for-finance/waiting-for-finance'
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'crm/login', component: LoginComponent },
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'direct-claim-form', component: DirectClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin','Brand'] }},
   { path: 'brand-claim-form', component: ClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Brand'] }},
   { path: 'assign-claim', component: AssignClaim, canActivate: [RoleGuard], data: { roles: ['Super Admin','Customer Care Executive'] } },
+  { path: 'waiting-for-finance', component: WaitingForFinance, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'master', component: MasterComponent,canActivate: [RoleGuard], data: { roles: ['Super Admin'] }} ,
   { path: 'report', component: ReportComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Service Centre','Brand','Customer Care Executive'] }},
