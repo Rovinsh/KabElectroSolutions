@@ -1,6 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
-
-html, body { height: 100%; }
+:root {
+  --brand-blue: #1e40af;
+  --brand-gold: #f2b705;
+  --dark-bg: #0b1220;
+  --text-light: #ffffff;
+}
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
