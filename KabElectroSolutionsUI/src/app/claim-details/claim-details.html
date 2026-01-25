@@ -8,11 +8,45 @@
 @if (!isLoading) {
   
 <div> <div class="actions">
+       <div class="reject-box" *ngIf="showRejectBox">
+
+  <label><strong>Reject Reason <span style="color:red">*</span></strong></label>
+
+  <textarea
+    class="form-control"
+    rows="3"
+    placeholder="Enter reject reason"
+    [(ngModel)]="rejectReason"
+    required>
+  </textarea>
+
+  <!-- Validation message -->
+  <small class="text-danger" *ngIf="rejectReasonTouched && !rejectReason.trim()">
+    Reject reason is required
+  </small>
+
+  <div style="margin-top: 8px;">
+    <button
+      class="reject"
+      [disabled]="!rejectReason.trim()"
+      (click)="confirmReject()">
+      Confirm Reject
+    </button>
+
+    <button
+      class="accept"
+      style="margin-left: 10px;"
+      (click)="cancelReject()">
+      Cancel
+    </button>
+  </div>
+
+</div>
     <h2 class="claim-code">Claim Code : <strong>{{ claimId }}</strong></h2>
     <button class="reject" *ngIf="claim?.statusName === 'Service Centre Assigned' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Call Rejected By Service Center', 'Call rejected')">Reject Call</button>
     <button class="accept" *ngIf="claim?.statusName === 'Service Centre Assigned' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Call Accepted By Service Center', 'Call accepted')">Accept Call</button>
-    <button class="reject" *ngIf="claim?.statusName === 'Estimation Shared' && (role == 'Customer Care Executive' || role == 'Super Admin')" (click)="updateClaimStatus('Re Estimate', 'Estimate Rejected')">Reject Estimate</button>
-    <button class="accept" *ngIf="claim?.statusName === 'Estimation Shared' && (role == 'Customer Care Executive' || role == 'Super Admin')" (click)="updateClaimStatus('Estimate Accepted', 'Estimate Accepted')">Accept Estimate</button>
+    <button class="reject" *ngIf="claim?.statusName === 'Estimation Shared' && (role == 'Customer Care Executive' || role == 'Super Admin')&& !showRejectBox" (click)="openRejectBox()" >Reject Estimate</button>
+    <button class="accept" [disabled]="showRejectBox" *ngIf="claim?.statusName === 'Estimation Shared' && (role == 'Customer Care Executive' || role == 'Super Admin')" (click)="updateClaimStatus('Estimate Accepted', 'Estimate Accepted')">Accept Estimate</button>
     <!-- <button class="images" *ngIf="role == 'Customer Care Executive' || role == 'Super Admin'" (click)="OpenClaimImagesPopup(claimId)">Images</button> -->
     <button mat-raised-button class="jobsheet" (click)="downloadPdf()">Download JobSheet</button>
     <button mat-raised-button class="abort" *ngIf="claim?.statusName === 'Call Initiated' || claim?.statusName === 'Service Centre Assigned' || claim?.statusName === 'Appointment Taken' || claim?.statusName === 'Claim Verified' || claim?.statusName === 'Call Accepted By Service Center' || claim?.statusName === 'Call Rejected By Service Center' && (role == 'Customer Care Executive' || role == 'Super Admin')" (click)="confirmAbort('Call Aborted', 'Call Aborted')">Abort Claim</button>

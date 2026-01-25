@@ -39,5 +39,7 @@ namespace KabElectroSolutions.Models
         public int? CreatedBy { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
+
+        public string? RejectReason { get; set; }
     }
 }
