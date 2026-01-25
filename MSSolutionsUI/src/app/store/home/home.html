@@ -1,61 +1,122 @@
-<!-- Hero Slider -->
-<section class="hero-slider" (mouseenter)="stopAutoSlide()" (mouseleave)="startAutoSlide()">
-  <div
-    class="slide"
-    *ngFor="let slide of heroSlides; let i = index"
-    [class.active]="i === activeSlide"
-    [style.backgroundImage]="'url(' + slide.image + ')'"
-  >
-    <div class="overlay">
-      <h1>{{ slide.title }}</h1>
-      <p>{{ slide.subtitle }}</p>
-    </div>
-  </div>
-
-  <button class="nav prev" (click)="prev()">‹</button>
-  <button class="nav next" (click)="next()">›</button>
+<section class="hero-banner">
+  <img src="/assets/banners/u.png" alt="MS Care Banner">
 </section>
 
-<!-- Service Slider -->
-<section class="services">
-  <div class="service-track">
-    <div class="service-card" *ngFor="let s of services">
-      <div class="icon">{{ s.icon }}</div>
-      <p>{{ s.title }}</p>
-    </div>
-  </div>
-</section>
 <div class="home-container">
-  <!-- Hero -->
-  <section class="hero">
+
+  <!-- SERVICES STRIP -->
+  <section class="services">
      <div class="container">
-    <div class="hero-text">
-      <h1>Best Deals on AMC Plans </h1>
-      <p>MsSolution Maintain offers extensive plans to help you install or maintain your product to keep it running as good as new..</p>
-    </div>
+    <div class="service-track">
+      <div class="service-card" *ngFor="let s of services">
+        <div class="icon">{{ s.icon }}</div>
+        <p>{{ s.title }}</p>
+      </div></div>
     </div>
   </section>
+
+<section class="about-section about-v1-area" style="background-image: url(assets/banners/about-v1-bg.jpg);">
+  <div class="container about-container">
+    <div class="row align-items-center">
+
+      <!-- LEFT CONTENT -->
+      <div class="col-lg-6 col-12 mb-4 mb-lg-0 about-left">  
+        <h2>What is MS Care</h2>
+        <p class="desc">
+          MS Care is your dedicated partner in appliance and device servicing. <br/>
+          We specialize in delivering reliable, quick, and high-quality care for a wide range of brands. <br/>
+          With a focus on customer convenience and excellence, we ensure that your products are in safe hands.
+        </p>
+      </div>
+
+      <!-- RIGHT CONTENT -->
+      <div class="col-lg-6 col-12">
+        <div class="row g-3 about-right">
+
+          <div class="col-sm-6 col-12">
+            <div class="info-card card1 text-center">
+              <div class="icon">💎</div>
+              <p>Guaranteed Quality</p>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-12">
+            <div class="info-card card2 text-center">
+              <div class="icon">🤝</div>
+              <p>100% Transparency</p>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-12">
+            <div class="info-card card3 text-center">
+              <div class="icon">⚙️</div>
+              <p>Reliability</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="help-services"><div class="container">
+  <h2 class="help-title">How our services can help you</h2>
+
+  <div class="help-cards">
+    
+    <div class="help-card">
+      <div class="help-icon">🛡️</div>
+      <div class="help-text">Extend the warranty of your device</div>
+      <div class="help-action">View →</div>
+    </div>
+
+    <div class="help-card">
+      <div class="help-icon">🛠️</div>
+      <div class="help-text">Maintain your device</div>
+      <div class="help-action">View →</div>
+    </div>
+
+    <div class="help-card">
+      <div class="help-icon">📍</div>
+      <div class="help-text">Setup your device</div>
+      <div class="help-action">View →</div>
+    </div>
+
+  </div></div>
+</section>
 
   <!-- Categories -->
-  <section class="categories">
+<section class="categories">
   <div class="container">
-    <h2>Shop by Category</h2>
-    <div class="category-grid">
-      <div class="filter-bar">
-  <button class="btn-outline"  *ngFor="let c of categories">
-   <a [routerLink]="['/store/productList', c.id]"> {{c.catName}} </a>
-  </button>
-   <button class="btn-outline">
-   <a [routerLink]="['/store/productList']">All Product </a>
-  </button>
-   </div>
+    <h2 class="section-title">Explore by Category</h2>
+
+    <div class="category-scroll">
+      <a
+        class="category-pill"
+        *ngFor="let c of categories"
+        [routerLink]="['/store/productList', c.id]"
+         [class.active]="selectedCategoryId === c.id"
+      >
+        {{ c.catName }}
+      </a>
+
+      <a
+        class="category-pill all"
+        [routerLink]="['/store/productList']"
+      >
+        All Products
+      </a>
     </div>
-   
-    </div>
-  </section>
+
+  </div>
+</section>
+
+
 <section class="featured py-5">
   <div class="container">
-    <h2 class="mb-4">Featured Products</h2>
+    <h2 class="mb-4 section-title">Featured Products</h2>
 
     <div class="row">
       <div class="col-md-3 col-sm-6 mb-4" *ngFor="let p of productList">
@@ -65,4 +126,73 @@
   </div>
 </section>
 
+<section class="faq-wrapper">
+  <div class="faq-container">
+
+    <div class="faq-header">
+      <h2 class="faq-title">FAQs</h2>
+      <p class="faq-subtitle">
+        Everything you need to know about MS CarePrime & ZipCare plans
+      </p>
+    </div>
+
+    <div class="faq-list">
+
+      <div
+        class="faq-item"
+        *ngFor="let faq of faqs; let i = index"
+        [class.active]="activeIndex === i"
+      >
+        <button class="faq-question" (click)="toggleFaq(i)">
+          {{ faq.question }}
+          <span class="faq-icon">+</span>
+        </button>
+
+        <div class="faq-answer">
+          {{ faq.answer }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="plans-section">
+  <div class="container">
+    <h2 class="section-title">Explore by Plans</h2>
+
+    <div class="plans-grid">
+
+      <!-- Protect Plan -->
+      <div class="plan-card protect">
+        <h3><span>MS Care</span> Protect</h3>
+        <p>Select a plan that extends your product's warranty or one that covers physical damage caused by accidents or spills.</p>
+
+        <div class="features">
+          <div class="feature">Peace of Mind</div>
+          <div class="feature">Cost Savings</div>
+          <div class="feature">Certified Experts</div>
+        </div>
+      </div>
+
+      <!-- Maintain Plan -->
+      <div class="plan-card maintain">
+        <h3><span>MS Care</span> Maintain</h3>
+        <p>Select a plan that will help you set up or maintain your product to keep it running as good as new.</p>
+
+        <div class="features">
+          <div class="feature">Improved Performance</div>
+          <div class="feature">On-demand care</div>
+          <div class="feature">Authorised Technicians</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 </div>
+
+
+
+

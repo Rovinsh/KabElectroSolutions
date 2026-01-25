@@ -1,105 +1,123 @@
-.login-modal {
-  background: #121212;
-  color: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  position: relative;
-  text-align: center;
-  box-shadow: 0 0 30px rgba(0,0,0,.6);
+/* ===== OVERLAY ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* top align */
+  padding: 40px 15px;
+  overflow-y: auto;
 }
-.inputboxmargin{margin:20px;width: 270px !important;color: #333 !important;padding: 12px !important; border: 1px solid #333#fff !important;background: #fff !important;}
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  background: none;
-  border: none;
-  color: #aaa;
-  font-size: 22px;
-  cursor: pointer;
+body.modal-open {
+  overflow: hidden;
+}
+/* ===== MODAL BOX ===== */
+.login-modal {
+  width: 100%;
+  max-width: 600px;
+  background: #0b1c2d;
+  color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  position: relative;
+  padding: 30px;
+  margin-top: 85px;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  animation: modalFade .3s ease;
 }
 
+/* ===== CLOSE BUTTON ===== */
+.close-btn {
+  position: absolute;
+  top: -1px;
+  right: 14px;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.close-btn:hover {
+  background: #f2b705;
+  color: #0b1c2d;
+}
+
+/* ===== TOGGLE ===== */
 .mode-toggle {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  border: 1px solid #333;
-  padding: 8px 14px;
+  gap: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 8px 16px;
   border-radius: 30px;
   margin-bottom: 20px;
-}
-
-.mode-toggle span {
-  cursor: pointer;
-  color: #aaa;
-}
-
-.mode-toggle .active {
-  color: #fff;
-  font-weight: 600;
-}
-
-.mode-toggle .or {
-  color: #666;
-}
-
-.hint {
-  margin-bottom: 10px;
   font-size: 14px;
-  color: #ccc;
+}
+.mode-toggle span { cursor: pointer; color: #9fb3c8; }
+.mode-toggle .active { color: #f2b705; font-weight: 600; }
+.mode-toggle .or { color: #556b82; }
+
+/* ===== FORM ===== */
+.form-area { display: flex; flex-direction: column; }
+.form-group { margin-bottom: 14px; text-align: left; }
+
+.form-group label {
+  font-size: 13px;
+  color: #c9d6e2;
+  margin-bottom: 4px;
+  display: block;
 }
 
-input[type="text"] {
+.form-control {
   width: 100%;
   padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background: #1c1c1c;
+  border-radius: 8px;
+  border: 1px solid #1e3a5f !important;
+  background: #10273f !important;
   color: #fff;
-  margin-bottom: 12px;
 }
 
-.keep {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #ccc;
-  margin-bottom: 12px;
+.form-control::placeholder { color: #8fa6bf; }
+
+.form-control:focus {
+  border-color: #f2b705;
+  box-shadow: 0 0 0 2px rgba(242,183,5,.25);
+  background: #0f243a;
 }
 
-.terms {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 16px;
-}
+/* ===== HINT & ERRORS ===== */
+.hint { font-size: 13px; color: #a8c1d9; margin-bottom: 10px; }
+.error { font-size: 12px; color: #ff6b6b; margin-top: 4px; }
 
-.terms a {
-  color: #00e5a8;
-  text-decoration: none;
-}
-
-.continue {
-  width: 35%;
+/* ===== BUTTON ===== */
+.submit-btn {
+  width: 100%;
+  margin-top: 10px;
   padding: 12px;
-  background: #0d6efd;
+  border-radius: 8px;
+  background: #f2b705;
   border: none;
-  border-radius: 6px;
-  color: #fff;
-  font-weight: bold;
+  font-weight: 600;
+  color: #0b1c2d;
   cursor: pointer;
-}
-.btn-outline {
-  border: 1px solid #ddd;
-  background: #0d6efd;
-  padding: 6px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin:5px;
-  width: 117px;
-  color:#fff;
 }
 
-.btn-outline:hover {
-  background: #28d497;
+/* ===== ANIMATION ===== */
+@keyframes modalFade {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ===== MOBILE FIX ===== */
+@media (max-width: 480px) {
+  .login-modal { padding: 22px; }
+  .close-btn { top: 8px; right: 8px; }
 }

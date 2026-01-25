@@ -1,39 +1,41 @@
-<div class="cart-popup">
+<div class="cp-cart-popup">
+
   <!-- Header -->
-  <div class="popup-header">
-    <div class="header-left">
-      <span class="success-icon">✔</span>
-      <span class="title">1 Item added to the cart!</span>
+  <div class="cp-header">
+    <div class="cp-header-left">
+      <span class="cp-success-icon">✔</span>
+      <span class="cp-title">1 Item added to the cart!</span>
     </div>
-    <button class="close-btn" (click)="close()">✕</button>
+    <button class="cp-close-btn" (click)="close()">✕</button>
   </div>
 
-  <hr class="divider" />
+  <hr class="cp-divider" />
 
   <!-- Body -->
-  <div class="popup-body">
-    <img [src]="getProductImage()" style="width:64px;" class="product-img" />
+  <div class="cp-body">
+    <img [src]="getProductImage()" class="cp-product-img" />
 
-    <div class="product-info">
-      <div class="product-name">
+    <div class="cp-product-info">
+      <div class="cp-product-name">
         {{ product.productName }}
       </div>
 
-      <div class="product-price">
+      <div class="cp-product-price">
         ₹{{ getFinalPrice() | number:'1.2-2' }}
-           <span class="text-muted ml-2" *ngIf="product.discountPrice > 0">
-        <s style="color:#fff;"> ₹{{ product.baseAmount }}</s>
-      </span>
+        <span class="cp-old-price" *ngIf="product.discountPrice > 0">
+          ₹{{ product.baseAmount }}
+        </span>
       </div>
 
-      <div class="discount" *ngIf="getDiscountPercent() as discount">
+      <div class="cp-discount" *ngIf="getDiscountPercent() as discount">
         {{ discount }}% Off
       </div>
     </div>
   </div>
 
   <!-- Footer -->
-  <button class="proceed-btn" (click)="goToCart()">
+  <button class="cp-proceed-btn" (click)="goToCart()">
     Proceed to Cart
   </button>
+
 </div>

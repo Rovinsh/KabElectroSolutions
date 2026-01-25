@@ -1,61 +1,64 @@
-<header class="store-header">
-  <div class="left">
-    <div class="logo" routerLink=""><img src="assets/logo.png"/></div>
-  </div>
+<header class="ms-header container-fluid">
+  <div class="row align-items-center w-100">
 
-  <div class="center">
-    <input class="search" placeholder="Search products..." />
-  </div>
-
-  <div class="right">
-    <div class="icon-btn user" (mouseenter)="showUserMenu=true" (mouseleave)="showUserMenu=false">
-      🧑🏻  <span style="color: #000"><strong>{{firstName | titlecase}} {{lastName | titlecase}}</strong><br/></span>
-
-      <div class="user-dropdown" *ngIf="showUserMenu">
-        <div class="menu-item" *ngIf="!firstName">
-  <span class="icon">🧑🏻</span>
-  <div (click)="custumerLogin()">
-    Login / Create Account
-  </div>
-</div>
-
-<div class="menu-item" *ngIf="firstName">
-  <span class="icon">🧑🏻</span>
-  <div>
-    <b>My Profile</b>
-  </div>
-</div>
-
-        <div class="menu-item" *ngIf="firstName">
-          <span class="icon">📍</span>
-          <div>
-            <b>My Address</b>
-          </div>
-        </div>
-
-        <div class="menu-item" *ngIf="firstName">
-          <span class="icon">📦</span>
-          <div>
-            <b>My Orders</b>
-          </div>
-        </div>
-        <div class="menu-item" *ngIf="firstName">
-          <span class="icon">❤️</span>
-          <div class="wishlist">
-            <a [routerLink]="['/store/wishlist']"><b>My Wishlist </b></a>
-          </div>
-        </div>
-        <div class="menu-item" *ngIf="firstName">
-          <span class="icon">🔓</span>
-          <div>
-            <button class="logout-button" (click)="logout()">Logout</button>
-          </div>
-        </div>
+    <!-- LEFT : LOGO -->
+    <div class="col-6 col-md-3 d-flex align-items-center">
+      <div class="ms-logo" routerLink="/">
+        <img src="assets/logo.png" alt="MS CarePrime">
       </div>
     </div>
 
-    <div class="icon-btn cart"  routerLink="/store/cart">
-      🛒 {{cartCount}}
+    <!-- CENTER : SEARCH (DESKTOP ONLY) -->
+    <div class="col-md-6 d-none d-md-flex justify-content-center">
+      <input
+        class="ms-search"
+        type="text"
+        placeholder="Search products..." />
+    </div>
+
+    <!-- RIGHT : USER + CART -->
+    <div class="col-6 col-md-3 d-flex justify-content-end gap-3">
+      
+      <!-- USER -->
+      <div class="ms-icon-btn ms-user-wrapper" (click)="showUserMenu = !showUserMenu">
+        👤
+        <span class="ms-user-name d-none d-md-inline">
+          {{ firstName | titlecase }}
+        </span>
+
+        <div class="ms-user-dropdown" *ngIf="showUserMenu">
+          <div class="ms-menu-item" *ngIf="!firstName" (click)="custumerLogin()">
+            Login / Create Account
+          </div>
+
+          <div class="ms-menu-item" *ngIf="firstName">My Profile</div>
+          <div class="ms-menu-item" *ngIf="firstName">My Address</div>
+          <div class="ms-menu-item" *ngIf="firstName">My Orders</div>
+
+          <div class="ms-menu-item" *ngIf="firstName">
+            <a routerLink="/store/wishlist">My Wishlist</a>
+          </div>
+
+          <div class="ms-menu-item logout" *ngIf="firstName" (click)="logout()">
+            Logout
+          </div>
+        </div>
+      </div>
+
+      <!-- CART -->
+      <div class="ms-icon-btn cart" routerLink="/store/cart">
+        🛒 <span routerLink="/store/cart" class="cart-count">{{ cartCount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE SEARCH (FULL WIDTH) -->
+  <div class="row d-md-none mt-2">
+    <div class="col-12">
+      <input
+        class="ms-search w-100"
+        type="text"
+        placeholder="Search products..." />
     </div>
   </div>
 </header>
