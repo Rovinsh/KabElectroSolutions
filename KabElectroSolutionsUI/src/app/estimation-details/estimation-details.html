@@ -34,6 +34,45 @@
   </table>
 </div>
 
+ <div class="section" *ngIf="!isLoading && images">
+    <div class="section-header">
+      <span></span>
+    </div>
+<div class="grid">
+<div class="card" *ngFor="let img of images; let i = index">
+  <div class="card-title"></div>
+
+  <!-- 🖼 IMAGE -->
+  <img
+    *ngIf="isImage(img)"
+    [src]="img"
+    class="thumb"
+    (click)="openInNewTab(img)"
+  />
+
+  <!-- 🎥 VIDEO -->
+  <video
+    *ngIf="isVideo(img)"
+    [src]="img"
+    class="thumb"
+    muted
+    playsinline
+    preload="metadata"
+    (click)="openInNewTab(img)">
+  </video>
+
+  <!-- 📄 PDF -->
+  <mat-icon
+    *ngIf="isPdf(img)"
+    class="pdf-icon"
+    (click)="openInNewTab(img)">
+    picture_as_pdf
+  </mat-icon>
+
+</div>
+</div>
+  </div>
+
 <div class="card action-card">
   <div class="card-header">Action</div>
 

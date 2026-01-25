@@ -23,6 +23,8 @@ export class AssignClaim {
   status : any[]= [];
   private toast = inject(ToastService);
   isLoading = false;
+  isReassign = false;
+  buttonText = "ASSIGN CLAIM";
 
 filter = {
     warrantyType: '',
@@ -67,9 +69,10 @@ filter = {
   });
 
   dialogRef.afterClosed().subscribe(result => {
-    if (result == "") {
-      this.loadClaimsByStatus(this.getSubStatusId("Call Initiated"));
-    }
+    this.loadClaimsByStatus(this.getSubStatusId("Call Initiated"), this.isReassign);
+    // if (result == "") {
+    //   this.loadClaimsByStatus(this.getSubStatusId("Call Initiated"), this.isReassign);
+    // }
   });
 }
 
@@ -146,7 +149,7 @@ openClaimDetails(claimId: number): void {
       next: (status) => {
         this.status = Object.values(status.data);
         
-    this.loadClaimsByStatus(this.getSubStatusId("Call Initiated"));
+    this.loadClaimsByStatus(this.getSubStatusId("Call Initiated"), this.isReassign);
   },
       error: (err) => {
         console.error('API error:', err);
@@ -159,9 +162,24 @@ getSubStatusId(subStatusName: string): number{
   return subStatus.substatusid;
 }
 
-loadClaimsByStatus(subStatusId: number): void {
+onReAssignChange(event: Event): void {
+  const isChecked = (event.target as HTMLInputElement).checked;
+  console.log('Re-Assign Claims checked:', isChecked);
+this.isReassign = !this.isReassign;
+if(this.isReassign)
+{
+  this.buttonText = "RE-ASSIGN CLAIM";
+}
+else
+{
+  this.buttonText = "ASSIGN CLAIM";
+}
+  this.loadClaimsByStatus(this.getSubStatusId("Call Initiated"), this.isReassign);
+}
+
+loadClaimsByStatus(subStatusId: number, isReassign:boolean): void {
   this.isLoading = true;
-  this.apiService.getClaims(`Claims/claims?statusId=${subStatusId}`).subscribe({
+  this.apiService.getClaims(`Claims/claims?statusId=${subStatusId}&isReassign=${this.isReassign}`).subscribe({
     next: (res) => {
       this.isLoading = false;
       this.claims = res.data.results as Claim[];

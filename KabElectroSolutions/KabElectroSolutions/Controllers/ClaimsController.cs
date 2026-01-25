@@ -1,6 +1,5 @@
 ﻿using Azure.Core;
 using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Office2016.Excel;
 using DocumentFormat.OpenXml.Wordprocessing;
 using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
@@ -9,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO.Compression;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 
 namespace KabElectroSolutions.Controllers
@@ -28,7 +29,7 @@ namespace KabElectroSolutions.Controllers
 
 
         [HttpGet("claims")]
-        public async Task<IActionResult> GetClaims([FromQuery] int? statusId)
+        public async Task<IActionResult> GetClaims([FromQuery] int? statusId, [FromQuery] bool? isReassign= false)
         {
             var validStatusNames = new[]
 {
@@ -45,6 +46,14 @@ namespace KabElectroSolutions.Controllers
     "Invoice Rejected By Service",
     "Invoice Accepted By Service"
 };
+            var validReAssignStatusNames = new[]
+            {
+    "Service Centre Assigned",
+    "Appointment Taken",
+    "Claim Verified"
+};
+
+
             try
             {
                 List<Models.Claim> claims;
@@ -59,7 +68,14 @@ namespace KabElectroSolutions.Controllers
                         if (substatus.Name == "Claim Verified")
                             claims = await _context.Claims.Where(claim => claim.Status == statusId || validStatusNames.Contains(claim.StatusName)).ToListAsync();
                         else
+                        {
+                            if (isReassign !=null && isReassign == true)
+                            {
+                                claims = await _context.Claims.Where(claim => validReAssignStatusNames.Contains(claim.StatusName)).ToListAsync();
+                            }
+                            else
                             claims = await _context.Claims.Where(claim => claim.Status == statusId).ToListAsync();
+                        }
 
                     }
                     else
@@ -298,6 +314,12 @@ namespace KabElectroSolutions.Controllers
                 await UpdateStatus(request.ClaimId, "Visit Done", "Visit Done", existingClaim);
                 await transaction.CommitAsync();
 
+                var partner = await _context.ServicePartner.FindAsync(existingClaim.ServicePartner);
+
+                var subject = partner!.ServicePartner + " customer visit is done for claim number " +request.ClaimId+ ".";
+                var body = "<!DOCTYPE html>\r\n<html>\r\n<body style=\"font-family: Arial, Helvetica, sans-serif; background-color: #f6f6f6; padding: 20px;\">\r\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\r\n        <tr>\r\n            <td align=\"center\">\r\n                <table width=\"600\" cellpadding=\"20\" cellspacing=\"0\" style=\"background-color: #ffffff; border-radius: 6px;\">\r\n                    <tr>\r\n                        <td style=\"font-size: 14px; color: #333333;\">\r\n                            <p style=\"margin-top: 0;\">\r\n                                Hi <strong>" + partner.ServicePartner + "</strong>,\r\n                            </p>\r\n\r\n                            <p>\r\n                                Your technician has visited the customers place for claim number \r\n<strong>" + request.ClaimId + "</strong>.\r\n                            </p>\r\n\r\n         <p>Kindly share the estimation for the same.</p>                   <p>\r\n                                In case of any queries, please call on\r\n                                <strong>+91-8433112032</strong>\r\n                                or alternatively, write to us at\r\n                                <a href=\"mailto:support@kabelectro.in\" style=\"color: #1a73e8;\">\r\n                                    support@kabelectro.in\r\n                                </a>.\r\n                            </p>\r\n\r\n                            <br>\r\n\r\n                            <p style=\"margin-bottom: 0;\">\r\n                                Thank You,<br>\r\n                                <strong>Team KAB Electro</strong>\r\n                            </p>\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n\r\n                <p style=\"font-size: 12px; color: #999999; margin-top: 10px;\">\r\n                    This is an automated email. Please do not reply.\r\n                </p>\r\n            </td>\r\n        </tr>\r\n    </table>\r\n</body>\r\n</html>\r\n";
+               
+                await SendEmailAsync(partner.Email, subject, body);
 
                 return Ok(new { message = "Images saved", total = entries.Count });
             }
@@ -402,10 +424,21 @@ namespace KabElectroSolutions.Controllers
             _context.Entry(existingClaim).Property(x => x.PreviousStatus).IsModified = true;
             if (status == "Invoice Rejected By Service")
             {
+                var partner = await _context.ServicePartner.FindAsync(existingClaim.ServicePartner);
                 var invoice = await _context.InvoiceDetails.FirstOrDefaultAsync(x => x.ClaimId == id && !x.IsRejected);
                 invoice!.IsRejected = true;
-                await _context.SaveChangesAsync();
+                invoice.RejectReason = remarks;
+                await _context.SaveChangesAsync();                
+
+                var subject = "Invoice rejected for claim number " + id;
+                var body = "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <title>Invoice Rejected</title>\r\n</head>\r\n<body style=\"margin:0; padding:0; background-color:#ffffff; font-family:Arial, Helvetica, sans-serif;\">\r\n\r\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#ffffff;\">\r\n    <tr>\r\n      <td align=\"center\">\r\n\r\n        <!-- Main Container -->\r\n        <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse; border:1px solid #e0e0e0;\">\r\n\r\n          <!-- Header -->\r\n          <tr>\r\n            <td style=\"padding:15px 20px; border-bottom:4px solid #4cc3d9;\">\r\n              <table width=\"100%\">\r\n                <tr>\r\n                  <td align=\"right\">\r\n                    <img src=\"https://kabelectro.in/attached_assets/logo_1756027620126.png\" alt=\"KAB Electro\" height=\"30\" />\r\n                  </td>\r\n                </tr>\r\n              </table>\r\n            </td>\r\n          </tr>\r\n\r\n          <!-- Body -->\r\n          <tr>\r\n            <td style=\"background-color:#f2fbfd; padding:25px 20px; color:#333333; font-size:14px; line-height:22px;\">\r\n\r\n              <p style=\"margin:0 0 15px 0; color:#f57c00; font-size:16px;\">\r\n                <strong>Dear Partner</strong>\r\n              </p>\r\n\r\n              <p style=\"margin:0 0 12px 0;\">\r\n                Greetings from KAB Electro!!!\r\n              </p>\r\n\r\n              <p style=\"margin:0 0 12px 0;\">\r\n                This is in reference to the Invoice Number <strong>"+invoice.InvoiceNumber+"</strong> against the Claim Code\r\n                <strong>"+id+"</strong>.\r\n              </p>\r\n\r\n              <p style=\"margin:0 0 12px 0;\">\r\n                We would like to intimate that the invoice has been <strong>rejected</strong> due to\r\n                <strong>"+remarks+"</strong>.\r\n              </p>\r\n\r\n              <p style=\"margin:0;\">\r\n                Further, we request to rectify the issue and upload the correct invoice as per the requirement.\r\n                Your cooperation and support is highly appreciated in this regard.\r\n              </p>\r\n\r\n            </td>\r\n          </tr>\r\n\r\n          <!-- Footer -->\r\n          <tr>\r\n            <td style=\"background-color:#4cc3d9; padding:12px 20px; color:#ffffff; font-size:13px;\">\r\n              <strong>Thanks</strong><br>\r\n              Team KAB Electro\r\n            </td>\r\n          </tr>\r\n\r\n        </table>\r\n        <!-- End Container -->\r\n\r\n      </td>\r\n    </tr>\r\n  </table>\r\n\r\n</body>\r\n</html>\r\n";                
+                await SendEmailAsync(partner.Email, subject, body);
             }
+            if (status == "Re Estimate")
+            {
+                await _context.EstimationImages.Where(x => x.ClaimId == id).ExecuteDeleteAsync();
+                await _context.SaveChangesAsync();
+            }            
 
             await _context.SaveChangesAsync();
             await AddAuditLog("Claim", id, status, remarks);
@@ -497,6 +530,10 @@ namespace KabElectroSolutions.Controllers
             await AddAuditLog("Claim", id, status, remarks);
 
             var claims = await _context.Claims.Where(c => c.Id == id).ToListAsync();
+            var subject = partner.ServicePartner + " new claim assigned to you.";
+            var  body = "<!DOCTYPE html>\r\n<html>\r\n<body style=\"font-family: Arial, Helvetica, sans-serif; background-color: #f6f6f6; padding: 20px;\">\r\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\r\n        <tr>\r\n            <td align=\"center\">\r\n                <table width=\"600\" cellpadding=\"20\" cellspacing=\"0\" style=\"background-color: #ffffff; border-radius: 6px;\">\r\n                    <tr>\r\n                        <td style=\"font-size: 14px; color: #333333;\">\r\n                            <p style=\"margin-top: 0;\">\r\n                                Hi <strong>" + partner.ServicePartner + "</strong>,\r\n                            </p>\r\n\r\n                            <p>\r\n                                New claim with claim ID\r\n                                <strong>" + id + "</strong>\r\n                                is assigned to you.\r\n                            </p>\r\n\r\n                            <p>\r\n                                In case of any queries, please call on\r\n                                <strong>+91-8433112032</strong>\r\n                                or alternatively, write to us at\r\n                                <a href=\"mailto:support@kabelectro.in\" style=\"color: #1a73e8;\">\r\n                                    support@kabelectro.in\r\n                                </a>.\r\n                            </p>\r\n\r\n                            <br>\r\n\r\n                            <p style=\"margin-bottom: 0;\">\r\n                                Thank You,<br>\r\n                                <strong>Team KAB Electro</strong>\r\n                            </p>\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n\r\n                <p style=\"font-size: 12px; color: #999999; margin-top: 10px;\">\r\n                    This is an automated email. Please do not reply.\r\n                </p>\r\n            </td>\r\n        </tr>\r\n    </table>\r\n</body>\r\n</html>\r\n";
+
+            await SendEmailAsync(partner.Email, subject, body);
 
             var response = new ClaimsResponseDto
             {
@@ -510,6 +547,41 @@ namespace KabElectroSolutions.Controllers
             };
 
             return Ok(response);
+        }
+
+        private async Task SendEmailAsync(string email, string subject, string body)
+        {
+            using var smtpClient = new SmtpClient("smtp.titan.email")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential(
+                    "chetan.sharma@kabelectro.in",
+                    "Kab@8433112032"
+                ),
+                EnableSsl = true
+            };
+
+            using var mailMessage = new MailMessage
+            {
+                From = new MailAddress("chetan.sharma@kabelectro.in", "KAB Electro"),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+
+            mailMessage.To.Add(email);
+            try
+            {
+                await smtpClient.SendMailAsync(mailMessage);
+            }
+            catch (SmtpException ex)
+            {
+                // ❌ SMTP-level failure
+            }
+            catch (Exception ex)
+            {
+                // ❌ Unexpected failure
+            }
         }
 
         [HttpPost("ShareEstimation/{id}/{status}/{remarks}")]
@@ -944,6 +1016,17 @@ namespace KabElectroSolutions.Controllers
         [HttpGet("GetClaimEstimationDetails/{claimId}")]
         public async Task<IActionResult> GetEstimationDetails(int claimId)
         {
+            var images = await _context.EstimationImages
+                .Where(x => x.ClaimId == claimId)
+                .ToListAsync();
+
+            string ToBase64(byte[] data, string fileName)
+            {
+                var mimeType = GetMimeTypeFromFileName(fileName);
+                return $"data:{mimeType};base64,{Convert.ToBase64String(data)}";
+            }
+            var estimationImages = images.Select(x => ToBase64(x.Image, $"{x.FileName}")).ToList();
+
             var items = await _context.EstimationDetails
                 .Where(x => x.ClaimId == claimId)
                 .Select(x => new EstimationDetailResponseDto
@@ -963,7 +1046,8 @@ namespace KabElectroSolutions.Controllers
             var response = new EstimationSummaryResponseDto
             {
                 Items = items,
-                GrandTotal = items.Sum(x => x.TotalCost)
+                GrandTotal = items.Sum(x => x.TotalCost),
+                Images = estimationImages
             };
 
             return Ok(response);

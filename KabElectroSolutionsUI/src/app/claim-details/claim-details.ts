@@ -35,6 +35,9 @@ showNotes = false;
 newNote = '';
 claimNotes: Note[] = [];
 role:string | null = null;
+showRejectBox = false;
+rejectReason = '';
+rejectReasonTouched = false;
 
 steps: string[] = [
   'Claim Registered',
@@ -156,6 +159,33 @@ confirmAbort(status: string, remarks: string) {
   });
 }
 
+openRejectBox() {
+  this.showRejectBox = true;
+  this.rejectReasonTouched = false;
+}
+
+cancelReject() {
+  this.showRejectBox = false;
+  this.rejectReason = '';
+  this.rejectReasonTouched = false;
+}
+
+confirmReject() {
+  this.rejectReasonTouched = true;
+
+  if (!this.rejectReason.trim()) {
+    return; // ❌ stop if empty
+  }
+
+  this.updateClaimStatus(
+    'Re Estimate',
+    this.rejectReason
+  );
+
+  this.showRejectBox = false;
+  this.rejectReason = '';
+  this.rejectReasonTouched = false;
+}
 
   updateClaimStatus(status: string, remarks: string) {
     this.isLoading = true;

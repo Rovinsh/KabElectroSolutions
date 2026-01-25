@@ -448,6 +448,7 @@ export interface EstimationDetailResponseDto {
 export interface EstimationSummaryResponseDto {
   items: EstimationDetailResponseDto[];
   grandTotal: number;
+  images:string[];
 }
 
 export interface ReportFilterDto {

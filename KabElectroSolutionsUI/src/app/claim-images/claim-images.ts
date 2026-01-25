@@ -9,6 +9,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ToastService } from '../services/toastService.service';
 import { Claim } from '../models/claim.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-claim-images-dialog',
@@ -17,7 +18,7 @@ import { Claim } from '../models/claim.model';
     CommonModule,
     MatDialogModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,FormsModule
   ],
   templateUrl: './claim-images.html',
   styleUrls: ['./claim-images.css']
@@ -27,6 +28,9 @@ isLoading: boolean = false;
 data!: ClaimCustomerVisitImages;
 invoice!: InvoiceDetail;
 repairImages!: ClaimClosedWithOrWithoutRepair;
+showRejectBox = false;
+rejectReason = '';
+rejectReasonTouched = false;
 role:string | null = null;
   constructor(
     private dialogRef: MatDialogRef<ClaimImages>,private apiService: ApiService
@@ -87,6 +91,34 @@ role:string | null = null;
   }
 });
   }
+
+ openRejectBox() {
+  this.showRejectBox = true;
+  this.rejectReasonTouched = false;
+}
+
+cancelReject() {
+  this.showRejectBox = false;
+  this.rejectReason = '';
+  this.rejectReasonTouched = false;
+}
+
+confirmReject() {
+  this.rejectReasonTouched = true;
+
+  if (!this.rejectReason.trim()) {
+    return; // ❌ stop if empty
+  }
+
+  this.updateClaimStatus(
+    'Invoice Rejected By Service',
+    this.rejectReason
+  );
+
+  this.showRejectBox = false;
+  this.rejectReason = '';
+  this.rejectReasonTouched = false;
+}
 
   close() {
     this.dialogRef.close();

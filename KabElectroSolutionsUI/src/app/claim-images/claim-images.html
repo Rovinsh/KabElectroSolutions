@@ -213,9 +213,45 @@
 
    <div class="section" *ngIf="!isLoading && invoice">
     <div class="section-header">
+      <div class="reject-box" *ngIf="showRejectBox">
+
+  <label><strong>Reject Reason <span style="color:red">*</span></strong></label>
+
+  <textarea
+    class="form-control"
+    rows="3"
+    placeholder="Enter reject reason"
+    [(ngModel)]="rejectReason"
+    required>
+  </textarea>
+
+  <!-- Validation message -->
+  <small class="text-danger" *ngIf="rejectReasonTouched && !rejectReason.trim()">
+    Reject reason is required
+  </small>
+
+  <div style="margin-top: 8px;">
+    <button
+      class="reject"
+      [disabled]="!rejectReason.trim()"
+      (click)="confirmReject()">
+      Confirm Reject
+    </button>
+
+    <button
+      class="accept"
+      style="margin-left: 10px;"
+      (click)="cancelReject()">
+      Cancel
+    </button>
+  </div>
+
+</div>
+
       <span>Invoice Details</span>
-      <button class="reject" *ngIf="claim.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Rejected By Service', 'Invoice Rejected By Service')">Reject Invoice</button>
-    <button class="accept" *ngIf="claim.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Accepted By Service', 'Invoice Accepted By Service')">Accept Invoice</button>
+      <button class="reject" *ngIf="claim.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')  && !showRejectBox"
+  (click)="openRejectBox()">Reject Invoice</button>
+    <button class="accept" [disabled]="showRejectBox" *ngIf="claim.statusName === 'Invoice Claimed' && (role == 'Service Centre' || role == 'Super Admin')" (click)="updateClaimStatus('Invoice Accepted By Service', 'Invoice Accepted By Service')">Accept Invoice</button>
     </div>
 
     <div class="grid">
