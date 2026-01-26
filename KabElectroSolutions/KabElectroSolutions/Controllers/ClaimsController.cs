@@ -386,7 +386,7 @@ namespace KabElectroSolutions.Controllers
             return Ok(existingClaim);
         }
 
-        [HttpPost("AcceptOrRejectClaim/{id}/{status}/{remarks}/{utr}")]
+        [HttpPost("AcceptOrRejectClaim/{id}/{status}/{remarks?}/{utr?}")]
         public async Task<IActionResult> AcceptOrRejectClaim(int id, string status, string? remarks = "", string? utr = "")
         {
             if (id == 0)

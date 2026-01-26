@@ -48,7 +48,7 @@ this.updateClaimStatus(this.claimId,"Invoice Rejected By Finance",this.remark);
 
 updateClaimStatus(claimId: number,status: string, remarks:string) {
     this.isLoading = true;
-    this.apiService.AcceptOrRejectClaim(claimId, status, remarks).subscribe({
+    this.apiService.AcceptOrRejectClaim(claimId, status, remarks,'').subscribe({
       next: (res) => {        
         this.isLoading = false; // hide spinner
          this.toast.success(status +' Successfully!');
