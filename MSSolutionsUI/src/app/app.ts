@@ -11,7 +11,7 @@ import { filter } from 'rxjs/operators';
 })
 export class App {
   isLoginPage = false;
-  protected title = 'KabElectroSolutions';
+  protected title = 'MSCareSolutions';
 
   constructor(private router: Router) {
     this.router.events
