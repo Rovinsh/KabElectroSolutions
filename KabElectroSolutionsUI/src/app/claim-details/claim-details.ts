@@ -189,7 +189,7 @@ confirmReject() {
 
   updateClaimStatus(status: string, remarks: string) {
     this.isLoading = true;
-    this.apiService.AcceptOrRejectClaim(parseInt(this.claimId!), status, remarks).subscribe({
+    this.apiService.AcceptOrRejectClaim(parseInt(this.claimId!), status, remarks,'').subscribe({
       next: (res) => {
         this.claim = res.data.results[0] as Claim;
         this.toast.success(status +' Successfully!');
