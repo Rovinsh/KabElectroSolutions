@@ -1,12 +1,17 @@
 ﻿using Azure.Core;
+using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using ExcelDataReader;
 using KabElectroSolutions.Data;
 using KabElectroSolutions.DTOs;
 using KabElectroSolutions.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Globalization;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Mail;
@@ -1214,6 +1219,171 @@ namespace KabElectroSolutions.Controllers
         }
 
 
+
+        [HttpPost("BulkImportClaims")]
+        public async Task<IActionResult> BulkImportClaims(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("File is required");
+
+            var userEmail = User?.Identity?.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == userEmail);
+            if (user == null)
+                return Unauthorized();
+
+            var subStatus = await _context.SubStatuses
+                .FirstAsync(x => x.Name == "Call Initiated");
+
+            var claims = new List<Models.Claim>();
+            var failedRows = new List<FailedClaimRowDto>();
+
+            using var stream = file.OpenReadStream();
+            using var reader = ExcelReaderFactory.CreateReader(stream);
+            var table = reader.AsDataSet().Tables[0];
+
+            for (int i = 1; i < table.Rows.Count; i++) // skip header
+            {
+                var row = table.Rows[i];
+                try
+                {
+                    //var row = table.Rows[i];
+
+                    var dto = new ClaimImportDto
+                    {
+                        CustomerName = row[0]?.ToString(),
+                        CustomerPhone = row[1]?.ToString(),
+                        CustomerEmail = row[2]?.ToString(),
+                        Concern = row[3]?.ToString(),
+                        ItemName = row[4]?.ToString(),
+                        ItemBrand = row[5]?.ToString(),
+                        ItemSerialNumber = row[6]?.ToString(),
+                        InvoiceNumber = row[7]?.ToString(),
+                        InvoiceDate = DateTime.TryParseExact(row[8]?.ToString()?.Trim(),"dd-MM-yyyy HH:mm:ss",CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt)? DateOnly.FromDateTime(dt): null,
+                        ItemPrice = decimal.TryParse(row[9]?.ToString(), out var p) ? p : null,
+                        Pincode = int.TryParse(row[10]?.ToString(), out var pin) ? pin : null,
+                        CustomerCity = row[11]?.ToString(),
+                        CustomerState = row[12]?.ToString(),
+                        CustomerAddress = row[13]?.ToString()
+                    };
+
+                    claims.Add(BuildClaimFromImport(dto, user, subStatus));
+                }
+                catch (Exception ex)
+                {
+                    failedRows.Add(new FailedClaimRowDto
+                    {
+                        RowNumber = i + 1,
+                        Error = ex.Message,
+                        RawData = string.Join(" | ", row.ItemArray)
+                    });
+                }
+            }
+
+            await _context.Claims.AddRangeAsync(claims);
+            await _context.SaveChangesAsync();
+            foreach (var claim in claims)
+            {
+                await AddAuditLog(
+                    "Claim",
+                    claim.Id,              // now populated
+                    "Call Registered",
+                    claim.Concern
+                );
+            }
+
+            return Ok(new
+            {
+                Total = table.Rows.Count - 1,
+                Inserted = claims.Count,
+                Failed = failedRows.Count,
+                FailedRows = failedRows
+            });
+        }
+
+
+        [HttpPost("DownloadFailedClaims")]
+        public IActionResult DownloadFailedClaims([FromBody] List<FailedClaimRowDto> failedRows)
+        {
+            if (failedRows == null || !failedRows.Any())
+                return BadRequest("No failed rows provided");
+
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Failed Claims");
+
+            // Header
+            worksheet.Cell(1, 1).Value = "RowNumber";
+            worksheet.Cell(1, 2).Value = "Error";
+            worksheet.Cell(1, 3).Value = "RawData";
+
+            int rowIndex = 2;
+
+            foreach (var row in failedRows)
+            {
+                worksheet.Cell(rowIndex, 1).Value = row.RowNumber;
+                worksheet.Cell(rowIndex, 2).Value = row.Error;
+                worksheet.Cell(rowIndex, 3).Value = row.RawData;
+                rowIndex++;
+            }
+
+            worksheet.Columns().AdjustToContents();
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Position = 0;
+
+            return File(
+                stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "FailedClaims.xlsx"
+            );
+        }
+
+
+        private Models.Claim BuildClaimFromImport(
+            ClaimImportDto dto,
+            User user,
+            SubStatus subStatus)
+        {
+            return new Models.Claim
+            {
+                // From Excel
+                CustomerName = dto.CustomerName,
+                CustomerPhone = dto.CustomerPhone,
+                CustomerEmail = dto.CustomerEmail,
+                Concern = dto.Concern,
+                ItemName = dto.ItemName,
+                ItemBrand = dto.ItemBrand,
+                ItemSerialNumber = dto.ItemSerialNumber,
+                InvoiceNumber = dto.InvoiceNumber,
+                InvoiceDate = dto.InvoiceDate,
+                PlanSoldDate = (DateOnly)dto.InvoiceDate!,
+                ItemPrice = dto.ItemPrice ?? 0,
+                Pincode = dto.Pincode ?? 0,
+                CustomerCity = dto.CustomerCity,
+                CustomerState = dto.CustomerState,
+                CustomerAddress = dto.CustomerAddress,
+
+                // System controlled (same as CreateClaim)
+                ChannelId = user.Id,
+                ChannelName = user.Businessname,
+                StoreName = user.Businessname,
+                RegisteredBy = user.Id,
+                RegisteredByName = $"{user.Firstname} {user.Lastname}",
+
+                Status = subStatus.SubStatusId,
+                StatusName = subStatus.Name,
+                PreviousStatus = subStatus.SubStatusId,
+
+                Created = DateTime.Now,
+                CreatedDate = DateOnly.FromDateTime(DateTime.Now),
+                CreatedTime = TimeOnly.FromDateTime(DateTime.Now),
+
+                ClaimRedeemed = false,
+                OtpRequired = false,
+                RaiseAdditional = false,
+                IsAddressEditable = true
+            };
+        }
 
         private string GetMimeTypeFromFileName(string fileName)
         {

@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add EF Core with SQL Server
 builder.Services.AddDbContext<KabElectroSolutionsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 // Add services to the container.
 

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -224,7 +224,24 @@ downloadBulkImages(claimId: number) {
     return this.http.get<EstimationSummaryResponseDto >(
       `${this.baseUrl}Claims/GetClaimEstimationDetails/${claimId}`
     );
-  }  
+  } 
+  
+  uploadClaims(file: File): Observable<HttpEvent<any>> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const req = new HttpRequest('POST', `${this.baseUrl}Claims/BulkImportClaims`, formData, {
+      reportProgress: true
+    });
+
+    return this.http.request(req);
+  }
+
+  downloadFailedRows(data: any) {
+    return this.http.post(`${this.baseUrl}Claims/DownloadFailedClaims`, data, {
+      responseType: 'blob'
+    });
+  }
 }
 
 export interface InvoiceDetail {

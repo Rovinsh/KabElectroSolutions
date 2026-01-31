@@ -28,6 +28,7 @@ export class SidebarComponent {
     { title: 'Claims', icon: '📋', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/dashboard' },
     { title: 'Warranty Claim', icon: '➕', roles: ['Super Admin'], route: '/claim-form' },
     { title: 'Direct Claim', icon: '➕', roles: ['Super Admin','Brand'], route: '/direct-claim-form' },
+    { title: 'Bulk Import Claims', icon: '➕', roles: ['Super Admin','Brand'], route: '/claim-bulk-import' },
     { title: 'Assign Claim', icon: '📨', roles: ['Super Admin','Customer Care Executive'], route: '/assign-claim' },
     { title: 'Master', icon: '📂', roles: ['Super Admin'], route: '/master' },
     { title: 'User', icon: '🧑', roles: ['Super Admin'], route: '/user' },

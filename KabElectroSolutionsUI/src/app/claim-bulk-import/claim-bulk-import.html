@@ -1,0 +1,81 @@
+<div><button mat-raised-button class="jobsheet" (click)="downloadTemplate()">Download Template</button></div>
+<mat-card class="upload-card">
+
+  <h2>Bulk Claim Import</h2>
+
+  <!-- Drag & Drop -->
+  <div
+    class="drop-zone"
+    [class.dragging]="dragging"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+  >
+    <p *ngIf="!selectedFile">Drag & drop Excel / CSV here</p>
+    <p *ngIf="selectedFile">{{ selectedFile.name }}</p>
+  </div>
+
+  <input
+    type="file"
+    hidden
+    accept=".csv,.xls,.xlsx"
+    (change)="onFileSelect($event)"
+    #fileInput
+  />
+
+  <button mat-stroked-button (click)="fileInput.click()">
+    Choose File
+  </button>
+
+  <br /><br />
+
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="upload()"
+    [disabled]="!selectedFile || uploading"
+  >
+    Upload
+  </button>
+
+  <button
+    mat-button
+    color="warn"
+    *ngIf="uploading"
+    (click)="cancelUpload()"
+  >
+    Cancel
+  </button>
+
+  <mat-progress-bar
+    *ngIf="uploading"
+    [value]="progress"
+    mode="determinate">
+  </mat-progress-bar>
+
+  <mat-progress-spinner
+    *ngIf="uploading"
+    diameter="30"
+    mode="indeterminate">
+  </mat-progress-spinner>
+
+  <div class="result" *ngIf="result">
+    <p><b>Total:</b> {{ result.total }}</p>
+    <p><b>Inserted:</b> {{ result.inserted }}</p>
+    <p><b>Failed:</b> {{ result.failed }}</p>
+
+    <button
+      mat-stroked-button
+      color="warn"
+      *ngIf="result.failedRows?.length"
+      (click)="downloadFailed()"
+    >
+      Download Failed Rows
+    </button>
+  </div>
+
+  <div class="error" *ngIf="error">
+    {{ error }}
+  </div>
+
+</mat-card>
