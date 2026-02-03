@@ -19,7 +19,7 @@ export const STORE_ROUTES: Routes = [
         .then(m => m.ProductList),
   },
   {
-    path: 'productList/:id',
+    path: 'productList/:catUrl',
     loadComponent: () =>
       import('./product-list/product-list')
         .then(m => m.ProductList),

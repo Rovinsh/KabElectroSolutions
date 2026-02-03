@@ -10,3 +10,7 @@ VALUES
    ('Air Conditioner', 'Air Conditioner', 1),
   ('Washing Machine', 'Washing Machine', 1),
   ('Refrigerator','Refrigerator', 1);
+  
+  
+  ALTER TABLE MsCategories
+ADD CatUrl VARCHAR(250) NULL;

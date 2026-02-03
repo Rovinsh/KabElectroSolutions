@@ -1,120 +1,156 @@
-<div class="product-detail" *ngIf="product">
+<h2 class="popup-title">Select Address  <button class="close-btn" (click)="close()">×</button></h2>
+<div class="maindiv">
+<form [formGroup]="form">
 
-  <div class="image-section">
+  <div class="row">
+    <div class="col-sm-6"
+         *ngFor="let addr of addresses">
 
-    <div class="thumb-slider">
-      <button class="arrow" (click)="prevThumb()">▲</button>
+      <div class="address-card">
 
-      <div class="thumb-list">
-        <img
-          *ngFor="let img of visibleImages; let i = index"
-          [src]="img"
-          (click)="selectImage(img, i)"
-          [class.active]="activeIndex === (i + currentIndex)"
-        />
+        <!-- SHIPPING RADIO -->
+        <div class="radio">
+          <label>
+            <input
+              type="radio"
+              formControlName="shippingAddressId"
+              [value]="addr.id"
+            />
+            <strong>{{ addr.fullName }}</strong>
+          </label>
+        </div>
+
+        <p class="address-text">
+          {{ addr.addressLine }}, {{ addr.city }} - {{ addr.pincode }}<br />
+          📞 {{ addr.phone }}
+        </p>
+
+        <!-- BILLING RADIO -->
+        <div class="radio billing-radio"
+             *ngIf="!form.value.useShippingAsBilling">
+          <label>
+            <input
+              type="radio"
+              formControlName="billingAddressId"
+              [value]="addr.id"
+            />
+            Use as Billing
+          </label>
+        </div>
+
       </div>
-
-      <button class="arrow" (click)="nextThumb()">▼</button>
-    </div>
-
-    <div class="main-image zoom-container">
-      <img [src]="selectedImage" class="zoom-img" />
-    </div>
-
-  </div>
-
-  <div class="info">
-    <h2 class="title">{{ product.productName }}</h2>
- <div class="price price-row mb-2">
-      <span class="font-weight-bold text-dark">
-        ₹{{ getFinalPrice(product) }}
-      </span>
-
-      <span class="text-muted ml-2" *ngIf="product.discountPrice > 0">
-        <s> ₹{{ product.baseAmount }}</s>
-      </span>
-
-      <span class="text-success ml-2"
-            *ngIf="getDiscountPercent(product) as discount">
-        {{ discount }}% Off
-      </span>
-    </div>
-
-    <div class="rating mb-2">⭐ 4.5 (120)</div>
-
-    <div class="delivery text-muted small mb-3">
-      🚚 {{ product.shortDescription }}
-    </div>
-
-    <label class="compare mb-0">
-     <span class="icon"
-  [class.filled]="isInWishlist(product.id)"
-  (click)="onWishlistClick(product.id)">
-  {{ isInWishlist(product.id) ? '💚' : '♡' }}</span>
-      <input type="checkbox" class="spaceicon"> Compare
-    </label>
-
-    <button class="btn-outline" (click)="addToCart(product)">Add to Cart</button>
-
-    <div class="feature-card">
-      <h3>Key Features</h3>
-      {{ product.description }}
     </div>
   </div>
+
+</form>
+
+<hr />
+<button class="btn btn-outline"
+        (click)="showAddForm = !showAddForm">
+  ➕ Add New Address
+</button>
+
+<!-- ADD ADDRESS FORM -->
+<form *ngIf="showAddForm"
+      [formGroup]="addAddressForm"
+      class="add-form">
+
+  <div class="row">
+    <div class="col-sm-6">
+      <input class="form-control"
+             placeholder="Full Name"
+             formControlName="fullName" />
+               <mat-error *ngIf="addAddressForm.get('fullName')?.hasError('required')">
+             Full Name  is required
+            </mat-error>
+    </div>
+
+    <div class="col-sm-6">
+      <input class="form-control"
+             placeholder="Phone"
+             formControlName="phone" />
+             <mat-error *ngIf="addAddressForm.get('phone')?.hasError('required')">
+                Phone number is required
+              </mat-error>
+
+              <mat-error *ngIf="addAddressForm.get('phone')?.hasError('pattern')">
+                Invalid phone number. Example: 9876543210
+              </mat-error>
+    </div>
+  </div>
+
+  <div class="row mt-10">
+    <div class="col-sm-12">
+      <input class="form-control"
+             placeholder="Address"
+             formControlName="addressLine" />
+    </div>
+  </div>
+
+  <div class="row mt-10">
+      <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="mdc-text-field ">State</mat-label>
+            <input matInput formControlName="stateId"
+                   [matAutocomplete]="stateAuto"
+                   (focus)="showState()"
+                   (input)="showState()" />
+            <mat-autocomplete #stateAuto="matAutocomplete" [displayWith]="displayState" autoActiveFirstOption (optionSelected)="onStateSelected($event.option.value)">
+              <mat-option *ngFor="let state of filteredStates$ | async" [value]="state">{{ state.name }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="addAddressForm.get('stateId')?.hasError('required')">User State is required</mat-error>
+          </mat-form-field>
+    </div>
+
+   <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="mdc-text-field ">User City</mat-label>
+            <input matInput formControlName="cityId"
+                   [matAutocomplete]="cityAuto"
+                   (focus)="showCities()"
+                   (input)="showCities()" />
+            <mat-autocomplete #cityAuto="matAutocomplete" [displayWith]="displayCities" autoActiveFirstOption (optionSelected)="onCitySelected($event.option.value)">
+              <mat-option *ngFor="let city of filteredCities$ | async" [value]="city">{{ city.name }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="addAddressForm.get('cityId')?.hasError('required')">User City is required</mat-error>
+          </mat-form-field>
+        </div>
+
+    <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="mdc-text-field">User Pincode</mat-label>
+            <input matInput formControlName="pincodeId"
+                   [matAutocomplete]="pincodeAuto"
+                   (focus)="showPincode()"
+                   (input)="showPincode()" />
+            <mat-autocomplete #pincodeAuto="matAutocomplete" [displayWith]="displayPincodes">
+              <mat-option *ngFor="let pin of filteredPincodes$ | async" [value]="pin">{{ pin.pincode }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="addAddressForm.get('pincodeId')?.hasError('required')">User Pincode is required</mat-error>
+          </mat-form-field>
+        </div>
 </div>
-
-<div class="spec-card" *ngIf="product">
-
-  <div class="spec-header">
-    <h3>Specifications</h3>
-    <span class="toggle">⌃</span>
+  <div class="text-right mt-10">
+    <button type="button"
+            class="btn btn-outline"
+            (click)="addAddress()">
+      Save Address
+    </button>
   </div>
 
-  <div class="spec-section">
-    <h4>PRODUCT DETAILS</h4>
+</form>
 
-    <div class="spec-grid">
-      <div class="spec-item">
-        <label>Category</label>
-        <span>{{ product.categoryName }}</span>
-      </div>
-      <div class="spec-item">
-        <label>Brand</label>
-        <span>{{ product.brandName }}</span>
-      </div>
-      <div class="spec-item">
-        <label>SKU</label>
-        <span>{{ product.sku }}</span>
-      </div>
-      <div class="spec-item">
-        <label>GST</label>
-        <span>{{ product.gstPercentage }}%</span>
-      </div>
-       <div class="spec-item">
-        <label>Model Number</label>
-        <span>Not Applicable</span>
-      </div>
-      <div class="spec-item">
-        <label>When to Purchase</label>
-        <span>Within 3 Years of Product Purchase</span>
-      </div>
-       <div class="spec-item">
-        <label>No. of Devices Covered</label>
-        <span>1 Devices</span>
-      </div>
-      <div class="spec-item">
-        <label>Product Price Range</label>
-        <span>NA</span>
-      </div>
-      <div class="spec-item">
-        <label>Service Available From</label>
-        <span>From the Date of Purchase</span>
-      </div>
-       <div class="spec-item">
-        <label>Service Period</label>
-        <span>12 Months</span>
-      </div>
-      
-    </div>
-  </div>
+<hr />
+
+<div class="actions text-right">
+  <button class="btn btn-default"
+          (click)="cancel()">
+    Cancel
+  </button>
+
+  <button class="btn btn-primary"
+          (click)="save()">
+    Use Selected Address
+  </button>
+</div>
 </div>

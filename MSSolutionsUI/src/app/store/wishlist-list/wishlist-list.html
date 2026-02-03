@@ -4,11 +4,10 @@
   </div>
 
   <h1 class="page-title mainheader">My Wishlist</h1>
-
+  <ng-container *ngIf="(wishlistProducts?.length ?? 0) > 0; else emptyCart">
   <div
     class="wishlist-card"
-    *ngFor="let product of wishlistProducts"
-  >
+    *ngFor="let product of wishlistProducts" >
     <!-- IMAGE -->
     <div class="product-image">
       <a [routerLink]="['/store/product', product.id]">
@@ -63,4 +62,22 @@
       </button>
     </div>
   </div>
+  </ng-container>
+    <ng-template #emptyCart>
+  <div class="container cart-empty-container">
+  <div class="empty-cart text-center">
+    <img
+      src="assets/emptyCart.svg"
+      alt="Empty Cart"
+      class="empty-cart-img"
+    />
+
+    <h5 class="mt-4 font-weight-bold">Your Cart is Empty</h5>
+
+    <a routerLink="" class="continue-shopping">
+      continue shopping
+    </a>
+  </div>
+</div>
+</ng-template>
 </div>

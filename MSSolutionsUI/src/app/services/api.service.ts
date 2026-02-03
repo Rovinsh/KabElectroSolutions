@@ -115,6 +115,9 @@ removeWishlist(productId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}Users`, userData);
   }
 
+  postUserAddress(userAddress: AddressDto):Observable<AddressResponseDto>{
+    return this.http.post<AddressResponseDto>(`${this.baseUrl}Users/Address`, userAddress);
+  }
 applyCoupon(payload: ApplyCouponRequestDto): Observable<ApplyCouponResponseDto> {
   return this.http.post<ApplyCouponResponseDto>(
     `${this.baseUrl}ApplyCoupons/apply`,
@@ -201,6 +204,7 @@ export interface PincodeDto {
 
 export interface CategoryDto {
   name: string;
+  catUrl: string;
   id: number;
 }
 
@@ -360,11 +364,15 @@ export interface AddressDto {
   fullName: string;
   phone: string;
   addressLine: string;
+  cityId: number;
+  stateId: number;
+  pincodeId: number;
   city: string;
   state: string;
-  pincode: number;
+  pincode: string; 
   isDefault?: boolean;   // optional default flag
 }
+
 export interface AddressResponseDto {
   status: number;
   message: string;

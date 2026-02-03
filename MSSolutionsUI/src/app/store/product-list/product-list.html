@@ -32,7 +32,7 @@
             <input
               type="checkbox"
               [checked]="selectedCategoryIds.has(c.id)"
-              (change)="onCategorySelect(c.id, $event)"
+              (change)="onCategorySelect(c, $event)"
             />
             {{ c.catName }}
           </label>
