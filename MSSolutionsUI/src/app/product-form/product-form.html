@@ -96,20 +96,55 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-6">
+         <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Product Covered</mat-label>
+            <input matInput formControlName="productCovered" />  
+          </mat-form-field>
+        </div>
+         <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>No Of Devices Covered</mat-label>
+            <input matInput formControlName="noOfDevicesCovered" />  
+          </mat-form-field>
+        </div>
+         <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Services Avilable From</mat-label>
+            <input matInput formControlName="servicesAvilableFrom" />  
+          </mat-form-field>
+        </div>
+         <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Services Period</mat-label>
+            <input matInput formControlName="servicesPeriod" />  
+          </mat-form-field>
+        </div>
+         <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>When to Purchase</mat-label>
+            <input matInput formControlName="whentoPurchase" />  
+          </mat-form-field>
+        </div>
+        <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Description</mat-label>
             <textarea matInput formControlName="description" rows="3"></textarea>
           </mat-form-field>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Short Description</mat-label>
             <textarea matInput formControlName="shortDescription" rows="3"></textarea>
           </mat-form-field>
         </div>
-
+          <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Services Cover Feature</mat-label>
+            <textarea matInput formControlName="servicesCoverFeature" rows="3"></textarea>
+          </mat-form-field>
+        </div>
         <div class="col-12">
           <mat-checkbox formControlName="isActive">Active Product</mat-checkbox>
         </div>

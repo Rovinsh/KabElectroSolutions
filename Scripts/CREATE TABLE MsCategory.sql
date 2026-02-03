@@ -14,3 +14,13 @@ VALUES
   
   ALTER TABLE MsCategories
 ADD CatUrl VARCHAR(250) NULL;
+
+UPDATE MsCategories
+SET CatUrl = LOWER(
+    REPLACE(
+        REPLACE(
+            REPLACE(CatName, ' ', '-'),
+        '&', 'and'),
+    '--','-')
+)
+WHERE CatUrl IS NULL;

@@ -71,20 +71,40 @@
   </div>
 
   <div class="spec-section">
-    <h4>PRODUCT DETAILS</h4>
-
+    <h3>PRODUCT DETAILS</h3>
     <div class="spec-grid">
       <div class="spec-item">
-        <label>Category</label>
+        <label>Service Category</label>
         <span>{{ product.categoryName }}</span>
       </div>
-      <div class="spec-item">
-        <label>Brand</label>
-        <span>{{ product.brandName }}</span>
+       <div class="spec-item">
+        <label>Product Covered</label>
+        <span>{{ product.productCovered }}</span>
+      </div>
+       <div class="spec-item">
+        <label>No. of Devices Covered</label>
+        <span>{{ product.noOfDevicesCovered }}</span>
+      </div>
+       <div class="spec-item">
+        <label>Product Price Range</label>
+        <span>Upto Rs. {{ product.baseAmount }}</span>
       </div>
       <div class="spec-item">
-        <label>SKU</label>
-        <span>{{ product.sku }}</span>
+        <label>Service Available From</label>
+        <span>{{ product.servicesAvilableFrom }}</span>
+      </div>
+      
+       <div class="spec-item">
+        <label>Service Period</label>
+        <span>{{ product.servicesPeriod }}</span>
+      </div>
+      <div class="spec-item">
+        <label>When to Purchase</label>
+        <span>{{ product.whentoPurchase }}</span>
+      </div>
+      <div class="spec-item">
+        <label>Model Number</label>
+        <span>Not Applicable</span>
       </div>
       <div class="spec-item">
         <label>GST</label>
@@ -94,27 +114,20 @@
         <label>Model Number</label>
         <span>Not Applicable</span>
       </div>
+    </div>
+  </div>
+   <div class="spec-section">
+    <h3>MANUFACTURER DETAILS</h3>
+
+    <div class="spec-grid">
       <div class="spec-item">
-        <label>When to Purchase</label>
-        <span>Within 3 Years of Product Purchase</span>
+        <label>Brand</label>
+        <span>{{ product.brandName }}</span>
       </div>
        <div class="spec-item">
-        <label>No. of Devices Covered</label>
-        <span>1 Devices</span>
+        <label>SKU</label>
+        <span>{{ product.sku }}</span>
       </div>
-      <div class="spec-item">
-        <label>Product Price Range</label>
-        <span>NA</span>
-      </div>
-      <div class="spec-item">
-        <label>Service Available From</label>
-        <span>From the Date of Purchase</span>
-      </div>
-       <div class="spec-item">
-        <label>Service Period</label>
-        <span>12 Months</span>
-      </div>
-      
     </div>
   </div>
 </div>

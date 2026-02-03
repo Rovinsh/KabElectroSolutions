@@ -7,6 +7,13 @@
         public string SKU { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string? ShortDescription { get; set; }
+        public string? WhentoPurchase { get; set; }
+        public string? ProductCovered { get; set; }
+        public string? NoOfDevicesCovered { get; set; }
+        public string? ServicesPeriod { get; set; }
+        public string? ServicesCoverFeature { get; set; }
+        public string? ServicesAvilableFrom { get; set; }
+        public string? ProductUrl { get; set; }       
         public decimal? DiscountPrice { get; set; }
         public int CategoryId { get; set; }
         public int BrandId { get; set; }

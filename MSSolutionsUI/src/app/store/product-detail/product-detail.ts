@@ -41,15 +41,15 @@ export class ProductDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+  const productUrl = this.route.snapshot.paramMap.get('productUrl');
 
     this.apiService.getProduct().subscribe(res => {
       this.productList = res.data.filter(x => x.isActive);
 
-      const found = this.productList.find(p => p.id === id);
+   const found = this.productList.find(p => p.productUrl === productUrl);
 
       if (!found) {
-        console.error('Product not found for id:', id);
+        console.error('Product not found for Url:', productUrl);
         return;
       }
 

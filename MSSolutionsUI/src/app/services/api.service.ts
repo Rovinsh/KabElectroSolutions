@@ -331,6 +331,13 @@ export interface ProductDto {
   discountPrice: number;
   shortDescription: string;
   description: string;
+  whentoPurchase: string;
+  productCovered: string;
+  noOfDevicesCovered: string;
+  servicesPeriod: string;
+  servicesCoverFeature: string;
+  servicesAvilableFrom:string;
+  productUrl:string;
   isActive: boolean;
 }
 export interface ProductResponseDto {

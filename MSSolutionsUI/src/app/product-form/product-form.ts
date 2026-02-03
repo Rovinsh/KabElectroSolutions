@@ -70,6 +70,12 @@ export class ProductFormComponent implements OnInit {
       discountPrice: [0],
       shortDescription: [''],
       description: [''],
+      productCovered: [''],
+      noOfDevicesCovered: [''],
+      servicesPeriod: [''],
+      whentoPurchase: [''],
+      servicesCoverFeature: [''],
+      servicesAvilableFrom: [''],
       isActive: [false]
     });
 
@@ -127,6 +133,12 @@ export class ProductFormComponent implements OnInit {
     discountPrice: record.discountPrice,
     description: record.description,
     shortDescription: record.shortDescription,
+    productCovered: record.productCovered,
+    noOfDevicesCovered: record.noOfDevicesCovered,
+    servicesPeriod: record.servicesPeriod,
+    whentoPurchase: record.whentoPurchase,
+    servicesCoverFeature: record.servicesCoverFeature,
+    servicesAvilableFrom: record.servicesAvilableFrom,
     isActive: record.isActive
   });
 }
