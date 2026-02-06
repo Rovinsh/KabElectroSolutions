@@ -16,13 +16,23 @@
           <div class="col-md-6 col-12">
             <input class="form-control"
                    placeholder="Full Name"
-                   formControlName="fullName">
+                   formControlName="fullName" required>
+                   <mat-error *ngIf="addAddressForm.get('fullName')?.hasError('required')">
+             Full Name  is required
+            </mat-error>
           </div>
 
           <div class="col-md-6 col-12">
             <input class="form-control"
                    placeholder="Phone"
                    formControlName="phone">
+                   <mat-error *ngIf="addAddressForm.get('phone')?.hasError('required')">
+                Phone number is required
+              </mat-error>
+
+              <mat-error *ngIf="addAddressForm.get('phone')?.hasError('pattern')">
+                Invalid phone number. Example: 9876543210
+              </mat-error>
           </div>
 
           <div class="col-12">
@@ -45,6 +55,7 @@
                   {{ s.name }}
                 </mat-option>
               </mat-autocomplete>
+                 <mat-error *ngIf="addAddressForm.get('stateId')?.hasError('required')">User State is required</mat-error>
             </mat-form-field>
           </div>
 
@@ -62,6 +73,7 @@
                   {{ c.name }}
                 </mat-option>
               </mat-autocomplete>
+                <mat-error *ngIf="addAddressForm.get('cityId')?.hasError('required')">User City is required</mat-error>
             </mat-form-field>
           </div>
 
@@ -78,6 +90,7 @@
                   {{ p.pincode }}
                 </mat-option>
               </mat-autocomplete>
+                    <mat-error *ngIf="addAddressForm.get('pincodeId')?.hasError('required')">User Pincode is required</mat-error>
             </mat-form-field>
           </div>
         </div>
