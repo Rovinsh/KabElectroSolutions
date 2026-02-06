@@ -5,7 +5,14 @@
   top: 0;
   z-index: 1050;
 }
-
+.store-layout a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .store-layout a:hover {
+  color: #ffb703;
+  text-decoration: none;
+}
 /* LOGO */
 .ms-logo img {
     height: 59px;

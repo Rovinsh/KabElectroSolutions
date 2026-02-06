@@ -1,0 +1,103 @@
+.order-detail-container {
+  padding: 18px;
+  font-family: Arial, sans-serif;
+  max-height: 95vh;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Order info grid */
+.order-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Table */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.order-table th,
+.order-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.order-table th {
+  background-color: #f4f6f8;
+}
+
+/* Summary */
+.summary {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 20px;
+}
+
+.summary .grand {
+  font-weight: bold;
+  font-size: 18px;
+  color: green;
+}
+
+/* Address */
+.address-section {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.address-card {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+  .order-info,
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .address-section {
+    flex-direction: column;
+  }
+
+  .order-table {
+    font-size: 12px;
+  }
+
+  h2 { font-size: 18px; }
+  h3 { font-size: 16px; }
+}

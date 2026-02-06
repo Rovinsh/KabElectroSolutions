@@ -56,6 +56,29 @@ ADD
 	ProductUrl  VARCHAR(500) NULL;
 	
 	
+
+
+
+
+ALTER TABLE [MsProducts]
+ADD 
+    CostCovered VARCHAR(2000) NULL,
+    DocumentsRequired VARCHAR(2000) NULL,
+    MarketerNameAddress VARCHAR(2000) NULL,
+    ServiceIncludes VARCHAR(2000) NULL,
+    ServiceExcludes VARCHAR(2000) NULL,
+	RepairCostCovered VARCHAR(2000) NULL,
+	CustomerSupportEmail VARCHAR(250) NULL,
+	InstallationDemo VARCHAR(250) NULL,
+    ServiceType VARCHAR(500) NULL,
+    HowtoClaim VARCHAR(2000) NULL,
+    SupportCentreContactDetails VARCHAR(2000) NULL,
+    ExtendedHoursSupport VARCHAR(500) NULL,
+	ServiceCancellationRefundPeriod VARCHAR(2000) NULL,
+	ClaimType VARCHAR(250) NULL,
+	AuthorizedServiceCentreRepairs VARCHAR(2000) NULL,
+	cashlessService VARCHAR(250) NULL;
+	
 		UPDATE MsProducts
 SET ProductUrl = LOWER(
     REPLACE(

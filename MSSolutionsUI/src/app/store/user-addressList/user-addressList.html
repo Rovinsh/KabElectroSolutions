@@ -1,0 +1,121 @@
+<div class="address-page container-fluid">
+  <div class="row g-4">
+
+    <!-- ================= LEFT: ADDRESS LIST ================= -->
+       <!-- ================= RIGHT: ADD ADDRESS FORM ================= -->
+    <div class="col-lg-6 col-12">
+      <div class="form-header">
+        <h5 class="section-title">Add New Address</h5>
+      </div>
+
+      <form
+            [formGroup]="addAddressForm"
+            class="address-form">
+
+        <div class="row g-3">
+          <div class="col-md-6 col-12">
+            <input class="form-control"
+                   placeholder="Full Name"
+                   formControlName="fullName">
+          </div>
+
+          <div class="col-md-6 col-12">
+            <input class="form-control"
+                   placeholder="Phone"
+                   formControlName="phone">
+          </div>
+
+          <div class="col-12">
+            <input class="form-control"
+                   placeholder="Address Line"
+                   formControlName="addressLine">
+          </div>
+
+          <!-- State -->
+          <div class="col-md-4 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>State</mat-label>
+              <input matInput formControlName="stateId"
+                     [matAutocomplete]="stateAuto"
+                     (focus)="showState()">
+              <mat-autocomplete #stateAuto="matAutocomplete"
+                                [displayWith]="displayState"
+                                (optionSelected)="onStateSelected($event.option.value)">
+                <mat-option *ngFor="let s of filteredStates$ | async" [value]="s">
+                  {{ s.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+
+          <!-- City -->
+          <div class="col-md-4 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>City</mat-label>
+              <input matInput formControlName="cityId"
+                     [matAutocomplete]="cityAuto"
+                     (focus)="showCities()">
+              <mat-autocomplete #cityAuto="matAutocomplete"
+                                [displayWith]="displayCities"
+                                (optionSelected)="onCitySelected($event.option.value)">
+                <mat-option *ngFor="let c of filteredCities$ | async" [value]="c">
+                  {{ c.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+
+          <!-- Pincode -->
+          <div class="col-md-4 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Pincode</mat-label>
+              <input matInput formControlName="pincodeId"
+                     [matAutocomplete]="pinAuto"
+                     (focus)="showPincode()">
+              <mat-autocomplete #pinAuto="matAutocomplete"
+                                [displayWith]="displayPincodes">
+                <mat-option *ngFor="let p of filteredPincodes$ | async" [value]="p">
+                  {{ p.pincode }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="text-end mt-3">
+          <button class="btn btn-warning px-4"
+                  type="button"
+                  (click)="addAddress()">
+            Save Address
+          </button>
+        </div>
+
+      </form>
+    </div>
+    <div class="col-lg-6 col-12">
+      <h5 class="section-title">Addresses</h5>
+
+      <div class="address-list">
+        <div class="address-card mainbox" *ngFor="let addr of addresses"  [ngClass]="{ 'active-address': addr.isDefault }">
+
+          <div class="name">{{ addr.fullName |titlecase }}</div>
+
+          <div class="address-text">
+            {{ addr.addressLine }}, {{ addr.city }} - {{ addr.pincode }}
+          </div>
+
+          <div class="phone">📞 {{ addr.phone }}</div>
+
+        </div>
+
+        <div *ngIf="addresses.length === 0" class="empty">
+          No saved addresses found.
+        </div>
+      </div>
+    </div>
+
+
+  
+
+  </div>
+</div>

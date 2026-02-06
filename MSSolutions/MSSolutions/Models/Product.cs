@@ -13,7 +13,23 @@
         public string? ServicesPeriod { get; set; }
         public string? ServicesCoverFeature { get; set; }
         public string? ServicesAvilableFrom { get; set; }
-        public string? ProductUrl { get; set; }       
+        public string? ProductUrl { get; set; }
+        public string? CashlessService { get; set; }
+        public string? AuthorizedServiceCentreRepairs { get; set; }
+        public string? ClaimType { get; set; }
+        public string? ServiceCancellationRefundPeriod { get; set; }
+        public string? ExtendedHoursSupport { get; set; }
+        public string? SupportCentreContactDetails { get; set; }
+        public string? HowtoClaim { get; set; }
+        public string? ServiceType { get; set; }
+        public string? InstallationDemo { get; set; }
+        public string? CustomerSupportEmail { get; set; }
+        public string? RepairCostCovered { get; set; }
+        public string? ServiceExcludes { get; set; }
+        public string? ServiceIncludes { get; set; }
+        public string? MarketerNameAddress { get; set; }
+        public string? DocumentsRequired { get; set; }
+        public string? CostCovered { get; set; }
         public decimal? DiscountPrice { get; set; }
         public int CategoryId { get; set; }
         public int BrandId { get; set; }
@@ -22,6 +38,7 @@
         public decimal GstPercentage { get; set; }
         public decimal GstAmount { get; set; }
         public decimal WithGstAmount { get; set; }
+
         public int StockQty { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -66,6 +66,7 @@ custumerLogin() {
     localStorage.removeItem('token');
     localStorage.clear();
     sessionStorage.clear();
+    this.wishlistService.clearWishlist();
     location.href = '';
   }
 }

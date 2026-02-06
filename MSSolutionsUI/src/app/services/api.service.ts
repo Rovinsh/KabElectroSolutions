@@ -70,6 +70,10 @@ export class ApiService {
   return this.http.get<UserResponseDto>(`${this.baseUrl}Users/users/${userType}`);
 }
 
+getUserOrders(): Observable<OrderResponseDto> {
+    return this.http.get<OrderResponseDto>(`${this.baseUrl + "Orders/userOrders"}`);
+  }
+
  getOrders(): Observable<OrderResponseDto> {
     return this.http.get<OrderResponseDto>(`${this.baseUrl + "Orders/orders"}`);
   }
@@ -337,6 +341,22 @@ export interface ProductDto {
   servicesPeriod: string;
   servicesCoverFeature: string;
   servicesAvilableFrom:string;
+  cashlessService:string;
+  authorizedServiceCentreRepairs:string;
+  claimType:string;
+  serviceCancellationRefundPeriod:string;
+  extendedHoursSupport:string;
+  supportCentreContactDetails:string;
+  howtoClaim:string;
+  serviceType:string;
+  installationDemo:string;
+  customerSupportEmail:string;
+  repairCostCovered:string;
+  serviceExcludes:string;
+  serviceIncludes:string;
+  marketerNameAddress:string;
+  documentsRequired:string;
+  costCovered:string;
   productUrl:string;
   isActive: boolean;
 }

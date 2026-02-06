@@ -96,7 +96,97 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
             return Ok(result);
         }
 
+        
+        [HttpGet("userOrders")]
+        public async Task<IActionResult> GetuserOrders()
+        {
+            var performerEmail = User?.Identity?.Name;
+
+            if (string.IsNullOrEmpty(performerEmail))
+            {
+                return Unauthorized(new { message = "User not authenticated" });
+            }
+
+            var currentUser = await _context.MsUsers
+                .FirstOrDefaultAsync(u => u.Email == performerEmail);
+
+            if (currentUser == null)
+            {
+                return NotFound(new { message = "User does not exist" });
+            }
+            var data = await _context.MsOrders
+                .Where(o => o.UserId == currentUser.Id)
+                .Include(o => o.OrderDetails)
+                .Include(o => o.BillingAddress)
+                 .Include(o => o.ShippingAddress)
+                .Select(o => new OrderDTO
+                {
+                    Id = o.Id,
+                    OrderCode = o.OrderCode,
+                    UserName = _context.MsUsers.Where(c => c.Id == o.UserId).Select(c => c.Firstname).FirstOrDefault(),
+                    UserId = o.UserId,
+                    SubTotal = o.SubTotal,
+                    TaxAmount = o.TaxAmount,
+                    ShippingAmount = o.ShippingAmount,
+                    DiscountAmount = o.DiscountAmount,
+                    GrandTotal = o.GrandTotal,
+                    CouponAmount = o.CouponAmount,
+                    ReceiveAmount = o.ReceiveAmount,
+                    PaymentStatus = o.PaymentStatus,
+                    OrderStatus = o.OrderStatus,
+                    CouponCode = o.CouponCode,
+                    OrderDate = o.OrderDate,
+                    PaymentDate = o.PaymentDate,
+                    RazorpayOrderId = o.RazorpayOrderId,
+                    RazorpayPaymentId = o.RazorpayPaymentId,
+                    RazorpaySignature = o.RazorpaySignature,
+                    OrderDetails = o.OrderDetails.Select(d => new OrderDetailDTO
+                    {
+                        Id = d.Id,
+                        ProductId = d.ProductId,
+                        ProductName = d.ProductName,
+                        BrandName = d.BrandName,
+                        CategoryName = d.CategoryName,
+                        UnitPrice = d.UnitPrice,
+                        Quantity = d.Quantity,
+                        Discount = d.Discount,
+                        TotalAmount = d.TotalAmount
+                    }).ToList(),
+
+                    BillingAddress = o.BillingAddress == null ? null : new BillingAddressDTO
+                    {
+                        FullName = o.BillingAddress.FullName,
+                        Phone = o.BillingAddress.Phone,
+                        AddressLine = o.BillingAddress.AddressLine,
+                        City = o.BillingAddress.City,
+                        State = o.BillingAddress.State,
+                        Pincode = o.BillingAddress.Pincode
+                    },
+
+                    ShippingAddress = o.ShippingAddress == null ? null : new ShippingAddressDTO
+                    {
+                        FullName = o.ShippingAddress.FullName,
+                        Phone = o.ShippingAddress.Phone,
+                        AddressLine = o.ShippingAddress.AddressLine,
+                        City = o.ShippingAddress.City,
+                        State = o.ShippingAddress.State,
+                        Pincode = o.ShippingAddress.Pincode,
+                        Country = o.ShippingAddress.Country
+                    }
+                })
+                .ToListAsync();
+
+            var result = new OrderResponseDTO
+            {
+                Status = 200,
+                Message = "success, Orders",
+                Data = data
+            };
+
+            return Ok(result);
+        }
         // ---------------- CREATE ORDER ----------------
+       
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] MsOrders order)
         {

@@ -11,12 +11,6 @@ export class WishlistService {
   private _wishlistIds = new BehaviorSubject<Set<number>>(new Set());
   wishlistIds$ = this._wishlistIds.asObservable();
 
-  constructor() {
-    if (localStorage.getItem('token')) {
-      this.loadWishlist();
-    }
-  }
-
   loadWishlist() {
     this.apiService.getWishlist().subscribe({
       next: res => {
@@ -60,6 +54,20 @@ removeWishlist(productId: number) {
     error: () => {
       this.toast.error('Failed to remove from wishlist');
     }
+  });
+}
+restoreWishlist() {
+  if (!localStorage.getItem('token')) {
+    this._wishlistIds.next(new Set());
+    return;
+  }
+
+  this.apiService.getWishlist().subscribe({
+    next: res => {
+      const ids = res?.data?.map((x: any) => x.productId ?? x.ProductId) ?? [];
+      this._wishlistIds.next(new Set(ids));
+    },
+    error: () => this._wishlistIds.next(new Set())
   });
 }
 }

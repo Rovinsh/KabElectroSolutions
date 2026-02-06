@@ -31,6 +31,24 @@ export const STORE_ROUTES: Routes = [
         .then(m => m.WishlistList),
   },
   {
+    path: 'profile',
+    loadComponent: () =>
+      import('./user-profile/user-profile')
+        .then(m => m.UserProfile),
+  },
+   {
+    path: 'address',
+    loadComponent: () =>
+      import('./user-addressList/user-addressList')
+        .then(m => m.UserAddress),
+  },
+   {
+    path: 'orders',
+    loadComponent: () =>
+      import('./user-ordersList/user-ordersList')
+        .then(m => m.UserOrders),
+  },
+  {
     path: 'checkout',
     loadComponent: () =>
       import('./checkout/checkout')
