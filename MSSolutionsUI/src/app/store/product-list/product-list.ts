@@ -53,9 +53,7 @@ export class ProductList implements OnInit {
 
 ngOnInit(): void {
 
-  const initialCategoryId = Number(
-    this.route.snapshot.paramMap.get('id')
-  );
+ const initialCatUrl = this.route.snapshot.paramMap.get('catUrl');
 
   forkJoin({
     categories: this.api.getCategories(),
@@ -66,12 +64,15 @@ ngOnInit(): void {
     this.categories = res.categories.data.filter(x => x.isDisable);
     this.productList = res.products.data.filter(x => x.isActive);
     this.brands = res.brands.data.filter(x => x.isDisable);
-
-    // 🔥 seed from route (single category)
-    if (initialCategoryId) {
-      this.selectedCategoryIds.add(initialCategoryId);
+if (initialCatUrl) {
+      const matchedCategory = this.categories.find(
+        c => c.catUrl === initialCatUrl
+      );
+    
+      if (matchedCategory) {
+        this.selectedCategoryIds.add(matchedCategory.id);
+      }
     }
-
     this.applyFilter();
   });
 }
@@ -116,21 +117,12 @@ clearFilters() {
     this.brandOpen = false;
   }
 
-  // onCategorySelect(id: number, event: Event) {
-  //   const checked = (event.target as HTMLInputElement).checked;
-
-  //   if (checked) {
-  //     this.router.navigate(['/store/productslist', id]);
-  //   } else {
-  //     this.router.navigate(['/store/productslist']);
-  //   }
-  // }
-onCategorySelect(id: number, event: Event) {
+onCategorySelect(category: CategoryDto, event: Event) {
   const checked = (event.target as HTMLInputElement).checked;
 
   checked
-    ? this.selectedCategoryIds.add(id)
-    : this.selectedCategoryIds.delete(id);
+    ? this.selectedCategoryIds.add(category.id)
+    : this.selectedCategoryIds.delete(category.id);
 
   this.applyFilter();
 }

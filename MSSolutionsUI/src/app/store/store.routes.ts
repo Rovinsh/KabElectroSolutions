@@ -7,7 +7,7 @@ export const STORE_ROUTES: Routes = [
       import('./cart/cart').then(m => m.CartComponent),
   },
   {
-    path: 'product/:id',
+    path: 'product/:productUrl',
     loadComponent: () =>
       import('./product-detail/product-detail')
         .then(m => m.ProductDetailComponent),
@@ -19,7 +19,7 @@ export const STORE_ROUTES: Routes = [
         .then(m => m.ProductList),
   },
   {
-    path: 'productList/:id',
+    path: 'productList/:catUrl',
     loadComponent: () =>
       import('./product-list/product-list')
         .then(m => m.ProductList),
@@ -29,6 +29,24 @@ export const STORE_ROUTES: Routes = [
     loadComponent: () =>
       import('./wishlist-list/wishlist-list')
         .then(m => m.WishlistList),
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./user-profile/user-profile')
+        .then(m => m.UserProfile),
+  },
+   {
+    path: 'address',
+    loadComponent: () =>
+      import('./user-addressList/user-addressList')
+        .then(m => m.UserAddress),
+  },
+   {
+    path: 'orders',
+    loadComponent: () =>
+      import('./user-ordersList/user-ordersList')
+        .then(m => m.UserOrders),
   },
   {
     path: 'checkout',

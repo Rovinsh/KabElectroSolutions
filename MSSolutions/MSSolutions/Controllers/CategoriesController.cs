@@ -31,6 +31,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
              Id = c.Id,
              CatName = c.CatName,
              Description = c.Description,
+             CatUrl= c.CatUrl,
              IsDisable = c.IsDisable,
          })
          .ToListAsync();
@@ -53,6 +54,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
 
             try
             {
+                categories.CatUrl = GenerateSlug(categories.CatName);
                 _context.MsCategories.Add(categories);
                 await _context.SaveChangesAsync();
 
@@ -69,6 +71,15 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
                 return StatusCode(500, "An error occurred while saving the category.");
             }
         }
+        private string GenerateSlug(string name)
+        {
+            return name
+                .ToLowerInvariant()
+                .Trim()
+                .Replace(" ", "-")          // spaces to dash
+                .Replace("&", "and")        // optional cleanup
+                .Replace("--", "-");        // avoid double dash
+        }
 
         [HttpPost("{id}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] MsCategories updatedCategory)
@@ -83,6 +94,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
             {
                 existingCategory.CatName = updatedCategory.CatName;
                 existingCategory.Description = updatedCategory.Description;
+                existingCategory.CatUrl = GenerateSlug(updatedCategory.CatName);
                 existingCategory.IsDisable = updatedCategory.IsDisable;
 
                 _context.MsCategories.Update(existingCategory);

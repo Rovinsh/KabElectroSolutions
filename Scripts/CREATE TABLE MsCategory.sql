@@ -10,3 +10,17 @@ VALUES
    ('Air Conditioner', 'Air Conditioner', 1),
   ('Washing Machine', 'Washing Machine', 1),
   ('Refrigerator','Refrigerator', 1);
+  
+  
+  ALTER TABLE MsCategories
+ADD CatUrl VARCHAR(250) NULL;
+
+UPDATE MsCategories
+SET CatUrl = LOWER(
+    REPLACE(
+        REPLACE(
+            REPLACE(CatName, ' ', '-'),
+        '&', 'and'),
+    '--','-')
+)
+WHERE CatUrl IS NULL;

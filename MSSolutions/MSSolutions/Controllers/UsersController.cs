@@ -118,6 +118,9 @@ namespace MSSolutions.Controllers
                 Phone = a.Phone,
                 AddressLine = a.AddressLine,
                 City = a.City,
+                CityId=a.CityId,
+                StateId = a.StateId,
+                PincodeId=  a.PincodeId,
                 State = a.State,
                 Pincode = a.Pincode,
                 IsDefault = a.IsDefault
@@ -135,6 +138,69 @@ namespace MSSolutions.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+        
+        [HttpPost("Address")]
+        public async Task<IActionResult> CreateAddress([FromBody] AddressDto usersAddress)
+        {
+            if (usersAddress == null)
+                return BadRequest("Invalid address data");
+            try
+            {
+                var performerEmail = User?.Identity?.Name;
+                var currentUser = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                var address = new MsAddress
+                {
+                    UserId = currentUser.Id,
+                    FullName = usersAddress.FullName,
+                    Phone = usersAddress.Phone,
+                    AddressLine = usersAddress.AddressLine,
+                    CityId = usersAddress.CityId,
+                    StateId = usersAddress.StateId,
+                    PincodeId = usersAddress.PincodeId,
+                    City = usersAddress.City,
+                    State = usersAddress.State,
+                    Pincode = usersAddress.Pincode,
+                    IsBusinessAddress = false,
+                    IsDefault = usersAddress.IsDefault,
+                };
+
+                _context.MsAddresses.Add(address);
+                await _context.SaveChangesAsync();
+                var addresses = await GetUserAddressList(currentUser.Id);
+
+                return Ok(new
+                {
+                    Status = 200,
+                    Message = "Address saved successfully",
+                    Data = addresses
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private async Task<List<AddressDto>> GetUserAddressList(int userId)
+        {
+            return await _context.MsAddresses
+                .Where(a => a.UserId == userId)
+                .Select(a => new AddressDto
+                {
+                    Id = a.Id,
+                    FullName = a.FullName,
+                    Phone = a.Phone,
+                    AddressLine = a.AddressLine,
+                    City = a.City,
+                    CityId = a.CityId,
+                    State = a.State,
+                    StateId = a.StateId,
+                    Pincode = a.Pincode,
+                    PincodeId = a.PincodeId,
+                    IsDefault = a.IsDefault
+                })
+                .ToListAsync();
         }
 
         [HttpPost]

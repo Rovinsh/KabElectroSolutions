@@ -1,9 +1,10 @@
-﻿using MSSolutions.Data;
-using MSSolutions.DTOs;
-using MSSolutions.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MSSolutions.Data;
+using MSSolutions.DTOs;
+using MSSolutions.Models;
+using System.Security.Claims;
 
 namespace MSSolutions.Controllers
 {
@@ -46,6 +47,29 @@ namespace MSSolutions.Controllers
                     BaseAmount = p.BaseAmount,
                     Description = p.Description ?? "",
                     ShortDescription = p.ShortDescription ?? "",
+                    WhentoPurchase = p.WhentoPurchase ?? "",
+                    ProductCovered = p.ProductCovered ?? "",
+                    NoOfDevicesCovered = p.NoOfDevicesCovered ?? "",
+                    ServicesPeriod = p.ServicesPeriod ?? "",
+                    ServicesCoverFeature = p.ServicesCoverFeature ?? "",
+                    ServicesAvilableFrom = p.ServicesAvilableFrom ?? "",
+                    ProductUrl = p.ProductUrl ?? "",
+                    CashlessService = p.CashlessService ?? "",
+                    AuthorizedServiceCentreRepairs = p.AuthorizedServiceCentreRepairs ?? "",
+                    ClaimType = p.ClaimType ?? "",
+                    ServiceCancellationRefundPeriod = p.ServiceCancellationRefundPeriod ?? "",
+                    ExtendedHoursSupport = p.ExtendedHoursSupport ?? "",
+                    SupportCentreContactDetails = p.SupportCentreContactDetails ?? "",
+                    HowtoClaim = p.HowtoClaim ?? "",
+                    ServiceType = p.ServiceType ?? "",
+                    InstallationDemo = p.InstallationDemo ?? "",
+                    CustomerSupportEmail = p.CustomerSupportEmail ?? "",
+                    RepairCostCovered = p.RepairCostCovered ?? "",
+                    ServiceExcludes = p.ServiceExcludes ?? "",
+                    ServiceIncludes = p.ServiceIncludes ?? "",
+                    MarketerNameAddress = p.MarketerNameAddress ?? "",
+                    DocumentsRequired = p.DocumentsRequired ?? "",
+                    CostCovered = p.CostCovered ?? "",
                     DiscountPrice = p.DiscountPrice ?? 0,
                     GstId = p.GstId,
                     GstPercentage = p.GstPercentage,
@@ -104,6 +128,29 @@ namespace MSSolutions.Controllers
                 DiscountPrice= dto.DiscountPrice,
                 Description= dto.Description,
                 ShortDescription= dto.ShortDescription,
+                WhentoPurchase = dto.WhentoPurchase,
+                ProductCovered = dto.ProductCovered,
+                ServicesCoverFeature = dto.ServicesCoverFeature,
+                NoOfDevicesCovered = dto.NoOfDevicesCovered,
+                ServicesAvilableFrom = dto.ServicesAvilableFrom,
+                CashlessService = dto.CashlessService,
+                AuthorizedServiceCentreRepairs = dto.AuthorizedServiceCentreRepairs,
+                ClaimType = dto.ClaimType,
+                ServiceCancellationRefundPeriod = dto.ServiceCancellationRefundPeriod,
+                ExtendedHoursSupport = dto.ExtendedHoursSupport,
+                SupportCentreContactDetails = dto.SupportCentreContactDetails,
+                HowtoClaim = dto.HowtoClaim,
+                ServiceType = dto.ServiceType,
+                InstallationDemo = dto.InstallationDemo,
+                CustomerSupportEmail = dto.CustomerSupportEmail,
+                RepairCostCovered = dto.RepairCostCovered,
+                ServiceExcludes = dto.ServiceExcludes,
+                ServiceIncludes = dto.ServiceIncludes,
+                MarketerNameAddress = dto.MarketerNameAddress,
+                DocumentsRequired = dto.DocumentsRequired,
+                CostCovered = dto.CostCovered,
+                ServicesPeriod = dto.ServicesPeriod,
+                ProductUrl = GenerateSlug(dto.ProductName),
                 GstAmount = gstAmount,
                 WithGstAmount = withGstAmount,
                 StockQty = dto.StockQty,
@@ -115,6 +162,15 @@ namespace MSSolutions.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(product);
+        }
+        private string GenerateSlug(string name)
+        {
+            return name
+                .ToLowerInvariant()
+                .Trim()
+                .Replace(" ", "-")          // spaces to dash
+                .Replace("&", "and")        // optional cleanup
+                .Replace("--", "-");        // avoid double dash
         }
 
         // PUT: api/Product/{id}
@@ -146,6 +202,30 @@ namespace MSSolutions.Controllers
             product.GstPercentage = dto.GstPercentage;
             product.DiscountPrice = dto.DiscountPrice;
             product.ShortDescription = dto.ShortDescription;
+            product.WhentoPurchase = dto.WhentoPurchase;
+            product.NoOfDevicesCovered = dto.NoOfDevicesCovered;
+            product.ServicesCoverFeature = dto.ServicesCoverFeature;
+            product.ServicesAvilableFrom = dto.ServicesAvilableFrom;   
+            product.ServicesPeriod = dto.ServicesPeriod;
+            product.CashlessService = dto.CashlessService;
+            product.AuthorizedServiceCentreRepairs = dto.AuthorizedServiceCentreRepairs;
+            product.CashlessService = dto.CashlessService;
+            product.ServiceCancellationRefundPeriod = dto.ServiceCancellationRefundPeriod;
+            product.ExtendedHoursSupport = dto.ExtendedHoursSupport;
+            product.SupportCentreContactDetails = dto.SupportCentreContactDetails;
+            product.HowtoClaim = dto.HowtoClaim;
+            product.ServiceType = dto.ServiceType;
+            product.ClaimType = dto.ClaimType;
+            product.InstallationDemo = dto.InstallationDemo;
+            product.CustomerSupportEmail = dto.CustomerSupportEmail;
+            product.RepairCostCovered = dto.RepairCostCovered;
+            product.ServiceExcludes = dto.ServiceExcludes;
+            product.ServiceIncludes = dto.ServiceIncludes;
+            product.MarketerNameAddress = dto.MarketerNameAddress;
+            product.DocumentsRequired = dto.DocumentsRequired;
+            product.CostCovered = dto.CostCovered;
+            product.ProductUrl = GenerateSlug(dto.ProductName);
+            product.ProductCovered = dto.ProductCovered;
             product.Description = dto.Description;
             product.GstAmount = gstAmount;
             product.WithGstAmount = withGstAmount;

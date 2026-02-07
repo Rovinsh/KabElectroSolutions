@@ -10,13 +10,13 @@
         {{ isInWishlist(product.id) ? '❤' : '♡' }}
       </span>
 
-      <label class="compare mb-0">
+      <!-- <label class="compare mb-0">
         <input type="checkbox" hidden> Compare
-      </label>
+      </label> -->
     </div>
 
     <!-- Product Image -->
-    <a [routerLink]="['/store/product', product.id]">
+    <a [routerLink]="['/store/product', product.productUrl]">
       <img
         class="productImage"
         [src]="getPrimaryImage(product)"
@@ -30,7 +30,7 @@
     <!-- Title -->
     <h6 class="title">
       <a class="alinkcolor"
-         [routerLink]="['/store/product', product.id]">
+         [routerLink]="['/store/product', product.productUrl]">
          {{ product.productName }}
       </a>
     </h6>

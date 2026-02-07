@@ -96,8 +96,8 @@
       <a
         class="category-pill"
         *ngFor="let c of categories"
-        [routerLink]="['/store/productList', c.id]"
-         [class.active]="selectedCategoryId === c.id"
+        [routerLink]="['/store/productList', c.catUrl]"
+         [class.active]="selectedCategoryId === c.catUrl"
       >
         {{ c.catName }}
       </a>

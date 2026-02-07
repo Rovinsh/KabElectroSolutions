@@ -43,3 +43,48 @@ VALUES
 ('iPhone 15', 'IPH15', 1, 1, 70000, 0, 3, 18, 10, 1),
 ('Samsung TV', 'SMTV55', 2, 2, 50000, 0, 3, 18, 5, 1),
 ('T-Shirt', 'TSH001', 3, 4, 1200, 100, 1, 5, 50, 1);
+
+
+ALTER TABLE [MsProducts]
+ADD 
+    WhentoPurchase        VARCHAR(250) NULL,
+    ProductCovered        VARCHAR(250) NULL,
+    NoOfDevicesCovered    VARCHAR(100) NULL,
+    ServicesPeriod        VARCHAR(100) NULL,
+    ServicesCoverFeature  VARCHAR(500) NULL;
+	ServicesAvilableFrom  VARCHAR(500) NULL;
+	ProductUrl  VARCHAR(500) NULL;
+	
+	
+
+
+
+
+ALTER TABLE [MsProducts]
+ADD 
+    CostCovered VARCHAR(2000) NULL,
+    DocumentsRequired VARCHAR(2000) NULL,
+    MarketerNameAddress VARCHAR(2000) NULL,
+    ServiceIncludes VARCHAR(2000) NULL,
+    ServiceExcludes VARCHAR(2000) NULL,
+	RepairCostCovered VARCHAR(2000) NULL,
+	CustomerSupportEmail VARCHAR(250) NULL,
+	InstallationDemo VARCHAR(250) NULL,
+    ServiceType VARCHAR(500) NULL,
+    HowtoClaim VARCHAR(2000) NULL,
+    SupportCentreContactDetails VARCHAR(2000) NULL,
+    ExtendedHoursSupport VARCHAR(500) NULL,
+	ServiceCancellationRefundPeriod VARCHAR(2000) NULL,
+	ClaimType VARCHAR(250) NULL,
+	AuthorizedServiceCentreRepairs VARCHAR(2000) NULL,
+	cashlessService VARCHAR(250) NULL;
+	
+		UPDATE MsProducts
+SET ProductUrl = LOWER(
+    REPLACE(
+        REPLACE(
+            REPLACE(ProductName, ' ', '-'),
+        '&', 'and'),
+    '--','-')
+)
+WHERE ProductUrl IS NULL;

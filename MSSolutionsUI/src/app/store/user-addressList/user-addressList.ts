@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { AddressDto, ApiService, CitiesDto, PincodeDto, StateDto } from '../../services/api.service';
@@ -8,22 +8,25 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
+import { ToastService } from '../../services/toastService.service';
 
 @Component({
-  selector: 'app-user-delivery-address',
+  selector: 'app-user-addressList',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,  MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
     MatOptionModule],
-  templateUrl: './user-delivery-address.html',
-  styleUrls: ['./user-delivery-address.css']
+  templateUrl: './user-addressList.html',
+  styleUrls: ['./user-addressList.css']
 })
-export class UserDeliveryAddress implements OnInit {
+export class UserAddress implements OnInit {
 
   addresses: AddressDto[] = [];
-
+  // Selected addresses
+  selectedShippingAddress?: AddressDto;
+  selectedBillingAddress?: AddressDto;
   form!: FormGroup;
   addAddressForm!: FormGroup;
  states: StateDto[] = [];
@@ -32,27 +35,18 @@ export class UserDeliveryAddress implements OnInit {
   filteredStates$!: Observable<StateDto[]>;
   filteredCities$!: Observable<CitiesDto[]>;
   filteredPincodes$!: Observable<PincodeDto[]>;
-
+  private toast = inject(ToastService);
   selectedStateId: number | null = null;
   selectedCityId: number | null = null;
   showAddForm = false;
-
+  useShippingAsBilling = true;
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
-    private dialogRef: MatDialogRef<UserDeliveryAddress>,
-    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit(): void {
-    this.addresses = this.data.addresses || [];
-
-    this.form = this.fb.group({
-      shippingAddressId: [this.data.selectedShipping?.id, Validators.required],
-      billingAddressId: [this.data.selectedBilling?.id],
-      useShippingAsBilling: [this.data.useShippingAsBilling ?? true]
-    });
-
+  this.loadAddress();
     this.addAddressForm = this.fb.group({
       fullName: ['', Validators.required],
       phone: [null, [Validators.required,Validators.pattern(/^[6-9]\d{9}$/)]],
@@ -62,20 +56,6 @@ export class UserDeliveryAddress implements OnInit {
       pincodeId: ['', Validators.required]
     });
 
-    this.form.get('useShippingAsBilling')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.form.patchValue({
-          billingAddressId: this.form.value.shippingAddressId
-        });
-      }
-    });
-
-    this.form.get('shippingAddressId')?.valueChanges.subscribe(val => {
-      if (this.form.value.useShippingAsBilling) {
-        this.form.patchValue({ billingAddressId: val });
-      }
-    });
-    
     forkJoin({
           states: this.apiService.getStates(),
           cities: this.apiService.getCities(),
@@ -90,9 +70,19 @@ export class UserDeliveryAddress implements OnInit {
         });
     
   }
+
+  loadAddress(){
+  this.apiService.getUserAddresses().subscribe(res => {
+  this.addresses = res.data; 
+  // Optional: set default shipping/billing
+  this.selectedShippingAddress = this.addresses.find(a => a.isDefault);
+  if (this.useShippingAsBilling) {
+    this.selectedBillingAddress = this.selectedShippingAddress;
+  }
+});
+}
    // Autocomplete setup
     private setupAutocompleteFilters() {
-  
       this.filteredStates$ = this.addAddressForm.get('stateId')!.valueChanges.pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value?.name || ''),
@@ -140,29 +130,6 @@ export class UserDeliveryAddress implements OnInit {
       this.addAddressForm.patchValue({ pincodeId: null });
       this.showPincode();
     }
-  
- close() {
-    this.dialogRef.close(false);
-  }
-  save() {
-    const shipping = this.addresses.find(
-      a => a.id === this.form.value.shippingAddressId
-    );
-
-    const billing = this.addresses.find(
-      a => a.id === this.form.value.billingAddressId
-    );
-
-    this.dialogRef.close({
-      selectedShipping: shipping,
-      selectedBilling: this.form.value.useShippingAsBilling ? shipping : billing,
-      useShippingAsBilling: this.form.value.useShippingAsBilling
-    });
-  }
-
-  cancel() {
-    this.dialogRef.close();
-  }
 
   addAddress() {
     if (this.addAddressForm.invalid) return;
@@ -181,10 +148,9 @@ export class UserDeliveryAddress implements OnInit {
 
     this.apiService.postUserAddress(payload)
       .subscribe(res => {
-        const newAddr = res.data;
-        this.addresses= res.data;
-        this.showAddForm = false;
+         this.toast.success('Address add Successfully!');
         this.addAddressForm.reset();
+          this.loadAddress();
       });
   }
 }

@@ -82,7 +82,7 @@ private handleLoginSuccess(res: any, loginData: { username: string; password: st
     localStorage.setItem('userRole', this.auth.userRole ?? '');
 
     this.auth.isLoggedin$.next(1);
-    this.wishlistService.loadWishlist();
+    this.wishlistService.restoreWishlist();
     // Notify parent that login/signup succeeded
     this.dialogRef.close(true);
   }

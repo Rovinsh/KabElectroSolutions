@@ -21,26 +21,27 @@
     </div>
 
     <div class="col-md-4">
-  <div class="coupon-box address-card" *ngIf="selectedShippingAddress">
+  <div class="coupon-box address-card" >
     <h4>📦 Shipping Address   <div class="address-actions" style="float: right;">
     <span class="icon-btn" (click)="onChangeAddress()">✏️</span></div></h4>
+    <div *ngIf="selectedShippingAddress">
     <p class="d-flex justify-content-between">
-      <strong>{{ selectedShippingAddress.fullName }}</strong>
+      <strong>{{ selectedShippingAddress?.fullName }}</strong>
     </p>
 
     <p class="phone">
-      📞 {{ selectedShippingAddress.phone }}
+      📞 {{ selectedShippingAddress?.phone }}
     </p>
 
     <p class="address-line">
-     🏠 {{ selectedShippingAddress.addressLine }}
+     🏠 {{ selectedShippingAddress?.addressLine }}
     </p>
 
     <p class="city">
-      {{ selectedShippingAddress.city }},
-      {{ selectedShippingAddress.state }} -
-      {{ selectedShippingAddress.pincode }}
-    </p>
+      {{ selectedShippingAddress?.city }},
+      {{ selectedShippingAddress?.state }} -
+      {{ selectedShippingAddress?.pincode }}
+    </p></div>
   </div>
      <ng-template #noAddress>
   <div class="alert alert-warning">

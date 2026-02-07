@@ -15,7 +15,7 @@ export class HomeComponent {
   private apiService = inject(ApiService);
   categories: CategoryDto[] = [];
   productList: ProductWithImagesDto[] = [];
-  selectedCategoryId = 0;
+  selectedCategoryId = '';
   ngOnInit() {
      forkJoin({
               category: this.apiService.getCategories(),
@@ -27,7 +27,7 @@ export class HomeComponent {
                 this.productList = result.product.data.filter(x => x.isActive) ?? result.product; 
                 if (airCategory) {
                    this.productList = result.product.data.filter(x => x.isActive &&  x.categoryId === airCategory?.id) ?? result.product; 
-                    this.selectedCategoryId = airCategory.id;
+                    this.selectedCategoryId = airCategory.catUrl;
                  } 
                 }
             });  
