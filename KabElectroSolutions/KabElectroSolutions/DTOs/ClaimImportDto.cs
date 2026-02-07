@@ -8,6 +8,7 @@
         public string? Concern { get; set; }
         public string? ItemName { get; set; }
         public string? ItemBrand { get; set; }
+        public string? ItemCategory { get; set; }
         public string? ItemSerialNumber { get; set; }
         public string? InvoiceNumber { get; set; }
         public DateOnly? InvoiceDate { get; set; }

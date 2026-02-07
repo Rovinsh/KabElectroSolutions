@@ -1247,6 +1247,37 @@ namespace KabElectroSolutions.Controllers
                 try
                 {
                     //var row = table.Rows[i];
+                    DateOnly? invoiceDate = null;
+
+                    var value = row[9];
+
+                    if (value == null)
+                    {
+                        invoiceDate = null;
+                    }
+                    else if (value is DateTime dateTime) // ⭐ MOST IMPORTANT
+                    {
+                        invoiceDate = DateOnly.FromDateTime(dateTime);
+                    }
+                    else if (value is double oaDate) // Excel numeric date
+                    {
+                        invoiceDate = DateOnly.FromDateTime(DateTime.FromOADate(oaDate));
+                    }
+                    else
+                    {
+                        var text = value.ToString()?.Trim();
+
+                        if (!string.IsNullOrEmpty(text) &&
+                            DateTime.TryParseExact(
+                                text,
+                                "dd-MM-yyyy",
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.None,
+                                out var dt))
+                        {
+                            invoiceDate = DateOnly.FromDateTime(dt);
+                        }
+                    }
 
                     var dto = new ClaimImportDto
                     {
@@ -1258,29 +1289,37 @@ namespace KabElectroSolutions.Controllers
                         ItemBrand = row[5]?.ToString(),
                         ItemSerialNumber = row[6]?.ToString(),
                         InvoiceNumber = row[7]?.ToString(),
-                        InvoiceDate = DateTime.TryParseExact(row[8]?.ToString()?.Trim(),"dd-MM-yyyy HH:mm:ss",CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt)? DateOnly.FromDateTime(dt): null,
-                        ItemPrice = decimal.TryParse(row[9]?.ToString(), out var p) ? p : null,
-                        Pincode = int.TryParse(row[10]?.ToString(), out var pin) ? pin : null,
-                        CustomerCity = row[11]?.ToString(),
-                        CustomerState = row[12]?.ToString(),
-                        CustomerAddress = row[13]?.ToString()
+                        ItemCategory = row[8]?.ToString(),
+                        InvoiceDate = invoiceDate,
+                        ItemPrice = decimal.TryParse(row[10]?.ToString(), out var p) ? p : null,
+                        Pincode = int.TryParse(row[11]?.ToString(), out var pin) ? pin : null,
+                        CustomerCity = row[12]?.ToString(),
+                        CustomerState = row[13]?.ToString(),
+                        CustomerAddress = row[14]?.ToString()
                     };
 
                     claims.Add(BuildClaimFromImport(dto, user, subStatus));
                 }
                 catch (Exception ex)
-                {
+                {                    
                     failedRows.Add(new FailedClaimRowDto
                     {
                         RowNumber = i + 1,
-                        Error = ex.Message,
+                        Error = ex.Message+ ex.InnerException,
                         RawData = string.Join(" | ", row.ItemArray)
                     });
                 }
             }
 
             await _context.Claims.AddRangeAsync(claims);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
             foreach (var claim in claims)
             {
                 await AddAuditLog(
@@ -1354,6 +1393,7 @@ namespace KabElectroSolutions.Controllers
                 ItemName = dto.ItemName,
                 ItemBrand = dto.ItemBrand,
                 ItemSerialNumber = dto.ItemSerialNumber,
+                ItemCategory= dto.ItemCategory,
                 InvoiceNumber = dto.InvoiceNumber,
                 InvoiceDate = dto.InvoiceDate,
                 PlanSoldDate = (DateOnly)dto.InvoiceDate!,
