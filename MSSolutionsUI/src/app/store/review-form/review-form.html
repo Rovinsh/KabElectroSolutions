@@ -1,0 +1,42 @@
+<div class="dialogpadding" [formGroup]="reviewForm">
+
+  <h2 class="dialog-title">Write a Review</h2>
+
+  <div class="dialog-content">
+
+    <!-- RATING -->
+    <label>Rating</label>
+    <div class="star-input">
+      <span
+        *ngFor="let s of stars"
+        (click)="setRating(s)"
+        [class.active]="reviewForm.value.rating >= s">
+        ★
+      </span>
+    </div>
+
+    <div class="error" *ngIf="reviewForm.get('rating')?.touched && reviewForm.get('rating')?.invalid">
+      Rating is required
+    </div>
+
+    <!-- COMMENT -->
+    <label>Review</label>
+    <textarea
+      rows="4"
+      formControlName="comment"
+      placeholder="Share your experience">
+    </textarea>
+
+    <div class="error"
+         *ngIf="reviewForm.get('comment')?.touched && reviewForm.get('comment')?.invalid">
+      Review must be at least 10 characters
+    </div>
+
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-dialog-close class="btn-outline">Cancel</button>
+    <button class="btn-outline" (click)="submit()">Submit</button>
+  </div>
+
+</div>

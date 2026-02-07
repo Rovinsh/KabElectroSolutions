@@ -86,6 +86,10 @@ getUserOrders(): Observable<OrderResponseDto> {
     return this.http.get<AddressResponseDto>(`${this.baseUrl + "Users/Address"}`);
   }
 
+ getReviewComment(): Observable<ReviewResponseDto> {
+    return this.http.get<ReviewResponseDto>(`${this.baseUrl + "Review/Review"}`);
+  }
+
  addWishlist(productId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}Wishlist/AddWishlist`, { productId });
   }
@@ -103,6 +107,10 @@ removeWishlist(productId: number): Observable<any> {
 
   postBarands(brandData: BrandDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Brands`, brandData);
+  }
+
+  postReviewComment(reviewData: ReviewDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}Review`, reviewData);
   }
 
  postUserCreate(userData: SignupRequestDto): Observable<any> {
@@ -218,8 +226,17 @@ export interface BrandDto {
   id: number;
   categoryId:number;
 }
-
-
+export interface ReviewDto {
+  rating: number;
+  comment: string;
+  userName: string;
+  currentDate:Date;
+}
+export interface ReviewResponseDto {
+  status: number;
+  message: string;
+  data: ReviewDto[];
+}
 export interface CategoryDto {
   catName: string;
   description: string;

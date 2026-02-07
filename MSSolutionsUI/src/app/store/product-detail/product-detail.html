@@ -64,13 +64,11 @@
 </div>
 
 <div class="spec-card" *ngIf="product">
-
-  <div class="spec-header">
-    <h3>Specifications</h3>
-    <span class="toggle">⌃</span>
+  <div class="spec-header" (click)="toggleSpec()">
+    <h5>Specifications</h5>
+    <span class="toggle" [class.rotate]="isSpecOpen">⌃</span>
   </div>
-
-  <div class="spec-section">
+  <div class="spec-section" *ngIf="isSpecOpen">
     <h3>PRODUCT DETAILS</h3>
     <div class="spec-grid">
       <div class="spec-item">
@@ -111,7 +109,7 @@
         <span>Not Applicable</span>
       </div>
     </div>
-  </div>
+  
   <hr>
    <div class="spec-section">
     <h3>MANUFACTURER DETAILS</h3>
@@ -132,6 +130,7 @@
     </div>
   </div>
    <hr>
+    <ng-container *ngIf="showMoreSpecs">
    <div class="spec-section">
     <h3>Service Coverage Features</h3>
 
@@ -273,4 +272,72 @@
       </div> 
     </div>
   </div>
+  </ng-container>
+    <button class="view-btn" (click)="toggleViewMore()">
+    {{ showMoreSpecs ? 'View Less' : 'View More' }}
+  </button>
+  </div>
 </div>
+<div class="spec-card" *ngIf="product">
+
+  <!-- REVIEW HEADER -->
+  <div class="spec-header" (click)="toggleReview()">
+    <h5>Reviews</h5>
+    <span class="toggle" [class.rotate]="isReviewOpen">⌃</span>
+  </div>
+
+  <!-- REVIEW CONTENT -->
+  <div class="spec-section" *ngIf="isReviewOpen">
+
+    <!-- SUMMARY -->
+    <div class="review-summary">
+
+  <!-- LEFT -->
+  <div class="review-left">
+    <div class="rating-big">⭐ {{ getAverageRating() }} / 5</div>
+    <div class="rating-text">Based on ({{ reviewComment.length }} reviews)</div>
+
+    <p class="review-cta">
+      Review this product<br />
+      <span>Help other customers make their decision</span>
+    </p>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="review-right">
+    <button class="btn-outline" (click)="openReviewForm()">
+      Write a Review
+    </button>
+  </div>
+
+</div>
+
+
+    <hr>
+
+    <!-- REVIEW LIST -->
+    <div class="review-list" *ngIf="reviews.length; else noReviews">
+      <div class="review-item" *ngFor="let r of reviewComment">
+        <div class="review-head">
+          <strong>{{ r.userName }}</strong>
+          <span class="review-date">{{ r.currentDate | date:'dd MMM yyyy' }}</span>
+        </div>
+
+        <div class="review-rating">
+          ⭐ {{ r.rating }}
+        </div>
+
+        <p class="review-comment">
+          {{ r.comment }}
+        </p>
+      </div>
+    </div>
+
+    <!-- NO REVIEWS -->
+    <ng-template #noReviews>
+      <p class="no-review">No reviews yet.</p>
+    </ng-template>
+
+  </div>
+</div>
+

@@ -2,14 +2,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CartService } from '../services/cart.service';
-import { ApiService, ProductWithImagesDto, ProductImageDto } from '../../services/api.service';
+import { ApiService, ProductWithImagesDto, ProductImageDto, OrderDTO, ReviewDto } from '../../services/api.service';
 import { CartPopupComponent } from '../shared/cart-popup/cart-popup.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../services/auth';
 import { ToastService } from '../../services/toastService.service';
 import { LoginComponent } from '../Login/login.component';
 import { WishlistService } from '../services/wishlist.service';
-
+import { ReviewFormComponent } from '../review-form/review-form';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
@@ -20,6 +20,8 @@ import { WishlistService } from '../services/wishlist.service';
 export class ProductDetailComponent implements OnInit {
   wishlistIds: Set<number> = new Set();
   pendingWishlistProductId: number | null = null;
+  orders: OrderDTO[] = [];
+  reviewComment:ReviewDto[]=[];
   private wishlistService = inject(WishlistService);
   private apiService = inject(ApiService);
   private toast = inject(ToastService);
@@ -72,9 +74,16 @@ export class ProductDetailComponent implements OnInit {
     this.wishlistService.wishlistIds$.subscribe(ids => {
     this.wishlistIds = ids;
     });
+    this.loadOrders();
+    this.loadReviewComment();
   }
 
 
+  loadReviewComment() {
+    this.apiService.getReviewComment().subscribe(res => {
+      this.reviewComment = res.data.sort((a: any, b: any) => a.orderCode.localeCompare(b.orderCode));
+    });
+  }
 
  isInWishlist(productId: number): boolean {
     return this.wishlistService.isInWishlist(productId);
@@ -158,6 +167,18 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+getAverageRating(): number {
+  if (!this.reviewComment || this.reviewComment.length === 0) {
+    return 0;
+  }
+
+  const total = this.reviewComment.reduce(
+    (sum: number, r: any) => sum + (r.rating || 0),
+    0
+  );
+
+  return +(total / this.reviewComment.length).toFixed(1);
+}
 
   onWishlistClick(productId: number) {
     if (!this.auth.isLoggedIn()) {
@@ -166,5 +187,80 @@ export class ProductDetailComponent implements OnInit {
       return;
     }
     this.wishlistService.addWishlist(productId);
+  }
+
+  isSpecOpen = false;
+  showMoreSpecs = false;
+
+toggleSpec() {
+  this.isSpecOpen = !this.isSpecOpen;
+
+  // reset view more when collapsing
+  if (!this.isSpecOpen) {
+    this.showMoreSpecs = false;
+  }
+}
+
+toggleViewMore() {
+  this.showMoreSpecs = !this.showMoreSpecs;
+}
+isReviewOpen = false;
+
+reviews = [
+  {
+    user: 'Rahul S',
+    rating: 5,
+    comment: 'Excellent service. Easy claim process and quick support.',
+    date: 'Jan 2025'
+  },
+  {
+    user: 'Anita P',
+    rating: 4,
+    comment: 'Worth the price. Peace of mind after warranty.',
+    date: 'Dec 2024'
+  }
+];
+
+toggleReview() {
+  this.isReviewOpen = !this.isReviewOpen;
+}
+  loadOrders() {
+    this.apiService.getUserOrders().subscribe(res => {
+      this.orders = res.data.sort((a: any, b: any) => a.orderCode.localeCompare(b.orderCode));
+    });
+  }
+
+openReviewForm() {
+   if (!this.auth.isLoggedIn()) {
+      this.pendingWishlistProductId = this.product.id;
+      this.openLoginPopup();
+      return;
+    }
+    else{
+    if(this.hasPurchasedProduct(this.product.id)){
+    this.openReviewPopup();
+      }else{
+    this.toast.error(` You can only review products purchased from your account`);
+      }
+    }
+  }
+
+  hasPurchasedProduct(productId: number): boolean {
+    return this.orders.some(o => o.id === productId);
+  }
+
+   openReviewPopup() {
+    const dialogRef = this.dialog.open(ReviewFormComponent, {
+      width: '500px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      disableClose: true,
+      panelClass: 'review-dialog',
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('Review popup closed');
+      this.loadReviewComment();
+    });
   }
 }

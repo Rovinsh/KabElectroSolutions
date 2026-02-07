@@ -277,3 +277,182 @@
     flex-direction: row;
   }
 }
+/* SPEC CARD */
+.spec-card {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin: 30px auto;
+  color: #fff;
+}
+
+/* HEADER */
+.spec-header {
+  padding: 5px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle {
+  transition: transform 0.3s ease;
+}
+
+.toggle.rotate {
+  transform: rotate(180deg);
+}
+
+/* BODY */
+.spec-content {
+  padding: 20px 24px 30px;
+}
+
+.spec-section h3 {
+  margin-bottom: 14px;
+  font-size: 15px;
+  text-transform: uppercase;
+  color: #ddd;
+}
+
+/* GRID */
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.spec-item label {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.spec-item span {
+  font-size: 14px;
+}
+
+/* VIEW BUTTON */
+.view-btn {
+  margin: 30px auto 0;
+  display: block;
+  padding: 8px 26px;
+  border: 1px solid #666;
+  background: transparent;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.view-btn:hover {
+  background: #222;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .spec-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .spec-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* REVIEW SUMMARY */
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.rating-big {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.rating-text {
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* REVIEW LIST */
+.review-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.review-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.review-date {
+  color: #888;
+  font-size: 12px;
+}
+
+.review-rating {
+  margin: 6px 0;
+  font-size: 13px;
+  color: #f5c518;
+}
+
+.review-comment {
+  font-size: 14px;
+  color: #ddd;
+}
+
+/* EMPTY */
+.no-review {
+  text-align: center;
+  color: #aaa;
+  padding: 20px;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .review-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.review-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.review-left {
+  max-width: 70%;
+}
+
+.review-cta {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.review-cta span {
+  color: #aaa;
+  font-size: 13px;
+}
+
+.review-right {
+  flex-shrink: 0;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .review-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .review-right {
+    margin-top: 12px;
+  }
+}

@@ -9,6 +9,7 @@ namespace MSSolutions.Data
         public MSSolutionsDbContext(DbContextOptions<MSSolutionsDbContext> options) : base(options) { }
         public DbSet<MsUser> MsUsers => Set<MsUser>();
         public DbSet<MsOrders> MsOrders => Set<MsOrders>();
+        public DbSet<MsReview> MsReview => Set<MsReview>();
         public DbSet<MsOrderDetails> MsOrderDetails => Set<MsOrderDetails>();
         public DbSet<MsOrderBillingAddress> MsOrderBillingAddress => Set<MsOrderBillingAddress>(); 
         public DbSet<MsOrderShippingAddress> MsOrderShippingAddress => Set<MsOrderShippingAddress>();
