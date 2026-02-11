@@ -46,7 +46,7 @@ menu: SidebarItem[] = [
     title: 'Users',
     icon: '🧑',
     roles: ['Super Admin'],
-    route: '/crm/customers'
+    route: '/crm/users'
   },
   {
     title: 'Employees',

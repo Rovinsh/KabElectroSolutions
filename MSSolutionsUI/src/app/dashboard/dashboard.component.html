@@ -2,17 +2,22 @@
 <div class="container-fluid mt-3">
   <div class="row g-3">
 
-    <div class="col-xl-2 col-lg-4 col-md-6" *ngFor="let card of cards">
-      <div class="stat-card" [ngStyle]="{'background': card.bg}">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h4>{{ card.value }}</h4>
-            <p>{{ card.label }}</p>
-          </div>
-          <i class="bi {{ card.icon }}"></i>
-        </div>
+    <div class="row">
+  <div class="col-md-2" *ngFor="let card of cards">
+    <div
+      class="card dashboard-card"
+      [style.background]="card.bg"
+      [routerLink]="card.link"
+      [class.clickable]="card.link"
+    >
+      <div class="card-body text-white">
+        <i class="bi" [ngClass]="card.icon"></i>
+        <h3>{{ card.value }}</h3>
+        <p>{{ card.label }}</p>
       </div>
     </div>
+  </div>
+</div>
 
   </div>
 </div>
@@ -23,29 +28,53 @@
     <div class="section-card">
 
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">Top Selling Products</h5>
-        <select class="form-select form-select-sm w-auto">
-          <option>Filter By</option>
-          <option>This Week</option>
-          <option>This Month</option>
-        </select>
+        <h5 class="mb-0">Top Selling Products</h5>     
       </div>
 
-      <div class="product-item d-flex align-items-center" *ngFor="let p of topProducts">
-        <img [src]="p.image" class="product-img me-3" />
-        <div class="flex-grow-1">
-          <small class="text-muted">{{ p.date }}</small>
-          <div class="fw-semibold">{{ p.name }}</div>
-        </div>
-        <div class="text-end">
-          <small class="text-muted">Price</small>
-          <div class="fw-semibold">${{ p.price }}</div>
-        </div>
-        <div class="text-end ms-3">
-          <small class="text-muted">Orders</small>
-          <div class="fw-semibold">{{ p.orders }}</div>
-        </div>
-      </div>
+    <div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Product</th>
+        <th class="d-none d-md-table-cell">Category</th>
+        <th class="d-none d-lg-table-cell">Brand</th>
+        <th class="text-end">Price</th>
+        <th class="text-end">Orders</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let p of topProducts; let i = index">
+        <td>{{ i + 1 }}</td>
+
+        <td>
+          <div class="fw-semibold">{{ p.productName }}</div>
+          <!-- Mobile extra info -->
+          <small class="text-muted d-md-none">
+            {{ p.categoryName }} · {{ p.brand }}
+          </small>
+        </td>
+
+        <td class="d-none d-md-table-cell">
+          {{ p.categoryName }}
+        </td>
+
+        <td class="d-none d-lg-table-cell">
+          {{ p.brand }}
+        </td>
+
+        <td class="text-end fw-semibold">
+          ₹ {{ p.price | number:'1.0-0' }}
+        </td>
+
+        <td class="text-end">
+          <span class="badge bg-success">{{ p.orders }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
     </div>
   </div>
@@ -56,13 +85,15 @@
 
       <h5 class="mb-3">Recent Orders</h5>
 
-      <ag-grid-angular
+       <ag-grid-angular
         class="ag-theme-alpine"
-        style="width: 100%; height: 350px;"
-        [rowData]="recentOrders"
-        [columnDefs]="orderCols"
-        [animateRows]="true">
-      </ag-grid-angular>
+        style="width: 100%;"
+        [rowData]="topTenOrders"
+        [columnDefs]="OrderCols"
+        [animateRows]="true"
+        domLayout="autoHeight"
+        (cellClicked)="onCellClicked($event)">
+        </ag-grid-angular>
 
     </div>
   </div>

@@ -13,7 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiService, CitiesDto, PincodeDto, StateDto, Role } from '../services/api.service';
+import { ApiService, CitiesDto, PincodeDto, StateDto, Role, UserDto } from '../services/api.service';
 import { ToastService } from '../services/toastService.service';
 
 @Component({
@@ -39,8 +39,8 @@ export class UserFormComponent implements OnInit {
   isSubmitting = false;
   userForm!: FormGroup;
   mode: 'add' | 'edit' = 'add';
-  submitBtnLabel: string = 'Submit User';
-  title: string = 'Create User';
+  submitBtnLabel: string = 'Submit Employee';
+  title: string = 'Create Employee';
 
   states: StateDto[] = [];
   cities: CitiesDto[] = [];
@@ -58,6 +58,7 @@ export class UserFormComponent implements OnInit {
   private apiService = inject(ApiService);
   private toast = inject(ToastService);
   private dialogRef = inject(MatDialogRef<UserFormComponent>);
+  private data = inject(MAT_DIALOG_DATA) as { mode: 'add' | 'edit'; record?: UserDto };
 
   ngOnInit(): void {
 
@@ -85,12 +86,48 @@ export class UserFormComponent implements OnInit {
         this.states = result.states.data;
         this.cities = result.cities.data;
         this.pincodes = result.pincodes.data;
-        this.roles = result.roles;
+       this.roles = result.roles.filter(
+        (r: any) => r.roleName.toLowerCase() !== 'super admin'
+      );
 
         this.setupAutocompleteFilters();
+
+        if (this.data.mode === 'edit') {
+          this.mode = 'edit';
+          this.title = 'Edit Employee';
+          this.submitBtnLabel = 'Update Employee';
+          this.patchEditData();
+        }
       }
     });
 
+  }
+
+  // ✅ Perfect edit patching (no errors)
+  private patchEditData() {
+    const record = this.data.record!;
+
+    const stateObj = this.states.find(s => s.id === record.stateId) || null;
+    const cityObj = this.cities.find(c => c.id === record.cityId) || null;
+    const pinObj = this.pincodes.find(p => p.id === record.pinCodeId) || null;
+
+    this.selectedStateId = record.stateId;
+    this.selectedCityId = record.cityId;
+
+    this.userForm.patchValue({
+      firstName: record.firstName,
+      lastName: record.lastName,
+      phone: record.phone,
+      email: record.email,
+      address: record.address,
+      stateId: stateObj,
+      cityId: cityObj,
+      pinCodeId: pinObj,
+      roleId: record.roleId
+    });
+
+    this.showCities();
+    this.showPincode();
   }
 
   // Autocomplete setup
@@ -162,11 +199,28 @@ export class UserFormComponent implements OnInit {
      this.isSubmitting = true;
   const handleError = (err: any) => {
     if (err.status === 409) {this.isSubmitting = false;
-      this.toast.error('User email already exists!');
+      this.toast.error('Employee email already exists!');
     } else {this.isSubmitting = false;
       this.toast.error(err?.error || 'An error occurred!');
     }
   };
+  if (this.mode === 'edit' && this.data.record) {
+     this.apiService.updateUser(this.data.record.id, payload).subscribe({
+      next: () => {this.isSubmitting = false;
+        this.toast.success('Employee Updated Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: handleError
+    });
+  } else {
+    this.apiService.postUser(payload).subscribe({
+      next: () => {this.isSubmitting = false;
+        this.toast.success('Employee Created Successfully!');
+        this.dialogRef.close('success');
+      },
+      error: handleError
+    });
+  }
   }
 
   onClose() { this.dialogRef.close(); }

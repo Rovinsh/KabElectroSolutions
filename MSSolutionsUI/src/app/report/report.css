@@ -1,0 +1,91 @@
+.card-header {
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.btn {
+  border-radius: 8px;
+}
+
+hr {
+  border-top: 2px solid #e5e5e5;
+}
+.mat-form-field {
+  flex: 1;
+}
+.mat-form-field {
+  background-color: #fff;
+}
+
+@media (max-width: 768px) {
+  .mat-form-field {
+    width: 100% !important;
+  }
+}
+/* Reduce vertical padding inside Material field */
+::ng-deep .mat-form-field-infix {
+  padding: 0.35em 0 !important;
+}
+
+/* Align outline height with Bootstrap form fields */
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  top: 0 !important;
+}
+
+/* Shrink Material field to same height as Bootstrap input */
+::ng-deep .mat-form-field.mat-form-field-sm {
+  --mat-form-field-container-height: 2.4em;
+}
+
+/* Adjust range input baseline alignment */
+::ng-deep .mat-date-range-input-container {
+  align-items: center !important;
+}
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.table td,
+.table th {
+  padding: 0.75rem;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  text-align: left; /* file name left-aligned */
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}

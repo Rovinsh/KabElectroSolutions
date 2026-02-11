@@ -35,64 +35,95 @@ namespace MSSolutions.Controllers
 
             try
             {
-                var performerEmail = User?.Identity?.Name;
-                var user = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail && !u.IsPartner);
-
-                var query =
-                    from u in _context.MsUsers
-                    join a in _context.MsAddresses on u.Id equals a.UserId into addressGroup
-                    from addr in addressGroup.DefaultIfEmpty()
-                    where !u.IsPartner
-                    select new { u, addr };
+                var query = _context.MsUsers
+                    .Where(u => !u.IsPartner);
 
                 if (userType == "customer")
                 {
-                    query = query.Where(x => x.u.BusinessroleName == "User" && x.u.BusinessroleName != "Super Admin");
+                    query = query.Where(u =>
+                        u.BusinessroleName == "User" &&
+                        u.BusinessroleName != "Super Admin");
                 }
                 else
                 {
-                    query = query.Where(x => x.u.BusinessroleName != "Super Admin");
+                    query = query.Where(u =>
+                        u.BusinessroleName != "User" &&
+                        u.BusinessroleName != "Super Admin");
                 }
 
-                var data = await query.Select(x => new UsersDTO
-                {
-                    Id = x.u.Id,
-                    Phone = x.u.Phone,
-                    Email = x.u.Email,
-                    FirstName = x.u.Firstname,
-                    LastName = x.u.Lastname,
+                var data = await query
+                    .Select(u => new UsersDTO
+                    {
+                        Id = u.Id,
+                        Phone = u.Phone,
+                        Email = u.Email,
+                        FirstName = u.Firstname,
+                        LastName = u.Lastname,
 
-                    Address = x.addr != null ? x.addr.AddressLine : null,
-                    CityName = x.addr != null ? x.addr.City : null,
-                    StateName = x.addr != null ? x.addr.State : null,
-                    PinCode = x.addr != null ? x.addr.Pincode : null,
+                        // ✅ Take only ONE address
+                        Address = _context.MsAddresses
+                            .Where(a => a.UserId == u.Id)
+                            .OrderByDescending(a => a.Id) // latest address
+                            .Select(a => a.AddressLine)
+                            .FirstOrDefault(),
 
-                    RoleId = x.u.Businessrole,
-                    RoleName = x.u.BusinessroleName,
+                        CityName = _context.MsAddresses
+                            .Where(a => a.UserId == u.Id)
+                            .OrderByDescending(a => a.Id)
+                            .Select(a => a.City)
+                            .FirstOrDefault(),
 
-                    CityId = x.addr != null
-                        ? _context.Cities.Where(c => c.Name == x.addr.City).Select(c => c.Id).FirstOrDefault()
-                        : 0,
+                        StateName = _context.MsAddresses
+                            .Where(a => a.UserId == u.Id)
+                            .OrderByDescending(a => a.Id)
+                            .Select(a => a.State)
+                            .FirstOrDefault(),
 
-                    StateId = x.addr != null
-                        ? _context.Locations.Where(st => st.Name == x.addr.State).Select(st => st.Id).FirstOrDefault()
-                        : 0,
+                        PinCode = _context.MsAddresses
+                            .Where(a => a.UserId == u.Id)
+                            .OrderByDescending(a => a.Id)
+                            .Select(a => a.Pincode)
+                            .FirstOrDefault(),
 
-                    PinCodeId = x.addr != null
-                        ? _context.Pincodes.Where(p => p.PincodeValue == x.addr.Pincode).Select(p => p.Id).FirstOrDefault()
-                        : 0
-                }).ToListAsync();
+                        RoleId = u.Businessrole,
+                        RoleName = u.BusinessroleName,
 
-                var result = new UsersResponseDTO
+                        CityId = _context.MsAddresses
+                            .Where(a => a.UserId == u.Id)
+                            .OrderByDescending(a => a.Id)
+                            .Select(a => _context.Cities
+                                .Where(c => c.Name == a.City)
+                                .Select(c => c.Id)
+                                .FirstOrDefault())
+                            .FirstOrDefault(),
+
+                        StateId = _context.MsAddresses
+                            .Where(a => a.UserId == u.Id)
+                            .OrderByDescending(a => a.Id)
+                            .Select(a => _context.Locations
+                                .Where(st => st.Name == a.State)
+                                .Select(st => st.Id)
+                                .FirstOrDefault())
+                            .FirstOrDefault(),
+
+                        PinCodeId = _context.MsAddresses
+                            .Where(a => a.UserId == u.Id)
+                            .OrderByDescending(a => a.Id)
+                            .Select(a => _context.Pincodes
+                                .Where(p => p.PincodeValue == a.Pincode)
+                                .Select(p => p.Id)
+                                .FirstOrDefault())
+                            .FirstOrDefault()
+                    })
+                    .ToListAsync();
+
+                return Ok(new UsersResponseDTO
                 {
                     Status = 200,
-                    Message = "success, is_redis = True",
+                    Message = "success",
                     Data = data
-                };
-
-                return Ok(result);
+                });
             }
-        
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
@@ -212,6 +243,12 @@ namespace MSSolutions.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var emailExists = await _context.MsUsers
+            .AnyAsync(u => u.Email.ToLower() == users.Email.ToLower());
+
+                if (emailExists)
+                    return Conflict("User email already exists.");
+
                 var performerEmail = User?.Identity?.Name;
                 var currentUser = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
                 var roleName = _context.MsRoles.Where(role => role.RoleId == users.RoleId).First().RoleName;
@@ -263,7 +300,7 @@ namespace MSSolutions.Controllers
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
-                return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, users);
+                return CreatedAtAction( nameof(GetUsers),new { userType = "user" },users);
             }
             catch (DbUpdateException ex)
             {
@@ -292,6 +329,12 @@ namespace MSSolutions.Controllers
 
             try
             {
+                var emailExists = await _context.MsUsers
+            .AnyAsync(u => u.Email.ToLower() == customer.Email.ToLower());
+
+                if (emailExists)
+                    return Conflict("User email already exists.");
+
                 var roleData = await _context.MsRoles.FirstOrDefaultAsync(r => r.RoleName == "User");
                 if (roleData == null)
                     return BadRequest("Role 'User' not found.");
@@ -356,6 +399,16 @@ namespace MSSolutions.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var emailExists = await _context.MsUsers
+                    .AnyAsync(u =>
+                        u.Email.ToLower() == updateUserdata.Email.ToLower() &&
+                        u.Id != id
+                    );
+
+                if (emailExists)
+                {
+                    return Conflict("User email already exists.");
+                }
                 var performerEmail = User?.Identity?.Name;
                 var currentUser = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
                 var roleName = _context.MsRoles.Where(role => role.RoleId == updateUserdata.RoleId).First().RoleName;

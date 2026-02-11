@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace KabEleMSSolutionsctroSolutions.Controllers
+namespace MSSolutions.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

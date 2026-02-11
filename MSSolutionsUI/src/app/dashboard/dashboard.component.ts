@@ -1,13 +1,15 @@
 import { Component,inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ApiService } from '../services/api.service';
+import { ApiService, OrderDTO, ProductDto, TopSellingProductDto, UserDto } from '../services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon'
 import { AuthService } from '../services/auth';
 import { ColDef } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
+import { forkJoin } from 'rxjs';
+import { OrderDetailComponent } from '../order-detail/order-detail';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,51 +18,204 @@ import { AgGridModule } from 'ag-grid-angular';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-   cards = [
-    { label: 'Total Orders', value: '33500', icon: 'bi-currency-dollar', bg: 'linear-gradient(45deg,#8BC34A,#CDDC39)' },
-    { label: 'Total Products', value: '5300', icon: 'bi-hand-thumbs-up', bg: 'linear-gradient(45deg,#FF5722,#FF9800)' },
-    { label: 'Total Customers', value: '14280', icon: 'bi-people', bg: 'linear-gradient(45deg,#FFC107,#FFEB3B)' },
-    { label: 'Total Offers', value: '7520', icon: 'bi-cart', bg: 'linear-gradient(45deg,#E91E63,#F06292)' },
-    { label: 'TAX', value: '$2700', icon: 'bi-pie-chart', bg: 'linear-gradient(45deg,#4DD0E1,#80DEEA)' },
-    { label: 'DOWNLOADS', value: '12700', icon: 'bi-download', bg: 'linear-gradient(45deg,#A1887F,#8D6E63)' }
-  
-  ];
-  topProducts = [
-  { name: 'Gourmet Fresh Pomegranate', date: '25 Aug 2023', price: 4.65, orders: 2, image: 'https://via.placeholder.com/40?text=P' },
-  { name: 'Deliciously Sweet Strawberry', date: '25 Aug 2023', price: 6.37, orders: 10, image: 'https://via.placeholder.com/40?text=S' },
-  { name: 'Deliciously Sweet Watermelon', date: '25 Aug 2023', price: 5.46, orders: 13, image: 'https://via.placeholder.com/40?text=W' },
-  { name: 'Palm Bliss', date: '24 Aug 2023', price: 7.26, orders: 8, image: 'https://via.placeholder.com/40?text=B' }
+ orders: OrderDTO[] = [];
+ topTenOrders:OrderDTO[] = [];
+ topSellingProducts:TopSellingProductDto[]=[];
+ product: ProductDto[] = [];
+ customers : UserDto[] = [];
+ users: UserDto[] = [];
+ topProducts: any[] = [];
+ cards: any[] = [];
+ OrderCols: ColDef[] = [
+  { headerName: 'S.No', width: 70, valueGetter: (params: any) => params.node.rowIndex + 1 }
+  ,  {
+    headerName: 'Detail',
+    width: 80,
+    cellRenderer: (params: any) =>
+      `<a href="javascript:void(0)" class="detail-link" data-id="${params.data.id}">🚚📦</a>`
+  }, { headerName: 'Order Code', field: 'orderCode', filter: true, width: 180 },
+ {
+  headerName: 'Payment Status',
+  field: 'paymentStatus',
+  filter: true,
+  width: 120,
+  cellStyle: (params: any) => {
+    if (!params.value) return null;
+
+    const status = params.value.toLowerCase();
+
+    if (status === 'pending') {
+      return { color: 'red', fontWeight: 'bold' };
+    }
+    if (status === 'complete' || status === 'paid') {
+      return { color: 'green', fontWeight: 'bold' };
+    }
+    return null;
+  }
+},{ headerName: 'Grand Total', field: 'grandTotal', filter: true, width: 120 },
+  { headerName: 'Receive Amount', field: 'receiveAmount', filter: true, width: 120 },
+  { headerName: 'Sub Total', field: 'subTotal', filter: true, width: 120 },
+  { headerName: 'Tax Amount', field: 'taxAmount', filter: true, width: 120 },
+  { headerName: 'Shipping Amount', field: 'shippingAmount', filter: true, width: 120 },
+  { headerName: 'Discount Amount', field: 'discountAmount', filter: true, width: 120 },
+  { headerName: 'Coupon Amount', field: 'couponAmount', filter: true, width: 120 },
+  { headerName: 'User Name', field: 'UserName', filter: true, width: 120 },
+  { headerName: 'Order Status', field: 'orderStatus', filter: true, width: 100 },
+  { headerName: 'Coupon Code', field: 'couponCode', filter: true, width: 120 },
+  { headerName: 'Razorpay Order Id', field: 'razorpayOrderId', filter: true, width: 130 },
+  { headerName: 'Razorpay Payment Id', field: 'razorpayPaymentId', filter: true, width: 130 },
+  { headerName: 'Razorpay Signature', field: 'razorpaySignature', filter: true, width: 150 },
+  {
+    headerName: 'Order Date',
+    field: 'orderDate',
+    filter: true,
+    width: 130,
+    valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+  },
+  {
+    headerName: 'Payment Date',
+    field: 'paymentDate',
+    filter: true,
+    width: 130,
+    valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+  }
 ];
-recentOrders = [
-    { number: '#1031', date: '30 Sep 2023', name: 'John Doe', status: 'Completed', invoice: '📄' },
-    { number: '#1030', date: '30 Sep 2023', name: 'John Doe', status: 'Pending', invoice: '📄' },
-    { number: '#1029', date: '30 Sep 2023', name: 'John Doe', status: 'Completed', invoice: '📄' },
-    { number: '#1028', date: '30 Sep 2023', name: 'John Doe', status: 'Cancelled', invoice: '📄' }
-  ];
-
-  orderCols: ColDef[] = [
-    { headerName: 'Number', field: 'number', width: 150 },
-    { headerName: 'Date', field: 'date', width: 150 },
-    { headerName: 'Name', field: 'name', width: 120 },
-    {
-      headerName: 'Status',
-      field: 'status',
-      width: 100,
-      cellRenderer: (params: any) => {
-        switch (params.value) {
-          case 'Completed': return '<span class="badge bg-success">COMPLETED</span>';
-          case 'Pending': return '<span class="badge bg-warning text-dark">PENDING</span>';
-          case 'Cancelled': return '<span class="badge bg-danger">CANCELLED</span>';
-          default: return params.value;
-        }
-      }
-    },
-    { headerName: 'Invoice', field: 'invoice', width: 130 }
-  ];
-
   constructor(
     private apiService: ApiService,
     private dialog: MatDialog,
     private auth: AuthService
   ) {}
+   ngOnInit(): void {
+     this.loadDashboardData();
+  }
+
+  loadDashboardData() {
+  forkJoin({
+    orders: this.apiService.getOrders(),
+    products: this.apiService.getProduct(),
+    customers: this.apiService.getCustomrs(),
+    users: this.apiService.getUsers(),
+    topSellingProduct: this.apiService.getTopSellingProducts()
+  }).subscribe({
+    next: (res) => {
+
+      // Orders
+      this.orders = res.orders.data.sort((a: any, b: any) =>
+        a.orderCode.localeCompare(b.orderCode)
+      );
+
+    this.topTenOrders = res.orders.data
+      .sort((a: any, b: any) =>
+        new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
+      )
+      .slice(0, 10);
+      // Products
+      this.product = res.products.data.sort((a: any, b: any) =>
+        a.productName.localeCompare(b.productName)
+      );
+
+       this.topSellingProducts = res.topSellingProduct.data.sort((a: any, b: any) =>
+        a.productName.localeCompare(b.productName)
+      );
+
+    this.topProducts = this.topSellingProducts.map((p: any) => ({
+      categoryName: p.categoryName,
+      brand:p.brandName,     // or remove if not needed
+      productName: p.productName,
+      price: p.totalAmount,          // total revenue
+      orders: p.orderCount
+    }));
+      // Customers
+      this.customers = res.customers.data.sort((a: any, b: any) =>
+        a.firstName.localeCompare(b.firstName)
+      );
+
+      // Users / Employees
+      this.users = res.users.data.sort((a: any, b: any) =>
+        a.firstName.localeCompare(b.firstName)
+      );
+
+      // Update dashboard cards
+      this.updateCards();
+    },
+    error: () => {
+    }
+  });
+}
+onCellClicked(event: any) {
+    if (event.colDef.headerName === 'Detail' && event.event.target.classList.contains('detail-link')) {
+      this.openPopup(event.data); 
+    }
+  }
+openPopup(data: OrderDTO) {
+  this.dialog.open(OrderDetailComponent, {
+    width: '800px',
+    maxWidth: '95vw',
+    maxHeight: '90vh',
+    disableClose: true,
+    data: { record: data }
+  });
+}
+getTotalGST(): number {
+  return this.orders.reduce((sum: number, o: any) => {
+    return sum + (o.taxAmount || 0);
+  }, 0);
+}
+getTotalCouponAmount(): number {
+  return this.orders.reduce((sum: number, o: any) => {
+    return sum + (o.couponAmount|| 0);
+  }, 0);
+}
+
+updateCards() {
+  const totalGST = this.getTotalGST();
+  const totalCouponAmount = this.getTotalCouponAmount();
+
+  this.cards = [
+    {
+      label: 'Total Orders',
+      value: this.orders.length,
+      icon: 'bi-cart',
+      bg: 'linear-gradient(45deg,#8BC34A,#CDDC39)',
+      link: '/crm/orders'
+    },
+    {
+      label: 'Total Products',
+      value: this.product.length,
+      icon: 'bi-box',
+      bg: 'linear-gradient(45deg,#FF5722,#FF9800)',
+      link: '/crm/master'
+    },
+    {
+      label: 'Total Customers',
+      value: this.customers.length,
+      icon: 'bi-people',
+      bg: 'linear-gradient(45deg,#FFC107,#FFEB3B)',
+      link: '/crm/customers'
+    },
+    {
+      label: 'Total Employees',
+      value: this.users.length,
+      icon: 'bi-person-badge',
+      bg: 'linear-gradient(45deg,#E91E63,#F06292)',
+      link: '/crm/employees'   // ✅ ADDED
+    },
+    {
+      label: 'Total TAX',
+      value: `₹ ${totalGST.toFixed(2)}`,
+      icon: 'bi-pie-chart',
+      bg: 'linear-gradient(45deg,#4DD0E1,#80DEEA)',
+      link: '/crm/orders'
+    },
+    {
+      label: 'Coupon Amount',
+      value: `₹ ${totalCouponAmount.toFixed(2)}`,
+      icon: 'bi-ticket-perforated',
+      bg: 'linear-gradient(45deg,#A1887F,#8D6E63)',
+      link: '/crm/orders'
+    }
+  ];
+}
+
+
 }

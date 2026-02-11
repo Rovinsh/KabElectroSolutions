@@ -8,6 +8,8 @@ import { OrderComponent } from './orders/orders';
 import { CustomerComponent } from './customer/customer';
 import { MasterComponent } from '../app/master/master';
 import { UserComponent } from './user/user';
+import { ReportComponent } from './report/report';
+
 export const routes: Routes = [
   {
     path: '',
@@ -53,7 +55,7 @@ export const routes: Routes = [
         data: { roles: ['Super Admin'] }
       },
       {
-        path: 'user',
+        path: 'users',
         component: CustomerComponent,
         canActivate: [RoleGuard],
         data: { roles: ['Super Admin'] }
@@ -61,6 +63,12 @@ export const routes: Routes = [
       {
         path: 'master',
         component: MasterComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['Super Admin'] }
+      },
+      {
+        path: 'report',
+        component: ReportComponent,
         canActivate: [RoleGuard],
         data: { roles: ['Super Admin'] }
       }

@@ -77,7 +77,9 @@ getUserOrders(): Observable<OrderResponseDto> {
  getOrders(): Observable<OrderResponseDto> {
     return this.http.get<OrderResponseDto>(`${this.baseUrl + "Orders/orders"}`);
   }
-
+ getTopSellingProducts(): Observable<TopSellingProductResponseDto> {
+    return this.http.get<TopSellingProductResponseDto>(`${this.baseUrl + "Orders/topSellingProducts"}`);
+  }
   getRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(`${this.baseUrl + "Roles/roles"}`);
   }
@@ -86,6 +88,13 @@ getUserOrders(): Observable<OrderResponseDto> {
     return this.http.get<AddressResponseDto>(`${this.baseUrl + "Users/Address"}`);
   }
 
+ GetReportOnLinkClick(dateRange: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}Reports/GetReportOnLinkClick/${dateRange}`);
+  }
+
+   getReports(): Observable<ReportsResponseDto> {
+    return this.http.get<ReportsResponseDto>(`${this.baseUrl + "Reports/reports"}`);
+  }
  getReviewComment(): Observable<ReviewResponseDto> {
     return this.http.get<ReviewResponseDto>(`${this.baseUrl + "Review/Review"}`);
   }
@@ -100,7 +109,9 @@ removeWishlist(productId: number): Observable<any> {
   postCategory(categoryData: CategoryDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Categories`, categoryData);
   }
-
+ postReport(reportData:ReportFilterDto): Observable<any> {
+  return this.http.post(`${this.baseUrl}Reports`,reportData);
+  }
   postGst(GstData: GstDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Gst`, GstData);
   }
@@ -269,6 +280,20 @@ export interface GstResponseDto {
   message: string;
   data: GstDto[];
 }
+export interface TopSellingProductDto {
+  productId: number;
+  productName: string;
+  brandName: string;
+  categoryName: string;
+  orderCount: number;
+  totalQuantity: number;
+  totalAmount: number;
+}
+export interface TopSellingProductResponseDto {
+  status: number;
+  message: string;
+  data: TopSellingProductDto[];
+}
 export interface SignupRequestDto {
   firstName: string;
   lastName: string;
@@ -308,7 +333,27 @@ export interface ApplyCouponDto {
   finalAmount: number;
   discountType: 'percentage' | 'fixed';
 }
+export interface ReportFilterDto {
+  reportType: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  reportName:string;
+}
 
+export interface ReportsDto {
+  fileName: string;
+  link?: string;
+  id: number;
+  dateRange: string;
+  timeStamp: string;
+  status: string;
+}
+
+export interface ReportsResponseDto {
+  status: number;
+  message: string;
+  data: ReportsDto[];
+}
 export interface ApplyCouponResponseDto {
   status: number;
   message: string;
@@ -396,6 +441,7 @@ export interface UserDto {
   address: string;
   phone: string;
   email:string;
+  roleId:number;
 }
 
 export interface UserResponseDto {

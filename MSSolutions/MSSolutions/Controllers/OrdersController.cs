@@ -1,10 +1,11 @@
-﻿using MSSolutions.Data;
-using MSSolutions.DTOs;
-using MSSolutions.Models;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MSSolutions.Data;
+using MSSolutions.DTOs;
+using MSSolutions.Models;
 using System;
 
 namespace KabEleMSSolutionsctroSolutions.Controllers
@@ -206,6 +207,48 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
                 return StatusCode(500, "An error occurred while saving the order.");
             }
         }
-    
-}
+
+
+        [HttpGet("topSellingProducts")]
+        public async Task<IActionResult> GetTopSellingProducts()
+        {
+            var data = await _context.MsOrderDetails
+                .GroupBy(d => new
+                {
+                    d.ProductId,
+                    d.ProductName,
+                    d.BrandName,
+                    d.CategoryName
+                })
+                .Select(g => new TopSellingProductDTO
+                {
+                    ProductId = g.Key.ProductId,
+                    ProductName = g.Key.ProductName,
+                    BrandName = g.Key.BrandName,
+                    CategoryName = g.Key.CategoryName,
+
+                    // ✅ number of orders per product
+                    OrderCount = g
+                        .Select(x => x.OrderId)
+                        .Distinct()
+                        .Count(),
+
+                    // ✅ total quantity sold
+                    TotalQuantity = g.Sum(x => x.Quantity),
+
+                    // ✅ total revenue
+                    TotalAmount = g.Sum(x => x.TotalAmount)
+                })
+                .OrderByDescending(x => x.OrderCount) // 🔥 top selling first
+                .Take(10) // optional: top 10 products
+                .ToListAsync();
+
+            return Ok(new
+            {
+                Status = 200,
+                Message = "Top selling products",
+                Data = data
+            });
+        }
+    }
 }
