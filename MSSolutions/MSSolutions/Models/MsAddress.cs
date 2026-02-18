@@ -14,7 +14,7 @@ namespace MSSolutions.Models
         public int StateId { get; set; }
         public int CityId { get; set; }
         public int PincodeId { get; set; }
-        public int Pincode { get; set; }
+        public int? Pincode { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public string City { get; set; }

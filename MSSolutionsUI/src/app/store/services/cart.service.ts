@@ -14,6 +14,7 @@ export interface CartItem {
 
   // calculated later (optional)
   couponDiscount?: number;
+  couponCode?: string;
   gstAmount?: number;
   finalAmount?: number;
 }
@@ -115,6 +116,7 @@ addToCart(product: ProductWithImagesDto) {
       return {
         ...item,
         couponDiscount: +couponShare.toFixed(2),
+        couponCode:this.couponCode,
         gstAmount,
         finalAmount: +(discountedUnitPrice + gstAmount).toFixed(2)
       };

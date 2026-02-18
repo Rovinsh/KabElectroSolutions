@@ -13,7 +13,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-
   getAuditLogs(controllerName:string): Observable<any> {
     return this.http.get(`${this.baseUrl+controllerName}`);
   }
@@ -105,6 +104,10 @@ getUserOrders(): Observable<OrderResponseDto> {
 
 removeWishlist(productId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}Wishlist/removeWishlist`, { productId });
+  }
+  
+   createPayment(paymentData: CreatePaymentDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}CreatePhonePePayment`, paymentData);
   }
   postCategory(categoryData: CategoryDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Categories`, categoryData);
@@ -254,7 +257,18 @@ export interface CategoryDto {
   isDisable: boolean;
   id: number;
 }
+export interface CartItemDto {
+  productId: number;
+  quantity: number;
+}
 
+export interface CreatePaymentDto {
+  shippingAddressId: number | null;
+  billingAddressId: number | null;
+  useShippingAsBilling: boolean;
+  couponCode?: string | null;
+  cartItems: CartItemDto[];
+}
 export interface CategoryResponseDto {
   status: number;
   message: string;
@@ -473,26 +487,21 @@ export interface OrderDTO {
   orderCode: string;
   userId: number;
   userName: string;
-
   subTotal: number;
   taxAmount: number;
   shippingAmount: number;
   discountAmount: number;
   grandTotal: number;
   receiveAmount: number;
-
   paymentStatus: string;
   orderStatus: string;
-
   couponCode?: string;
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
   razorpaySignature?: string;
-
   orderDate: string;      // ISO Date string
   paymentDate: string;    // ISO Date string
   createdAt: string;      // ISO Date string
-
   orderDetails: OrderDetailDTO[];
   billingAddress: BillingAddressDTO;
   shippingAddress: ShippingAddressDTO;
@@ -544,7 +553,7 @@ export interface BillingAddressDTO {
   addressLine?: string;
   city?: string;
   state?: string;
-  pincode?: string;
+  pincode?: number;
 }
 export interface ShippingAddressDTO {
   fullName?: string;
@@ -552,7 +561,7 @@ export interface ShippingAddressDTO {
   addressLine?: string;
   city?: string;
   state?: string;
-  pincode?: string;
+  pincode?: number;
   country?: string;
 }
 export interface OrderResponseDto {

@@ -187,11 +187,11 @@ updateCards() {
       link: '/crm/master'
     },
     {
-      label: 'Total Customers',
+      label: 'Total User',
       value: this.customers.length,
       icon: 'bi-people',
       bg: 'linear-gradient(45deg,#FFC107,#FFEB3B)',
-      link: '/crm/customers'
+      link: '/crm/users'
     },
     {
       label: 'Total Employees',

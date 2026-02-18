@@ -26,6 +26,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   subtotal = 0;
   gstTotal = 0;
   couponDiscount = 0;
+  couponCode='';
   grandTotal = 0;
   private sub?: Subscription;
   private wishlistService = inject(WishlistService);
@@ -59,6 +60,9 @@ ngOnInit(): void {
     ).toFixed(2);
 
     // Coupon discount (already distributed in cart page)
+    if (items.length > 0) {
+      this.couponCode = items[0].couponCode || '';
+    }
     this.couponDiscount = +items.reduce(
       (sum, item) => sum + (item.couponDiscount ?? 0),
       0
@@ -150,5 +154,47 @@ onChangeAddress() {
 onChangeBillingAddress() {
   console.log('Change billing address');
 }
+proceedToPayment() {
 
+  if (!this.selectedShippingAddress) {
+    this.toast.error("Please select address");
+    return;
+  }
+
+  const payload = {
+
+  shippingAddressId: this.selectedShippingAddress.id,
+
+  billingAddressId: this.useShippingAsBilling
+    ? this.selectedShippingAddress.id
+    : (this.selectedBillingAddress?.id ?? null),
+
+  useShippingAsBilling: this.useShippingAsBilling,
+
+  couponCode: this.cartService.couponCode || null,
+
+  cartItems: this.cartItems.map(item => ({
+    productId: item.productId,
+    quantity: item.quantity
+  }))
+
+};
+
+  this.apiService.createPayment(payload).subscribe(res => {
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = res.apiUrl;
+
+  ['request', 'checksum', 'merchantId'].forEach(k => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = k;
+    input.value = res[k];
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+    });
+}
 }

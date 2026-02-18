@@ -12,25 +12,27 @@ public class MsOrders
     public int UserId { get; set; }
     public decimal SubTotal { get; set; }
     public decimal TaxAmount { get; set; }
-    public decimal ShippingAmount { get; set; }
     public decimal DiscountAmount { get; set; }
     public decimal GrandTotal { get; set; }
     public decimal ReceiveAmount { get; set; }
     public string PaymentStatus { get; set; } = "Pending";
     public string OrderStatus { get; set; } = "Pending";
     public string? CouponCode { get; set; }
-    public int CouponId { get; set; }
     public decimal CouponAmount { get; set; }
     public string? RazorpayOrderId { get; set; }
+    public string? MerchantTransactionId { get; set; }       
     public string? RazorpayPaymentId { get; set; }
     public string? RazorpaySignature { get; set; }
+    public string? PaymentResponse { get; set; }   
     public DateTime OrderDate { get; set; } = DateTime.UtcNow;
     public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public int ShippingAddressId { get; set; }
+    public int BillingAddressId { get; set; }
     public ICollection<MsOrderDetails> OrderDetails { get; set; }
     public MsOrderBillingAddress BillingAddress { get; set; }
     public MsOrderShippingAddress ShippingAddress { get; set; }
-}
+    }
 public class MsOrderDetails
     {
     [Key]
