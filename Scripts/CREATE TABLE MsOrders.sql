@@ -20,7 +20,15 @@ CREATE TABLE MsOrders (
 
     CONSTRAINT FK_MsOrders_MsUser FOREIGN KEY (UserId) REFERENCES MsUsers(Id)
 );
+  ALTER TABLE MsOrders
+DROP COLUMN
+    CouponId,
+    ShippingAmount;
+	    ALTER TABLE MsOrders
+DROP CONSTRAINT FK_MsOrders_MsCoupons;
 
+ALTER TABLE MsOrders
+DROP CONSTRAINT DF__MsOrders__Shippi__57A801BA;
 ALTER TABLE MsOrders
 ADD 
     CouponId INT NULL,
@@ -33,3 +41,22 @@ SET
     CouponId = 1,
     CouponAmount = 100
 WHERE Id = 5;
+
+
+ALTER TABLE MsOrders
+ADD
+    MerchantTransactionId NVARCHAR(100) NULL,
+    PaymentResponse NVARCHAR(MAX) NULL,
+	ShippingAddressId INT NULL,
+    BillingAddressId INT NULL;
+
+    ALTER TABLE MsOrders
+ADD CONSTRAINT FK_MsOrders_ShippingAddress
+FOREIGN KEY (ShippingAddressId)
+REFERENCES MsAddresses(Id);
+
+ALTER TABLE MsOrders
+ADD CONSTRAINT FK_MsOrders_BillingAddress
+FOREIGN KEY (BillingAddressId)
+REFERENCES MsAddresses(Id);
+
