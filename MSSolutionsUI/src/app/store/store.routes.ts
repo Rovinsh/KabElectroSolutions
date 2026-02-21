@@ -54,4 +54,34 @@ export const STORE_ROUTES: Routes = [
       import('./checkout/checkout')
         .then(m => m.CheckoutComponent),
   },
+  {
+    path: 'privacy_policy',
+    loadComponent: () =>
+      import('./privacy-policy/privacy_policy')
+        .then(m => m.PrivacyPolicyComponent),
+  },
+  {
+    path: 'term_condition',
+    loadComponent: () =>
+      import('./term_condition/term_condition')
+        .then(m => m.TermConditionComponent),
+  },
+{
+    path: 'refund_policy',
+    loadComponent: () =>
+      import('./refund_policy/refund_policy')
+        .then(m => m.RefundPolicyComponent),
+  },
+  {
+    path: 'return_policy',
+    loadComponent: () =>
+      import('./return_policy/return_policy')
+        .then(m => m.ReturnPolicyComponent),
+  },
+  {
+    path: 'shipping_policy',
+    loadComponent: () =>
+      import('./shipping_policy/shipping_policy')
+        .then(m => m.ShippingPolicyComponent),
+  }
 ];
