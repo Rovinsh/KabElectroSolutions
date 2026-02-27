@@ -12,6 +12,7 @@ using System.Text;
 
 namespace MSSolutions.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
