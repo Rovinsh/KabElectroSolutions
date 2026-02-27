@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-payment-success',
@@ -14,7 +15,7 @@ export class PaymentuScessComponent {
 
   orderId: number | null = null;
   amount: number | null = null;
-
+   private CartService = inject(CartService);
   constructor(private router: Router) {}
 
   ngOnInit() {
@@ -23,6 +24,7 @@ export class PaymentuScessComponent {
     if (navigation?.extras?.state) {
       this.orderId = navigation.extras.state['orderId'];
       this.amount = navigation.extras.state['amount'];
+      this.CartService.clearCart();
     }
   }
 }

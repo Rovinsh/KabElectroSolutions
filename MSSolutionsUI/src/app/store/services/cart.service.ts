@@ -185,4 +185,11 @@ addToCart(product: ProductWithImagesDto) {
 getCartItems(): CartItem[] {
   return this.cartItemsSubject.value;
 }
+clearCart() {
+  this.couponCode = '';
+  this.couponDiscount = 0;
+  this.cartItemsSubject.next([]);
+  this.cartCountSubject.next(0);
+  localStorage.removeItem(CART_KEY);
+}
 }
