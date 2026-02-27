@@ -2,15 +2,17 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { CartItem, CartService } from '../services/cart.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule,Router } from '@angular/router';
 import { LoginComponent } from '../Login/login.component';
 import { WishlistService } from '../services/wishlist.service';
 import { ToastService } from '../../services/toastService.service';
 import { AuthService } from '../../services/auth';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AddressDto, ApiService } from '../../services/api.service';
+import { AddressDto, ApiService, RazorpayVerifyDTO } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import{UserDeliveryAddress} from '../user-delivery-Address/user-delivery-address'
+declare var Razorpay: any;
+
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -19,9 +21,11 @@ import{UserDeliveryAddress} from '../user-delivery-Address/user-delivery-address
   styleUrls: ['./checkout.css']
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
+  
   wishlistIds: Set<number> = new Set();
   pendingWishlistProductId: number | null = null;
   cartItems: CartItem[] = [];
+  isSubmitting = false;
   total = 0;
   subtotal = 0;
   gstTotal = 0;
@@ -33,6 +37,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private toast = inject(ToastService);
   private auth = inject(AuthService);
   private apiService = inject(ApiService);
+  private router = inject(Router);
   isLoggedIn = false;
   addresses: AddressDto[] = [];
   // Selected addresses
@@ -181,20 +186,70 @@ proceedToPayment() {
 };
 
   this.apiService.createPayment(payload).subscribe(res => {
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = res.apiUrl;
+  const options = {
+    key: res.key,
+    amount: res.amount,
+    currency: "INR",
+    name: "MS Care Prime Private Limited",
+    description: "Order Payment",
+    order_id: res.razorpayOrderId,
 
-  ['request', 'checksum', 'merchantId'].forEach(k => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = k;
-    input.value = res[k];
-    form.appendChild(input);
-  });
+    handler: (response: any) => {
+    this.verifyPayment(response);
+  },
 
-  document.body.appendChild(form);
-  form.submit();
+  modal: {
+    ondismiss: () => {
+      // USER CLOSED POPUP
+      this.markFailed();
+    }
+  },
+    prefill: {
+      name: res.name,
+      email: res.email,
+      contact: res.contact
+    },
+
+    theme: {
+      color: "#3399cc"
+    }
+  };
+  const rzp = new Razorpay(options);
+  rzp.open();
+});
+}
+
+verifyPayment(response: any) {
+  const payload: RazorpayVerifyDTO = {
+    razorpay_order_id: response.razorpay_order_id,
+    razorpay_payment_id: response.razorpay_payment_id,
+    razorpay_signature: response.razorpay_signature
+  };
+this.isSubmitting = true;
+  this.apiService.verifyRazorpay(payload).subscribe({
+  next: (res) => {this.isSubmitting = false;
+    this.router.navigate(['/store/payment-success'], {
+      state: {
+        orderId: res.orderId,
+        amount: res.amount,
+        message: res.message
+      }
+    });
+  },
+  error: (err) => {this.isSubmitting = false;
+    this.router.navigate(['/store/payment-failed'], {
+      state: {
+        message: err.error || "Payment Failed"
+      }
+    });
+  }
+});
+}
+markFailed() { this.isSubmitting = false;
+ this.router.navigate(['/store/payment-failed'], {
+      state: {
+        message: "Payment Failed"
+      }
     });
 }
 }

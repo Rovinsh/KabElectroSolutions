@@ -83,5 +83,17 @@ export const STORE_ROUTES: Routes = [
     loadComponent: () =>
       import('./shipping_policy/shipping_policy')
         .then(m => m.ShippingPolicyComponent),
+  },
+  {
+    path: 'payment-success',
+    loadComponent: () =>
+      import('./payment-response/payment-success')
+        .then(m => m.PaymentuScessComponent),
+  },
+  {
+    path: 'payment-failed',
+    loadComponent: () =>
+      import('./payment-response/payment-failed')
+        .then(m => m.PaymentuFailedComponent),
   }
 ];

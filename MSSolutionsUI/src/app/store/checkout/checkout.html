@@ -76,7 +76,7 @@
 
 
 
-        <button class="btn-outline mt-4" (click)="proceedToPayment()">
+        <button class="btn-outline mt-4"   [disabled]="isSubmitting"  (click)="proceedToPayment()">
           Proceed To Payment
         </button>
       </div>

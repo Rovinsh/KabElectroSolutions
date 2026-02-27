@@ -13,7 +13,10 @@ using MSSolutions.DTOs;
 using MSSolutions.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Razorpay;
+using Razorpay.Api;
 using System;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text;
@@ -27,21 +30,23 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
     {
         private readonly MSSolutionsDbContext _context;
         private readonly ILogger<CreatePhonePePaymentController> _logger;
-        private readonly IConfiguration _phonePe;
-
-        public CreatePhonePePaymentController(ILogger<CreatePhonePePaymentController> logger, MSSolutionsDbContext context, IConfiguration phonePe)
+        private readonly PhonePeEnvConfig _phonePe;
+        public CreatePhonePePaymentController(ILogger<CreatePhonePePaymentController> logger, MSSolutionsDbContext context, IOptions<PhonePeSettings> options)
         {
             _logger = logger;
             _context = context;
-            _phonePe = phonePe;
+            var settings = options.Value;
+            _phonePe = settings.Environment == "PROD"
+                ? settings.PROD
+                : settings.UAT;
 
         }
-        private string PhonePeeSha256(string rawData)
-        {
-            using var sha256 = SHA256.Create();
-            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-            return BitConverter.ToString(bytes).Replace("-", "").ToLower();
-        }
+        //private string PhonePeeSha256(string rawData)
+        //{
+        //    using var sha256 = SHA256.Create();
+        //    var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+        //    return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+        //}
     
 
      
@@ -61,10 +66,11 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
             var currentUser = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
             if (currentUser == null)
                 return Unauthorized();
-
-            var merchantId = _phonePe["PhonePe:MerchantId"];
-            var saltKey = _phonePe["PhonePe:SaltKey"]; 
-            var saltIndex = _phonePe["PhonePe:SaltIndex"];
+            var merchantId = _phonePe.MerchantId;
+            var saltKey = _phonePe.SaltKey;
+            var saltIndex = _phonePe.SaltIndex;
+            var apiUrl = _phonePe.ApiUrl;
+            var UiUrl = _phonePe.FrontendUrl;
             // ===============================
             // 1️ LOAD PRODUCTS
             // ===============================
@@ -261,33 +267,61 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
                 order.MerchantTransactionId = merchantTxnId;
                 await _context.SaveChangesAsync();
 
-                var payload = new
-                {
-                    merchantId,
-                    merchantTransactionId = merchantTxnId,
-                    merchantUserId = currentUser.Id,
-                    amount = amountInPaise,
-                    redirectUrl = $"{_phonePe["PhonePe:FrontendUrl"]}/payment-success",
-                    redirectMode = "POST",
-                    callbackUrl = $"{_phonePe["PhonePe:ApiUrl"]}/api/payment/phonepe-callback",
-                    paymentInstrument = new { type = "PAY_PAGE" }
-                };
+                //var payload = new
+                //{
+                //    merchantId,
+                //    merchantTransactionId = merchantTxnId,
+                //    merchantUserId = currentUser.Id,
+                //    amount = amountInPaise,
+                //    redirectUrl = $"{_phonePe.FrontendUrl}/payment-success?txnId={merchantTxnId}",
+                //    redirectMode = "POST",
+                //    callbackUrl = $"{_phonePe.ApiUrl}/CreatePhonePePayment/phonepe-callback",
+                //    paymentInstrument = new { type = "PAY_PAGE" }
+                //};
 
-                var json = JsonConvert.SerializeObject(payload);
-                var base64Payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
-                var checksum = PhonePeeSha256(base64Payload + "/pg/v1/pay" + saltKey) + "###" + saltIndex;
+                //var json = JsonConvert.SerializeObject(payload);
+                //var base64Payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
+                //var checksum = PhonePeeSha256(base64Payload + "/pg/v1/pay" + saltKey) + "###" + saltIndex;
 
                 // ===============================
                 // 6️ RESPONSE
                 // ===============================
+
+                var client = new RazorpayClient(merchantId, saltKey);
+
+                var options = new Dictionary<string, object>
+                {
+                    { "amount", amountInPaise },
+                    { "currency", "INR" },
+                    { "receipt", order.OrderCode },
+                    { "payment_capture", 1 }
+                };
+
+                Razorpay.Api.Order razorpayOrder = client.Order.Create(options);
+                order.RazorpayOrderId = razorpayOrder["id"].ToString();
+                await _context.SaveChangesAsync();
+
                 await transaction.CommitAsync();
+
                 return Ok(new
                 {
-                    request = base64Payload,
-                    checksum,
-                    merchantId,
-                    apiUrl = $"{_phonePe["PhonePe:GatewayUrl"]}/pg/v1/pay"
+                    orderId = order.Id,
+                    razorpayOrderId = razorpayOrder["id"],
+                    amount = amountInPaise,
+                    key = merchantId,
+                    name = "Ms CarePrime",
+                    email = currentUser.Email,
+                    contact = shippingAddress.Phone
                 });
+                await transaction.CommitAsync();
+                //var phonePeResponse = await CallPhonePePayApi(base64Payload, checksum);
+
+                //return Ok(new
+                //{
+                //    orderId = order.Id,
+                //    merchantTxnId,
+                //    phonePeResponse
+                //});
             }
             catch (Exception ex)
             {
@@ -297,71 +331,151 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
             }
         }
 
-        [HttpPost("phonepe-callback")]
-        public async Task<IActionResult> PhonePeCallback()
+        [HttpPost("verify")]
+        public async Task<IActionResult> VerifyPayment([FromBody] RazorpayVerifyDTO dto)
         {
-            // 1️⃣ Read raw body
-            using var reader = new StreamReader(Request.Body);
-            var rawBody = await reader.ReadToEndAsync();
+            // 1. Verify signature
+            var body = dto.Razorpay_order_id + "|" + dto.Razorpay_payment_id;
 
-            // 2️⃣ Get X-VERIFY header
-            if (!Request.Headers.TryGetValue("X-VERIFY", out var receivedChecksum))
-                return BadRequest("Missing checksum");
+            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_phonePe.SaltKey));
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(body));
+            var generatedSignature = BitConverter
+                .ToString(hash)
+                .Replace("-", "")
+                .ToLower();
 
-            // 3️⃣ Generate checksum
-            var saltKey = _phonePe["PhonePe:SaltKey"];
-            var saltIndex = _phonePe["PhonePe:SaltIndex"];
+            if (generatedSignature != dto.Razorpay_signature)
+                return BadRequest("Invalid signature");
 
-            var calculatedChecksum =
-                PhonePeeSha256(rawBody + saltKey) + "###" + saltIndex;
-
-            if (receivedChecksum != calculatedChecksum)
-                return Unauthorized("Invalid checksum");
-
-            // 4️⃣ Parse JSON safely
-            var json = JObject.Parse(rawBody);
-            var responseBase64 = json["response"]?.ToString();
-
-            if (string.IsNullOrEmpty(responseBase64))
-                return BadRequest("Invalid payload");
-
-            var decodedJson =
-                Encoding.UTF8.GetString(Convert.FromBase64String(responseBase64));
-
-            var paymentData = JObject.Parse(decodedJson);
-
-            string txnId = paymentData["data"]?["merchantTransactionId"]?.ToString();
-            string status = paymentData["code"]?.ToString();
-
-            if (string.IsNullOrEmpty(txnId))
-                return Ok();
-
-            // 5️⃣ Fetch order
+            // 2. Fetch order
             var order = await _context.MsOrders
-                .FirstOrDefaultAsync(x => x.MerchantTransactionId == txnId);
+                .FirstOrDefaultAsync(o => o.RazorpayOrderId == dto.Razorpay_order_id);
 
             if (order == null)
-                return Ok();
+                return BadRequest("Order not found");
 
-            // 6️⃣ Update order status
-            if (status == "PAYMENT_SUCCESS")
-            {
-                order.PaymentStatus = "Success";
-                order.OrderStatus = "Confirmed";
-                order.PaymentDate = DateTime.UtcNow;
-                order.ReceiveAmount = order.GrandTotal;
-            }
-            else
-            {
-                order.PaymentStatus = "Failed";
-                order.OrderStatus = "Payment Failed";
-            }
+            // 3. Prevent double processing
+            if (order.PaymentStatus == "Success")
+                return Ok("Already verified");
+
+            // 4. Mark success
+            order.PaymentStatus = "Success";
+            order.OrderStatus = "Confirmed";
+            order.ReceiveAmount = order.GrandTotal;
+            order.PaymentDate = DateTime.UtcNow;
+            order.RazorpayPaymentId = dto.Razorpay_payment_id;
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(new
+            {
+                message = "Payment verified successfully",
+                orderId = order.Id,
+                amount = order.ReceiveAmount
+            });
         }
+        //[HttpPost("phonepe-callback")]
+        //public async Task<IActionResult> PhonePeCallback()
+        //{
+        //    // 1️⃣ Read raw body
+        //    using var reader = new StreamReader(Request.Body);
+        //    var rawBody = await reader.ReadToEndAsync();
 
+        //    // 2️⃣ Get X-VERIFY header
+        //    if (!Request.Headers.TryGetValue("X-VERIFY", out var receivedChecksum))
+        //        return BadRequest("Missing checksum");
+
+        //    // 3️⃣ Generate checksum
+        //    var saltKey = _phonePe.SaltKey;
+        //    var saltIndex = _phonePe.SaltIndex;
+
+        //    //var calculatedChecksum =
+        //    //    PhonePeeSha256(rawBody + saltKey) + "###" + saltIndex;
+
+        //    //if (receivedChecksum != calculatedChecksum)
+        //    //    return Unauthorized("Invalid checksum");
+
+        //    // 4️⃣ Parse JSON safely
+        //    var json = JObject.Parse(rawBody);
+        //    var responseBase64 = json["response"]?.ToString();
+
+        //    if (string.IsNullOrEmpty(responseBase64))
+        //        return BadRequest("Invalid payload");
+
+        //    var decodedJson =
+        //        Encoding.UTF8.GetString(Convert.FromBase64String(responseBase64));
+
+        //    var paymentData = JObject.Parse(decodedJson);
+
+        //    string txnId = paymentData["data"]?["merchantTransactionId"]?.ToString();
+        //    string status = paymentData["code"]?.ToString();
+
+        //    if (string.IsNullOrEmpty(txnId))
+        //        return Ok();
+
+        //    // 5️⃣ Fetch order
+        //    var order = await _context.MsOrders
+        //        .FirstOrDefaultAsync(x => x.MerchantTransactionId == txnId);
+
+        //    if (order == null)
+        //        return Ok();
+
+        //    // 6️⃣ Update order status
+        //    if (status == "PAYMENT_SUCCESS")
+        //    {
+        //        order.PaymentStatus = "Success";
+        //        order.OrderStatus = "Confirmed";
+        //        order.PaymentDate = DateTime.UtcNow;
+        //        order.ReceiveAmount = order.GrandTotal;
+        //    }
+        //    else
+        //    {
+        //        order.PaymentStatus = "Failed";
+        //        order.OrderStatus = "Payment Failed";
+        //    }
+
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok();
+        //}
+
+        //private string GenerateChecksum(string base64Payload, string apiPath, string saltKey, string saltIndex)
+        //{
+        //    var raw = base64Payload + apiPath + saltKey;
+        //    using var sha256 = SHA256.Create();
+        //    var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(raw));
+        //    return BitConverter.ToString(hash).Replace("-", "").ToLower() + "###" + saltIndex;
+        //}
+        //private async Task<string> CallPhonePePayApi(string base64Payload, string checksum)
+        //{
+        //    using var client = new HttpClient();
+
+        //    client.DefaultRequestHeaders.Clear();
+        //    client.DefaultRequestHeaders.Add("X-VERIFY", checksum);
+
+        //    var body = new
+        //    {
+        //        request = base64Payload
+        //    };
+
+        //    var content = new StringContent(
+        //        JsonConvert.SerializeObject(body),
+        //        Encoding.UTF8,
+        //        "application/json"
+        //    );
+
+        //    var response = await client.PostAsync(
+        //        $"{_phonePe.GatewayUrl}/pg/v1/pay",
+        //        content
+        //    );
+
+        //    var responseText = await response.Content.ReadAsStringAsync();
+
+        //    if (!response.IsSuccessStatusCode)
+        //        throw new Exception($"PhonePe Error: {response.StatusCode} - {responseText}");
+
+        //    return responseText;
+        //}
         private async Task<string> GenerateOrderNumber()
         {
             var today = DateTime.UtcNow.Date;

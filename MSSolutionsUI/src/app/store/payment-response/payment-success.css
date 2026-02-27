@@ -1,0 +1,77 @@
+/* Container */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Card */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  line-height: 1.7;
+}
+
+/* Banner Base */
+.banner {
+  padding: 30px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  color: white;
+}
+
+/* Success Banner */
+.success-banner {
+  background: linear-gradient(135deg, #28a745, #218838);
+}
+
+/* Failed Banner */
+.failed-banner {
+  background: linear-gradient(135deg, #dc3545, #b52a37);
+}
+
+.banner h1 {
+  margin: 0;
+  font-size: 36px;
+}
+
+.banner p {
+  margin-top: 10px;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+/* Headings */
+.card h2 {
+  color: #123a63;
+  margin-top: 25px;
+}
+
+/* List */
+.card ul {
+  padding-left: 20px;
+}
+
+/* Button */
+.btn-primary {
+  background: #123a63;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.btn-primary:hover {
+  background: #0d2b4a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .banner h1 {
+    font-size: 26px;
+  }
+}

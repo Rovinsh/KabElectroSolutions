@@ -21,7 +21,8 @@
   margin-bottom: 18px;
   text-transform: uppercase;
 }
-
+.footerlink{   color: #fff;
+    text-decoration: none;}
 /* Email input */
 .ms-footer-input {
   display: flex;

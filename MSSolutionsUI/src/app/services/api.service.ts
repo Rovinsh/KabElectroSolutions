@@ -87,14 +87,15 @@ getUserOrders(): Observable<OrderResponseDto> {
     return this.http.get<AddressResponseDto>(`${this.baseUrl + "Users/Address"}`);
   }
 
- GetReportOnLinkClick(dateRange: string): Observable<any> {
+  GetReportOnLinkClick(dateRange: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}Reports/GetReportOnLinkClick/${dateRange}`);
   }
 
    getReports(): Observable<ReportsResponseDto> {
     return this.http.get<ReportsResponseDto>(`${this.baseUrl + "Reports/reports"}`);
   }
- getReviewComment(): Observable<ReviewResponseDto> {
+
+  getReviewComment(): Observable<ReviewResponseDto> {
     return this.http.get<ReviewResponseDto>(`${this.baseUrl + "Review/Review"}`);
   }
 
@@ -102,16 +103,18 @@ getUserOrders(): Observable<OrderResponseDto> {
     return this.http.post(`${this.baseUrl}Wishlist/AddWishlist`, { productId });
   }
 
-removeWishlist(productId: number): Observable<any> {
+  removeWishlist(productId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}Wishlist/removeWishlist`, { productId });
   }
   
-   createPayment(paymentData: CreatePaymentDto): Observable<any> {
+  createPayment(paymentData: CreatePaymentDto): Observable<any> {
     return this.http.post(`${this.baseUrl}CreatePhonePePayment`, paymentData);
   }
+
   postCategory(categoryData: CategoryDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Categories`, categoryData);
   }
+
  postReport(reportData:ReportFilterDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Reports`,reportData);
   }
@@ -144,6 +147,11 @@ removeWishlist(productId: number): Observable<any> {
   postUserAddress(userAddress: AddressDto):Observable<AddressResponseDto>{
     return this.http.post<AddressResponseDto>(`${this.baseUrl}Users/Address`, userAddress);
   }
+
+  verifyRazorpay(paymentData: RazorpayVerifyDTO): Observable<any> {
+    return this.http.post<RazorpayVerifyResponseDTO> (`${this.baseUrl}CreatePhonePePayment/verify`, paymentData);
+  }
+
 applyCoupon(payload: ApplyCouponRequestDto): Observable<ApplyCouponResponseDto> {
   return this.http.post<ApplyCouponResponseDto>(
     `${this.baseUrl}ApplyCoupons/apply`,
@@ -506,6 +514,18 @@ export interface OrderDTO {
   billingAddress: BillingAddressDTO;
   shippingAddress: ShippingAddressDTO;
 }
+export interface RazorpayVerifyDTO {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+export interface RazorpayVerifyResponseDTO {
+  status: number;
+  message: string;
+  data: RazorpayVerifyDTO[];
+}
+
 export interface OrderDTO {
   id: number;
   orderCode: string;

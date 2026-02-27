@@ -1,9 +1,10 @@
-﻿using MSSolutions.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
+using MSSolutions.Data;
+using MSSolutions.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+builder.Services.Configure<PhonePeSettings>(
+    builder.Configuration.GetSection("RozorPay"));
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
