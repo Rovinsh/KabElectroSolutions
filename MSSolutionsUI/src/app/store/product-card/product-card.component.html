@@ -19,6 +19,7 @@
     <a [routerLink]="['/store/product', product.productUrl]">
       <img
         class="productImage"
+         loading="lazy"
         [src]="getPrimaryImage(product)"
         [alt]="product.productName"
       />

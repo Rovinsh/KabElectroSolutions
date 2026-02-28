@@ -1,4 +1,6 @@
-﻿public class ProductDTO
+﻿using MSSolutions.DTOs;
+
+public class ProductDTO
 {
     public int Id { get; set; }
     public string ProductName { get; set; } = string.Empty;
@@ -48,4 +50,29 @@ public class ProductImagesDto
     public int ProductId { get; set; }
     public string FileName { get; set; } = "";
     public string ImageBase64 { get; set; } = "";
+}
+public class HomeInitDTO
+{
+    public List<CategoriesDTO> Categories { get; set; }
+    public List<ProductDTO> HomeProducts { get; set; }
+}
+public class HomeInitResponseDTO
+{
+    public int Status { get; set; }
+    public string Message { get; set; }
+    public HomeInitDTO Data { get; set; }
+}
+
+public class ProductListInitResponseDTO
+{
+    public List<CategoriesDTO> Categories { get; set; }
+    public List<ProductDTO> HomeProducts { get; set; }
+
+    public List<BrandsDTO> Brands { get; set; }
+}
+public class ProductListsInitResponseDTO
+{
+    public int Status { get; set; }
+    public string Message { get; set; }
+    public ProductListInitResponseDTO Data { get; set; }
 }

@@ -41,7 +41,8 @@ builder.Services.AddCors(options =>
 
         policy.WithOrigins("http://localhost:4200", "https://mscareprime.in/crm", "https://mscareprime.in/API", "https://mscareprime.in", "https://mscareprime.in/store") // Your Angular app's URL
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+             .SetPreflightMaxAge(TimeSpan.FromHours(1));
     });
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

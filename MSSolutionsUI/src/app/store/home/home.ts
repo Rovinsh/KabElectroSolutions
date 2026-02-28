@@ -17,21 +17,29 @@ export class HomeComponent {
   productList: ProductWithImagesDto[] = [];
   selectedCategoryId = '';
   ngOnInit() {
-     forkJoin({
-              category: this.apiService.getCategories(),
-              product: this.apiService.getProduct(),
-            }).subscribe({
-              next: (result) => {
-                this.categories = result.category.data.filter(x => x.isDisable) ?? result.category;
-                const airCategory = this.categories.find(c =>c.catName.toLowerCase().includes('air'));
-                this.productList = result.product.data.filter(x => x.isActive) ?? result.product; 
-                if (airCategory) {
-                   this.productList = result.product.data.filter(x => x.isActive &&  x.categoryId === airCategory?.id) ?? result.product; 
-                    this.selectedCategoryId = airCategory.catUrl;
-                 } 
-                }
-            });  
-  }
+  this.apiService.getHomeProduct().subscribe({
+    next: (res) => {
+
+       this.categories =  res.data?.categories.filter(x => x.isDisable) ?? res.data?.categories ?? [];
+      this.productList = res.data?.homeProducts.filter(x => x.isActive) ?? res.data?.homeProducts ?? [];
+     
+      const airCategory = this.categories.find(c =>
+        c.catName.toLowerCase().includes('air')
+      );
+
+      if (airCategory) {
+        this.productList = this.productList.filter(
+          x => x.isActive &&
+           x.categoryId === airCategory.id
+        );
+        this.selectedCategoryId = airCategory.catUrl;
+      }
+    },
+    error: (err) => {
+      console.error('Home init failed', err);
+    }
+  });
+}
 
     services = [
     { title: 'Cost Saving', icon: '💰' },

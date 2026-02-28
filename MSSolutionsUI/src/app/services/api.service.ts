@@ -42,7 +42,17 @@ export class ApiService {
     return this.http.get<GstResponseDto>(`${this.baseUrl + "Gst/gst"}`);
   }
 
-   getProduct(): Observable<ProductWithImageResponseDto> {
+  getHomeProduct(): Observable<HomeInitWrapperDto> {
+    return this.http.get<HomeInitWrapperDto>(
+      `${this.baseUrl + "Product/homeproducts"}`
+    );
+  }
+ getProductList(): Observable<ProductListInitWrapperDto> {
+    return this.http.get<ProductListInitWrapperDto>(
+      `${this.baseUrl + "Product/productList"}`
+    );
+  }
+  getProduct(): Observable<ProductWithImageResponseDto> {
     return this.http.get<ProductWithImageResponseDto>(`${this.baseUrl + "Product/products"}`);
   }
   getCoupon(): Observable<CouponResponseDto> {
@@ -360,6 +370,21 @@ export interface ReportFilterDto {
   startDate: string | null;
   endDate: string | null;
   reportName:string;
+}
+export interface HomeInitResponseDto {
+  categories: CategoryDto[];
+  homeProducts: ProductWithImagesDto[];
+}
+export interface HomeInitWrapperDto {
+  data: HomeInitResponseDto;
+}
+export interface ProductListInitResponseDto {
+  categories: CategoryDto[];
+  brands: BrandDto[];
+  homeProducts: ProductWithImagesDto[];
+}
+export interface ProductListInitWrapperDto {
+  data: ProductListInitResponseDto;
 }
 
 export interface ReportsDto {

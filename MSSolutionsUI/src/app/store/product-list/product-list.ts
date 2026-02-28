@@ -51,33 +51,41 @@ export class ProductList implements OnInit {
   private auth = inject(AuthService);
   private toast = inject(ToastService);
 
-ngOnInit(): void {
+ngOnInit() {
+  const initialCatUrl = this.route.snapshot.paramMap.get('catUrl');
+  this.api.getProductList().subscribe({
+    next: (res) => {
 
- const initialCatUrl = this.route.snapshot.paramMap.get('catUrl');
+      const data = res.data;
 
-  forkJoin({
-    categories: this.api.getCategories(),
-    products: this.api.getProduct(),
-    brands: this.api.getBrands()
-  }).subscribe(res => {
+      // ✅ Safe filtering
+      this.categories = (data?.categories ?? [])
+        .filter(x => x.isDisable);
 
-    this.categories = res.categories.data.filter(x => x.isDisable);
-    this.productList = res.products.data.filter(x => x.isActive);
-    this.brands = res.brands.data.filter(x => x.isDisable);
-if (initialCatUrl) {
-      const matchedCategory = this.categories.find(
-        c => c.catUrl === initialCatUrl
-      );
-    
-      if (matchedCategory) {
-        this.selectedCategoryIds.add(matchedCategory.id);
+      this.productList = (data?.homeProducts ?? [])
+        .filter(x => x.isActive);
+
+      this.brands = (data?.brands ?? [])
+        .filter(x => x.isDisable);
+
+      // ✅ Category URL matching
+      if (initialCatUrl) {
+        const matchedCategory = this.categories.find(
+          c => c.catUrl === initialCatUrl
+        );
+
+        if (matchedCategory) {
+          this.selectedCategoryIds.add(matchedCategory.id);
+        }
       }
+
+      this.applyFilter();
+    },
+    error: (err) => {
+      console.error('Product list load failed', err);
     }
-    this.applyFilter();
   });
 }
-
-
 
   /* ---------------- FILTER LOGIC ---------------- */
 
