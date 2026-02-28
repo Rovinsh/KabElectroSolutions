@@ -59,7 +59,7 @@ export class ApiService {
   );
 }
  deleteProductImage(imageId: number) {
-    return this.http.delete(`${this.baseUrl}product/DeleteImage/${imageId}`);
+    return this.http.get(`${this.baseUrl}product/DeleteImage/${imageId}`);
   }
 
  getUsers(userType: string = 'user'): Observable<UserResponseDto> {

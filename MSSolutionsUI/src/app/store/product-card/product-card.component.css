@@ -31,8 +31,11 @@
 }
 
 .image-wrapper img {
-  max-height: 234px;
-  object-fit: contain;
+ max-height: 324px !important;
+min-height: 235px !important;
+ object-fit: contain !important;
+ max-width: 234px !important;
+min-width: 230px !important;
 }
 
 /* TOP ACTIONS */

@@ -63,8 +63,10 @@
 
 /* MAIN IMAGE */
 .main-image {
-  width: 420px;
-  height: 420px;
+  max-width: 420px;
+  max-height: 420px;
+   min-width: 320px;
+  min-height: 320px;
   border-radius: 12px;
   overflow: hidden;
   background: #0b1c2d;
@@ -83,7 +85,7 @@
 }
 
 .zoom-container:hover .zoom-img {
-  transform: scale(1.5);
+  transform: scale(1.2);
 }
 
 /* INFO SECTION */

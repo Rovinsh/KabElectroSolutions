@@ -291,7 +291,7 @@ namespace MSSolutions.Controllers
             });
         }
 
-        [HttpDelete("DeleteImage/{id}")]
+        [HttpGet("DeleteImage/{id}")]
         public async Task<IActionResult> DeleteImage(int id)
         {
             var image = await _context.MsProductImage.FindAsync(id);
