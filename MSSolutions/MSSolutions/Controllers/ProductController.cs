@@ -98,95 +98,127 @@ namespace MSSolutions.Controllers
             });
         }
 
-        
-      // GET: api/Product/homeinit
+
         [HttpGet("homeproducts")]
         public async Task<IActionResult> GetHomeProducts()
         {
-            // Categories
+            // 1️⃣ Get Categories
             var categories = await _context.MsCategories
-                 .Where(c => c.IsDisable)
+                  .AsNoTracking()
+                .Where(c => c.IsDisable)
                 .Select(c => new CategoriesDTO
                 {
                     Id = c.Id,
                     CatName = c.CatName,
                     Description = c.Description,
                     CatUrl = c.CatUrl,
-                    IsDisable = c.IsDisable,
+                    IsDisable = c.IsDisable
                 })
                 .ToListAsync();
-            var airCategoryId = await _context.MsCategories
-       .Where(c => c.CatName == "Air Conditioner" && c.IsDisable)
-       .Select(c => c.Id)
-       .FirstOrDefaultAsync();
-            // Home Products (Top 4)
-            var products = await _context.MsProducts
-                 .Where(p => p.CategoryId == airCategoryId && p.IsActive)
-                .Select(p => new ProductDTO
-                {
-                    Id = p.Id,
-                    ProductName = p.ProductName,
-                    SKU = p.SKU,
 
-                    CategoryId = p.CategoryId,
-                    CategoryName = _context.MsCategories
-                        .Where(c => c.Id == p.CategoryId)
-                        .Select(c => c.CatName)
-                        .FirstOrDefault(),
+            // 2️⃣ Get Air Conditioner CategoryId
+            var airCategoryId = categories
+                .Where(c => c.CatName == "Air Conditioner")
+                .Select(c => c.Id)
+                .FirstOrDefault();
 
-                    BrandId = p.BrandId,
-                    BrandName = _context.MsBrands
-                        .Where(b => b.Id == p.BrandId)
-                        .Select(b => b.BrandName)
-                        .FirstOrDefault(),
-
-                    BaseAmount = p.BaseAmount,
-                    Description = p.Description ?? "",
-                    ShortDescription = p.ShortDescription ?? "",
-                    WhentoPurchase = p.WhentoPurchase ?? "",
-                    ProductCovered = p.ProductCovered ?? "",
-                    NoOfDevicesCovered = p.NoOfDevicesCovered ?? "",
-                    ServicesPeriod = p.ServicesPeriod ?? "",
-                    ServicesCoverFeature = p.ServicesCoverFeature ?? "",
-                    ServicesAvilableFrom = p.ServicesAvilableFrom ?? "",
-                    ProductUrl = p.ProductUrl ?? "",
-                    CashlessService = p.CashlessService ?? "",
-                    AuthorizedServiceCentreRepairs = p.AuthorizedServiceCentreRepairs ?? "",
-                    ClaimType = p.ClaimType ?? "",
-                    ServiceCancellationRefundPeriod = p.ServiceCancellationRefundPeriod ?? "",
-                    ExtendedHoursSupport = p.ExtendedHoursSupport ?? "",
-                    SupportCentreContactDetails = p.SupportCentreContactDetails ?? "",
-                    HowtoClaim = p.HowtoClaim ?? "",
-                    ServiceType = p.ServiceType ?? "",
-                    InstallationDemo = p.InstallationDemo ?? "",
-                    CustomerSupportEmail = p.CustomerSupportEmail ?? "",
-                    RepairCostCovered = p.RepairCostCovered ?? "",
-                    ServiceExcludes = p.ServiceExcludes ?? "",
-                    ServiceIncludes = p.ServiceIncludes ?? "",
-                    MarketerNameAddress = p.MarketerNameAddress ?? "",
-                    DocumentsRequired = p.DocumentsRequired ?? "",
-                    CostCovered = p.CostCovered ?? "",
-                    DiscountPrice = p.DiscountPrice ?? 0,
-                    GstId = p.GstId,
-                    GstPercentage = p.GstPercentage,
-                    GstAmount = p.GstAmount,
-                    WithGstAmount = p.WithGstAmount,
-                    StockQty = p.StockQty,
-                    IsActive = p.IsActive,
-
-                    Images = _context.MsProductImage
-                        .Where(i => i.ProductId == p.Id)
-                        .Select(i => new ProductImagesDto
-                        {
-                            Id = i.Id,
-                            ProductId = i.ProductId,
-                            FileName = i.FileName,
-                            ImageBase64 = Convert.ToBase64String(i.Image)
-                        })
-                        .ToList()
-                })
+            // 4️⃣ Get Products (Top 4)
+            var productsRaw = await _context.MsProducts
+                   .AsNoTracking()
+                .Where(p => p.CategoryId == airCategoryId && p.IsActive)
                 .Take(4)
                 .ToListAsync();
+
+            var productIds = productsRaw.Select(p => p.Id).ToList();
+
+            var images = await _context.MsProductImage
+    .AsNoTracking()
+    .Where(i => productIds.Contains(i.ProductId))
+    .GroupBy(i => i.ProductId)
+    .Select(g => g
+        .OrderBy(i => i.Id) // define which is first (can change to CreatedDate if needed)
+        .Select(i => new
+        {
+            i.Id,
+            i.ProductId,
+            i.FileName,
+            i.Image
+        })
+        .FirstOrDefault()
+    )
+    .ToListAsync();
+
+            // Convert to dictionary (still List<ProductImagesDto>)
+            var imageLookup = images
+                .Where(i => i != null)
+                .ToDictionary(
+                    i => i.ProductId,
+                    i => new List<ProductImagesDto>
+                    {
+            new ProductImagesDto
+            {
+                Id = i.Id,
+                ProductId = i.ProductId,
+                FileName = i.FileName,
+                ImageBase64 = Convert.ToBase64String(i.Image)
+            }
+                    }
+                );
+
+            // 6️⃣ Map to ProductDTO
+            var products = productsRaw.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                SKU = p.SKU,
+
+                CategoryId = p.CategoryId,
+                //CategoryName = categoryDict.ContainsKey(p.CategoryId)
+                //                ? categoryDict[p.CategoryId]
+                //                : "",
+
+                BrandId = p.BrandId,
+                //BrandName = brandDict.ContainsKey(p.BrandId)
+                //                ? brandDict[p.BrandId]
+                //                : "",
+
+                BaseAmount = p.BaseAmount,
+                Description = p.Description ?? "",
+                ShortDescription = p.ShortDescription ?? "",
+                WhentoPurchase = p.WhentoPurchase ?? "",
+                ProductCovered = p.ProductCovered ?? "",
+                NoOfDevicesCovered = p.NoOfDevicesCovered ?? "",
+                ServicesPeriod = p.ServicesPeriod ?? "",
+                ServicesCoverFeature = p.ServicesCoverFeature ?? "",
+                ServicesAvilableFrom = p.ServicesAvilableFrom ?? "",
+                ProductUrl = p.ProductUrl ?? "",
+                CashlessService = p.CashlessService ?? "",
+                AuthorizedServiceCentreRepairs = p.AuthorizedServiceCentreRepairs ?? "",
+                ClaimType = p.ClaimType ?? "",
+                ServiceCancellationRefundPeriod = p.ServiceCancellationRefundPeriod ?? "",
+                ExtendedHoursSupport = p.ExtendedHoursSupport ?? "",
+                SupportCentreContactDetails = p.SupportCentreContactDetails ?? "",
+                HowtoClaim = p.HowtoClaim ?? "",
+                ServiceType = p.ServiceType ?? "",
+                InstallationDemo = p.InstallationDemo ?? "",
+                CustomerSupportEmail = p.CustomerSupportEmail ?? "",
+                RepairCostCovered = p.RepairCostCovered ?? "",
+                ServiceExcludes = p.ServiceExcludes ?? "",
+                ServiceIncludes = p.ServiceIncludes ?? "",
+                MarketerNameAddress = p.MarketerNameAddress ?? "",
+                DocumentsRequired = p.DocumentsRequired ?? "",
+                CostCovered = p.CostCovered ?? "",
+                DiscountPrice = p.DiscountPrice ?? 0,
+                GstId = p.GstId,
+                GstPercentage = p.GstPercentage,
+                GstAmount = p.GstAmount,
+                WithGstAmount = p.WithGstAmount,
+                StockQty = p.StockQty,
+                IsActive = p.IsActive,
+                Images = imageLookup.ContainsKey(p.Id)
+    ? imageLookup[p.Id]
+    : new List<ProductImagesDto>()
+            }).ToList();
 
             var result = new HomeInitResponseDTO
             {
@@ -205,50 +237,224 @@ namespace MSSolutions.Controllers
         [HttpGet("productList")]
         public async Task<IActionResult> GetproductList()
         {
-            // Categories
+            // 1️⃣ Categories
             var categories = await _context.MsCategories
-                 .Where(c => c.IsDisable)
-                .Select(c => new CategoriesDTO
+                 .AsNoTracking()
+               .Where(c => c.IsDisable)
+               .Select(c => new CategoriesDTO
+               {
+                   Id = c.Id,
+                   CatName = c.CatName,
+                   Description = c.Description,
+                   CatUrl = c.CatUrl,
+                   IsDisable = c.IsDisable
+               })
+               .ToListAsync();
+
+            // 2️⃣ Brands
+            var brands = await (
+     from b in _context.MsBrands.AsNoTracking()
+     join c in _context.MsCategories.AsNoTracking()
+         on b.CategoryId equals c.Id
+     where b.IsDisable
+     select new BrandsDTO
+     {
+         Id = b.Id,
+         CategoryId = b.CategoryId,
+         CategoryName = c.CatName,
+         BrandName = b.BrandName,
+         Description = b.Description,
+         IsDisable = b.IsDisable
+     }
+ ).ToListAsync();
+
+
+            // 4️⃣ Get Products (Top 4)
+            var productsRaw = await _context.MsProducts
+                   .AsNoTracking()
+                .Where(p => p.IsActive)
+                .Take(4)
+                .ToListAsync();
+
+            var productIds = productsRaw.Select(p => p.Id).ToList();
+
+            var images = await _context.MsProductImage
+    .AsNoTracking()
+    .Where(i => productIds.Contains(i.ProductId))
+    .GroupBy(i => i.ProductId)
+    .Select(g => g
+        .OrderBy(i => i.Id) // define which is first (can change to CreatedDate if needed)
+        .Select(i => new
+        {
+            i.Id,
+            i.ProductId,
+            i.FileName,
+            i.Image
+        })
+        .FirstOrDefault()
+    )
+    .ToListAsync();
+
+            // Convert to dictionary (still List<ProductImagesDto>)
+            var imageLookup = images
+                .Where(i => i != null)
+                .ToDictionary(
+                    i => i.ProductId,
+                    i => new List<ProductImagesDto>
+                    {
+            new ProductImagesDto
+            {
+                Id = i.Id,
+                ProductId = i.ProductId,
+                FileName = i.FileName,
+                ImageBase64 = Convert.ToBase64String(i.Image)
+            }
+                    }
+                );
+
+            // 6️⃣ Map to ProductDTO
+            var products = productsRaw.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                SKU = p.SKU,
+
+                CategoryId = p.CategoryId,
+                //CategoryName = categoryDict.ContainsKey(p.CategoryId)
+                //                ? categoryDict[p.CategoryId]
+                //                : "",
+
+                BrandId = p.BrandId,
+                //BrandName = brandDict.ContainsKey(p.BrandId)
+                //                ? brandDict[p.BrandId]
+                //                : "",
+
+                BaseAmount = p.BaseAmount,
+                Description = p.Description ?? "",
+                ShortDescription = p.ShortDescription ?? "",
+                WhentoPurchase = p.WhentoPurchase ?? "",
+                ProductCovered = p.ProductCovered ?? "",
+                NoOfDevicesCovered = p.NoOfDevicesCovered ?? "",
+                ServicesPeriod = p.ServicesPeriod ?? "",
+                ServicesCoverFeature = p.ServicesCoverFeature ?? "",
+                ServicesAvilableFrom = p.ServicesAvilableFrom ?? "",
+                ProductUrl = p.ProductUrl ?? "",
+                CashlessService = p.CashlessService ?? "",
+                AuthorizedServiceCentreRepairs = p.AuthorizedServiceCentreRepairs ?? "",
+                ClaimType = p.ClaimType ?? "",
+                ServiceCancellationRefundPeriod = p.ServiceCancellationRefundPeriod ?? "",
+                ExtendedHoursSupport = p.ExtendedHoursSupport ?? "",
+                SupportCentreContactDetails = p.SupportCentreContactDetails ?? "",
+                HowtoClaim = p.HowtoClaim ?? "",
+                ServiceType = p.ServiceType ?? "",
+                InstallationDemo = p.InstallationDemo ?? "",
+                CustomerSupportEmail = p.CustomerSupportEmail ?? "",
+                RepairCostCovered = p.RepairCostCovered ?? "",
+                ServiceExcludes = p.ServiceExcludes ?? "",
+                ServiceIncludes = p.ServiceIncludes ?? "",
+                MarketerNameAddress = p.MarketerNameAddress ?? "",
+                DocumentsRequired = p.DocumentsRequired ?? "",
+                CostCovered = p.CostCovered ?? "",
+                DiscountPrice = p.DiscountPrice ?? 0,
+                GstId = p.GstId,
+                GstPercentage = p.GstPercentage,
+                GstAmount = p.GstAmount,
+                WithGstAmount = p.WithGstAmount,
+                StockQty = p.StockQty,
+                IsActive = p.IsActive,
+                Images = imageLookup.ContainsKey(p.Id)
+    ? imageLookup[p.Id]
+    : new List<ProductImagesDto>()
+            }).ToList();
+            var result = new ProductListsInitResponseDTO
+            {
+                Status = 200,
+                Message = "Success",
+                Data = new ProductListInitResponseDTO
                 {
-                    Id = c.Id,
-                    CatName = c.CatName,
-                    Description = c.Description,
-                    CatUrl = c.CatUrl,
-                    IsDisable = c.IsDisable,
+                    Categories = categories,
+                    HomeProducts = products,
+                    Brands = brands
+                }
+            };
+
+            return Ok(result);
+        }
+
+        [HttpGet("productsByUrl")]
+        public async Task<IActionResult> GetProductsByUrl(string productUrl)
+        {
+            // 1️⃣ Get Products with Category & Brand
+            var productsRaw = await (
+                from p in _context.MsProducts.AsNoTracking()
+                join c in _context.MsCategories.AsNoTracking()
+                    on p.CategoryId equals c.Id
+                join b in _context.MsBrands.AsNoTracking()
+                    on p.BrandId equals b.Id
+                where p.IsActive && p.ProductUrl == productUrl
+                select new
+                {
+                    Product = p,
+                    CategoryName = c.CatName,
+                    BrandName = b.BrandName
+                }
+            ).ToListAsync();
+
+            if (!productsRaw.Any())
+            {
+                return Ok(new ProductResponseDTO
+                {
+                    Status = 200,
+                    Message = "No Products Found",
+                    Data = new List<ProductDTO>()
+                });
+            }
+
+            var productIds = productsRaw.Select(x => x.Product.Id).ToList();
+
+            // 2️⃣ Load Images
+            var images = await _context.MsProductImage
+                .AsNoTracking()
+                .Where(i => productIds.Contains(i.ProductId))
+                .Select(i => new
+                {
+                    i.Id,
+                    i.ProductId,
+                    i.FileName,
+                    i.Image
                 })
                 .ToListAsync();
 
-            var brands = await _context.MsBrands
-                 .Where(c => c.IsDisable)
-                   .Select(b => new BrandsDTO
-                   {
-                       Id = b.Id,
-                       CategoryId = b.CategoryId,
-                       CategoryName = _context.MsCategories.Where(c => c.Id == b.CategoryId).Select(c => c.CatName).FirstOrDefault(),
-                       BrandName = b.BrandName,
-                       Description = b.Description,
-                       IsDisable = b.IsDisable,
-                   })
-                   .ToListAsync();
-            var products = await _context.MsProducts
-                 .Where(p => p.IsActive)
-                .Select(p => new ProductDTO
+            // 3️⃣ Group Images
+            var imageLookup = images
+                .GroupBy(i => i.ProductId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(img => new ProductImagesDto
+                    {
+                        Id = img.Id,
+                        ProductId = img.ProductId,
+                        FileName = img.FileName,
+                        ImageBase64 = Convert.ToBase64String(img.Image)
+                    }).ToList()
+                );
+
+            // 4️⃣ Map to DTO
+            var products = productsRaw.Select(x =>
+            {
+                var p = x.Product;
+
+                return new ProductDTO
                 {
                     Id = p.Id,
                     ProductName = p.ProductName,
                     SKU = p.SKU,
 
                     CategoryId = p.CategoryId,
-                    CategoryName = _context.MsCategories
-                        .Where(c => c.Id == p.CategoryId)
-                        .Select(c => c.CatName)
-                        .FirstOrDefault(),
+                    CategoryName = x.CategoryName,   // ✅ From Join
 
                     BrandId = p.BrandId,
-                    BrandName = _context.MsBrands
-                        .Where(b => b.Id == p.BrandId)
-                        .Select(b => b.BrandName)
-                        .FirstOrDefault(),
+                    BrandName = x.BrandName,         // ✅ From Join
 
                     BaseAmount = p.BaseAmount,
                     Description = p.Description ?? "",
@@ -284,31 +490,18 @@ namespace MSSolutions.Controllers
                     StockQty = p.StockQty,
                     IsActive = p.IsActive,
 
-                    Images = _context.MsProductImage
-                        .Where(i => i.ProductId == p.Id)
-                        .Select(i => new ProductImagesDto
-                        {
-                            Id = i.Id,
-                            ProductId = i.ProductId,
-                            FileName = i.FileName,
-                            ImageBase64 = Convert.ToBase64String(i.Image)
-                        })
-                        .ToList()
-                })
-                .ToListAsync();
+                    Images = imageLookup.ContainsKey(p.Id)
+                        ? imageLookup[p.Id]
+                        : new List<ProductImagesDto>()
+                };
+            }).ToList();
 
-            var result = new ProductListsInitResponseDTO
+            return Ok(new ProductResponseDTO
             {
                 Status = 200,
                 Message = "Success",
-                Data = new ProductListInitResponseDTO
-                {
-                    Categories = categories,
-                    HomeProducts = products,
-                    Brands = brands
-                }
-            };
-            return Ok(result);
+                Data = products
+            });
         }
 
         // POST: api/Product

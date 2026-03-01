@@ -18,7 +18,7 @@
 
       <div class="form-group">
         <label>Email Address</label>
-        <input type="email" formControlName="username" class="form-control" placeholder="Enter your email">
+        <input type="email" formControlName="username" class="form-control" autocomplete="email" placeholder="Enter your email">
         <div class="error" *ngIf="lf['username'].touched && lf['username'].invalid">
           Valid email required
         </div>
@@ -26,7 +26,7 @@
 
       <div class="form-group">
         <label>Password</label>
-        <input type="password" formControlName="password" class="form-control" placeholder="Enter password">
+        <input type="password" formControlName="password" autocomplete="password" class="form-control" placeholder="Enter password">
         <div class="error" *ngIf="lf['password'].touched && lf['password'].invalid">
           Password required
         </div>
@@ -43,12 +43,12 @@
   <div class="row">
     <div class="col-md-6 col-12 form-group">
       <label>First Name</label>
-      <input type="text" formControlName="firstName" class="form-control" placeholder="First name">
+      <input type="text" formControlName="firstName" class="form-control" autocomplete="off" placeholder="First name">
     </div>
 
     <div class="col-md-6 col-12 form-group">
       <label>Last Name</label>
-      <input type="text" formControlName="lastName" class="form-control" placeholder="Last name">
+      <input type="text" formControlName="lastName" class="form-control" autocomplete="off" placeholder="Last name">
     </div>
   </div>
 
@@ -56,7 +56,7 @@
   <div class="row">
     <div class="col-md-6 col-12 form-group">
       <label>Email Address</label>
-      <input type="email" formControlName="email" class="form-control" placeholder="example@email.com">
+      <input type="email" formControlName="email" class="form-control" autocomplete="off" placeholder="example@email.com">
       <div class="error" *ngIf="sf['email'].touched && sf['email'].invalid">
         Valid email required
       </div>
@@ -64,7 +64,7 @@
 
     <div class="col-md-6 col-12 form-group">
       <label>Phone Number</label>
-      <input type="text" formControlName="phone" maxlength="10" class="form-control" placeholder="10 digit mobile number">
+      <input type="text" formControlName="phone" maxlength="10" class="form-control" autocomplete="off" placeholder="10 digit mobile number">
       <div class="error" *ngIf="sf['phone'].touched && sf['phone'].invalid">
         Enter 10 digit phone number
       </div>
@@ -75,12 +75,12 @@
   <div class="row">
     <div class="col-md-6 col-12 form-group">
       <label>Password</label>
-      <input type="password" formControlName="password" class="form-control" placeholder="Create password">
+      <input type="password" formControlName="password" class="form-control" autocomplete="off" placeholder="Create password">
     </div>
 
     <div class="col-md-6 col-12 form-group">
       <label>Confirm Password</label>
-      <input type="password" formControlName="confirmPassword" class="form-control" placeholder="Re-enter password">
+      <input type="password" formControlName="confirmPassword" class="form-control" autocomplete="off" placeholder="Re-enter password">
       <div class="error" *ngIf="signupForm.errors?.['passwordMismatch'] && sf['confirmPassword'].touched">
         Passwords do not match
       </div>

@@ -45,23 +45,19 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit(): void {
   const productUrl = this.route.snapshot.paramMap.get('productUrl');
 
-    this.apiService.getProduct().subscribe(res => {
-      this.productList = res.data.filter(x => x.isActive);
-
-   const found = this.productList.find(p => p.productUrl === productUrl);
-
+    this.apiService.getProductbyUrl(productUrl).subscribe(res => {
+     this.productList = res.data;
+    const found = this.productList.find(p => p.productUrl === productUrl);
       if (!found) {
         console.error('Product not found for Url:', productUrl);
         return;
       }
 
-      this.product = found;
-
-      if (this.product.images?.length) {
-        this.selectedImage = this.resolveImage(this.product.images[0]);
-        this.activeIndex = 0;
-      }
-    });
+      this.product = found;  
+    if (this.product?.images?.length) {
+      this.selectedImage = this.resolveImage(this.product.images[0]);
+      this.activeIndex = 0;
+    }
     this.isLoggedIn = !!localStorage.getItem('token');
       if (this.isLoggedIn) {
         this.apiService.getWishlist().subscribe(res => {
@@ -76,6 +72,10 @@ export class ProductDetailComponent implements OnInit {
     });
     this.loadOrders();
     this.loadReviewComment();
+      }, error => {
+    console.error("Product not found", error);
+  });
+
   }
 
 

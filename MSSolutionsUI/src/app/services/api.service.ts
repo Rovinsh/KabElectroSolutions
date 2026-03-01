@@ -52,6 +52,10 @@ export class ApiService {
       `${this.baseUrl + "Product/productList"}`
     );
   }
+ 
+   getProductbyUrl( url: any): Observable<ProductWithImageResponseDto> {
+    return this.http.get<ProductWithImageResponseDto>(`${this.baseUrl}Product/productsByUrl?productUrl=${encodeURIComponent(url)}`);
+  }
   getProduct(): Observable<ProductWithImageResponseDto> {
     return this.http.get<ProductWithImageResponseDto>(`${this.baseUrl + "Product/products"}`);
   }
@@ -639,4 +643,10 @@ export interface  ProductWithImageResponseDto {
   status: number;
   message: string;
   data: ProductWithImagesDto[];
+}
+
+export interface  ProductWithSImageResponseDto {
+  status: number;
+  message: string;
+  data: ProductWithImagesDto;
 }
