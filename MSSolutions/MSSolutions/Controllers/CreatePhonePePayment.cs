@@ -307,7 +307,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
                 return Ok(new
                 {
                     orderId = order.Id,
-                    razorpayOrderId = razorpayOrder["id"],
+                    razorpayOrderId = razorpayOrder["id"].ToString(),
                     amount = amountInPaise,
                     key = merchantId,
                     name = "Ms CarePrime",
@@ -365,6 +365,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
             order.ReceiveAmount = order.GrandTotal;
             order.PaymentDate = DateTime.UtcNow;
             order.RazorpayPaymentId = dto.Razorpay_payment_id;
+            order.RazorpaySignature = dto.Razorpay_signature;
 
             await _context.SaveChangesAsync();
 

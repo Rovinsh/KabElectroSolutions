@@ -19,12 +19,13 @@ export class PaymentuScessComponent {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    const navigation = this.router.getCurrentNavigation();
+    const state = history.state;
 
-    if (navigation?.extras?.state) {
-      this.orderId = navigation.extras.state['orderId'];
-      this.amount = navigation.extras.state['amount'];
-      this.CartService.clearCart();
-    }
+  if (state && state.orderId) {
+    this.orderId = state.orderId;
+    this.amount = state.amount;
+
+    this.CartService.clearCart(); // ✅ cart clear here
+  }
   }
 }

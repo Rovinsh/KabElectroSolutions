@@ -180,6 +180,10 @@ namespace MSSolutions.Controllers
             {
                 var performerEmail = User?.Identity?.Name;
                 var currentUser = await _context.MsUsers.FirstOrDefaultAsync(u => u.Email == performerEmail);
+                await _context.MsAddresses
+     .Where(a => a.UserId == currentUser.Id && a.IsDefault)
+     .ExecuteUpdateAsync(setters => setters
+         .SetProperty(a => a.IsDefault, false));
                 var address = new MsAddress
                 {
                     UserId = currentUser.Id,
@@ -193,11 +197,12 @@ namespace MSSolutions.Controllers
                     State = usersAddress.State,
                     Pincode = usersAddress.Pincode,
                     IsBusinessAddress = false,
-                    IsDefault = usersAddress.IsDefault,
+                    IsDefault = true,
                 };
 
                 _context.MsAddresses.Add(address);
                 await _context.SaveChangesAsync();
+
                 var addresses = await GetUserAddressList(currentUser.Id);
 
                 return Ok(new
