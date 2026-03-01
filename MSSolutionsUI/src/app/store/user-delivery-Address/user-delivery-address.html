@@ -57,7 +57,7 @@
 
   <div class="row">
     <div class="col-sm-6">
-      <input class="form-control"
+      <input class="form-control"  autocomplete="off"
              placeholder="Full Name"
              formControlName="fullName" />
                <mat-error *ngIf="addAddressForm.get('fullName')?.hasError('required')">
@@ -67,7 +67,7 @@
 
     <div class="col-sm-6">
       <input class="form-control"
-             placeholder="Phone"
+             placeholder="Phone"  autocomplete="off"
              formControlName="phone" />
              <mat-error *ngIf="addAddressForm.get('phone')?.hasError('required')">
                 Phone number is required
@@ -82,17 +82,17 @@
   <div class="row mt-10">
     <div class="col-sm-12">
       <input class="form-control"
-             placeholder="Address"
+             placeholder="Address"  autocomplete="off"
              formControlName="addressLine" />
     </div>
   </div>
 
   <div class="row mt-10">
-      <div class="col-4">
+      <div class="col-12 col-sm-12">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label class="mdc-text-field ">State</mat-label>
             <input matInput formControlName="stateId"
-                   [matAutocomplete]="stateAuto"
+                   [matAutocomplete]="stateAuto"  autocomplete="off"
                    (focus)="showState()"
                    (input)="showState()" />
             <mat-autocomplete #stateAuto="matAutocomplete" [displayWith]="displayState" autoActiveFirstOption (optionSelected)="onStateSelected($event.option.value)">
@@ -100,12 +100,12 @@
             </mat-autocomplete>
             <mat-error *ngIf="addAddressForm.get('stateId')?.hasError('required')">User State is required</mat-error>
           </mat-form-field>
-    </div>
-
-   <div class="col-4">
+    </div></div>
+<div class="row mt-10">
+   <div class="col-12 col-sm-12">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label class="mdc-text-field ">User City</mat-label>
-            <input matInput formControlName="cityId"
+            <input matInput formControlName="cityId"  autocomplete="off"
                    [matAutocomplete]="cityAuto"
                    (focus)="showCities()"
                    (input)="showCities()" />
@@ -115,11 +115,12 @@
             <mat-error *ngIf="addAddressForm.get('cityId')?.hasError('required')">User City is required</mat-error>
           </mat-form-field>
         </div>
-
-    <div class="col-4">
+</div>
+<div class="row mt-10">
+    <div class="col-12 col-sm-12">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label class="mdc-text-field">User Pincode</mat-label>
-            <input matInput formControlName="pincodeId"
+            <input matInput formControlName="pincodeId"  autocomplete="off"
                    [matAutocomplete]="pincodeAuto"
                    (focus)="showPincode()"
                    (input)="showPincode()" />

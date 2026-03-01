@@ -21,7 +21,7 @@ h4, h5, h6 {
   padding: 18px;
   transition: 0.3s ease;
 }
-
+.boxmarg{margin-bottom:20px;}
 .maincardbox:hover {
   border-color: #f2b705;
   box-shadow: 0 6px 18px rgba(0,0,0,0.5);
