@@ -5,7 +5,7 @@ import{ UserOrderDetailComponent} from '../user-order-detail/user-order-detail';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
 import { ApiService, OrderDTO } from '../../services/api.service';
-
+import { InvoiceService } from '../../services/invoice.service';
 @Component({
   selector: 'app-ordersList',
   standalone: true,
@@ -15,7 +15,8 @@ import { ApiService, OrderDTO } from '../../services/api.service';
 })
 export class UserOrders implements OnInit {
   isLoading = false;
-  constructor(private dialog: MatDialog, private apiService: ApiService) {}
+  selectedOrder!: OrderDTO;
+  constructor(private dialog: MatDialog, private apiService: ApiService,private invoiceService: InvoiceService) {}
   orders: OrderDTO[] = [];
   ngOnInit(): void {
     this.loadOrders();
@@ -43,11 +44,21 @@ onCellClicked(event: any) {
     if (event.colDef.headerName === 'Detail' && event.event.target.classList.contains('detail-link')) {
       this.openPopup(event.data); 
     }
+    // Invoice download
+  if (event.colDef.headerName === 'Invoice' &&
+      event.event.target.classList.contains('invoice-btn')) {
+    this.invoiceService.generateInvoice(event.data);
+  }
   }
 
  OrderCols: ColDef[] = [
   { headerName: 'S.No', width: 70, valueGetter: (params: any) => params.node.rowIndex + 1 }
-  ,  {
+  , {
+  headerName: 'Invoice',
+  width: 100,
+  cellRenderer: (params: any) =>
+    `<button class="invoice-btn" style="border:none; cursor: pointer;" data-id="${params.data.id}">🧾 Invoice</button>`
+}, {
     headerName: 'Detail',
     width: 80,
     cellRenderer: (params: any) =>
@@ -98,5 +109,4 @@ onCellClicked(event: any) {
     valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
   }
 ];
-
 }

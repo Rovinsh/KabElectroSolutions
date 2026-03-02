@@ -10,6 +10,7 @@ import { ColDef } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
 import { forkJoin } from 'rxjs';
 import { OrderDetailComponent } from '../order-detail/order-detail';
+import { InvoiceService } from '../services/invoice.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,7 +29,12 @@ export class DashboardComponent {
  cards: any[] = [];
  OrderCols: ColDef[] = [
   { headerName: 'S.No', width: 70, valueGetter: (params: any) => params.node.rowIndex + 1 }
-  ,  {
+  , {
+  headerName: 'Invoice',
+  width: 100,
+  cellRenderer: (params: any) =>
+    `<button class="invoice-btn" style="border:none; cursor: pointer;" data-id="${params.data.id}">🧾 Invoice</button>`
+}, {
     headerName: 'Detail',
     width: 80,
     cellRenderer: (params: any) =>
@@ -83,7 +89,8 @@ export class DashboardComponent {
   constructor(
     private apiService: ApiService,
     private dialog: MatDialog,
-    private auth: AuthService
+    private auth: AuthService,
+    private invoiceService: InvoiceService
   ) {}
    ngOnInit(): void {
      this.loadDashboardData();
@@ -146,6 +153,10 @@ onCellClicked(event: any) {
     if (event.colDef.headerName === 'Detail' && event.event.target.classList.contains('detail-link')) {
       this.openPopup(event.data); 
     }
+      if (event.colDef.headerName === 'Invoice' &&
+      event.event.target.classList.contains('invoice-btn')) {
+    this.invoiceService.generateInvoice(event.data);
+  }
   }
 openPopup(data: OrderDTO) {
   this.dialog.open(OrderDetailComponent, {

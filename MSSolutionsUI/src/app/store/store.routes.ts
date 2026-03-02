@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-
+import { RoleGuard } from '../guards/role-guard';
 export const STORE_ROUTES: Routes = [
   {
     path: 'cart',
@@ -26,24 +26,32 @@ export const STORE_ROUTES: Routes = [
   },
   {
     path: 'wishlist',
+    canActivate: [RoleGuard],
+    data: { roles: ['User'] },
     loadComponent: () =>
       import('./wishlist-list/wishlist-list')
         .then(m => m.WishlistList),
   },
   {
     path: 'profile',
+     canActivate: [RoleGuard],
+    data: { roles: ['User'] },
     loadComponent: () =>
       import('./user-profile/user-profile')
         .then(m => m.UserProfile),
   },
    {
     path: 'address',
+     canActivate: [RoleGuard],
+    data: { roles: ['User'] },
     loadComponent: () =>
       import('./user-addressList/user-addressList')
         .then(m => m.UserAddress),
   },
    {
     path: 'orders',
+     canActivate: [RoleGuard],
+    data: { roles: ['User'] },
     loadComponent: () =>
       import('./user-ordersList/user-ordersList')
         .then(m => m.UserOrders),
@@ -86,12 +94,16 @@ export const STORE_ROUTES: Routes = [
   },
   {
     path: 'payment-success',
+     canActivate: [RoleGuard],
+    data: { roles: ['User'] },
     loadComponent: () =>
       import('./payment-response/payment-success')
         .then(m => m.PaymentuScessComponent),
   },
   {
     path: 'payment-failed',
+     canActivate: [RoleGuard],
+    data: { roles: ['User'] },
     loadComponent: () =>
       import('./payment-response/payment-failed')
         .then(m => m.PaymentuFailedComponent),
