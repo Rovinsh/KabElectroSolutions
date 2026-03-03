@@ -306,7 +306,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
 
                 return Ok(new
                 {
-                    orderId = order.Id,
+                    orderId = order.OrderCode,
                     razorpayOrderId = razorpayOrder["id"].ToString(),
                     amount = amountInPaise,
                     key = merchantId,
@@ -372,7 +372,7 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
             return Ok(new
             {
                 message = "Payment verified successfully",
-                orderId = order.Id,
+                orderId = order.OrderCode,
                 amount = order.ReceiveAmount
             });
         }

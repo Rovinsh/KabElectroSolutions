@@ -17,6 +17,9 @@ export class ApiService {
     return this.http.get(`${this.baseUrl+controllerName}`);
   }
 
+  getOrderById(id: string) {
+    return this.http.get<OrderDTO>(`${this.baseUrl}orders/orderById/${id}`);
+  }
 
   getLocations(): Observable<LocationResponseDto> {
     return this.http.get<LocationResponseDto>(`${this.baseUrl+"Locations/locations"}`);
@@ -25,9 +28,11 @@ export class ApiService {
   getStates(): Observable<StateResponseDto> {
     return this.http.get<StateResponseDto>(`${this.baseUrl+"Locations/states"}`);
   }
+
   getCities(): Observable<CityResponseDto> {
     return this.http.get<CityResponseDto>(`${this.baseUrl+"Locations/cities"}`);
   }
+
   getPincodes(): Observable<PincodeResponseDto> {
     return this.http.get<PincodeResponseDto>(`${this.baseUrl+"Locations/pincodes"}`);
   }
@@ -38,6 +43,7 @@ export class ApiService {
   getCategories(): Observable<CategoryResponseDto> {
     return this.http.get<CategoryResponseDto>(`${this.baseUrl + "Categories/categories"}`);
   }
+
  getGst(): Observable<GstResponseDto> {
     return this.http.get<GstResponseDto>(`${this.baseUrl + "Gst/gst"}`);
   }
@@ -47,6 +53,7 @@ export class ApiService {
       `${this.baseUrl + "Product/homeproducts"}`
     );
   }
+
  getProductList(): Observable<ProductListInitWrapperDto> {
     return this.http.get<ProductListInitWrapperDto>(
       `${this.baseUrl + "Product/productList"}`
@@ -56,9 +63,11 @@ export class ApiService {
    getProductbyUrl( url: any): Observable<ProductWithImageResponseDto> {
     return this.http.get<ProductWithImageResponseDto>(`${this.baseUrl}Product/productsByUrl?productUrl=${encodeURIComponent(url)}`);
   }
+
   getProduct(): Observable<ProductWithImageResponseDto> {
     return this.http.get<ProductWithImageResponseDto>(`${this.baseUrl + "Product/products"}`);
   }
+
   getCoupon(): Observable<CouponResponseDto> {
     return this.http.get<CouponResponseDto>(`${this.baseUrl + "Coupon/coupons"}`);
   }
@@ -72,6 +81,7 @@ export class ApiService {
     `${this.baseUrl}product/GetImages/${productId}`
   );
 }
+
  deleteProductImage(imageId: number) {
     return this.http.get(`${this.baseUrl}product/DeleteImage/${imageId}`);
   }
@@ -90,9 +100,11 @@ getUserOrders(): Observable<OrderResponseDto> {
  getOrders(): Observable<OrderResponseDto> {
     return this.http.get<OrderResponseDto>(`${this.baseUrl + "Orders/orders"}`);
   }
+
  getTopSellingProducts(): Observable<TopSellingProductResponseDto> {
     return this.http.get<TopSellingProductResponseDto>(`${this.baseUrl + "Orders/topSellingProducts"}`);
   }
+
   getRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(`${this.baseUrl + "Roles/roles"}`);
   }
@@ -132,6 +144,7 @@ getUserOrders(): Observable<OrderResponseDto> {
  postReport(reportData:ReportFilterDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Reports`,reportData);
   }
+
   postGst(GstData: GstDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Gst`, GstData);
   }
@@ -147,9 +160,11 @@ getUserOrders(): Observable<OrderResponseDto> {
  postUserCreate(userData: SignupRequestDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Users/CreateCustomer`, userData);
   }
+
   postProduct(productData: ProductDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Product`, productData);
   }
+
   postCoupon(couponData: CouponDto): Observable<any> {
     return this.http.post(`${this.baseUrl}Coupon`, couponData);
   }
@@ -172,6 +187,7 @@ applyCoupon(payload: ApplyCouponRequestDto): Observable<ApplyCouponResponseDto> 
     payload
   );
 }
+
  updateCategory(id: number, categoryData: CategoryDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Categories/${id}`, categoryData);
   }

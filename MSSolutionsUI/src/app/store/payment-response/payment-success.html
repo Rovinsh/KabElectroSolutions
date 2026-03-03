@@ -17,7 +17,11 @@
     <p>
       <strong>Paid Amount:</strong> ₹{{ amount }}
     </p>
-
+    <p>
+      <button class="btn-success" (click)="downloadInvoice()">
+        Download Invoice
+      </button>
+    </p>
     <p>
       We have received your payment and your order is now confirmed.
       You will receive order confirmation details via email or SMS shortly.

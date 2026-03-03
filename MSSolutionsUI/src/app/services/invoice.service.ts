@@ -76,8 +76,8 @@ export class InvoiceService {
 
   pdf.setFontSize(10);
   pdf.setFont('helvetica', 'normal');
-  pdf.text('GST No: 22AAAAA0000A1Z5', pageWidth / 2, 22, { align: 'center' });
-  pdf.text('Phone: +91 9876543210', pageWidth / 2, 27, { align: 'center' });
+  pdf.text('GST No: 09AAUCM2860K1ZR', pageWidth / 2, 22, { align: 'center' });
+  pdf.text('Phone: +91 7055110711', pageWidth / 2, 27, { align: 'center' });
   pdf.text('Email: support@mscareprime.in', pageWidth / 2, 32, { align: 'center' });
 
   pdf.line(10, 38, pageWidth - 10, 38);
@@ -99,9 +99,10 @@ pdf.setFont('helvetica', 'normal');
 const leftX = 14;
 const rightX = pageWidth - 85;
 let startY = 55;
-
+const date = new Date(order.orderDate);
+const formattedDate = date.toLocaleDateString('en-GB'); // dd/mm/yyyy
 pdf.text(`Invoice No: ${order.orderCode}`, leftX, startY);
-pdf.text(`Date: ${new Date(order.orderDate).toLocaleString()}`, leftX, startY + 7);
+pdf.text(`Date: ${formattedDate}`, leftX, startY + 7);
 pdf.text(`Order Status: ${order.orderStatus}`, leftX, startY + 14);
 pdf.text(`Payment Status: ${order.paymentStatus?.toLowerCase() === 'success'? 'Paid': order.paymentStatus}`, leftX, startY + 21);
 
@@ -161,7 +162,7 @@ pdf.setFontSize(11);
   autoTable(pdf, {
     startY: 85,
     head: [[
-      '#', 'Product', 'Category', 'Brand',
+      '#', 'Product', 'Category',
       'Qty', 'Unit', 'Discount', 'Total'
     ]],
     body: tableData,

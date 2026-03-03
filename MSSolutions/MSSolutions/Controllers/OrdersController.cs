@@ -186,7 +186,68 @@ namespace KabEleMSSolutionsctroSolutions.Controllers
             return Ok(result);
         }
         // ---------------- CREATE ORDER ----------------
-       
+
+        [HttpGet("orderById/{id}")]
+        public async Task<IActionResult> GetOrderById(string id)
+        {
+            var order = await _context.MsOrders
+                .Where(o => o.OrderCode == id)
+                .Include(o => o.OrderDetails)
+                .Include(o => o.BillingAddress)
+                .Include(o => o.ShippingAddress)
+                .Select(o => new OrderDTO
+                {
+                    Id = o.Id,
+                    OrderCode = o.OrderCode,
+                    UserId = o.UserId,
+                    SubTotal = o.SubTotal,
+                    TaxAmount = o.TaxAmount,
+                    DiscountAmount = o.DiscountAmount,
+                    GrandTotal = o.GrandTotal,
+                    ReceiveAmount = o.ReceiveAmount,
+                    PaymentStatus = o.PaymentStatus,
+                    OrderStatus = o.OrderStatus,
+                    OrderDate = o.OrderDate,
+                    PaymentDate = o.PaymentDate,
+
+                    OrderDetails = o.OrderDetails.Select(d => new OrderDetailDTO
+                    {
+                        ProductName = d.ProductName,
+                        BrandName = d.BrandName,
+                        CategoryName = d.CategoryName,
+                        UnitPrice = d.UnitPrice,
+                        Quantity = d.Quantity,
+                        TotalAmount = d.TotalAmount
+                    }).ToList(),
+
+                    BillingAddress = new BillingAddressDTO
+                    {
+                        FullName = o.BillingAddress.FullName,
+                        Phone = o.BillingAddress.Phone,
+                        AddressLine = o.BillingAddress.AddressLine,
+                        City = o.BillingAddress.City,
+                        State = o.BillingAddress.State,
+                        Pincode = o.BillingAddress.Pincode
+                    },
+
+                    ShippingAddress = new ShippingAddressDTO
+                    {
+                        FullName = o.ShippingAddress.FullName,
+                        Phone = o.ShippingAddress.Phone,
+                        AddressLine = o.ShippingAddress.AddressLine,
+                        City = o.ShippingAddress.City,
+                        State = o.ShippingAddress.State,
+                        Pincode = o.ShippingAddress.Pincode
+                    }
+                })
+                .FirstOrDefaultAsync();
+
+            if (order == null)
+                return NotFound();
+
+            return Ok(order);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] MsOrders order)
         {
