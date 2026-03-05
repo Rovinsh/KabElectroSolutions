@@ -80,6 +80,12 @@ export const STORE_ROUTES: Routes = [
       import('./refund_policy/refund_policy')
         .then(m => m.RefundPolicyComponent),
   },
+{
+    path: 'aboutus',
+    loadComponent: () =>
+      import('./aboutus/aboutus')
+        .then(m => m.AboutusComponent),
+  },
   {
     path: 'return_policy',
     loadComponent: () =>
