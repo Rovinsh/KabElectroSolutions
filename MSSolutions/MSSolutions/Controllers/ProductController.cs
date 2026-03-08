@@ -273,7 +273,6 @@ namespace MSSolutions.Controllers
             var productsRaw = await _context.MsProducts
                    .AsNoTracking()
                 .Where(p => p.IsActive)
-                .Take(4)
                 .ToListAsync();
 
             var productIds = productsRaw.Select(p => p.Id).ToList();
