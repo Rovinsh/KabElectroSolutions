@@ -76,3 +76,114 @@
   color: #ffffff;
   cursor: pointer;
 }
+
+
+
+/* HAMBURGER BUTTON */
+.ms-hamburger{
+  font-size:24px;
+  cursor:pointer;
+  position:absolute;
+  left:10px;
+  top:18px;
+  color:#0d3b66;
+  z-index:1200;
+}
+
+/* SIDE MENU */
+.ms-side-menu{
+  position:fixed;
+  top:0;
+  left:-280px;
+  width:280px;
+  height:100vh;            /* full screen height */
+  background:#0d3b66;
+  color:white;
+  transition:0.3s;
+  z-index:2000;
+  padding-top:20px;
+
+  overflow-y:auto;         /* enable vertical scroll */
+  overflow-x:hidden;       /* hide horizontal scroll */
+}
+
+.ms-side-menu.open{
+  left:0;
+}
+
+.ms-menu-header{
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  font-size:18px;
+  border-bottom:1px solid rgba(255,255,255,0.2);
+}
+
+.close-btn{
+  cursor:pointer;
+}
+
+.ms-side-menu .ms-menu-item{
+  padding:14px 20px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  cursor:pointer;
+}
+
+.ms-side-menu .ms-menu-item:hover{
+  background:#124a82;
+}
+
+/* OVERLAY */
+.ms-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  opacity:0;
+  visibility:hidden;
+  transition:0.3s;
+  z-index:1500;
+}
+
+.ms-overlay.show{
+  opacity:1;
+  visibility:visible;
+}
+
+/* CATEGORY ARROW */
+.category{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.arrow{
+  font-size:12px;
+}
+
+/* SUB MENU */
+.ms-sub-menu{
+  background:#124a82;
+}
+
+.ms-sub-item{
+  padding:12px 35px;
+  font-size:14px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  cursor:pointer;
+}
+
+.ms-sub-item:hover{
+  background:#1a5da0;
+}
+
+.ms-side-menu::-webkit-scrollbar{
+  width:6px;
+}
+
+.ms-side-menu::-webkit-scrollbar-thumb{
+  background:#2c6db2;
+  border-radius:10px;
+}

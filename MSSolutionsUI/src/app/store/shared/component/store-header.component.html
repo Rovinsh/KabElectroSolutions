@@ -1,4 +1,10 @@
 <header class="ms-header container-fluid">
+
+  <!-- MOBILE MENU BUTTON -->
+  <div class="ms-hamburger d-md-none" (click)="toggleMenu()">
+    ☰
+  </div>
+
   <div class="row align-items-center w-100">
 
     <!-- LEFT : LOGO -->
@@ -10,15 +16,12 @@
 
     <!-- CENTER : SEARCH (DESKTOP ONLY) -->
     <div class="col-md-6 d-none d-md-flex justify-content-center">
-      <input
-        class="ms-search"
-        type="text"
-        placeholder="Search products..." />
+      <input class="ms-search" type="text" placeholder="Search products..." />
     </div>
 
     <!-- RIGHT : USER + CART -->
     <div class="col-6 col-md-3 d-flex justify-content-end gap-3">
-      
+
       <!-- USER -->
       <div class="ms-icon-btn ms-user-wrapper" (click)="showUserMenu = !showUserMenu">
         👤
@@ -27,12 +30,17 @@
         </span>
 
         <div class="ms-user-dropdown" *ngIf="showUserMenu">
-          <div class="ms-menu-item " *ngIf="!firstName" (click)="custumerLogin()">
+          <div class="ms-menu-item" *ngIf="!firstName" (click)="custumerLogin()">
             Login / Create Account
           </div>
-          <!-- <div class="ms-menu-item store-layout" *ngIf="firstName"><a routerLink="/store/profile">My Profile</a></div> -->
-          <div class="ms-menu-item store-layout" *ngIf="firstName"> <a routerLink="/store/address">My Address</a></div>
-          <div class="ms-menu-item store-layout" *ngIf="firstName"><a routerLink="/store/orders">My Orders</a></div>
+
+          <div class="ms-menu-item store-layout" *ngIf="firstName">
+            <a routerLink="/store/address">My Address</a>
+          </div>
+
+          <div class="ms-menu-item store-layout" *ngIf="firstName">
+            <a routerLink="/store/orders">My Orders</a>
+          </div>
 
           <div class="ms-menu-item store-layout" *ngIf="firstName">
             <a routerLink="/store/wishlist">My Wishlist</a>
@@ -46,18 +54,50 @@
 
       <!-- CART -->
       <div class="ms-icon-btn cart" routerLink="/store/cart">
-        🛒 <span routerLink="/store/cart" class="cart-count">{{ cartCount }}</span>
+        🛒 <span class="cart-count">{{ cartCount }}</span>
       </div>
+
     </div>
   </div>
 
-  <!-- MOBILE SEARCH (FULL WIDTH) -->
+  <!-- MOBILE SEARCH -->
   <div class="row d-md-none mt-2">
     <div class="col-12">
-      <input
-        class="ms-search w-100"
-        type="text"
-        placeholder="Search products..." />
+      <input class="ms-search w-100" type="text" placeholder="Search products..." />
     </div>
   </div>
 </header>
+
+<!-- SIDE MENU -->
+<div class="ms-side-menu" [class.open]="menuOpen">
+
+  <div class="ms-menu-header">
+    <span class="close-btn" (click)="toggleMenu()">✕</span>
+  </div>
+
+  <div class="ms-menu-item" routerLink="/" (click)="toggleMenu()">Home</div>
+  <div class="ms-menu-item" routerLink="/store/aboutus" (click)="toggleMenu()">About MsCarePrime</div>
+  <div class="ms-menu-item category" (click)="toggleCategory()">
+    Categories
+    <span class="arrow">{{ categoryOpen ? '▲' : '▼' }}</span>
+  </div>
+
+  <!-- SUB MENU -->
+  <div class="ms-sub-menu" *ngIf="categoryOpen">
+
+    <div class="ms-sub-item" *ngFor="let c of Allcategories"
+        [routerLink]="['/store/productList', c.catUrl]" (click)="toggleMenu()">
+      {{ c.catName }} 
+    </div>
+  </div>
+  <div class="ms-menu-item" routerLink="/store/products" (click)="toggleMenu()">Products</div>
+  <div class="ms-menu-item" routerLink="/store/orders" (click)="toggleMenu()">My Orders</div>
+  <div class="ms-menu-item" routerLink="/store/wishlist" (click)="toggleMenu()">Wishlist</div>
+  <div class="ms-menu-item" routerLink="/store/contact" (click)="toggleMenu()">Contact</div>
+  <div class="ms-menu-item" routerLink="/#" (click)="toggleMenu()">Help & Support</div>
+  <div class="ms-menu-item" routerLink="/store/term_condition" (click)="toggleMenu()">Term & Condition</div>
+  <div class="ms-menu-item" routerLink="/store/refund_policy" (click)="toggleMenu()"> Refund Policy</div>
+   <div class="ms-menu-item" routerLink="/store/return_policy" (click)="toggleMenu()"> Return Policy</div>
+</div>
+
+<div class="ms-overlay" [class.show]="menuOpen" (click)="toggleMenu()"></div>

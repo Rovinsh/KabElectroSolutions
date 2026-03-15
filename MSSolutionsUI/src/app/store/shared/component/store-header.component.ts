@@ -7,6 +7,7 @@ import { ToastService } from '../../../services/toastService.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { LoginComponent } from '../../Login/login.component';
 import { WishlistService } from '../../services/wishlist.service';
+import { ApiService, CategoryDto } from '../../../services/api.service';
 @Component({
   selector: 'app-store-header',
   standalone: true,
@@ -15,6 +16,8 @@ import { WishlistService } from '../../services/wishlist.service';
   styleUrls: ['./store-header.component.css']
 })
 export class StoreHeaderComponent {
+   Allcategories: CategoryDto[] = [];
+   private apiService = inject(ApiService);
   private toast = inject(ToastService);
   private wishlistService = inject(WishlistService);
   cartCount = 0;
@@ -37,6 +40,12 @@ export class StoreHeaderComponent {
 
    this.wishlistService.wishlistIds$.subscribe(ids => {
     this.wishlistCount = ids.size;
+  });
+
+   this.apiService.getHomeProduct().subscribe({
+    next: (res) => {
+       this.Allcategories =  res.data?.categories.filter(x => x.isDisable) ?? res.data?.categories ?? [];
+    }
   });
   }
 
@@ -69,4 +78,14 @@ custumerLogin() {
     this.wishlistService.clearWishlist();
     location.href = '';
   }
+menuOpen = false;
+categoryOpen = false;
+
+toggleMenu(){
+  this.menuOpen = !this.menuOpen;
+}
+
+toggleCategory(){
+  this.categoryOpen = !this.categoryOpen;
+}
 }
