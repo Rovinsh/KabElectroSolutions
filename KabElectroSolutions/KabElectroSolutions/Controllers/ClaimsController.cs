@@ -55,7 +55,8 @@ namespace KabElectroSolutions.Controllers
             {
     "Service Centre Assigned",
     "Appointment Taken",
-    "Claim Verified"
+    "Claim Verified",
+    "Call Rejected By Service Center"
 };
 
 
