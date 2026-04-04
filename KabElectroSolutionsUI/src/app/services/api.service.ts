@@ -102,6 +102,10 @@ downloadBulkImages(claimId: number) {
     return this.http.get<Note[]>(`${this.baseUrl}Claims/GetNotes/${claimId}`);
   }
 
+  getAllServiceCenters(): Observable<ServiceCenter[]> {
+    return this.http.get<ServiceCenter[]>(`${this.baseUrl}servicecenters`);
+  }
+
   postReport(reportData:ReportFilterDto): Observable<any> {
   return this.http.post(`${this.baseUrl}Reports`,reportData);
   }
@@ -732,4 +736,18 @@ export interface ClaimCustomerVisitImages {
   remarks?: string;
   createdBy: string;
   createdAt: string;
+}
+
+export interface ServiceCenter {
+  id: number;
+  svcName: string;
+  city: string;
+  state: string;
+  address: string;
+  pincode: string;
+  gstNumber: string;
+  panNumber: string;
+  sbpContactPerson: string;
+  mobileNumber: string;
+  email: string;
 }

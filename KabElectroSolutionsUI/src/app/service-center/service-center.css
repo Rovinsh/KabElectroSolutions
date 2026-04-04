@@ -1,0 +1,52 @@
+/* 🔹 Container */
+.filter-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+/* 🔹 Input Fields */
+.filter-input {
+  padding: 10px 12px;
+  width: 220px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Focus Effect */
+.filter-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 6px rgba(25, 118, 210, 0.3);
+}
+
+/* 🔹 Placeholder styling */
+.filter-input::placeholder {
+  color: #888;
+}
+
+/* 🔹 Clear Button */
+.clear-btn {
+  padding: 10px 18px;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Hover effect */
+.clear-btn:hover {
+  background-color: #c62828;
+  transform: translateY(-1px);
+}
+
+/* 🔹 Active click */
+.clear-btn:active {
+  transform: scale(0.98);
+}

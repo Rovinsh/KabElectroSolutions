@@ -32,6 +32,7 @@ export class SidebarComponent {
     { title: 'Assign Claim', icon: '📨', roles: ['Super Admin','Customer Care Executive'], route: '/assign-claim' },
     { title: 'Master', icon: '📂', roles: ['Super Admin'], route: '/master' },
     { title: 'User', icon: '🧑', roles: ['Super Admin'], route: '/user' },
+    { title: 'Service Centers', icon: '📨', roles: ['Super Admin','Customer Care Executive'], route: 'service-center' },
     { title: 'Report', icon: '📄', roles: ['Super Admin','Service Centre','Brand','Customer Care Executive'], route: '/report' },
     { title: 'Warranties', icon: '🛡️', roles: ['Super Admin'], route: '/warranties' },
     { title: 'Waiting For Finance', icon: '📨', roles: ['Super Admin'], route: '/waiting-for-finance' },

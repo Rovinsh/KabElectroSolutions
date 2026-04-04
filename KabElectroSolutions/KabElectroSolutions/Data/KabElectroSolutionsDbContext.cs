@@ -38,6 +38,7 @@ namespace KabElectroSolutions.Data
         public DbSet<ClaimRepairDetail> ClaimRepairDetails => Set<ClaimRepairDetail>();
         public DbSet<ClaimClosedWithOrWithoutRepairDetail> ClaimClosedWithOrWithoutRepairDetails { get; set; }
         public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
+        public DbSet<ServiceCenter> ServiceCenters { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Place your configuration here

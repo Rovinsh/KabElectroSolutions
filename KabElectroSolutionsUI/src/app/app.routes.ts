@@ -3,6 +3,7 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ClaimDetailsComponent } from './claim-details/claim-details';
 import { AssignClaim } from './assign-claim/assign-claim';
+import { ServiceCenterComponent } from './service-center/service-center';
 import { ClaimFormComponent } from './claim-form/claim-form';
 import { DirectClaimFormComponent } from './direct-claim-form/direct-claim-form';
 import { RoleGuard } from './guards/role-guard';
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'claim-bulk-import', component: ClaimBulkImport, canActivate: [RoleGuard], data: { roles: ['Super Admin','Brand'] }},
   { path: 'brand-claim-form', component: ClaimFormComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin', 'Brand'] }},
   { path: 'assign-claim', component: AssignClaim, canActivate: [RoleGuard], data: { roles: ['Super Admin','Customer Care Executive'] } },
+  { path: 'service-center', component: ServiceCenterComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin','Customer Care Executive'] } },
   { path: 'waiting-for-finance', component: WaitingForFinance, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { roles: ['Super Admin'] } },
   { path: 'master', component: MasterComponent,canActivate: [RoleGuard], data: { roles: ['Super Admin'] }} ,
