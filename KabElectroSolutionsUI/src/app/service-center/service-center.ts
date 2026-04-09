@@ -26,12 +26,13 @@ rowData: ServiceCenter[] = [];
     { field: 'pincode', flex: 2, filter: true, floatingFilter: true },
     { field: 'mobileNumber', flex: 2, filter: true, floatingFilter: true},
     { field: 'email', flex: 2, filter: true, floatingFilter: true},
-    { field: 'address' , flex: 3,cellStyle: {
+    { field: 'address' , flex: 3, filter: true, floatingFilter: true, cellStyle: {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis'
     },
-    tooltipField: 'address'}
+    tooltipField: 'address'},
+    { field: 'phoneNumber', flex: 2, filter: true, floatingFilter: true},
   ];
 
   defaultColDef = {

@@ -3,13 +3,14 @@ CREATE TABLE ServiceCenters (
     SVCName NVARCHAR(255) NOT NULL,
     City NVARCHAR(100),
     State NVARCHAR(100),
-    Address NVARCHAR(500),
-    Pincode NVARCHAR(10),
+    Address NVARCHAR(max),
+    Pincode NVARCHAR(20),
     GSTNumber NVARCHAR(50),
     PanNumber NVARCHAR(20),
     SBPContactPerson NVARCHAR(255),
-    MobileNumber NVARCHAR(50),
-	Email NVARCHAR(100)
+    MobileNumber NVARCHAR(100),
+	Email NVARCHAR(100),
+	PhoneNumber NVARCHAR(100)
 );
 
 --Drop table ServiceCenters
@@ -18,13 +19,14 @@ CREATE TABLE ServiceCenters_Staging (
     SVCName NVARCHAR(255),
     City NVARCHAR(100),
     State NVARCHAR(100),
-    Address NVARCHAR(500),
+    Address NVARCHAR(max),
     Pincode NVARCHAR(20),
     GSTNumber NVARCHAR(50),
     PanNumber NVARCHAR(50),
     SBPContactPerson NVARCHAR(100),
-    MobileNumber NVARCHAR(50),
-	Email NVARCHAR(100)
+    MobileNumber NVARCHAR(100),
+	Email NVARCHAR(100),
+	PhoneNumber NVARCHAR(100)
 );
 
 BULK INSERT ServiceCenters_Staging
